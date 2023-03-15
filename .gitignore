@@ -1,4 +1,4 @@
-*.class
+g*.class
 *.log
 *.ctxt
 .mtj.tmp/
