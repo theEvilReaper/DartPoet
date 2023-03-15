@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.8.10"
+    alias(libs.plugins.kotlin.jvm)
     application
 }
 
@@ -11,8 +11,8 @@ repositories {
 }
 
 dependencies {
-    implementation("com.google.truth:truth:1.1.3")
-    testImplementation(kotlin("test"))
+    testImplementation(libs.truth)
+    testImplementation(libs.kotlin.junit)
 }
 
 tasks.test {
