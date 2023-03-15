@@ -1,8 +1,8 @@
 package net.theevilreaper.dartpoet.code
 
 class CodeFragment(
-    var formatParts: List<String>,
-    var args: List<Any?>
+    private var formatParts: List<String>,
+    private var args: List<Any?>
 ) {
 
     fun isEmpty() = formatParts.isEmpty()
