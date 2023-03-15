@@ -1,14 +1,15 @@
 package net.theevilreaper.dartpoet.writer
 
 enum class FragmentPart(
-    val part: String
+    val part: String,
+    val identifier: Char
 ) {
 
-    LITERAL("%L"),
-    STRING("%S"),
-    STRING_NOT_ESCAPED("%P"),
-    TYPE("%T");
-
+    NAMED("%N", 'N'),
+    LITERAL("%L", 'L'),
+    STRING("%S", 'S'),
+    STRING_NOT_ESCAPED("%P", 'P'),
+    MEMBER("%M", 'M');
 
     companion object {
         /**
@@ -17,6 +18,10 @@ enum class FragmentPart(
          */
         fun mapToFragmentPart(partString: String): FragmentPart? {
             return values().firstOrNull { it.part === partString }
+        }
+
+        fun mapByIdentifier(identifier: Char): FragmentPart? {
+            return values().firstOrNull { it.identifier == identifier }
         }
     }
 }
