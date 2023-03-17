@@ -15,12 +15,20 @@ dependencies {
     testImplementation(libs.kotlin.junit)
 }
 
-tasks.test {
-    useJUnitPlatform()
+tasks {
+    test {
+        useJUnitPlatform()
+    }
+    compileKotlin {
+        kotlinOptions {
+            jvmTarget = "17"
+            useK2 = true
+        }
+    }
 }
 
 kotlin {
-    jvmToolchain(8)
+    jvmToolchain(17)
 }
 
 application {
