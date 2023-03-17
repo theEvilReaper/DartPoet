@@ -1,6 +1,6 @@
 package net.theevilreaper.dartpoet.import
 
-import net.theevilreaper.dartpoet.util.AS_PART
+import java.lang.IllegalStateException
 
 /**
  * The class represents a normal import from dart.
@@ -16,22 +16,20 @@ import net.theevilreaper.dartpoet.util.AS_PART
  * @since 1.0.0
  */
 class DartImport internal constructor(
-    private val name: String,
+    private val path: String,
+    private val importCastType: ImportCastType? = null,
     private val importCast: String? = null
 ) : Import {
 
     private val importString = buildString {
-        if (!startWithDot()) {
-            append("'package:")
+        append("import ")
+        if (importCast == null && importCastType == null) {
+            append("'package:$path';")
+        } else if (importCast != null && importCastType != null) {
+            append("'$path' ${importCastType.identifier} $importCast;")
         } else {
-            append("'")
+            throw IllegalStateException("NOPE")
         }
-        append(name)
-        append("'")
-        if (includePrefix()) {
-            append(" $AS_PART $importCast")
-        }
-        append(";")
     }
 
     /**
@@ -43,8 +41,12 @@ class DartImport internal constructor(
         return !importCast.isNullOrEmpty()
     }
 
+    /**
+     * Checks if the given name starts with a dot.
+     * @return true when the import starts with a dot otherwise false
+     */
     private fun startWithDot(): Boolean {
-        return this.name.startsWith(".")
+        return this.path.startsWith(".")
     }
 
     override fun compareTo(other: Import): Int = importString.compareTo(other.toString())
