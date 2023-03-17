@@ -1,10 +1,15 @@
 package net.theevilreaper.dartpoet
 
 enum class DartModifier(
-    private val identifier: String,
-    vararg modifiers: ModifierTarget
+    internal val identifier: String,
+    private vararg val modifiers: ModifierTarget
 ) {
 
-    PUBLIC("public", ModifierTarget.CLASS),
-    FINAL("final", ModifierTarget.CLASS, ModifierTarget.FUNCTION, ModifierTarget.PROPERTY)
+    PRIVATE("_", ModifierTarget.FUNCTION, ModifierTarget.PROPERTY),
+    LATE("late", ModifierTarget.PROPERTY),
+    FINAL("final", ModifierTarget.PROPERTY);
+
+    internal fun containsTarget(modifierTarget: ModifierTarget): Boolean {
+        return modifiers.contains(modifierTarget)
+    }
 }
