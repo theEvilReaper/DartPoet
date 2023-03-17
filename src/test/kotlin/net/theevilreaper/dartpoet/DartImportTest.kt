@@ -18,13 +18,13 @@ class DartImportTest {
     }
 
     @Test
-    fun `test package import with cast`() {
+    fun `test package with cast`() {
         val import = DartImport("../../model/item_model.dart", ImportCastType.AS,"item")
         assertEquals(modelImport, import.toString())
     }
 
     @Test
-    fun `test lazy package import with cast`() {
+    fun `test lazy import`() {
         val import = DartImport("../../model/item_model.dart", ImportCastType.DEFERRED,"item")
         assertEquals(lazyCastImport, import.toString())
     }
