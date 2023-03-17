@@ -1,9 +1,8 @@
-package net.theevilreaper.dartpoet.clazz
+package net.theevilreaper.dartpoet
 
 import com.google.common.truth.Truth.assertThat
-import net.theevilreaper.dartpoet.DartClassType
-import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
+import net.theevilreaper.dartpoet.clazz.DartClassSpec
 import net.theevilreaper.dartpoet.property.DartPropertySpec
 import org.junit.Test
 
@@ -17,14 +16,33 @@ class DartClassBuilderTest {
             DartClassSpec.builder(className).annotation(AnnotationSpec()).modifier { DartModifier.FINAL }.build()
 
         assertThat(clazz.toString()).isEqualTo("""
-            public final class $className {
+            public class $className {
             }
         """.trimIndent())
     }
 
     @Test
+    fun `test enum class`() {
+        val clazz = DartClassSpec.enumClass(className).build()
+        assertThat(clazz.toString()).isEqualTo("""
+            enum $className {
+            }
+        """.trimIndent())
+    }
+
+    @Test
+    fun `test mixin class`() {
+        val clazz = DartClassSpec.mixinClass(className).build()
+        assertThat(clazz.toString()).isEqualTo("""
+            mixin $className {
+            }
+        """.trimIndent()
+        )
+    }
+
+    @Test
     fun `test class with a parameter`() {
-        val clazz = DartClassSpec.builder(className, DartClassType.CLASS)
+        val clazz = DartClassSpec.builder(className)
             .property(DartPropertySpec
                 .builder("name", "String")
                 .nullable(false)
