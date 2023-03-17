@@ -1,5 +1,8 @@
 package net.theevilreaper.dartpoet.annotation
 
+import net.theevilreaper.dartpoet.code.CodeFragment
+import net.theevilreaper.dartpoet.code.CodeFragmentBuilder
+
 
 /**
  * @author theEvilReaper
@@ -7,9 +10,25 @@ package net.theevilreaper.dartpoet.annotation
  * @since
  **/
 
-class AnnotationSpecBuilder {
+class AnnotationSpecBuilder(
+    val name: String
+) {
+
+    internal val content: MutableList<CodeFragment> = mutableListOf()
+
+    fun content(format: String, vararg args: Any) = apply {
+        this.content += CodeFragmentBuilder.of(format, args)
+    }
+
+    fun content(codeFragment: CodeFragment) = apply {
+        this.content += codeFragment
+    }
+
+    fun content(codeFragment: () -> CodeFragment) = apply {
+        this.content += codeFragment()
+    }
 
     fun build(): AnnotationSpec {
-        return AnnotationSpec()
+        return AnnotationSpec(this)
     }
 }
