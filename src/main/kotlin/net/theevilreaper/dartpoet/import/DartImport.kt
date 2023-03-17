@@ -1,5 +1,6 @@
 package net.theevilreaper.dartpoet.import
 
+import net.theevilreaper.dartpoet.util.IMPORT
 import java.lang.IllegalStateException
 
 /**
@@ -22,7 +23,7 @@ class DartImport internal constructor(
 ) : Import {
 
     private val importString = buildString {
-        append("import ")
+        append("$IMPORT ")
         if (importCast == null && importCastType == null) {
             append("'package:$path';")
         } else if (importCast != null && importCastType != null) {
