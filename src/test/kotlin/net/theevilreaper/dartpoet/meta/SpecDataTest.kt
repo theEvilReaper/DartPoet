@@ -11,8 +11,8 @@ class SpecDataTest {
 
     @Test
     fun `test annotation add`() {
-        this.specData.annotation(AnnotationSpec())
-        this.specData.annotation { AnnotationSpec() }
+        this.specData.annotation(AnnotationSpec.builder("jsonKey").build())
+        this.specData.annotation { AnnotationSpec.builder("jsonIgnore").build() }
         assertEquals(2, this.specData.annotations.size)
     }
 
