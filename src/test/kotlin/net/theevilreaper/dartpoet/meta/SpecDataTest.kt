@@ -2,7 +2,7 @@ package net.theevilreaper.dartpoet.meta
 
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class SpecDataTest {

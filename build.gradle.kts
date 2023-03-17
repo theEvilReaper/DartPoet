@@ -12,18 +12,22 @@ repositories {
 }
 
 dependencies {
+    testImplementation(kotlin("test"))
     testImplementation(libs.truth)
-    testImplementation(libs.kotlin.junit)
+    // testImplementation(libs.kotlin.junit)
 }
 
 tasks {
     test {
         useJUnitPlatform()
+        testLogging {
+            events("passed", "skipped", "failed")
+        }
     }
     compileKotlin {
         kotlinOptions {
             jvmTarget = "17"
-            useK2 = true
+            useK2 = false
         }
     }
 }

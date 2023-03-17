@@ -4,7 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.DartClassSpec
 import net.theevilreaper.dartpoet.property.DartPropertySpec
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class DartClassBuilderTest {
 

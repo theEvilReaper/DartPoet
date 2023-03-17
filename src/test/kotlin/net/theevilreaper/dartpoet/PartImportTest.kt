@@ -1,8 +1,8 @@
 package net.theevilreaper.dartpoet
 
 import net.theevilreaper.dartpoet.import.PartImport
-import org.junit.Test
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
 
 class PartImportTest {
 

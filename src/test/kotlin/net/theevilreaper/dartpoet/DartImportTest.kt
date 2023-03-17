@@ -3,7 +3,7 @@ package net.theevilreaper.dartpoet
 import junit.framework.TestCase.assertEquals
 import net.theevilreaper.dartpoet.import.DartImport
 import net.theevilreaper.dartpoet.import.ImportCastType
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class DartImportTest {
 
