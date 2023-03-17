@@ -1,10 +1,11 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
     application
+    id("org.jetbrains.changelog") version "2.0.0"
 }
 
 group = "net.theevilreaper.dartpoet"
-version = "1.0-SNAPSHOT"
+version = "0.0.1-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -33,4 +34,12 @@ kotlin {
 
 application {
     mainClass.set("MainKt")
+}
+
+changelog {
+    path.set("${project.projectDir}/CHANGELOG.md")
+    itemPrefix.set("-")
+    keepUnreleasedSection.set(true)
+    unreleasedTerm.set("[Unreleased]")
+    groups.set(listOf("Added", "Changed", "Deprecated", "Removed", "Fixed", "Security"))
 }
