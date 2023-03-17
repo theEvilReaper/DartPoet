@@ -10,5 +10,6 @@ internal const val SEMICONLON = ";"
 
 internal const val AS_PART = "as"
 internal const val IMPORT = "import"
+internal const val ANNOTATION_CHAR = "@"
 
 internal val NEW_LINE_SPLIT: Pattern = Pattern.compile(NEW_LINE)
