@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test
 class DartImportTest {
 
     private val packageImport = "import 'package:flutter/material.dart';"
+    private val withoutPackageImport = "import '../../model/item_model.dart';"
     private val modelImport = "import '../../model/item_model.dart' as item;"
     private val lazyCastImport = "import '../../model/item_model.dart' deferred as item;"
     private val hideCastImport = "import '../../model/item_model.dart' hide item;"
@@ -21,6 +22,12 @@ class DartImportTest {
     fun `test package import`() {
         val import = DartImport("flutter/material.dart")
         assertEquals(packageImport, import.toString())
+    }
+
+    @Test
+    fun `test import without package`() {
+        val import = DartImport("../../model/item_model.dart")
+        assertEquals(withoutPackageImport, import.toString())
     }
 
     @Test
