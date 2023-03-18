@@ -2,7 +2,7 @@ package net.theevilreaper.dartpoet.import
 
 class PartImport internal constructor(
     private val path: String
-): Import {
+) : Import {
 
     private val partImport: String = buildString {
         append("part ")

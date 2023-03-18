@@ -7,7 +7,7 @@ package net.theevilreaper.dartpoet.import
  */
 enum class ImportCastType(
     val identifier: String
-){
+) {
     AS("as"),
     SHOW("show"),
     HIDE("hide"),
