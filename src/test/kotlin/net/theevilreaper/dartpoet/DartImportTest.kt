@@ -1,8 +1,8 @@
 package net.theevilreaper.dartpoet
 
-import junit.framework.TestCase.assertEquals
 import net.theevilreaper.dartpoet.import.DartImport
 import net.theevilreaper.dartpoet.import.ImportCastType
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class DartImportTest {
@@ -12,6 +12,7 @@ class DartImportTest {
     private val lazyCastImport = "import '../../model/item_model.dart' deferred as item;"
     private val hideCastImport = "import '../../model/item_model.dart' hide item;"
     private val showCastImport = "import '../../model/item_model.dart' show item;"
+    private val dartImport = "import 'dart:html';"
 
     private val castValue = "item"
     private val testImport = "../../model/item_model.dart"
@@ -24,13 +25,13 @@ class DartImportTest {
 
     @Test
     fun `test package with cast`() {
-        val import = DartImport(testImport, ImportCastType.AS,castValue)
+        val import = DartImport(testImport, ImportCastType.AS, castValue)
         assertEquals(modelImport, import.toString())
     }
 
     @Test
     fun `test lazy import`() {
-        val import = DartImport(testImport, ImportCastType.DEFERRED,castValue)
+        val import = DartImport(testImport, ImportCastType.DEFERRED, castValue)
         assertEquals(lazyCastImport, import.toString())
     }
 
@@ -44,5 +45,11 @@ class DartImportTest {
     fun `test import with show`() {
         val import = DartImport(testImport, ImportCastType.SHOW, castValue)
         assertEquals(showCastImport, import.toString())
+    }
+
+    @Test
+    fun `test dart import`() {
+        val import = DartImport("dart:html")
+        assertEquals(dartImport, import.toString())
     }
 }
