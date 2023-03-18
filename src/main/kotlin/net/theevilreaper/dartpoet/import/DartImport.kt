@@ -25,16 +25,26 @@ class DartImport internal constructor(
     private val importString = buildString {
         append("$IMPORT ")
         if (importCast == null && importCastType == null) {
-            if (isDartImport()) {
-                append("'$path';")
+            if (isDartImport() || startWithDot()) {
+                append("'$path'")
             } else {
-                append("'package:$path';")
+                append("'package:$path'")
             }
+            append(";")
         } else if (importCast != null && importCastType != null) {
             append("'$path' ${importCastType.identifier} $importCast;")
         } else {
             throw IllegalStateException("NOPE")
         }
+    }
+
+    /**
+     * Checks if the given name starts with a dot.
+     * @return true when the import starts with a dot otherwise false
+     * Compares a given import string with another import.
+     */
+    private fun startWithDot(): Boolean {
+        return this.path.startsWith(".")
     }
 
     /**
