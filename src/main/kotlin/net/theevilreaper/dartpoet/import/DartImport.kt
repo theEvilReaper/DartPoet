@@ -25,7 +25,11 @@ class DartImport internal constructor(
     private val importString = buildString {
         append("$IMPORT ")
         if (importCast == null && importCastType == null) {
-            append("'package:$path';")
+            if (isDartImport()) {
+                append("'$path';")
+            } else {
+                append("'package:$path';")
+            }
         } else if (importCast != null && importCastType != null) {
             append("'$path' ${importCastType.identifier} $importCast;")
         } else {
@@ -34,23 +38,21 @@ class DartImport internal constructor(
     }
 
     /**
-     * Checks if the importCast string is null or empty.
-     * It used to determine if the import statement should include the 'as name' in the generation
-     * @return true when the string is null or empty otherwise false
+     * Checks if a given import path starts with the word dart.
+     * @return true when the path starts with the word otherwise false
      */
-    private fun includePrefix(): Boolean {
-        return !importCast.isNullOrEmpty()
+    private fun isDartImport(): Boolean {
+        return path.startsWith("dart")
     }
 
     /**
-     * Checks if the given name starts with a dot.
-     * @return true when the import starts with a dot otherwise false
+     * Compares a given import string with another import.
      */
-    private fun startWithDot(): Boolean {
-        return this.path.startsWith(".")
-    }
-
     override fun compareTo(other: Import): Int = importString.compareTo(other.toString())
 
+    /**
+     * Returns the string which contains the created import statement.
+     * @return the created import
+     */
     override fun toString(): String = importString
 }
