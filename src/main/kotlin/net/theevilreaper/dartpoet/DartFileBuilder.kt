@@ -1,17 +1,19 @@
 package net.theevilreaper.dartpoet
 
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
-import net.theevilreaper.dartpoet.meta.SpecData
-import net.theevilreaper.dartpoet.meta.SpecMethods
+import net.theevilreaper.dartpoet.code.CodeFragment
+import net.theevilreaper.dartpoet.code.CodeFragmentBuilder
+import net.theevilreaper.dartpoet.import.Import
 import net.theevilreaper.dartpoet.util.DEFAULT_INDENT
 import java.lang.IllegalArgumentException
 
 class DartFileBuilder(
     val name: String
-) : SpecMethods<DartFileBuilder> {
-
-    internal val specData = SpecData()
-    internal val documentation: MutableList<String> = mutableListOf()
+) {
+    internal val comment: CodeFragmentBuilder = CodeFragment.builder()
+    internal val specTypes: MutableList<Any> = mutableListOf()
+    internal val imports: MutableList<Import> = mutableListOf()
+    internal val annotations: MutableList<AnnotationSpec> = mutableListOf()
     internal var indent = DEFAULT_INDENT
 
     fun indent(indent: String) = apply {
@@ -25,40 +27,36 @@ class DartFileBuilder(
         this.indent(indent())
     }
 
-    override fun annotations(annotations: Iterable<AnnotationSpec>) = apply {
-        this.specData.annotations(annotations)
+    fun addType(dartFileSpec: DartFile) = apply {
+        this.specTypes += dartFileSpec
     }
 
-    override fun annotations(annotations: () -> Iterable<AnnotationSpec>) = apply {
-        this.specData.annotations(annotations)
+    fun addType(dartFileSpec: () -> DartFile) = apply {
+        this.specTypes += dartFileSpec()
     }
 
-    override fun annotation(annotation: () -> AnnotationSpec) = apply {
-        this.specData.annotation(annotation)
+    fun addType(dartFileSpec: () -> DartFileBuilder) = apply {
+        this.specTypes += dartFileSpec()
     }
 
-    override fun annotation(annotation: AnnotationSpec) = apply {
-        this.specData.annotation(annotation)
+    fun addType(dartFileSpec: DartFileBuilder) = apply {
+        this.specTypes += dartFileSpec.build()
     }
 
-    override fun modifier(modifier: DartModifier) = apply {
-        this.specData.modifier(modifier)
+    fun annotations(annotations: Iterable<AnnotationSpec>) = apply {
+        this.annotations += annotations
     }
 
-    override fun modifier(modifier: () -> DartModifier) = apply {
-        this.specData.modifier(modifier)
+    fun annotations(annotations: () -> Iterable<AnnotationSpec>) = apply {
+        this.annotations += annotations()
     }
 
-    override fun modifiers(vararg modifiers: DartModifier) = apply {
-        throw UnsupportedOperationException("Not implemented yet")
+    fun annotation(annotation: () -> AnnotationSpec) = apply {
+        this.annotations += annotation()
     }
 
-    override fun modifiers(modifiers: Iterable<DartModifier>) = apply {
-        this.specData.modifiers(modifiers)
-    }
-
-    override fun modifiers(modifiers: () -> Iterable<DartModifier>) = apply {
-        this.specData.modifiers(modifiers)
+    fun annotation(annotation: AnnotationSpec) = apply {
+        this.annotations += annotation
     }
 
     fun build(): DartFile {

@@ -11,5 +11,14 @@ internal const val SEMICOLON = ";"
 internal const val AS_PART = "as"
 internal const val IMPORT = "import"
 internal const val ANNOTATION_CHAR = "@"
-
+internal const val DART_FILE_ENDING = ".dart"
 internal val NEW_LINE_SPLIT: Pattern = Pattern.compile(NEW_LINE)
+
+/**
+ * Checks if a given file na.
+ * @param fileName the file name to check
+ * @return true if the name matches otherwise false
+ */
+fun isDartConventionFileName(fileName: String): Boolean {
+    return false
+}
