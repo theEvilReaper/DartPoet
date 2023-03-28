@@ -11,14 +11,14 @@ class DartParameterBuilder internal constructor(
     internal var named: Boolean = false
     internal var required: Boolean = false
     internal var nullable: Boolean = false
-    internal val initializer: CodeFragmentBuilder = CodeFragment.builder()
+    //internal val initializer: CodeFragmentBuilder = CodeFragment.builder()
 
     fun initializer(format: String, vararg args: Any) = apply {
-        this.initializer.add(format, args)
+        //this.initializer.add(format, args)
     }
 
     fun named(named: Boolean) = apply {
-       this.named = named
+        this.named = named
     }
 
     fun nullable(nullable: Boolean) = apply {

@@ -6,7 +6,8 @@ class DartParameterSpec internal constructor(
 
     val name = builder.name
     val type = builder.type
-    val named = builder.named
+    val isNamed = builder.named
+
 
 
 
