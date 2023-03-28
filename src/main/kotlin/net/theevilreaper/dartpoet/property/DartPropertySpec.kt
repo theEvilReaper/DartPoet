@@ -31,7 +31,7 @@ class DartPropertySpec(
             type: String,
             vararg modifiers: DartModifier
         ): DartPropertyBuilder {
-            return DartPropertyBuilder(name, type, *modifiers)
+            return DartPropertyBuilder(name, type).modifiers { listOf(*modifiers) }
         }
     }
 }

@@ -15,7 +15,6 @@ import net.theevilreaper.dartpoet.code.CodeFragmentBuilder
 class DartPropertyBuilder internal constructor(
     var name: String,
     var type: String,
-    vararg modifiers: DartModifier
 ) {
 
     internal var nullable = false
