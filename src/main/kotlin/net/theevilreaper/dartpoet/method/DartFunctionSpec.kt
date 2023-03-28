@@ -1,5 +1,6 @@
 package net.theevilreaper.dartpoet.method
 
+import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.parameter.DartParameterSpec
 import net.theevilreaper.dartpoet.util.toImmutableSet
 
@@ -7,14 +8,15 @@ class DartFunctionSpec(
     builder: DartFunctionBuilder
 ) {
 
-    val name = builder.name
-    val parameters: Set<DartParameterSpec> = builder.parameters.toImmutableSet()
-    val isAsync: Boolean = builder.async
+    private val name = builder.name
+    private val parameters: Set<DartParameterSpec> = builder.parameters.toImmutableSet()
+    private val isAsync: Boolean = builder.async
+    private val specData = builder.specData
 
-    val namedParameters: Set<DartParameterSpec> = if (parameters.isEmpty()) {
+    private val namedParameters: Set<DartParameterSpec> = if (parameters.isEmpty()) {
         setOf()
     } else {
-        parameters.filter { it.named }.toSet()
+        parameters.filter { it.isNamed }.toSet()
     }
 
 
@@ -32,5 +34,7 @@ class DartFunctionSpec(
         fun namedConstructor(name: String) {
 
         }
+
+        val allowedModifiers: Set<DartModifier> = setOf(DartModifier.PRIVATE, DartModifier.PUBLIC)
     }
 }
