@@ -5,11 +5,11 @@ import net.theevilreaper.dartpoet.util.DEFAULT_INDENT
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
-class LineAppenderTest {
+class LineWrapperTest {
 
     @Test
     fun `test empty string write`() {
-        val appender = LineAppender(StringBuilder(), "", 100)
+        val appender = LineWrapper(StringBuilder(), "", 100)
         assertThrows(
             IllegalArgumentException::class.java,
             { appender.writeNoWrapping("") },
@@ -20,7 +20,7 @@ class LineAppenderTest {
     @Test
     fun `test non wrapping appending`() {
         val builder = StringBuilder()
-        val appender = LineAppender(builder, DEFAULT_INDENT, 10)
+        val appender = LineWrapper(builder, DEFAULT_INDENT, 10)
         appender.writeNoWrapping("This is a")
         appender.writeNoWrapping(" test")
         appender.close()
@@ -30,7 +30,7 @@ class LineAppenderTest {
     @Test
     fun `test append string write`() {
         val builder = StringBuilder()
-        val appender = LineAppender(builder, "", 100)
+        val appender = LineWrapper(builder, "", 100)
         appender.append("Test")
         appender.close()
         assertEquals("Test", builder.toString())
@@ -39,7 +39,7 @@ class LineAppenderTest {
     @Test
     fun `test manual line breaking`() {
         val builder = StringBuilder()
-        val appender = LineAppender(builder, " ", 100)
+        val appender = LineWrapper(builder, " ", 100)
         appender.append("Line\nBreak", indentLevel = 1)
         appender.close()
         assertThat(builder.toString()).isEqualTo(
@@ -53,7 +53,7 @@ class LineAppenderTest {
     @Test
     fun `test line break`() {
         val builder = StringBuffer()
-        val appender = LineAppender(builder, " ", 6)
+        val appender = LineWrapper(builder, " ", 6)
         appender.append("Second Test", indentLevel = 1)
         appender.close()
         assertThat(builder.toString()).isEqualTo(
