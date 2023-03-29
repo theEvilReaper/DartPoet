@@ -4,6 +4,10 @@ class PartImport internal constructor(
     private val path: String
 ) : Import {
 
+    init {
+        check(path.trim().isNotEmpty()) { "The path of an Import can't be empty" }
+    }
+
     private val partImport: String = buildString {
         append("part ")
         append("'")
