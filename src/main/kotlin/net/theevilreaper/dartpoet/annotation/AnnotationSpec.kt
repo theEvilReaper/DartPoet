@@ -17,6 +17,10 @@ class AnnotationSpec(
     private val name: String = builder.name
     private val content: Set<CodeFragment> = builder.content.toImmutableSet()
 
+    init {
+        check(name.trim().isNotEmpty()) { "The name can't be empty" }
+    }
+
     //TODO: Update later to the class which writes the code. For now it is used to test the generation
     fun write(): String {
         val builder = StringBuilder()
