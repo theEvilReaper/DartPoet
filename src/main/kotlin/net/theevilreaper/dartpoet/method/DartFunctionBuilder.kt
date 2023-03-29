@@ -76,6 +76,7 @@ class DartFunctionBuilder internal constructor(
     }
 
     fun build(): DartFunctionSpec {
+        check(name.trim().isNotEmpty()) { "The name of a function can't be empty" }
         return DartFunctionSpec(this)
     }
 }
