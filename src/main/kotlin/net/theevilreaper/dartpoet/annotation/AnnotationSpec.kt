@@ -24,7 +24,7 @@ class AnnotationSpec(
     //TODO: Update later to the class which writes the code. For now it is used to test the generation
     fun write(): String {
         val builder = StringBuilder()
-        builder.append("$ANNOTATION_CHAR $name")
+        builder.append("$ANNOTATION_CHAR$name")
 
         if (content.isEmpty()) {
             return builder.toString()
