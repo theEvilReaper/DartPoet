@@ -10,25 +10,10 @@ import java.text.DecimalFormatSymbols
  *
  */
 
-private val NO_ARG_PLACEHOLDERS = arrayOf('⇥', '⇤', '«', '»').toCharArray()
-
 class CodeFragmentBuilder(
     internal val formatParts: MutableList<String> = mutableListOf(), // 0
     internal val args: MutableList<Any?> = mutableListOf(), // 0
 ) {
-
-    companion object {
-        @JvmStatic
-        fun of(format: String, vararg args: Any?): CodeFragment = builder().add(format, args).build()
-
-        @JvmStatic
-        fun builder(): CodeFragmentBuilder = CodeFragmentBuilder()
-        internal val Char.isSingleCharNoArgPlaceholder get() = this in NO_ARG_PLACEHOLDERS
-        internal val Char.isMultiCharNoArgPlaceholder get() = this == '%'
-
-        internal fun String.nextPotentialPlaceholderPosition(startIndex: Int) =
-            indexOfAny(NO_ARG_PLACEHOLDERS, startIndex)
-    }
 
     fun add(format: String, vararg args: Any?): CodeFragmentBuilder = apply {
         if (format.trim().isEmpty()) return@apply

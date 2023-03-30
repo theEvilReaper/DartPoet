@@ -13,4 +13,12 @@ class CodeFragment(
         builder.args.addAll(args)
         return builder
     }
+
+    companion object {
+        @JvmStatic
+        fun of(format: String, vararg args: Any?): CodeFragment = builder().add(format, args).build()
+
+        @JvmStatic
+        fun builder(): CodeFragmentBuilder = CodeFragmentBuilder()
+    }
 }
