@@ -3,9 +3,9 @@ package net.theevilreaper.dartpoet.meta
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 
-class SpecData : SpecMethods<Unit> {
+class SpecData(vararg modifiers: DartModifier = emptyArray()) : SpecMethods<Unit> {
 
-    internal val modifiers: MutableList<DartModifier> = mutableListOf()
+    internal val modifiers: MutableSet<DartModifier> = mutableSetOf(*modifiers)
     internal val annotations: MutableList<AnnotationSpec> = mutableListOf()
 
     /**
@@ -62,6 +62,10 @@ class SpecData : SpecMethods<Unit> {
      */
     override fun modifier(modifier: () -> DartModifier) {
         this.modifiers += modifier()
+    }
+
+    override fun modifiers(vararg modifiers: DartModifier) {
+        this.modifiers += modifiers
     }
 
     /**
