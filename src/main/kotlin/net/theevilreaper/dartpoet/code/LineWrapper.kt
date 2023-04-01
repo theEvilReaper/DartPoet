@@ -21,8 +21,10 @@
  */
 package net.theevilreaper.dartpoet.code
 
+import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.NEW_LINE
+import net.theevilreaper.dartpoet.util.NEW_LINE_CHAR
 import net.theevilreaper.dartpoet.util.SPACE
 import java.io.Closeable
 
@@ -44,13 +46,13 @@ class LineWrapper(
         var pos = 0
         while (pos < string.length) {
             when (string[pos]) {
-                '\n' -> {
+                NEW_LINE_CHAR -> {
                     // The \n tells that we need a new line. For that we're writing the current line and after that we append a new line
                     writeNewLine()
                     pos++
                 }
 
-                ' ' -> {
+                SPACE_CHAR -> {
                     this.indentLevel = indentLevel
                     this.stringParts += EMPTY_STRING
                     pos++
