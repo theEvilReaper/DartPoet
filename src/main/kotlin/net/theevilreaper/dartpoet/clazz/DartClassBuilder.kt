@@ -4,7 +4,7 @@ import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.meta.SpecData
 import net.theevilreaper.dartpoet.meta.SpecMethods
-import net.theevilreaper.dartpoet.method.DartFunctionSpec
+import net.theevilreaper.dartpoet.function.DartFunctionSpec
 import net.theevilreaper.dartpoet.property.DartPropertySpec
 
 //TODO: Add check to prevent illegal modifiers on some class combinations
@@ -13,8 +13,8 @@ class DartClassBuilder internal constructor(
     internal val classType: ClassType,
     vararg modifiers: DartModifier
 ) : SpecMethods<DartClassBuilder> {
-    private val classMetaData: SpecData = SpecData(*modifiers)
-    private val isAnonymousClass get() = name == null && classType == ClassType.CLASS
+    internal val classMetaData: SpecData = SpecData(*modifiers)
+    internal val isAnonymousClass get() = name == null && classType == ClassType.CLASS
     private val isEnumClass get() = classType == ClassType.CLASS && DartModifier.ENUM in classMetaData.modifiers
     private val isMixinClass get() = classType == ClassType.MIXIN && DartModifier.MIXIN in classMetaData.modifiers
     private val isAbstract get() = classType == ClassType.CLASS && DartModifier.ABSTRACT in classMetaData.modifiers
