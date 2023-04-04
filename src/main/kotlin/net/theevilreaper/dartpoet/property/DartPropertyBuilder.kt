@@ -2,8 +2,7 @@ package net.theevilreaper.dartpoet.property
 
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
-import net.theevilreaper.dartpoet.code.CodeFragment
-import net.theevilreaper.dartpoet.code.CodeFragmentBuilder
+import net.theevilreaper.dartpoet.code.CodeBlock
 
 
 /**
@@ -20,13 +19,12 @@ class DartPropertyBuilder internal constructor(
     internal var nullable = false
     internal val modifiers: MutableList<DartModifier> = mutableListOf()
     internal val annotations: MutableList<AnnotationSpec> = mutableListOf()
-    internal var initBlock: CodeFragment? = null
+    internal var initBlock: CodeBlock.Builder? = null
 
     fun initWith(format: String, vararg args: Any?): DartPropertyBuilder = apply {
-        this.initWith(CodeFragmentBuilder.of(format, args))
     }
 
-    fun initWith(codeFragment: CodeFragment?): DartPropertyBuilder = apply {
+    fun initWith(codeFragment: CodeBlock.Builder?): DartPropertyBuilder = apply {
         this.initBlock = codeFragment
     }
 
