@@ -13,21 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.squareup.kotlinpoet
+package net.theevilreaper.dartpoet.code
 
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.DartClassSpec
-import net.theevilreaper.dartpoet.code.CodeBlock
-import net.theevilreaper.dartpoet.code.LineWrapper
-import net.theevilreaper.dartpoet.code.isPlaceholder
 import net.theevilreaper.dartpoet.import.DartImport
 import net.theevilreaper.dartpoet.util.DEFAULT_INDENT
 import net.theevilreaper.dartpoet.util.escapeCharacterLiterals
 import net.theevilreaper.dartpoet.util.stringLiteralWithQuotes
 import net.theevilreaper.dartpoet.util.toEnumSet
 import java.io.Closeable
-import kotlin.math.min
 
 /** Sentinel value that indicates that no user-provided package has been set.  */
 private val NO_PACKAGE = String()
