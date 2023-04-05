@@ -1,6 +1,8 @@
-package net.theevilreaper.dartpoet.method
+package net.theevilreaper.dartpoet.function
 
 import net.theevilreaper.dartpoet.DartModifier
+import net.theevilreaper.dartpoet.annotation.AnnotationSpec
+import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.parameter.DartParameterSpec
 import net.theevilreaper.dartpoet.util.toImmutableSet
 
@@ -9,16 +11,21 @@ class DartFunctionSpec(
 ) {
 
     private val name = builder.name
+    private val body: CodeBlock = builder.body.build()
     private val parameters: Set<DartParameterSpec> = builder.parameters.toImmutableSet()
     private val isAsync: Boolean = builder.async
-    private val specData = builder.specData
-
+    private val annotation: Set<AnnotationSpec> = builder.specData.annotations.toImmutableSet()
+    private var modifiers: Set<DartModifier> = builder.specData.modifiers.toImmutableSet()
     private val namedParameters: Set<DartParameterSpec> = if (parameters.isEmpty()) {
         setOf()
     } else {
         parameters.filter { it.isNamed }.toSet()
     }
 
+    init {
+        check(name.trim().isNotEmpty()) { "The name of a function can't be empty" }
+        require(body.isEmpty() || !modifiers.contains(DartModifier.ABSTRACT)) { "An abstract method can't have a body" }
+    }
 
     companion object {
 
@@ -34,7 +41,5 @@ class DartFunctionSpec(
         fun namedConstructor(name: String) {
 
         }
-
-        val allowedModifiers: Set<DartModifier> = setOf(DartModifier.PRIVATE, DartModifier.PUBLIC)
     }
 }
