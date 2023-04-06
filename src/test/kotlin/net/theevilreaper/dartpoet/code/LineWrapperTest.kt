@@ -12,7 +12,7 @@ class LineWrapperTest {
         val appender = LineWrapper(StringBuilder(), "", 100)
         assertThrows(
             IllegalArgumentException::class.java,
-            { appender.writeNoWrapping("") },
+            { appender.appendNonWrapping("") },
             "Unable to write an empty text"
         )
     }
@@ -21,8 +21,8 @@ class LineWrapperTest {
     fun `test non wrapping appending`() {
         val builder = StringBuilder()
         val appender = LineWrapper(builder, DEFAULT_INDENT, 10)
-        appender.writeNoWrapping("This is a")
-        appender.writeNoWrapping(" test")
+        appender.appendNonWrapping("This is a")
+        appender.appendNonWrapping(" test")
         appender.close()
         assertEquals("This is a test", builder.toString())
     }
