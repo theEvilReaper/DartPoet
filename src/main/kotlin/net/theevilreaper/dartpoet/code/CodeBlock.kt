@@ -20,8 +20,6 @@
 
 package net.theevilreaper.dartpoet.code
 
-import com.squareup.kotlinpoet.CodeWriter
-import com.squareup.kotlinpoet.buildCodeString
 import net.theevilreaper.dartpoet.util.escapeIfNecessary
 import net.theevilreaper.dartpoet.util.isOneOf
 import net.theevilreaper.dartpoet.util.toImmutableList
