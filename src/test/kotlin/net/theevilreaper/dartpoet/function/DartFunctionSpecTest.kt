@@ -1,4 +1,4 @@
-package net.theevilreaper.dartpoet.method
+package net.theevilreaper.dartpoet.function
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Assertions.assertThrows
