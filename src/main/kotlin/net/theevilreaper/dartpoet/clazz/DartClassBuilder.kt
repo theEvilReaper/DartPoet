@@ -15,15 +15,15 @@ class DartClassBuilder internal constructor(
 ) : SpecMethods<DartClassBuilder> {
     internal val classMetaData: SpecData = SpecData(*modifiers)
     internal val isAnonymousClass get() = name == null && classType == ClassType.CLASS
-    private val isEnumClass get() = classType == ClassType.CLASS && DartModifier.ENUM in classMetaData.modifiers
-    private val isMixinClass get() = classType == ClassType.MIXIN && DartModifier.MIXIN in classMetaData.modifiers
-    private val isAbstract get() = classType == ClassType.CLASS && DartModifier.ABSTRACT in classMetaData.modifiers
-    private val isLibrary get() = classType == ClassType.CLASS && DartModifier.LIBRARY in classMetaData.modifiers
+    internal  val isEnumClass get() = classType == ClassType.CLASS && DartModifier.ENUM in classMetaData.modifiers
+    internal  val isMixinClass get() = classType == ClassType.MIXIN && DartModifier.MIXIN in classMetaData.modifiers
+    internal  val isAbstract get() = classType == ClassType.CLASS && DartModifier.ABSTRACT in classMetaData.modifiers
+    internal val isLibrary get() = classType == ClassType.CLASS && DartModifier.LIBRARY in classMetaData.modifiers
     private val isNormalClass get() = classType == ClassType.CLASS && !isEnumClass && !isMixinClass && !isAbstract && !isLibrary
     private val propertyStack: MutableList<DartPropertySpec> = mutableListOf()
     private val functionStack: MutableList<DartFunctionSpec> = mutableListOf()
 
-    private var endWithNewLine = false
+    internal var endWithNewLine = false
 
     fun endWithNewLine(endWithNewLine: Boolean) = apply {
         this.endWithNewLine = endWithNewLine
