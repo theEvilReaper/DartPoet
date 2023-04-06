@@ -1,5 +1,6 @@
 package net.theevilreaper.dartpoet.util
 
+import net.theevilreaper.dartpoet.DartModifier
 import java.util.regex.Pattern
 
 // The documentation from dart says that maximum length of a line is 80
@@ -26,6 +27,8 @@ internal val NEW_LINE_SPLIT: Pattern = Pattern.compile(NEW_LINE)
 //Brackets
 internal const val CURLY_OPEN = '{'
 internal const val CURLY_CLOSE = '}'
+
+internal val ALLOWED_PARAMETER_MODIFIERS = setOf(DartModifier.PUBLIC, DartModifier.PRIVATE)
 
 private val namePattern: Pattern = Pattern.compile("([a-z]+)_+([a-z]+)")
 
