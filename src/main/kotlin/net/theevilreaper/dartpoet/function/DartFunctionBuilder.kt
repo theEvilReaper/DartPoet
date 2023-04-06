@@ -1,7 +1,8 @@
-package net.theevilreaper.dartpoet.method
+package net.theevilreaper.dartpoet.function
 
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
+import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.meta.SpecData
 import net.theevilreaper.dartpoet.meta.SpecMethods
 import net.theevilreaper.dartpoet.parameter.DartParameterSpec
@@ -14,6 +15,7 @@ class DartFunctionBuilder internal constructor(
     internal val parameters: MutableList<DartParameterSpec> = mutableListOf()
     internal var async: Boolean = false
     internal var returnType: String? = null
+    internal val body: CodeBlock.Builder = CodeBlock.builder()
 
     fun returns(returnType: String) = apply {
         this.returnType = returnType
@@ -76,6 +78,7 @@ class DartFunctionBuilder internal constructor(
     }
 
     fun build(): DartFunctionSpec {
+        check(name.trim().isNotEmpty()) { "The name of a function can't be empty" }
         return DartFunctionSpec(this)
     }
 }

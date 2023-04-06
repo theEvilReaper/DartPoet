@@ -19,6 +19,34 @@ class DartImportTest {
     private val testImport = "../../model/item_model.dart"
 
     @Test
+    fun `test import with empty path`() {
+        assertThrows(
+            IllegalStateException::class.java,
+            { DartImport(" ") },
+            "The path of an Import can't be empty"
+        )
+        assertThrows(
+            IllegalStateException::class.java,
+            { DartImport("") },
+            "The path of an Import can't be empty"
+        )
+    }
+
+    @Test
+    fun `test cast import with empty cast`() {
+        assertThrows(
+            IllegalStateException::class.java,
+            { DartImport("flutter/material.dart", ImportCastType.AS, " ") },
+            "The importCast can't be empty"
+        )
+        assertThrows(
+            IllegalStateException::class.java,
+            { DartImport("flutter/material.dart", ImportCastType.AS, "") },
+            "The importCast can't be empty"
+        )
+    }
+
+    @Test
     fun `test package import`() {
         val import = DartImport("flutter/material.dart")
         assertEquals(packageImport, import.toString())

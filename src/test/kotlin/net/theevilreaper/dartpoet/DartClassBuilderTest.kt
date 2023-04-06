@@ -11,8 +11,7 @@ class DartClassBuilderTest {
 
     @Test
     fun `test simple class creation`() {
-        val clazz =
-            DartClassSpec.builder(className).modifier { DartModifier.FINAL }.build()
+        val clazz = DartClassSpec.builder(className).build()
 
         assertThat(clazz.toString()).isEqualTo(
             """

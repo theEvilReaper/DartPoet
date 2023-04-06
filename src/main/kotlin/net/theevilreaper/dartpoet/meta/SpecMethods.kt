@@ -47,6 +47,12 @@ internal interface SpecMethods<T> {
     fun modifier(modifier: () -> DartModifier): T
 
     /**
+     * Add a variable number of [DartModifier]'s.
+     * @param modifiers the modifiers to add
+     */
+    fun modifiers(vararg modifiers: DartModifier): T
+
+    /**
      * Add a [Iterable] of [DartModifier].
      * @param modifiers the modifiers to add
      */

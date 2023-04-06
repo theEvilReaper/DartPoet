@@ -22,6 +22,16 @@ class DartImport internal constructor(
     private val importCast: String? = null
 ) : Import {
 
+    /**
+     * Check if some conditions are false and throw an exception.
+     */
+    init {
+        check(path.trim().isNotEmpty()) { "The path of an Import can't be empty" }
+        if (importCastType != null && importCast != null) {
+            check(importCast.trim().isNotEmpty()) { "The importCast can't be empty" }
+        }
+    }
+
     private val importString = buildString {
         append("$IMPORT ")
         if (importCast == null && importCastType == null) {
