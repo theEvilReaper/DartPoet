@@ -10,7 +10,7 @@ internal const val NULL_STRING = "null"
 
 internal const val SPACE_CHAR = ' '
 internal const val SPACE = SPACE_CHAR.toString()
-const val DEFAULT_INDENT = SPACE
+const val DEFAULT_INDENT = "  "
 internal const val NEW_LINE_CHAR = '\n'
 
 internal const val NEW_LINE = NEW_LINE_CHAR.toString()
