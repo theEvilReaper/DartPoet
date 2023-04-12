@@ -185,12 +185,8 @@ class CodeWriter constructor(
         val partIterator = codeBlock.formatParts.listIterator()
         while (partIterator.hasNext()) {
             val part = partIterator.next()
-            println("part is $part")
             when (part) {
                 "%L" -> emitLiteral(codeBlock.args[a++], isConstantContext)
-
-                "%N" -> emit(codeBlock.args[a++] as String)
-
                 "%S" -> {
                     val string = codeBlock.args[a++] as String?
                     // Emit null as a literal null: no quotes.
@@ -226,38 +222,9 @@ class CodeWriter constructor(
                     }
                     emit(literal, nonWrapping = true)
                 }
-
-             /*   "%T" -> {
-                    var typeName = codeBlock.args[a++] as TypeName
-                    if (typeName.isAnnotated) {
-                        typeName.emitAnnotations(this)
-                        typeName = typeName.copy(annotations = emptyList())
-                    }
-                    // defer "typeName.emit(this)" if next format part will be handled by the default case
-                    var defer = false
-                    if (typeName is ClassName && partIterator.hasNext()) {
-                        if (!codeBlock.formatParts[partIterator.nextIndex()].startsWith("%")) {
-                            val candidate = typeName
-                            if (candidate.canonicalName in memberImportNames) {
-                                check(deferredTypeName == null) { "pending type for static import?!" }
-                                deferredTypeName = candidate
-                                defer = true
-                            }
-                        }
-                    }
-                    if (!defer) typeName.emit(this)
-                    typeName.emitNullable(this)
-                }*/
-
-                "%M" -> {
-                }
-
                 "%%" -> emit("%")
-
                 "⇥" -> indent()
-
                 "⇤" -> unindent()
-
                 "«" -> {
                     check(statementLine == -1) {
                         """
@@ -305,7 +272,7 @@ class CodeWriter constructor(
 
     private fun emitLiteral(o: Any?, isConstantContext: Boolean) {
         when (o) {
-          /*  is TypeSpec -> o.emit(this, null)
+            /*is TypeSpec -> o.emit(this, null)
             is AnnotationSpec -> o.emit(this, inline = true, asParameter = isConstantContext)
             is PropertySpec -> o.emit(this, emptySet())
             is FunSpec -> o.emit(
@@ -314,8 +281,8 @@ class CodeWriter constructor(
                 implicitModifiers = setOf(KModifier.PUBLIC),
                 includeKdocTags = true,
             )
-            is TypeAliasSpec -> o.emit(this)
-            is CodeBlock -> emitCode(o, isConstantContext = isConstantContext)*/
+            is TypeAliasSpec -> o.emit(this)*/
+            is CodeBlock -> emitCode(o, isConstantContext = isConstantContext)
             else -> emit(o.toString())
         }
     }
