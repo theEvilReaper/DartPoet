@@ -4,7 +4,7 @@ import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
-import net.theevilreaper.dartpoet.code.FunctionWriter
+import net.theevilreaper.dartpoet.code.writer.FunctionWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.parameter.DartParameterSpec
 import net.theevilreaper.dartpoet.util.toImmutableSet
