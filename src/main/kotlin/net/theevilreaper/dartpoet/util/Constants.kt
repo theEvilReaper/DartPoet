@@ -28,7 +28,7 @@ internal val NEW_LINE_SPLIT: Pattern = Pattern.compile(NEW_LINE)
 internal const val CURLY_OPEN = '{'
 internal const val CURLY_CLOSE = '}'
 
-internal val ALLOWED_PARAMETER_MODIFIERS = setOf(DartModifier.PUBLIC, DartModifier.PRIVATE)
+internal val ALLOWED_PARAMETER_MODIFIERS = setOf(DartModifier.PUBLIC, DartModifier.PRIVATE, DartModifier.LATE, DartModifier.CONST, DartModifier.STATIC)
 
 private val namePattern: Pattern = Pattern.compile("([a-z]+)_+([a-z]+)")
 
