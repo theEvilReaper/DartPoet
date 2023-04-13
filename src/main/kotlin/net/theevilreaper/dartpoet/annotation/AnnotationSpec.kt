@@ -1,7 +1,8 @@
 package net.theevilreaper.dartpoet.annotation
 
-import net.theevilreaper.dartpoet.code.CodeBlock
-import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.*
+import net.theevilreaper.dartpoet.code.buildCodeString
+import net.theevilreaper.dartpoet.code.writer.AnnotationWriter
 import net.theevilreaper.dartpoet.util.ANNOTATION_CHAR
 import net.theevilreaper.dartpoet.util.toImmutableSet
 
@@ -11,12 +12,14 @@ import net.theevilreaper.dartpoet.util.toImmutableSet
  * @since
  **/
 
+val annotationWriter = AnnotationWriter()
+
 class AnnotationSpec(
     builder: AnnotationSpecBuilder
 ) {
 
-    private val name: String = builder.name
-    private val content: Set<CodeBlock> = builder.content.toImmutableSet()
+    internal val name: String = builder.name
+    internal val content: Set<CodeBlock> = builder.content.toImmutableSet()
 
     init {
         check(name.trim().isNotEmpty()) { "The name can't be empty" }
@@ -40,6 +43,18 @@ class AnnotationSpec(
         builder.append(")")
 
         return builder.toString()
+    }
+
+    internal fun write(
+        codeWriter: CodeWriter
+    ) {
+        AnnotationWriter().emit(this, codeWriter, inline = true)
+    }
+
+    override fun toString() = buildCodeString {
+        write(
+            this
+        )
     }
 
     companion object {
