@@ -16,7 +16,7 @@ class AnnotationSpecBuilder(
     internal val content: MutableList<CodeBlock> = mutableListOf()
 
     fun content(format: String, vararg args: Any) = apply {
-        //this.content += CodeFragmentBuilder.of(format, args)
+        this.content += CodeBlock.of(format, args)
     }
 
     fun content(codeFragment: CodeBlock) = apply {
