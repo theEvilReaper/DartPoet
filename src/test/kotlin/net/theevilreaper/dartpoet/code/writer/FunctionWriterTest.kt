@@ -1,9 +1,10 @@
-package net.theevilreaper.dartpoet.code
+package net.theevilreaper.dartpoet.code.writer
 
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.function.DartFunctionSpec
 import org.junit.jupiter.api.Test
 import com.google.common.truth.Truth.assertThat
+import net.theevilreaper.dartpoet.code.CodeWriter
 
 class FunctionWriterTest {
 

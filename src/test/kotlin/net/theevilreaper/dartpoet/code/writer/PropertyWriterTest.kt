@@ -1,9 +1,8 @@
-package net.theevilreaper.dartpoet.code
+package net.theevilreaper.dartpoet.code.writer
 
 import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.property.DartPropertySpec
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class PropertyWriterTest {

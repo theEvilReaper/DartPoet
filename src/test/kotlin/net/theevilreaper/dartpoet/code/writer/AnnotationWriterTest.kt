@@ -1,4 +1,4 @@
-package net.theevilreaper.dartpoet.code
+package net.theevilreaper.dartpoet.code.writer
 
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import org.junit.jupiter.api.Assertions.*
