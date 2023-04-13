@@ -7,6 +7,7 @@ enum class DartModifier(
 
     PUBLIC("", ModifierTarget.CLASS, ModifierTarget.PROPERTY, ModifierTarget.FUNCTION),
     PRIVATE("_", ModifierTarget.FUNCTION, ModifierTarget.PROPERTY),
+    STATIC("static", ModifierTarget.FUNCTION, ModifierTarget.PROPERTY),
     LATE("late", ModifierTarget.PROPERTY),
     FINAL("final", ModifierTarget.PROPERTY),
 
