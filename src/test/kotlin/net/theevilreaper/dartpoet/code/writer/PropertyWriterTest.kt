@@ -80,4 +80,22 @@ class PropertyWriterTest {
             """.trimIndent()
         )
     }
+
+    @Test
+    fun `write parameter with annotations`() {
+        val param = DartPropertySpec.builder("description", "String")
+            .nullable(true)
+            .annotation {
+                AnnotationSpec.builder("JsonKey")
+                    .content("name: %S", "description")
+                    .build()
+            }
+            .build()
+        assertThat(param.toString()).isEqualTo(
+            """
+            @JsonKey(name: "description")
+            String? description;
+            """.trimIndent()
+        )
+    }
 }
