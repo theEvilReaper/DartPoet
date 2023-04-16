@@ -10,7 +10,7 @@ class DartClassSpecTest {
     fun `test wrong abstract class`() {
         assertThrows(
             IllegalStateException::class.java,
-            { DartClassSpec.interfaceClass("Test").modifier { ENUM }.build()},
+            { DartClassSpec.abstractClass("Test").modifier { ENUM }.build()},
             "An abstract class can't have [${ABSTRACT.identifier}, ${ENUM.identifier} as modifiers"
         )
     }
@@ -19,7 +19,7 @@ class DartClassSpecTest {
     fun `test wrong abstract class with mixin`() {
         assertThrows(
             IllegalStateException::class.java,
-            { DartClassSpec.interfaceClass("Test").modifier { MIXIN }.build() },
+            { DartClassSpec.abstractClass("Test").modifier { MIXIN }.build() },
             "An abstract class can't have [${ABSTRACT.identifier}, ${ENUM.identifier} as modifiers"
         )
     }
