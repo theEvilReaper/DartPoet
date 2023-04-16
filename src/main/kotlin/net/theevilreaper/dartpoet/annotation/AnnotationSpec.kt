@@ -25,10 +25,6 @@ class AnnotationSpec(
         check(name.trim().isNotEmpty()) { "The name can't be empty" }
     }
 
-    fun emit(codeWriter: CodeWriter) {
-
-    }
-
     //TODO: Update later to the class which writes the code. For now it is used to test the generation
     fun write(): String {
         val builder = StringBuilder()
