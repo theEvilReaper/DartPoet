@@ -18,9 +18,10 @@ enum class DartModifier(
     MIXIN("mixin", ModifierTarget.CLASS),
     ABSTRACT("abstract", ModifierTarget.CLASS),
     FACTORY("factory", ModifierTarget.FUNCTION),
+    CLASS("class", ModifierTarget.CLASS),
     LIBRARY("library", ModifierTarget.CLASS),
 
-    VOID("void", ModifierTarget.INTERFACE);
+    VOID("void", ModifierTarget.INTERFACE, ModifierTarget.FUNCTION);
 
     internal fun containsTarget(modifierTarget: ModifierTarget): Boolean {
         return modifiers.contains(modifierTarget)
