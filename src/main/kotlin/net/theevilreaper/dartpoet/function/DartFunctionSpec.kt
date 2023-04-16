@@ -34,7 +34,7 @@ class DartFunctionSpec(
     init {
         require(name.trim().isNotEmpty()) { "The name of a function can't be empty" }
         require(body.isEmpty() || !modifiers.contains(DartModifier.ABSTRACT)) { "An abstract method can't have a body" }
-      //  require (returnType == null && isNullable) { "A void function can't be nullable" }
+        require (returnType == null && !isNullable) { "A void function can't be nullable" }
     }
 
     internal fun write(
