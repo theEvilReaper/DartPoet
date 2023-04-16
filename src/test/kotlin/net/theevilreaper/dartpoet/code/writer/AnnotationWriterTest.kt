@@ -15,7 +15,7 @@ class AnnotationWriterTest {
     @Test
     fun `test annotation write with content`() {
         val annotationSpec = AnnotationSpec.builder("JsonKey")
-            .content("name = %L", "Test").build()
+            .content("%S", "Test").build()
 
         assertEquals("@JsonKey(name: \"Test\")", annotationSpec.toString())
     }
