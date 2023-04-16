@@ -17,6 +17,6 @@ class AnnotationWriterTest {
         val annotationSpec = AnnotationSpec.builder("JsonKey")
             .content("%S", "Test").build()
 
-        assertEquals("@JsonKey(name: \"Test\")", annotationSpec.toString())
+        assertEquals("@JsonKey(\"Test\")", annotationSpec.toString())
     }
 }
