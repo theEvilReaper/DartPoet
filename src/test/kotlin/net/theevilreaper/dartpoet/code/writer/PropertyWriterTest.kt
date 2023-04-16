@@ -2,6 +2,7 @@ package net.theevilreaper.dartpoet.code.writer
 
 import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.DartModifier
+import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.property.DartPropertySpec
 import org.junit.jupiter.api.Test
 
@@ -61,6 +62,20 @@ class PropertyWriterTest {
             .build()
         assertThat(parameter.toString()).isEqualTo(
             """
+            int age = 12;
+            """.trimIndent()
+        )
+    }
+
+    @Test
+    fun `write simple variable with one annotation`() {
+        val parameter = DartPropertySpec.builder("age", "int")
+            .annotation { AnnotationSpec.builder("jsonIgnore").build() }
+            .initWith("%L", "12")
+            .build()
+        assertThat(parameter.toString()).isEqualTo(
+            """
+            @jsonIgnore
             int age = 12;
             """.trimIndent()
         )
