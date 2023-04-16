@@ -6,9 +6,11 @@ import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.meta.SpecData
 import net.theevilreaper.dartpoet.meta.SpecMethods
 import net.theevilreaper.dartpoet.parameter.DartParameterSpec
+import net.theevilreaper.dartpoet.util.CONSTRUCTOR
 
 class DartFunctionBuilder internal constructor(
-    val name: String
+    val name: String,
+    namedConstructor: Boolean = false
 ) : SpecMethods<DartFunctionBuilder> {
 
     internal val specData: SpecData = SpecData()
@@ -17,6 +19,8 @@ class DartFunctionBuilder internal constructor(
     internal var returnType: String? = null
     internal val body: CodeBlock.Builder = CodeBlock.builder()
     internal var nullable: Boolean = false
+    internal val isConstructor: Boolean = name == CONSTRUCTOR
+    internal val isNamedConstructor: Boolean = namedConstructor
 
     fun nullable(nullable: Boolean) = apply {
         this.nullable = nullable

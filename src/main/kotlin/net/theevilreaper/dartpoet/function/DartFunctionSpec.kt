@@ -7,6 +7,7 @@ import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.writer.FunctionWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.parameter.DartParameterSpec
+import net.theevilreaper.dartpoet.util.CONSTRUCTOR
 import net.theevilreaper.dartpoet.util.toImmutableSet
 
 class DartFunctionSpec(
@@ -55,9 +56,7 @@ class DartFunctionSpec(
         fun builder(name: String) = DartFunctionBuilder(name)
 
         @JvmStatic
-        fun constructor(name: String, const: Boolean) {
-
-        }
+        fun constructor() = DartFunctionBuilder(CONSTRUCTOR)
 
         @JvmStatic
         fun namedConstructor(name: String) {
