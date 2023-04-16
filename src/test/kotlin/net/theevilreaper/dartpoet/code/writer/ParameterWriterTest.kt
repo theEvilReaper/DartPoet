@@ -16,6 +16,11 @@ class ParameterWriterTest {
     fun `write int parameter with initializer`() {
         val param = DartParameterSpec.builder("age", "int").initializer("%L", "10").build()
         assertThat(param.toString()).isEqualTo("int age = 10 ")
+    }
 
+    @Test
+    fun `write nullable parameter`() {
+        val param = DartParameterSpec.builder("test", "String").nullable(true).build()
+        assertThat(param.toString()).isEqualTo("String? test ")
     }
 }
