@@ -7,7 +7,9 @@ import net.theevilreaper.dartpoet.util.SPACE
 class ParameterWriter {
 
     fun write(spec: DartParameterSpec, codeWriter: CodeWriter) {
-        codeWriter.emit("${spec.type} ${spec.name}·")
+        codeWriter.emit(spec.type)
+        codeWriter.emit(if (spec.isNullable) "?·" else "·")
+        codeWriter.emit("${spec.name}·")
 
         if (spec.initializer.isNotEmpty()) {
             codeWriter.emit("=·")
