@@ -185,6 +185,7 @@ class CodeWriter constructor(
         val partIterator = codeBlock.formatParts.listIterator()
         while (partIterator.hasNext()) {
             val part = partIterator.next()
+            println("Part is $part")
             when (part) {
                 "%L" -> emitLiteral(codeBlock.args[a++], isConstantContext)
                 "%S" -> {
@@ -257,11 +258,7 @@ class CodeWriter constructor(
                 }
 
                 else -> {
-                    // Handle deferred type.
-                    var doBreak = false
-                    if (!doBreak) {
-                        emit(part)
-                    }
+                    emit(part)
                 }
             }
         }
@@ -271,6 +268,8 @@ class CodeWriter constructor(
     }
 
     private fun emitLiteral(o: Any?, isConstantContext: Boolean) {
+        println("o is Anno ${o is AnnotationSpec}")
+        println("o is CodeBlock ${o is CodeBlock}")
         when (o) {
             /*is TypeSpec -> o.emit(this, null)
             is AnnotationSpec -> o.emit(this, inline = true, asParameter = isConstantContext)
