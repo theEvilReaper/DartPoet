@@ -19,10 +19,12 @@ class AnnotationWriter {
 
         writer.emit("(")
         if (annotationSpec.content.size > 1) writer.emit(whitespace).indent()
+        val codeBlock = annotationSpec.content.toImmutableList()
+            .map { if (inline) it.replaceAll("[⇥|⇤]", "") else it }
+            .joinToCode(separator = memberSeparator, suffix = memberSuffix)
+        println("Code block is ${codeBlock.toString()}")
         writer.emitCode(
-            codeBlock = annotationSpec.content.toImmutableList()
-                .map { if (inline) it.replaceAll("[⇥|⇤]", "") else it }
-                .joinToCode(separator = memberSeparator, suffix = memberSuffix),
+            codeBlock = codeBlock,
             isConstantContext = true,
         )
         if (annotationSpec.content.size > 1) writer.unindent().emit(whitespace)

@@ -9,6 +9,15 @@ class PropertyWriter {
 
     //TODO: Write annotations
     fun write(property: DartPropertySpec, codeWriter: CodeWriter) {
+        if (property.annotations.isNotEmpty()) {
+            val annotationString = property.annotations.joinToString("\n") { it ->
+                "@${it.name}"
+            }
+
+            codeWriter.emit(annotationString)
+            codeWriter.emit("\n")
+        }
+
         for (modifier in property.modifiers) {
             codeWriter.emit(modifier.identifier)
             codeWriter.emit(SPACE)
