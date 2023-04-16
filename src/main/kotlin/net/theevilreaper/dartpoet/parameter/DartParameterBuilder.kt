@@ -19,7 +19,7 @@ class DartParameterBuilder internal constructor(
 
 
     fun initializer(format: String, vararg args: Any) = apply {
-        this.initializer.add(format, args)
+        this.initializer.add(format, *args)
     }
 
     fun named(named: Boolean) = apply {
