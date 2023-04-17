@@ -14,10 +14,16 @@ class DartClassSpec internal constructor(
     internal val name = builder.name
     internal val classType = builder.classType
     internal val modifiers = builder.classMetaData.modifiers.toImmutableSet()
+    internal val annotations = builder.classMetaData.annotations.toImmutableSet()
     internal val endsWithNewLine = builder.endWithNewLine
     internal val isEnum = builder.isEnumClass
     internal val isAbstract = builder.isAbstract
     internal val isMixin = builder.isMixinClass
+
+    internal val classModifiers = modifiers.filter { it != WITH }.toImmutableSet()
+    internal val functions = builder.functionStack
+
+    internal val mixinSubClass = builder.includeMixinClass
 
     init {
         if (name != null) {
