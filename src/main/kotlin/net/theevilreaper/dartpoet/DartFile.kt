@@ -2,6 +2,8 @@ package net.theevilreaper.dartpoet
 
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.buildCodeString
+import net.theevilreaper.dartpoet.code.writer.DartFileWriter
 import net.theevilreaper.dartpoet.function.DartFunctionSpec
 import net.theevilreaper.dartpoet.import.DartImport
 import net.theevilreaper.dartpoet.import.PartImport
@@ -29,6 +31,18 @@ class DartFile internal constructor(
         emptyList()
     } else {
         builder.imports.filterIsInstance<PartImport>().toList()
+    }
+
+    internal fun write(
+        codeWriter: CodeWriter
+    ) {
+        DartFileWriter().emit(this, codeWriter)
+    }
+
+    override fun toString() = buildCodeString {
+        write(
+            this,
+        )
     }
 
     internal val callEmit: (Any, CodeWriter) -> Unit = { o: Any, c: CodeWriter -> emitInternal(o, c) }
