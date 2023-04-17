@@ -17,6 +17,22 @@ class DartFileBuilder(
     internal val annotations: MutableList<AnnotationSpec> = mutableListOf()
     internal var indent = DEFAULT_INDENT
 
+    fun import(import: Import) = apply {
+        this.imports += import
+    }
+
+    fun import(import: () -> Import) = apply {
+        this.imports += import()
+    }
+
+    fun imports(import: Iterable<Import>) = apply {
+        this.imports += import
+    }
+
+    fun imports(import: () -> Iterable<Import>) = apply {
+        this.imports += import()
+    }
+
     fun indent(indent: String) = apply {
         if (indent.trim().isEmpty()) {
             throw IllegalArgumentException("The indent can't be empty")
