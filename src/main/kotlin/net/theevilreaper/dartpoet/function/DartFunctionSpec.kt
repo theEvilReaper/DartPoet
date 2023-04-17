@@ -12,7 +12,7 @@ import net.theevilreaper.dartpoet.util.toImmutableSet
 
 class DartFunctionSpec(
     builder: DartFunctionBuilder
-) {
+) : FunctionType {
 
     internal val name = builder.name
     internal val returnType: String? = builder.returnType
@@ -22,7 +22,6 @@ class DartFunctionSpec(
     internal val annotation: Set<AnnotationSpec> = builder.specData.annotations.toImmutableSet()
     private var modifiers: Set<DartModifier> = builder.specData.modifiers.toImmutableSet()
     internal val isNullable: Boolean = builder.nullable
-
     internal val isPrivate = modifiers.contains(DartModifier.PRIVATE)
 
     private val namedParameters: Set<DartParameterSpec> = if (parameters.isEmpty()) {
@@ -34,7 +33,8 @@ class DartFunctionSpec(
     init {
         require(name.trim().isNotEmpty()) { "The name of a function can't be empty" }
         require(body.isEmpty() || !modifiers.contains(DartModifier.ABSTRACT)) { "An abstract method can't have a body" }
-        require (returnType == null && !isNullable) { "A void function can't be nullable" }
+
+        //require (isFactory && returnType == null && !isNullable) { "A void function can't be nullable" }
     }
 
     internal fun write(
