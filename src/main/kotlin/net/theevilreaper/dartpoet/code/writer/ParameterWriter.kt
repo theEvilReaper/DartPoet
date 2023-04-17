@@ -13,7 +13,7 @@ class ParameterWriter {
 
         if (spec.initializer.isNotEmpty()) {
             codeWriter.emit("=·")
-            codeWriter.emitCode(spec.initializer.build())
+            codeWriter.emitCode(spec.initializer.build().trim())
         }
 
     }

@@ -7,14 +7,14 @@ import net.theevilreaper.dartpoet.util.SPACE
 
 class PropertyWriter {
 
+    //TODO: Add delegation for the writer
+    val annotationWriter = AnnotationWriter()
+
     //TODO: Write annotations
     fun write(property: DartPropertySpec, codeWriter: CodeWriter) {
         if (property.annotations.isNotEmpty()) {
-            val annotationString = property.annotations.joinToString("\n") { it ->
-                "@${it.name}"
-            }
-
-            codeWriter.emit(annotationString)
+            //TODO: Detect when to use inline
+            property.annotations.forEach { annotationWriter.emit(it, codeWriter, inline = false) }
             codeWriter.emit("\n")
         }
 

@@ -1,11 +1,14 @@
 package net.theevilreaper.dartpoet.code.writer
 
+import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.DartModifier.*
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.function.DartFunctionSpec
 
 class FunctionWriter {
+
+    private val parameterWriter = ParameterWriter()
 
     fun emit(functionSpec: DartFunctionSpec, writer: CodeWriter) {
         if (functionSpec.returnType.orEmpty().trim().isEmpty()) {

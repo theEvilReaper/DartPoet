@@ -22,7 +22,6 @@ class AnnotationWriter {
         val codeBlock = annotationSpec.content.toImmutableList()
             .map { if (inline) it.replaceAll("[⇥|⇤]", "") else it }
             .joinToCode(separator = memberSeparator, suffix = memberSuffix)
-        println("Code block is ${codeBlock.toString()}")
         writer.emitCode(
             codeBlock = codeBlock,
             isConstantContext = true,
