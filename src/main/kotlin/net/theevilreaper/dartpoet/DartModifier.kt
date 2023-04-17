@@ -10,6 +10,7 @@ enum class DartModifier(
     STATIC("static", ModifierTarget.FUNCTION, ModifierTarget.PROPERTY),
     LATE("late", ModifierTarget.PROPERTY),
     FINAL("final", ModifierTarget.PROPERTY),
+    WITH("with", ModifierTarget.CLASS),
 
     ASYNC("async", ModifierTarget.FUNCTION),
     CONST("const", ModifierTarget.PROPERTY),
