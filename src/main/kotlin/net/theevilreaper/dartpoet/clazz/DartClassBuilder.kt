@@ -4,7 +4,7 @@ import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.meta.SpecData
 import net.theevilreaper.dartpoet.meta.SpecMethods
-import net.theevilreaper.dartpoet.function.DartFunctionSpec
+import net.theevilreaper.dartpoet.function.FunctionType
 import net.theevilreaper.dartpoet.property.DartPropertySpec
 
 //TODO: Add check to prevent illegal modifiers on some class combinations
@@ -15,15 +15,22 @@ class DartClassBuilder internal constructor(
 ) : SpecMethods<DartClassBuilder> {
     internal val classMetaData: SpecData = SpecData(*modifiers)
     internal val isAnonymousClass get() = name == null && classType == ClassType.CLASS
-    internal  val isEnumClass get() = classType == ClassType.CLASS && DartModifier.ENUM in classMetaData.modifiers
-    internal  val isMixinClass get() = classType == ClassType.MIXIN && DartModifier.MIXIN in classMetaData.modifiers
-    internal  val isAbstract get() = classType == ClassType.CLASS && DartModifier.ABSTRACT in classMetaData.modifiers
+    internal val isEnumClass get() = classType == ClassType.CLASS && DartModifier.ENUM in classMetaData.modifiers
+    internal val isMixinClass get() = classType == ClassType.MIXIN && DartModifier.MIXIN in classMetaData.modifiers
+    internal val isAbstract get() = classType == ClassType.CLASS && DartModifier.ABSTRACT in classMetaData.modifiers
     internal val isLibrary get() = classType == ClassType.CLASS && DartModifier.LIBRARY in classMetaData.modifiers
     private val isNormalClass get() = classType == ClassType.CLASS && !isEnumClass && !isMixinClass && !isAbstract && !isLibrary
-    private val propertyStack: MutableList<DartPropertySpec> = mutableListOf()
-    private val functionStack: MutableList<DartFunctionSpec> = mutableListOf()
 
+    private val propertyStack: MutableList<DartPropertySpec> = mutableListOf()
+    internal val functionStack: MutableList<FunctionType> = mutableListOf()
+
+    internal var includeMixinClass: String? = null
     internal var endWithNewLine = false
+
+    fun includeMixing(className: String) = apply {
+        this.includeMixinClass = className
+        this.modifier { DartModifier.WITH }
+    }
 
     fun endWithNewLine(endWithNewLine: Boolean) = apply {
         this.endWithNewLine = endWithNewLine
@@ -37,11 +44,11 @@ class DartClassBuilder internal constructor(
         this.propertyStack += dartPropertySpec()
     }
 
-    fun function(function: DartFunctionSpec) = apply {
+    fun function(function: FunctionType) = apply {
         this.functionStack += function
     }
 
-    fun function(function: () -> DartFunctionSpec) = apply {
+    fun function(function: () -> FunctionType) = apply {
         this.functionStack += function()
     }
 
