@@ -1,7 +1,7 @@
 
 [versions]
 
-kotlin = "1.8.10"
+kotlin = "1.8.20"
 googleTruth = "1.1.3"
 
 [plugins]
