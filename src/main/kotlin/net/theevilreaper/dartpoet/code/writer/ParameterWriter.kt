@@ -9,10 +9,10 @@ class ParameterWriter {
     fun write(spec: DartParameterSpec, codeWriter: CodeWriter) {
         codeWriter.emit(spec.type)
         codeWriter.emit(if (spec.isNullable) "?·" else "·")
-        codeWriter.emit("${spec.name}·")
+        codeWriter.emit(spec.name)
 
         if (spec.initializer.isNotEmpty()) {
-            codeWriter.emit("=·")
+            codeWriter.emit("·=·")
             codeWriter.emitCode(spec.initializer.build().trim())
         }
 
