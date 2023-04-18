@@ -1,6 +1,7 @@
 package net.theevilreaper.dartpoet.classTypes
 
 import com.google.common.truth.Truth
+import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.DartClassSpec
 import net.theevilreaper.dartpoet.function.DartFunctionSpec
 import net.theevilreaper.dartpoet.parameter.DartParameterSpec
@@ -33,5 +34,25 @@ class AbstractClassTest {
             """.trimIndent()
         )
 
+    }
+
+    @Test
+    fun `test abstract class with annotation`() {
+        val abstractClass = DartClassSpec.abstractClass("Test")
+            .annotation(
+                AnnotationSpec.builder("abc").build()
+            )
+            .function(DartFunctionSpec.builder("test").build())
+            .build()
+        Truth.assertThat(abstractClass.toString()).isEqualTo(
+            """
+            @abc
+            abstract class Test {
+            
+              void test();
+            
+            }
+            """.trimIndent()
+        )
     }
 }
