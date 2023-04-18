@@ -24,14 +24,21 @@ class FunctionWriter {
         writer.emitCode("(")
 
         if (functionSpec.parameters.isNotEmpty()) {
-
+            functionSpec.parameters.forEach {
+                parameterWriter.write(it, codeWriter = writer)
+            }
         }
 
-        writer.emitCode(")·{\n")
-        writer.indent()
-        writer.emitCode(functionSpec.body.returnsWithoutLinebreak(), ensureTrailingNewline = true)
-        writer.unindent()
-        writer.emit("}\n")
+        writer.emitCode(")")
+        if (functionSpec.body.isEmpty()) {
+            writer.emit(";\n\n")
+        } else {
+            writer.emit("·{\n")
+            writer.indent()
+            writer.emitCode(functionSpec.body.returnsWithoutLinebreak(), ensureTrailingNewline = true)
+            writer.unindent()
+            writer.emit("}\n\n")
+        }
     }
 
     private val RETURN_EXPRESSION_BODY_PREFIX_SPACE = CodeBlock.of("return ")
