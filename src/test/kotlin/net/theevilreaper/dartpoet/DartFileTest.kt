@@ -3,7 +3,7 @@ package net.theevilreaper.dartpoet
 import com.google.common.truth.Truth
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.DartClassSpec
-import net.theevilreaper.dartpoet.function.factory.FactoryFunctionSpec
+import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.import.DartImport
 import net.theevilreaper.dartpoet.import.PartImport
 import net.theevilreaper.dartpoet.parameter.DartParameterSpec
@@ -33,10 +33,9 @@ class DartFileTest {
             .includeMixing("_${'$'}VersionModel")
             .annotation { AnnotationSpec.builder("freezed").build() }
             .function {
-                FactoryFunctionSpec.builder()
-                    .name("fromJson")
-                    .classType("VersionModel")
+                ConstructorSpec.named("VersionModel", "fromJson")
                     .lambda(true)
+                    .asFactory(true)
                     .parameter(
                         DartParameterSpec.builder("json", "Map<String, dynamic>").build()
                     )
