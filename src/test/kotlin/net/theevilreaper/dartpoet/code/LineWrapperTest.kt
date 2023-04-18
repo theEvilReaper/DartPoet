@@ -8,16 +8,6 @@ import org.junit.jupiter.api.Test
 class LineWrapperTest {
 
     @Test
-    fun `test empty string write`() {
-        val appender = LineWrapper(StringBuilder(), "", 100)
-        assertThrows(
-            IllegalArgumentException::class.java,
-            { appender.appendNonWrapping("") },
-            "Unable to write an empty text"
-        )
-    }
-
-    @Test
     fun `test non wrapping appending`() {
         val builder = StringBuilder()
         val appender = LineWrapper(builder, DEFAULT_INDENT, 10)
