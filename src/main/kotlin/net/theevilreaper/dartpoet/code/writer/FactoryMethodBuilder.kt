@@ -2,17 +2,17 @@ package net.theevilreaper.dartpoet.code.writer
 
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeWriter
-import net.theevilreaper.dartpoet.function.factory.FactoryFunctionSpec
+import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.util.NEW_LINE
 
 class FactoryMethodBuilder {
 
     private val parameterWriter: ParameterWriter = ParameterWriter()
 
-    fun write(functionSpec: FactoryFunctionSpec, codeWriter: CodeWriter) {
+    fun write(functionSpec: ConstructorSpec, codeWriter: CodeWriter) {
         codeWriter.emit("${DartModifier.FACTORY.identifier}·")
-        codeWriter.emit("${functionSpec.classType}.")
-        codeWriter.emit("${functionSpec.name}")
+        codeWriter.emit("${functionSpec.name}.")
+        codeWriter.emit("${functionSpec.named}")
         codeWriter.emit("(")
         if (functionSpec.parameters.isNotEmpty()) {
             functionSpec.parameters.forEach {
