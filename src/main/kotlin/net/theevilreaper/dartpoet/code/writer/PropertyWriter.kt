@@ -35,9 +35,9 @@ class PropertyWriter {
         codeWriter.emit(property.name)
 
         if (property.initBlock.isNotEmpty()) {
-            codeWriter.emit("$SPACE=$SPACE")
+            codeWriter.emit("·=·")
             codeWriter.emitCode(property.initBlock.build(), isConstantContext = true)
         }
-        codeWriter.emitCode(";")
+        codeWriter.emit(";")
     }
 }
