@@ -1,9 +1,9 @@
 package net.theevilreaper.dartpoet.code.writer
 
-import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.DartModifier.*
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.emitParameters
 import net.theevilreaper.dartpoet.function.DartFunctionSpec
 
 class FunctionWriter {
@@ -21,23 +21,19 @@ class FunctionWriter {
 
         writer.emitCode("${if (functionSpec.isPrivate) PRIVATE.identifier else ""}${functionSpec.name}")
         writer.emitCode(if (functionSpec.isAsync) ASYNC.identifier else "")
-        writer.emitCode("(")
 
-        if (functionSpec.parameters.isNotEmpty()) {
-            functionSpec.parameters.forEach {
-                parameterWriter.write(it, codeWriter = writer)
-            }
+        functionSpec.parameters.emitParameters(writer) {
+            it.write(writer)
         }
 
-        writer.emitCode(")")
         if (functionSpec.body.isEmpty()) {
-            writer.emit(";\n\n")
+            writer.emit(";")
         } else {
             writer.emit("·{\n")
             writer.indent()
             writer.emitCode(functionSpec.body.returnsWithoutLinebreak(), ensureTrailingNewline = true)
             writer.unindent()
-            writer.emit("}\n\n")
+            writer.emit("}")
         }
     }
 
