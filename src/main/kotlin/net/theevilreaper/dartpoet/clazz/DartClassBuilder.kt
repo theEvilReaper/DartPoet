@@ -2,9 +2,10 @@ package net.theevilreaper.dartpoet.clazz
 
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
+import net.theevilreaper.dartpoet.function.DartFunctionSpec
 import net.theevilreaper.dartpoet.meta.SpecData
 import net.theevilreaper.dartpoet.meta.SpecMethods
-import net.theevilreaper.dartpoet.function.FunctionType
+import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.property.DartPropertySpec
 
 //TODO: Add check to prevent illegal modifiers on some class combinations
@@ -21,8 +22,9 @@ class DartClassBuilder internal constructor(
     internal val isLibrary get() = classType == ClassType.CLASS && DartModifier.LIBRARY in classMetaData.modifiers
     private val isNormalClass get() = classType == ClassType.CLASS && !isEnumClass && !isMixinClass && !isAbstract && !isLibrary
 
-    private val propertyStack: MutableList<DartPropertySpec> = mutableListOf()
-    internal val functionStack: MutableList<FunctionType> = mutableListOf()
+    internal val constructorStack: MutableList<ConstructorSpec> = mutableListOf()
+    internal val propertyStack: MutableList<DartPropertySpec> = mutableListOf()
+    internal val functionStack: MutableList<DartFunctionSpec> = mutableListOf()
 
     internal var includeMixinClass: String? = null
     internal var endWithNewLine = false
@@ -44,12 +46,28 @@ class DartClassBuilder internal constructor(
         this.propertyStack += dartPropertySpec()
     }
 
-    fun function(function: FunctionType) = apply {
+    fun properties(properties: Iterable<DartPropertySpec>) = apply {
+        this.propertyStack += properties
+    }
+
+    fun properties(properties: () -> Iterable<DartPropertySpec>) = apply {
+        this.propertyStack += properties()
+    }
+
+    fun function(function: DartFunctionSpec) = apply {
         this.functionStack += function
     }
 
-    fun function(function: () -> FunctionType) = apply {
+    fun function(function: () -> DartFunctionSpec) = apply {
         this.functionStack += function()
+    }
+
+    fun constructor(constructor: ConstructorSpec) = apply {
+        this.constructorStack += constructor
+    }
+
+    fun constructor(constructor: () -> ConstructorSpec) = apply {
+        this.constructorStack += constructor()
     }
 
     override fun annotations(annotations: Iterable<AnnotationSpec>) = apply {
