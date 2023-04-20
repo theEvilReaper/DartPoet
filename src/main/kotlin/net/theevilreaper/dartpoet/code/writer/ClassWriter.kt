@@ -63,26 +63,6 @@ class ClassWriter {
         }
     }
 
-    /*private fun Set<DartFunctionSpec>.emitFunctions(
-        codeWriter: CodeWriter,
-        forceNewLines: Boolean = false,
-        emitBlock: (DartFunctionSpec) -> Unit = { it.write(codeWriter) }
-    ) = with(codeWriter) {
-        if (isNotEmpty()) {
-            val emitNewLines = size > 1 || forceNewLines
-            forEachIndexed { index, functionSpec ->
-                if (index > 0 && emitNewLines) {
-                    emit(NEW_LINE)
-                }
-                emitBlock(functionSpec)
-
-                if (emitNewLines) {
-                    emit(NEW_LINE)
-                }
-            }
-        }
-    }*/
-
     private fun Set<DartPropertySpec>.emit(
         codeWriter: CodeWriter,
         forceNewLines: Boolean = false,
