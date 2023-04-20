@@ -93,7 +93,7 @@ class PropertyWriterTest {
             .build()
         assertThat(param.toString()).isEqualTo(
             """
-            @JsonKey(name: "description")
+            @JsonKey(name: 'description')
             String? description;
             """.trimIndent()
         )
