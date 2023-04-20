@@ -6,6 +6,7 @@ import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.DartFileWriter
 import net.theevilreaper.dartpoet.function.DartFunctionSpec
 import net.theevilreaper.dartpoet.import.DartImport
+import net.theevilreaper.dartpoet.import.LibraryImport
 import net.theevilreaper.dartpoet.import.PartImport
 import net.theevilreaper.dartpoet.util.toImmutableList
 import java.io.IOException
@@ -31,6 +32,14 @@ class DartFile internal constructor(
         emptyList()
     } else {
         builder.imports.filterIsInstance<PartImport>().toList()
+    }
+
+    internal val libImport: LibraryImport? = if (builder.imports.isEmpty()) {
+        null
+    } else {
+        builder.imports.filterIsInstance<LibraryImport>().let {
+            null
+        }
     }
 
     internal fun write(
