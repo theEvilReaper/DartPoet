@@ -9,7 +9,7 @@ class ParameterWriterTest {
     @Test
     fun `write int parameter`() {
         val param = DartParameterSpec.builder("age", "int").build()
-        assertThat(param.toString()).isEqualTo("int age ")
+        assertThat(param.toString()).isEqualTo("int age")
     }
 
     @Test
@@ -21,6 +21,6 @@ class ParameterWriterTest {
     @Test
     fun `write nullable parameter`() {
         val param = DartParameterSpec.builder("test", "String").nullable(true).build()
-        assertThat(param.toString()).isEqualTo("String? test ")
+        assertThat(param.toString()).isEqualTo("String? test")
     }
 }
