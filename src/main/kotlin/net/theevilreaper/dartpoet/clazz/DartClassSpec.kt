@@ -21,8 +21,9 @@ class DartClassSpec internal constructor(
     internal val isMixin = builder.isMixinClass
 
     internal val classModifiers = modifiers.filter { it != WITH }.toImmutableSet()
-    internal val functions = builder.functionStack
-
+    internal val functions = builder.functionStack.toImmutableSet()
+    internal val properties = builder.propertyStack.toImmutableSet()
+    internal val constructors = builder.constructorStack.toImmutableSet()
     internal val mixinSubClass = builder.includeMixinClass
 
     init {
