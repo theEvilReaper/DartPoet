@@ -12,15 +12,25 @@ class FunctionWriter {
 
     fun emit(functionSpec: DartFunctionSpec, writer: CodeWriter) {
         if (functionSpec.returnType.orEmpty().trim().isEmpty()) {
-            writer.emitCode("void·")
+            if (functionSpec.isAsync) {
+                writer.emit("Future<void>·")
+            } else {
+                writer.emit("void·")
+            }
         } else {
-            writer.emitCode(functionSpec.returnType!!)
-            writer.emitCode(if (functionSpec.isNullable) "?" else "")
-            writer.emitCode("·")
+            if (functionSpec.isAsync) {
+                writer.emit("Future<")
+            }
+            writer.emit(functionSpec.returnType!!)
+            writer.emit(if (functionSpec.isNullable) "?" else "")
+
+            if (functionSpec.isAsync) {
+                writer.emit(">")
+            }
+            writer.emit("·")
         }
 
-        writer.emitCode("${if (functionSpec.isPrivate) PRIVATE.identifier else ""}${functionSpec.name}")
-        writer.emitCode(if (functionSpec.isAsync) ASYNC.identifier else "")
+        writer.emit("${if (functionSpec.isPrivate) PRIVATE.identifier else ""}${functionSpec.name}")
 
         functionSpec.parameters.emitParameters(writer) {
             it.write(writer)
@@ -29,6 +39,9 @@ class FunctionWriter {
         if (functionSpec.body.isEmpty()) {
             writer.emit(";")
         } else {
+            if (functionSpec.isAsync) {
+                writer.emit("·${ASYNC.identifier}")
+            }
             writer.emit("·{\n")
             writer.indent()
             writer.emitCode(functionSpec.body.returnsWithoutLinebreak(), ensureTrailingNewline = true)
