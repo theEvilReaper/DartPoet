@@ -4,6 +4,7 @@ import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.function.DartFunctionSpec
 import org.junit.jupiter.api.Test
 import com.google.common.truth.Truth.assertThat
+import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.parameter.DartParameterSpec
 
@@ -22,7 +23,7 @@ class FunctionWriterTest {
         assertThat(method.toString()).isEqualTo(
             """
             String getName() {
-              return ${"\""}test${"\""};
+              return 'test';
             }
             """.trimIndent()
         )
@@ -39,7 +40,7 @@ class FunctionWriterTest {
         assertThat(method.toString()).isEqualTo(
             """
             String _name() {
-              return ${"\""}Tobi${"\""};
+              return 'Tobi';
             }
             """.trimIndent()
         )
@@ -77,7 +78,24 @@ class FunctionWriterTest {
 
     @Test
     fun `write simple async function`() {
-
+        val method = DartFunctionSpec.builder("getNameById")
+            .returns("String")
+            .async(true)
+            .parameter {
+                DartParameterSpec.builder("id", "int").build()
+            }
+            .addCode(CodeBlock.builder()
+                .addStatement("return 'Thomas';")
+                .build()
+            )
+            .build()
+        assertThat(method.toString()).isEqualTo(
+            """
+            Future<String> getNameById(int id) async {
+              return 'Thomas';
+            }
+            """.trimIndent()
+        )
     }
 
     @Test
@@ -93,7 +111,7 @@ class FunctionWriterTest {
             .build()
         assertThat(method.toString()).isEqualTo(
             """
-            List<Model> getAllById(String id, int amount);
+            List<Model> getAllById(String id, int amount,);
             """.trimIndent()
         )
     }
