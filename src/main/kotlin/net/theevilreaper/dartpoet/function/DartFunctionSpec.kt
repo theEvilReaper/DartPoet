@@ -8,6 +8,7 @@ import net.theevilreaper.dartpoet.code.writer.FunctionWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.parameter.DartParameterSpec
 import net.theevilreaper.dartpoet.util.CONSTRUCTOR
+import net.theevilreaper.dartpoet.util.toImmutableList
 import net.theevilreaper.dartpoet.util.toImmutableSet
 
 class DartFunctionSpec(
@@ -17,7 +18,7 @@ class DartFunctionSpec(
     internal val name = builder.name
     internal val returnType: String? = builder.returnType
     internal val body: CodeBlock = builder.body.build()
-    internal val parameters: Set<DartParameterSpec> = builder.parameters.toImmutableSet()
+    internal val parameters: List<DartParameterSpec> = builder.parameters.toImmutableList()
     internal val isAsync: Boolean = builder.async
     internal val annotation: Set<AnnotationSpec> = builder.specData.annotations.toImmutableSet()
     private var modifiers: Set<DartModifier> = builder.specData.modifiers.toImmutableSet()
