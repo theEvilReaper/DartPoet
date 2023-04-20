@@ -32,7 +32,25 @@ class DartFileTest {
         val versionFreezedClass = DartClassSpec.builder("VersionModel")
             .includeMixing("_${'$'}VersionModel")
             .annotation { AnnotationSpec.builder("freezed").build() }
-            .function {
+            .constructor {
+                ConstructorSpec.builder("VersionModel")
+                    .asFactory(true)
+                    .modifier { DartModifier.CONST }
+                    .parameter {
+                        DartParameterSpec.builder("version", "String")
+                            .annotations {
+                                listOf(
+                                    AnnotationSpec.builder("JsonKey")
+                                        .content("name: %S", "version").build(),
+                                    AnnotationSpec.builder("Default")
+                                        .content("%S", "1.0.0").build()
+                                )
+                            }
+                            .build()
+                    }
+                    .build()
+            }
+            .constructor {
                 ConstructorSpec.named("VersionModel", "fromJson")
                     .lambda(true)
                     .asFactory(true)
@@ -63,14 +81,15 @@ class DartFileTest {
             
             @freezed
             class VersionModel with _${'$'}VersionModel {
+            
               const factory VersionModel({
                 @JsonKey(name: "version")@Default('1.0.0') String version
               }) = _VersionModel;
               
               factory VersionModel.fromJson(Map<String, dynamic> json) =>
                   _${'$'}VersionModelFromJson(json);
+              
             }
-
             """.trimIndent()
         )
     }

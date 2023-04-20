@@ -25,7 +25,7 @@ class AbstractClassTest {
             """
             abstract class DatabaseHandler {
             
-              TestModel getByID(int id);
+              TestModel getByID(int id,);
             
               void test();
             

@@ -13,6 +13,7 @@ class ClassWriterTest {
         assertThat(clazz.toString()).isEqualTo(
             """
             class Test {
+            
             }
             """.trimIndent()
         )
@@ -26,10 +27,10 @@ class ClassWriterTest {
         assertThat(clazz.toString()).isEqualTo(
             """
             mixin Test {
+            
             }
             """.trimIndent()
         )
-
     }
 
     @Test
@@ -39,6 +40,7 @@ class ClassWriterTest {
         assertThat(clazz.toString()).isEqualTo(
             """
             enum Test {
+            
             }
             """.trimIndent()
         )
@@ -52,6 +54,7 @@ class ClassWriterTest {
         assertThat(clazz.toString()).isEqualTo(
             """
             class Model {
+            
             }
             
             """.trimIndent()
@@ -66,10 +69,10 @@ class ClassWriterTest {
         assertThat(clazz.toString()).isEqualTo(
             """
             abstract class DatabaseHandler {
+            
             }
             
             """.trimIndent()
         )
     }
-
 }
