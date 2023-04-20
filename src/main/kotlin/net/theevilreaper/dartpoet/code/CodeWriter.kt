@@ -19,7 +19,8 @@ import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.DartClassSpec
 import net.theevilreaper.dartpoet.import.DartImport
-import net.theevilreaper.dartpoet.util.DEFAULT_INDENT
+import net.theevilreaper.dartpoet.util.*
+import net.theevilreaper.dartpoet.util.NEW_LINE
 import net.theevilreaper.dartpoet.util.escapeCharacterLiterals
 import net.theevilreaper.dartpoet.util.stringLiteralWithQuotes
 import net.theevilreaper.dartpoet.util.toEnumSet
@@ -123,7 +124,7 @@ class CodeWriter constructor(
         comment = true
         try {
             emitCode(codeBlock)
-            emit("\n")
+            emit(NEW_LINE)
         } finally {
             comment = false
         }
@@ -140,13 +141,6 @@ class CodeWriter constructor(
             kdoc = false
         }
         emit(" */\n")
-    }
-
-    fun emitAnnotations(annotations: List<AnnotationSpec>, inline: Boolean) {
-        for (annotationSpec in annotations) {
-           // annotationSpec.emit(this, inline)
-            emit(if (inline) " " else "\n")
-        }
     }
 
     /**
@@ -185,7 +179,6 @@ class CodeWriter constructor(
         val partIterator = codeBlock.formatParts.listIterator()
         while (partIterator.hasNext()) {
             val part = partIterator.next()
-            println("Part is $part")
             when (part) {
                 "%L" -> emitLiteral(codeBlock.args[a++], isConstantContext)
                 "%S" -> {
@@ -200,7 +193,7 @@ class CodeWriter constructor(
                     } else {
                         "null"
                     }
-                    emit(literal, nonWrapping = true)
+                    emit(literal.replace("\"", "'"), nonWrapping = true)
                 }
 
                 "%P" -> {
@@ -221,7 +214,7 @@ class CodeWriter constructor(
                     } else {
                         "null"
                     }
-                    emit(literal, nonWrapping = true)
+                    emit(literal.replace("\"", "'"), nonWrapping = true)
                 }
                 "%%" -> emit("%")
                 "⇥" -> indent()
@@ -263,7 +256,7 @@ class CodeWriter constructor(
             }
         }
         if (ensureTrailingNewline && out.hasPendingSegments) {
-            emit("\n")
+            emit(NEW_LINE)
         }
     }
 
