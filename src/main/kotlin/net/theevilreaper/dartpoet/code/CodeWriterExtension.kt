@@ -126,12 +126,15 @@ fun List<DartParameterSpec>.emitParameters(
         }
 
         forEachIndexed { index, parameter ->
-            if (index > 0) {
-                emit(if (emitNewLines) NEW_LINE else ", ")
+            if (index > 0 && emitNewLines)  {
+                emit(NEW_LINE)
             }
             emitBlock(parameter)
             if (emitComma) {
                 emit(",")
+                if (index < size - 1) {
+                    emit(SPACE)
+                }
             }
         }
 
