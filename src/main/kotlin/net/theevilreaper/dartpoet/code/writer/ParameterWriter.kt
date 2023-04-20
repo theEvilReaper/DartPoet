@@ -2,6 +2,7 @@ package net.theevilreaper.dartpoet.code.writer
 
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.parameter.DartParameterSpec
 
 /**
@@ -18,10 +19,12 @@ class ParameterWriter {
      * This would be done when the spec is being created
      */
     fun write(spec: DartParameterSpec, codeWriter: CodeWriter) {
+        spec.annotations.emitAnnotations(codeWriter, endWithNewLine = false) {
+            it.write(codeWriter)
+        }
         codeWriter.emit(spec.type)
         codeWriter.emit(if (spec.isNullable) "?·" else "·")
         codeWriter.emit(spec.name)
-
         writeInitializer(spec.initializer, codeWriter)
     }
 
