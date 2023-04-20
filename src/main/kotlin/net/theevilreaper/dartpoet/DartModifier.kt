@@ -15,6 +15,7 @@ enum class DartModifier(
     ASYNC("async", ModifierTarget.FUNCTION),
     CONST("const", ModifierTarget.PROPERTY),
 
+    EXTENSION("extension", ModifierTarget.CLASS),
     ENUM("enum", ModifierTarget.CLASS),
     MIXIN("mixin", ModifierTarget.CLASS),
     ABSTRACT("abstract", ModifierTarget.CLASS),
