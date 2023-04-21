@@ -348,6 +348,7 @@ class CodeBlock private constructor(
         'S' -> this.args += argToString(arg)
         'P' -> this.args += if (arg is CodeBlock) arg else argToString(arg)
         'M' -> this.args += arg
+        'C' -> this.args += argToString(arg)
         else -> throw IllegalArgumentException(
           String.format("invalid format string: '%s'", format),
         )
@@ -455,7 +456,7 @@ class CodeBlock private constructor(
     public fun build(): CodeBlock = CodeBlock(formatParts.toImmutableList(), args.toImmutableList())
   }
 
-  public companion object {
+  companion object {
     private val NAMED_ARGUMENT = Regex("%([\\w_]+):([\\w]).*")
     private val LOWERCASE = Regex("[a-z]+[\\w_]*")
     private const val ARG_NAME = 1

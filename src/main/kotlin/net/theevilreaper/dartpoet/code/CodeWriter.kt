@@ -181,7 +181,7 @@ class CodeWriter constructor(
             val part = partIterator.next()
             when (part) {
                 "%L" -> emitLiteral(codeBlock.args[a++], isConstantContext)
-                "%S" -> {
+                "%S", "%C" -> {
                     val string = codeBlock.args[a++] as String?
                     // Emit null as a literal null: no quotes.
                     val literal = if (string != null) {
@@ -193,7 +193,12 @@ class CodeWriter constructor(
                     } else {
                         "null"
                     }
-                    emit(literal.replace("\"", "'"), nonWrapping = true)
+
+                    if (part == "%C") {
+                        emit(literal.replace("\"", "'"), nonWrapping = true)
+                    } else {
+                        emit(literal, nonWrapping = true)
+                    }
                 }
 
                 "%P" -> {
