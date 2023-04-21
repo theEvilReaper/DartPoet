@@ -9,7 +9,7 @@ class CodeBlockTest {
     @Test
     fun `test string write`() {
         val block = CodeBlock.builder().add("Test %S", "!!!").build()
-        assertThat(block.toString()).isEqualTo("Test '!!!'")
+        assertThat(block.toString()).isEqualTo("Test \"!!!\"")
     }
 
     @Test

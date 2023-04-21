@@ -16,7 +16,7 @@ class FunctionWriterTest {
         val method = DartFunctionSpec.builder("getName")
             .modifier(DartModifier.PUBLIC)
             .returns("String")
-            .addCode("return %S;", "test")
+            .addCode("return %C;", "test")
             .build()
         writer.close()
 
@@ -35,7 +35,7 @@ class FunctionWriterTest {
         val method = DartFunctionSpec.builder("name")
             .returns("String")
             .modifier(DartModifier.PRIVATE)
-            .addCode("return %S;", "Tobi").build()
+            .addCode("return %C;", "Tobi").build()
         writer.close()
         assertThat(method.toString()).isEqualTo(
             """

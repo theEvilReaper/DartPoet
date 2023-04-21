@@ -87,7 +87,7 @@ class PropertyWriterTest {
             .nullable(true)
             .annotation {
                 AnnotationSpec.builder("JsonKey")
-                    .content("name: %S", "description")
+                    .content("name: %C", "description")
                     .build()
             }
             .build()
