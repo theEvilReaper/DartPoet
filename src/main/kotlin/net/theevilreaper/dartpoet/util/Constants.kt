@@ -22,8 +22,6 @@ internal const val IMPORT = "import"
 internal const val ANNOTATION_CHAR = "@"
 
 internal const val DART_FILE_ENDING = ".dart"
-internal val NEW_LINE_SPLIT: Pattern = Pattern.compile(NEW_LINE)
-
 internal const val CONSTRUCTOR = "CONSTRUCTOR"
 
 //Brackets
