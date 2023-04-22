@@ -25,6 +25,6 @@ class AnnotationSpecTest {
     @Test
     fun `test simple annotation without content`() {
         val annotation = AnnotationSpec.builder("jsonIgnore").build()
-        assertEquals(expectedAnnotation, annotation.write())
+        assertEquals(expectedAnnotation, annotation.toString())
     }
 }
