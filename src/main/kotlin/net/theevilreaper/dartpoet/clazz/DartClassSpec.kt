@@ -20,11 +20,12 @@ class DartClassSpec internal constructor(
     internal val isAbstract = builder.isAbstract
     internal val isMixin = builder.isMixinClass
 
+    internal val superClass = builder.superClass
+    internal val inheritKeyWord = builder.inheritKeyWord
     internal val classModifiers = modifiers.filter { it != WITH }.toImmutableSet()
     internal val functions = builder.functionStack.toImmutableSet()
     internal val properties = builder.propertyStack.toImmutableSet()
     internal val constructors = builder.constructorStack.toImmutableSet()
-    internal val mixinSubClass = builder.includeMixinClass
 
     init {
         if (name != null) {
@@ -73,20 +74,20 @@ class DartClassSpec internal constructor(
          * @return the created instance
          */
         @JvmStatic
-        fun enumClass(name: String): DartClassBuilder = DartClassBuilder(name, ClassType.CLASS, ENUM)
+        fun enumClass(name: String): DartClassBuilder = DartClassBuilder(name, ClassType.ENUM)
 
         /**
          * Create a new [DartClassBuilder] instance for a mixin dart class.
          * @return the created instance
          */
         @JvmStatic
-        fun mixinClass(name: String): DartClassBuilder = DartClassBuilder(name, ClassType.CLASS, MIXIN)
+        fun mixinClass(name: String): DartClassBuilder = DartClassBuilder(name, ClassType.MIXIN)
 
         /**
          * Create a new [DartClassBuilder] instance for a abstract dart class.
          * @return the created instance
          */
         @JvmStatic
-        fun abstractClass(name: String): DartClassBuilder = DartClassBuilder(name, ClassType.ABSTRACT, ABSTRACT, CLASS)
+        fun abstractClass(name: String): DartClassBuilder = DartClassBuilder(name, ClassType.ABSTRACT)
     }
 }

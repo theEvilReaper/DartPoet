@@ -1,7 +1,9 @@
 package net.theevilreaper.dartpoet.clazz
 
 import net.theevilreaper.dartpoet.DartModifier
+import net.theevilreaper.dartpoet.InheritKeyword
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
+import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.function.DartFunctionSpec
 import net.theevilreaper.dartpoet.meta.SpecData
 import net.theevilreaper.dartpoet.meta.SpecMethods
@@ -25,14 +27,31 @@ class DartClassBuilder internal constructor(
     internal val constructorStack: MutableList<ConstructorSpec> = mutableListOf()
     internal val propertyStack: MutableList<DartPropertySpec> = mutableListOf()
     internal val functionStack: MutableList<DartFunctionSpec> = mutableListOf()
+    internal val extensionStack: MutableList<ExtensionSpec> = mutableListOf()
 
-    internal var includeMixinClass: String? = null
+    internal var superClass: String? = null
+    internal var inheritKeyWord: InheritKeyword? = null
     internal var endWithNewLine = false
 
-    fun includeMixing(className: String) = apply {
-        this.includeMixinClass = className
-        this.modifier { DartModifier.WITH }
+    fun withMixin(className: String) = apply {
+        setClassName(className)
+        this.inheritKeyWord = InheritKeyword.MIXIN
     }
+
+    fun withExtends(className: String) = apply {
+        setClassName(className)
+        this.inheritKeyWord = InheritKeyword.EXTENDS
+    }
+
+    fun withImplements(className: String) = apply {
+        setClassName(className)
+        this.inheritKeyWord = InheritKeyword.IMPLEMENTS
+    }
+
+    private fun setClassName(className: String) {
+        this.superClass = className
+    }
+
 
     fun endWithNewLine(endWithNewLine: Boolean) = apply {
         this.endWithNewLine = endWithNewLine
@@ -60,6 +79,22 @@ class DartClassBuilder internal constructor(
 
     fun function(function: () -> DartFunctionSpec) = apply {
         this.functionStack += function()
+    }
+
+    fun extension(extension: ExtensionSpec) = apply {
+        this.extensionStack += extension
+    }
+
+    fun extension(extension: () -> ExtensionSpec) = apply {
+        this.extensionStack += extension()
+    }
+
+    fun extensions(extensions: Iterable<ExtensionSpec>) = apply {
+        this.extensionStack += extensions
+    }
+
+    fun extensions(extensions: () -> Iterable<ExtensionSpec>) = apply {
+        this.extensionStack += extensions()
     }
 
     fun constructor(constructor: ConstructorSpec) = apply {
