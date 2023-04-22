@@ -4,6 +4,7 @@ import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.DartClassBuilder
 import net.theevilreaper.dartpoet.clazz.DartClassSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
+import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.import.Import
 import net.theevilreaper.dartpoet.util.DEFAULT_INDENT
 import java.lang.IllegalArgumentException
@@ -15,6 +16,7 @@ class DartFileBuilder(
     internal val specTypes: MutableList<DartClassSpec> = mutableListOf()
     internal val imports: MutableList<Import> = mutableListOf()
     internal val annotations: MutableList<AnnotationSpec> = mutableListOf()
+    internal val extensionStack: MutableList<ExtensionSpec> = mutableListOf()
     internal var indent = DEFAULT_INDENT
 
     fun import(import: Import) = apply {
@@ -42,6 +44,22 @@ class DartFileBuilder(
 
     fun indent(indent: () -> String) = apply {
         this.indent(indent())
+    }
+
+    fun extension(extension: ExtensionSpec) = apply {
+        this.extensionStack += extension
+    }
+
+    fun extension(extension: () -> ExtensionSpec) = apply {
+        this.extensionStack += extension()
+    }
+
+    fun extensions(extensions: Iterable<ExtensionSpec>) = apply {
+        this.extensionStack += extensions
+    }
+
+    fun extensions(extensions: () -> Iterable<ExtensionSpec>) = apply {
+        this.extensionStack += extensions()
     }
 
     fun addType(dartFileSpec: DartClassSpec) = apply {
