@@ -3,7 +3,6 @@ package net.theevilreaper.dartpoet.clazz
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.InheritKeyword
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
-import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.function.DartFunctionSpec
 import net.theevilreaper.dartpoet.meta.SpecData
 import net.theevilreaper.dartpoet.meta.SpecMethods
@@ -27,7 +26,6 @@ class DartClassBuilder internal constructor(
     internal val constructorStack: MutableList<ConstructorSpec> = mutableListOf()
     internal val propertyStack: MutableList<DartPropertySpec> = mutableListOf()
     internal val functionStack: MutableList<DartFunctionSpec> = mutableListOf()
-    internal val extensionStack: MutableList<ExtensionSpec> = mutableListOf()
 
     internal var superClass: String? = null
     internal var inheritKeyWord: InheritKeyword? = null
@@ -79,22 +77,6 @@ class DartClassBuilder internal constructor(
 
     fun function(function: () -> DartFunctionSpec) = apply {
         this.functionStack += function()
-    }
-
-    fun extension(extension: ExtensionSpec) = apply {
-        this.extensionStack += extension
-    }
-
-    fun extension(extension: () -> ExtensionSpec) = apply {
-        this.extensionStack += extension()
-    }
-
-    fun extensions(extensions: Iterable<ExtensionSpec>) = apply {
-        this.extensionStack += extensions
-    }
-
-    fun extensions(extensions: () -> Iterable<ExtensionSpec>) = apply {
-        this.extensionStack += extensions()
     }
 
     fun constructor(constructor: ConstructorSpec) = apply {
