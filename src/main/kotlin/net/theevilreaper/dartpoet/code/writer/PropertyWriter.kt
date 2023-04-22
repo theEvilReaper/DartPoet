@@ -2,42 +2,38 @@ package net.theevilreaper.dartpoet.code.writer
 
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.property.DartPropertySpec
+import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.SPACE
 
 class PropertyWriter {
 
-    //TODO: Add delegation for the writer
-    val annotationWriter = AnnotationWriter()
-
-    //TODO: Write annotations
-    fun write(property: DartPropertySpec, codeWriter: CodeWriter) {
-        if (property.annotations.isNotEmpty()) {
-            //TODO: Detect when to use inline
-            property.annotations.forEach { annotationWriter.emit(it, codeWriter, inline = false) }
-            codeWriter.emit("\n")
+    fun write(property: DartPropertySpec, writer: CodeWriter) {
+        property.annotations.emitAnnotations(writer) {
+            it.write(writer, inline = false)
         }
 
         for (modifier in property.modifiers) {
-            codeWriter.emit(modifier.identifier)
-            codeWriter.emit(SPACE)
+            writer.emit(modifier.identifier)
+            writer.emit(SPACE)
         }
 
-        codeWriter.emit(property.type)
+        writer.emit(property.type)
 
         if (property.nullable) {
-            codeWriter.emit("? ")
+            writer.emit("? ")
         } else {
-            codeWriter.emit(SPACE)
+            writer.emit(SPACE)
         }
 
-        codeWriter.emit(if (property.isPrivate) DartModifier.PRIVATE.identifier else "")
-        codeWriter.emit(property.name)
+        writer.emit(if (property.isPrivate) DartModifier.PRIVATE.identifier else EMPTY_STRING)
+        writer.emit(property.name)
 
         if (property.initBlock.isNotEmpty()) {
-            codeWriter.emit("·=·")
-            codeWriter.emitCode(property.initBlock.build(), isConstantContext = true)
+            writer.emit("·=·")
+            writer.emitCode(property.initBlock.build(), isConstantContext = true)
         }
-        codeWriter.emit(";")
+        writer.emit(";")
     }
 }

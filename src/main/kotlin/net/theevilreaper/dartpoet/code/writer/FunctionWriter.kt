@@ -8,8 +8,6 @@ import net.theevilreaper.dartpoet.function.DartFunctionSpec
 
 class FunctionWriter {
 
-    private val parameterWriter = ParameterWriter()
-
     fun emit(functionSpec: DartFunctionSpec, writer: CodeWriter) {
         if (functionSpec.returnType.orEmpty().trim().isEmpty()) {
             if (functionSpec.isAsync) {

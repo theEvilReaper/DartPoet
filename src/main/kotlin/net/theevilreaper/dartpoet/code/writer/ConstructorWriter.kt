@@ -8,16 +8,14 @@ import net.theevilreaper.dartpoet.util.NEW_LINE
 
 class ConstructorWriter {
 
-    private val functionWriter = FunctionWriter()
-
     fun emit(spec: ConstructorSpec, codeWriter: CodeWriter) {
         for (modifier in spec.modifiers) {
             codeWriter.emit("${modifier.identifier}·")
         }
+
         if (spec.isFactory) {
             codeWriter.emit("${DartModifier.FACTORY.identifier}·")
         }
-
 
         codeWriter.emit(spec.name)
 
@@ -36,7 +34,7 @@ class ConstructorWriter {
             codeWriter.emitCode("({$NEW_LINE")
             codeWriter.indent()
 
-            spec.parameters.emitParameters(codeWriter, emitBrackets = false, ) {
+            spec.parameters.emitParameters(codeWriter, emitBrackets = false) {
                 it.write(codeWriter)
             }
 
