@@ -10,9 +10,6 @@ import net.theevilreaper.dartpoet.util.toImmutableSet
  * @version 1.0.0
  * @since
  **/
-
-val annotationWriter = AnnotationWriter()
-
 class AnnotationSpec(
     builder: AnnotationSpecBuilder
 ) {
