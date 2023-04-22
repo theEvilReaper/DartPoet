@@ -1,65 +1,81 @@
 package net.theevilreaper.dartpoet.code.writer
 
-import net.theevilreaper.dartpoet.DartModifier
+import net.theevilreaper.dartpoet.DartModifier.*
+import net.theevilreaper.dartpoet.clazz.ClassType
 import net.theevilreaper.dartpoet.clazz.DartClassSpec
 import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.code.emitConstructors
 import net.theevilreaper.dartpoet.code.emitFunctions
 import net.theevilreaper.dartpoet.property.DartPropertySpec
+import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.NEW_LINE
 
+/**
+ * @version 1.0.0
+ * @since 1.0.0
+ * @author theEvilReaper
+ */
 class ClassWriter {
 
-    private val abstractClassWriter = AbstractClassWriter()
-    private val propertyWriter = PropertyWriter()
-    private val annotationWriter = AnnotationWriter()
-    private val functionWriter = FunctionWriter()
-    private val constructorWriter = ConstructorWriter()
-    private val libraryWriter = LibraryWriter()
-
-    fun write(classSpec: DartClassSpec, codeWriter: CodeWriter) {
-        if (classSpec.annotations.isNotEmpty()) {
-            classSpec.annotations.forEach { annotationWriter.emit(it, codeWriter, false) }
-            codeWriter.emit(NEW_LINE)
+    fun write(spec: DartClassSpec, codeWriter: CodeWriter) {
+        spec.annotations.emitAnnotations(codeWriter) {
+            it.write(codeWriter)
         }
+        writeClassHeader(spec, codeWriter)
+        writeInheritance(spec, codeWriter)
 
-        if (classSpec.isAbstract) {
-            abstractClassWriter.write(classSpec, codeWriter)
-            return
-        }
-
-        for (modifier in classSpec.classModifiers) {
-            codeWriter.emit("${modifier.identifier}·")
-        }
-        codeWriter.emit("${classSpec.name}")
-
-        if (classSpec.mixinSubClass.orEmpty().trim().isNotEmpty()) {
-            codeWriter.emit("·${DartModifier.WITH.identifier}·${classSpec.mixinSubClass}")
-        }
-
-        codeWriter.emit("·{\n")
-
-        codeWriter.indent()
+        codeWriter.emit("{$NEW_LINE")
         codeWriter.emit(NEW_LINE)
+        codeWriter.indent()
 
-        classSpec.properties.emit(codeWriter) {
+        spec.properties.emit(codeWriter) {
             it.write(codeWriter)
         }
 
-        classSpec.constructors.emitConstructors(codeWriter) {
+        spec.constructors.emitConstructors(codeWriter) {
             it.write(codeWriter)
         }
 
-        classSpec.functions.emitFunctions(codeWriter) {
-            functionWriter.emit(it, codeWriter)
+        spec.functions.emitFunctions(codeWriter) {
+            it.write(codeWriter)
         }
 
         codeWriter.unindent()
 
         codeWriter.emit("}")
 
-        if (classSpec.endsWithNewLine) {
+        if (spec.endsWithNewLine) {
             codeWriter.emit(NEW_LINE)
+        }
+    }
+
+    /**
+     * The method contains the logic to write the dart class declaration for a [DartClassSpec].
+     * @param spec the [DartClassSpec] which contains all data for a class
+     * @param writer the [CodeWriter] to write the class declaration
+     */
+    private fun writeClassHeader(spec: DartClassSpec, writer: CodeWriter) {
+        when (val type = spec.classType) {
+            ClassType.CLASS, ClassType.MIXIN, ClassType.ENUM -> {
+                writer.emit(type.keyword)
+                writer.emit("·")
+                writer.emit(if (spec.modifiers.contains(PRIVATE)) PRIVATE.identifier else EMPTY_STRING)
+                writer.emit(spec.name!!)
+            }
+            ClassType.ABSTRACT -> {
+                writer.emit("${type.keyword}·${ClassType.CLASS.keyword}·")
+                writer.emit(if (spec.modifiers.contains(PRIVATE)) PRIVATE.identifier else EMPTY_STRING)
+                writer.emit(spec.name!!)
+            }
+        }
+        writer.emit("·")
+    }
+
+    private fun writeInheritance(spec: DartClassSpec, writer: CodeWriter) {
+        if (spec.superClass.orEmpty().trim().isNotEmpty()) {
+            writer.emit("${spec.inheritKeyWord!!.identifier}·")
+            writer.emit("${spec.superClass!!}·")
         }
     }
 
@@ -73,7 +89,7 @@ class ClassWriter {
 
             forEachIndexed { index, property ->
                 if (index > 0) {
-                    emit(if (emitNewLines) NEW_LINE else "")
+                    emit(if (emitNewLines) NEW_LINE else EMPTY_STRING)
                 }
                 emitBlock(property)
             }
