@@ -3,7 +3,6 @@ package net.theevilreaper.dartpoet.extension
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.ExtensionWriter
-import net.theevilreaper.dartpoet.code.writer.PropertyWriter
 import net.theevilreaper.dartpoet.util.toImmutableSet
 
 class ExtensionSpec(
