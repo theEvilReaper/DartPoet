@@ -19,15 +19,17 @@ class AnnotationSpec(
 
     internal val name: String = builder.name
     internal val content: Set<CodeBlock> = builder.content.toImmutableSet()
+    internal val hasMultipleContentParts = content.size > 1
 
     init {
         check(name.trim().isNotEmpty()) { "The name can't be empty" }
     }
 
     internal fun write(
-        codeWriter: CodeWriter
+        codeWriter: CodeWriter,
+        inline: Boolean = true
     ) {
-        AnnotationWriter().emit(this, codeWriter, inline = true)
+        AnnotationWriter().emit(this, codeWriter, inline = inline)
     }
 
     override fun toString() = buildCodeString {
