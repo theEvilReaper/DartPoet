@@ -22,6 +22,7 @@ enum class DartModifier(
     FACTORY("factory", ModifierTarget.FUNCTION),
     CLASS("class", ModifierTarget.CLASS),
     LIBRARY("library", ModifierTarget.CLASS),
+    ON("on", ModifierTarget.CLASS),
 
     VOID("void", ModifierTarget.INTERFACE, ModifierTarget.FUNCTION);
 
