@@ -6,6 +6,7 @@ import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.parameter.DartParameterSpec
 import net.theevilreaper.dartpoet.util.CURLY_CLOSE
 import net.theevilreaper.dartpoet.util.CURLY_OPEN
+import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.NEW_LINE
 import net.theevilreaper.dartpoet.util.SPACE
 
@@ -72,9 +73,8 @@ fun Set<AnnotationSpec>.emitAnnotations(
     if (isNotEmpty()) {
         forEachIndexed { index, annotation ->
             if (index > 0) {
-                codeWriter.emit(if (inLineAnnotations) " " else NEW_LINE)
+                codeWriter.emit(if (inLineAnnotations) EMPTY_STRING else NEW_LINE)
             }
-
             emitBlock(annotation)
         }
 
