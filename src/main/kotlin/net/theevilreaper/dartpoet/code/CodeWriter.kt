@@ -284,8 +284,6 @@ class CodeWriter constructor(
         }
     }
 
-    // TODO(luqasn): also honor superclass members when resolving names.
-
     /**
      * Emits `s` with indentation as required. It's important that all code that writes to
      * [CodeWriter.out] does it through here, since we emit indentation lazily in order to avoid
