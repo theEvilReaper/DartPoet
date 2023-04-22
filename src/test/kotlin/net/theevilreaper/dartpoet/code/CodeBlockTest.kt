@@ -18,4 +18,19 @@ class CodeBlockTest {
         assertThat(block.toString()).isEqualTo("The cake is a lie")
     }
 
+    @Test
+    fun `test simple if statement`() {
+        val block = CodeBlock.builder()
+            .beginControlFlow("if (value == null)")
+            .addStatement("return null;")
+            .endControlFlow()
+            .build()
+        assertThat(block.toString().trim()).isEqualTo(
+            """
+            if (value == null) {
+              return null;
+            }
+            """.trimIndent()
+        )
+    }
 }
