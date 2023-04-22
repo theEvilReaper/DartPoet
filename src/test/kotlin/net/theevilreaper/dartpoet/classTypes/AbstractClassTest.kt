@@ -1,6 +1,6 @@
 package net.theevilreaper.dartpoet.classTypes
 
-import com.google.common.truth.Truth
+import com.google.common.truth.Truth.*
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.DartClassSpec
 import net.theevilreaper.dartpoet.function.DartFunctionSpec
@@ -21,7 +21,7 @@ class AbstractClassTest {
             .function(DartFunctionSpec.builder("test").build())
             .build()
 
-        Truth.assertThat(abstractClass.toString()).isEqualTo(
+        assertThat(abstractClass.toString()).isEqualTo(
             """
             abstract class DatabaseHandler {
             
@@ -44,7 +44,7 @@ class AbstractClassTest {
             )
             .function(DartFunctionSpec.builder("test").build())
             .build()
-        Truth.assertThat(abstractClass.toString()).isEqualTo(
+        assertThat(abstractClass.toString()).isEqualTo(
             """
             @abc
             abstract class Test {
