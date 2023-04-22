@@ -5,6 +5,7 @@ import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.emitParameters
 import net.theevilreaper.dartpoet.function.DartFunctionSpec
+import net.theevilreaper.dartpoet.util.SEMICOLON
 
 class FunctionWriter {
 
@@ -35,7 +36,7 @@ class FunctionWriter {
         }
 
         if (functionSpec.body.isEmpty()) {
-            writer.emit(";")
+            writer.emit(SEMICOLON)
         } else {
             if (functionSpec.isAsync) {
                 writer.emit("·${ASYNC.identifier}")

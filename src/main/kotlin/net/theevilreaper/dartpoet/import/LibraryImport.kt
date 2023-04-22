@@ -1,5 +1,7 @@
 package net.theevilreaper.dartpoet.import
 
+import net.theevilreaper.dartpoet.util.SEMICOLON
+
 class LibraryImport(
     private val path: String
 ): Import {
@@ -10,7 +12,7 @@ class LibraryImport(
     private val partImport: String = buildString {
         append("part·of·")
         append(path)
-        append(";")
+        append(SEMICOLON)
     }
 
     override fun toString(): String = partImport
