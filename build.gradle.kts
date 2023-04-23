@@ -117,7 +117,7 @@ publishing {
             url = if (version.toString().endsWith("SNAPSHOT")) uri(snapshotsRepoUrl) else uri(releasesRepoUrl)
             credentials {
                 username = System.getenv("OSSRH_USERNAME")
-                password = System.getenv("OSSRH_TOKEN")
+                password = System.getenv("OSSRH_PASSWORD")
             }
         }
     }
