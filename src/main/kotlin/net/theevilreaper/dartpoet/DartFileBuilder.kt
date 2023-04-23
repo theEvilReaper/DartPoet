@@ -62,15 +62,15 @@ class DartFileBuilder(
         this.extensionStack += extensions()
     }
 
-    fun addType(dartFileSpec: DartClassSpec) = apply {
+    fun type(dartFileSpec: DartClassSpec) = apply {
         this.specTypes += dartFileSpec
     }
 
-    fun addType(dartFileSpec: () -> DartClassSpec) = apply {
+    fun type(dartFileSpec: () -> DartClassSpec) = apply {
         this.specTypes += dartFileSpec()
     }
 
-    fun addType(dartFileSpec: DartClassBuilder) = apply {
+    fun type(dartFileSpec: DartClassBuilder) = apply {
         this.specTypes += dartFileSpec.build()
     }
 
