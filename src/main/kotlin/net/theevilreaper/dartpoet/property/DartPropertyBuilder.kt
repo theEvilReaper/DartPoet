@@ -15,14 +15,13 @@ class DartPropertyBuilder internal constructor(
     var name: String,
     var type: String,
 ) {
-
     internal var nullable = false
     internal val modifiers: MutableList<DartModifier> = mutableListOf()
     internal val annotations: MutableList<AnnotationSpec> = mutableListOf()
     internal var initBlock: CodeBlock.Builder = CodeBlock.builder()
 
     fun initWith(format: String, vararg args: Any?): DartPropertyBuilder = apply {
-        this.initBlock.add(format, *args);
+        this.initBlock.add(format, *args)
     }
 
     fun initWith(codeFragment: CodeBlock.Builder): DartPropertyBuilder = apply {
@@ -91,7 +90,7 @@ class DartPropertyBuilder internal constructor(
      * @param modifiers the modifiers to add
      */
     fun modifiers(modifiers: Iterable<DartModifier>): DartPropertyBuilder = apply {
-        this.modifiers += modifiers;
+        this.modifiers += modifiers
     }
 
     /**
