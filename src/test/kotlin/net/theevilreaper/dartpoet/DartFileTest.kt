@@ -68,7 +68,7 @@ class DartFileTest {
                     PartImport("version.g.dart")
                 )
             }
-            .addType(
+            .type(
                 versionFreezedClass
             )
             .build()
