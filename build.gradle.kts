@@ -5,6 +5,7 @@ plugins {
     `maven-publish`
     signing
     id("org.jetbrains.dokka") version "1.8.10"
+    `java-library`
 }
 
 group = "net.theevilreaper.dartpoet"
@@ -21,6 +22,7 @@ dependencies {
 }
 
 tasks {
+
     test {
         useJUnitPlatform()
         testLogging {
@@ -33,12 +35,26 @@ tasks {
             languageVersion = "2.0"
         }
     }
+
+}
+val sourceJar by tasks.register<Jar>("kotlinJar") {
+    from(sourceSets.main.get().allSource)
+    archiveClassifier.set("sources")
+}
+val dokkaJavadocJar by tasks.register<Jar>("dokkaHtmlJar") {
+    dependsOn(rootProject.tasks.dokkaHtml)
+    from(rootProject.tasks.dokkaHtml.flatMap { it.outputDirectory })
+    archiveClassifier.set("html-docs")
 }
 
+val dokkaHtmlJar by tasks.register<Jar>("dokkaJavadocJar") {
+    dependsOn(rootProject.tasks.dokkaJavadoc)
+    from(rootProject.tasks.dokkaJavadoc.flatMap { it.outputDirectory })
+    archiveClassifier.set("javadoc")
+}
 kotlin {
     jvmToolchain(17)
 }
-
 application {
     mainClass.set("MainKt")
 }
@@ -53,11 +69,13 @@ changelog {
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
-            from(components.findByName("kotlin"))
+            from(components.findByName("java"))
             groupId = "dev.themeinerlp"
             artifactId = "dartPoet"
             version = rootProject.version.toString()
-
+            artifact(dokkaJavadocJar)
+            artifact(dokkaHtmlJar)
+            artifact(sourceJar)
             pom {
                 name.set("Dart Poet")
                 description.set("A Kotlin API which allows the generation of code for dart")
@@ -104,7 +122,10 @@ publishing {
         }
     }
 }
+
 signing {
-    useInMemoryPgpKeys(System.getenv("SIGNING_KEY"), System.getenv("SIGNING_PASSWORD"))
+    val signingKey: String? by project
+    val signingPassword: String? by project
+    useInMemoryPgpKeys(signingKey, signingPassword)
     sign(publishing.publications)
 }
