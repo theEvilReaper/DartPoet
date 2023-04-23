@@ -1,8 +1,10 @@
 package net.theevilreaper.dartpoet.code
 
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
+import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.function.DartFunctionSpec
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
+import net.theevilreaper.dartpoet.import.Import
 import net.theevilreaper.dartpoet.parameter.DartParameterSpec
 import net.theevilreaper.dartpoet.util.CURLY_CLOSE
 import net.theevilreaper.dartpoet.util.CURLY_OPEN
@@ -14,9 +16,6 @@ internal val NO_ARG_PLACEHOLDERS = arrayOf('%', '⇥', '⇤', '«', '»').toChar
 internal val NO_ARG_PLACEHOLDERS_STRING = setOf("⇥", "⇤", "«", "»")
 internal val SPECIAL_CHARACTERS = " \n·".toCharArray()
 internal val UNSAFE_LINE_START = Regex("\\s*[-+].*")
-
-internal val NAMED_ARGUMENT = Regex("%([\\w_]+):([\\w]).*")
-internal val LOWERCASE = Regex("[a-z]+[\\w_]*")
 
 fun String.withOpenBrackets(): String {
 
@@ -145,5 +144,47 @@ fun List<DartParameterSpec>.emitParameters(
     }
     if (emitBrackets) {
         emit(")")
+    }
+}
+
+fun List<ExtensionSpec>.emitExtensions(
+    codeWriter: CodeWriter,
+    forceNewLines: Boolean = false,
+    emitBlock: (ExtensionSpec) -> Unit = { it.write(codeWriter) }
+) = with(codeWriter) {
+    if (isNotEmpty()) {
+        val emitNewLines = size > 1 || forceNewLines
+
+        forEachIndexed { index, parameter ->
+            if (index > 0 && emitNewLines)  {
+                emit(NEW_LINE)
+            }
+            emitBlock(parameter)
+        }
+
+        if (emitNewLines) {
+            codeWriter.emit(NEW_LINE)
+        }
+    }
+}
+
+fun <T: Import> List<T>.writeImports(
+    writer: CodeWriter,
+    newLineAtBegin: Boolean = true,
+    emitBlock: (T) -> String = { it.toString() }
+) {
+    if (isNotEmpty()) {
+        if (newLineAtBegin) {
+            writer.emit(NEW_LINE)
+        }
+
+        forEachIndexed { index, import ->
+            if (index > 0) {
+                writer.emit(NEW_LINE)
+            }
+            writer.emit(emitBlock(import))
+        }
+
+        writer.emit(NEW_LINE)
     }
 }
