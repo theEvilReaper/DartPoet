@@ -63,12 +63,8 @@ class DartClassBuilder internal constructor(
         this.propertyStack += dartPropertySpec()
     }
 
-    fun properties(properties: Iterable<DartPropertySpec>) = apply {
+    fun properties(vararg properties: DartPropertySpec) = apply {
         this.propertyStack += properties
-    }
-
-    fun properties(properties: () -> Iterable<DartPropertySpec>) = apply {
-        this.propertyStack += properties()
     }
 
     fun function(function: DartFunctionSpec) = apply {

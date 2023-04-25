@@ -54,12 +54,8 @@ class DartFileBuilder(
         this.extensionStack += extension()
     }
 
-    fun extensions(extensions: Iterable<ExtensionSpec>) = apply {
+    fun extensions(vararg extensions: ExtensionSpec) = apply {
         this.extensionStack += extensions
-    }
-
-    fun extensions(extensions: () -> Iterable<ExtensionSpec>) = apply {
-        this.extensionStack += extensions()
     }
 
     fun type(dartFileSpec: DartClassSpec) = apply {
@@ -74,12 +70,8 @@ class DartFileBuilder(
         this.specTypes += dartFileSpec.build()
     }
 
-    fun annotations(annotations: Iterable<AnnotationSpec>) = apply {
+    fun annotations(vararg annotations: AnnotationSpec) = apply {
         this.annotations += annotations
-    }
-
-    fun annotations(annotations: () -> Iterable<AnnotationSpec>) = apply {
-        this.annotations += annotations()
     }
 
     fun annotation(annotation: () -> AnnotationSpec) = apply {
