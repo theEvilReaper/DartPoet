@@ -39,7 +39,7 @@ internal val String.isPlaceholder
 fun String.nextPotentialPlaceholderPosition(startIndex: Int) =
     indexOfAny(NO_ARG_PLACEHOLDERS, startIndex)
 
-fun Set<DartFunctionSpec>.emitFunctions(
+internal fun Set<DartFunctionSpec>.emitFunctions(
     codeWriter: CodeWriter,
     forceNewLines: Boolean = false,
     emitBlock: (DartFunctionSpec) -> Unit = { it.write(codeWriter) }
@@ -63,7 +63,7 @@ fun Set<DartFunctionSpec>.emitFunctions(
     }
 }
 
-fun Set<AnnotationSpec>.emitAnnotations(
+internal fun Set<AnnotationSpec>.emitAnnotations(
     codeWriter: CodeWriter,
     inLineAnnotations: Boolean = true,
     endWithNewLine: Boolean = true,
@@ -85,7 +85,7 @@ fun Set<AnnotationSpec>.emitAnnotations(
     }
 }
 
-fun Set<ConstructorSpec>.emitConstructors(
+internal fun Set<ConstructorSpec>.emitConstructors(
     codeWriter: CodeWriter,
     forceNewLines: Boolean = false,
     emitBlock: (ConstructorSpec) -> Unit = { it.write(codeWriter)}
@@ -107,7 +107,7 @@ fun Set<ConstructorSpec>.emitConstructors(
     }
 }
 
-fun List<DartParameterSpec>.emitParameters(
+internal fun List<DartParameterSpec>.emitParameters(
     codeWriter: CodeWriter,
     forceNewLines: Boolean = false,
     emitBrackets: Boolean = true,
@@ -147,7 +147,7 @@ fun List<DartParameterSpec>.emitParameters(
     }
 }
 
-fun List<ExtensionSpec>.emitExtensions(
+internal fun List<ExtensionSpec>.emitExtensions(
     codeWriter: CodeWriter,
     forceNewLines: Boolean = false,
     emitBlock: (ExtensionSpec) -> Unit = { it.write(codeWriter) }
@@ -168,7 +168,7 @@ fun List<ExtensionSpec>.emitExtensions(
     }
 }
 
-fun <T: Import> List<T>.writeImports(
+internal fun <T: Import> List<T>.writeImports(
     writer: CodeWriter,
     newLineAtBegin: Boolean = true,
     emitBlock: (T) -> String = { it.toString() }
