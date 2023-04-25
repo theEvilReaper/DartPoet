@@ -10,7 +10,7 @@ internal const val NULL_STRING = "null"
 
 internal const val SPACE_CHAR = ' '
 internal const val SPACE = SPACE_CHAR.toString()
-const val DEFAULT_INDENT = SPACE
+const val DEFAULT_INDENT = "  "
 internal const val NEW_LINE_CHAR = '\n'
 
 internal const val NEW_LINE = NEW_LINE_CHAR.toString()
@@ -22,13 +22,13 @@ internal const val IMPORT = "import"
 internal const val ANNOTATION_CHAR = "@"
 
 internal const val DART_FILE_ENDING = ".dart"
-internal val NEW_LINE_SPLIT: Pattern = Pattern.compile(NEW_LINE)
+internal const val CONSTRUCTOR = "CONSTRUCTOR"
 
 //Brackets
 internal const val CURLY_OPEN = '{'
 internal const val CURLY_CLOSE = '}'
 
-internal val ALLOWED_PARAMETER_MODIFIERS = setOf(DartModifier.PUBLIC, DartModifier.PRIVATE)
+internal val ALLOWED_PARAMETER_MODIFIERS = setOf(DartModifier.PUBLIC, DartModifier.PRIVATE, DartModifier.LATE, DartModifier.CONST, DartModifier.STATIC)
 
 private val namePattern: Pattern = Pattern.compile("([a-z]+)_+([a-z]+)")
 

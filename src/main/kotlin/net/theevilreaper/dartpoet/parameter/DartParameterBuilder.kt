@@ -15,11 +15,15 @@ class DartParameterBuilder internal constructor(
     internal var named: Boolean = false
     internal var required: Boolean = false
     internal var nullable: Boolean = false
-    internal val initializer: CodeBlock.Builder = CodeBlock.builder()
+    internal var initializer: CodeBlock? = null
 
 
     fun initializer(format: String, vararg args: Any) = apply {
-        this.initializer.add(format, args)
+        initializer(CodeBlock.of(format, *args))
+    }
+
+    fun initializer(block: CodeBlock) = apply {
+        this.initializer = block
     }
 
     fun named(named: Boolean) = apply {

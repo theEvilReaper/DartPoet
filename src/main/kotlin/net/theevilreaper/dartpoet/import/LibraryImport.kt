@@ -2,19 +2,17 @@ package net.theevilreaper.dartpoet.import
 
 import net.theevilreaper.dartpoet.util.SEMICOLON
 
-class PartImport internal constructor(
+class LibraryImport(
     private val path: String
-) : Import {
-
+): Import {
     init {
-        check(path.trim().isNotEmpty()) { "The path of an Import can't be empty" }
+        check(path.trim().isNotEmpty()) { "The path of an LibraryImport can't be empty" }
     }
 
     private val partImport: String = buildString {
-        append("part ")
-        append("'")
+        append("part·of·")
         append(path)
-        append("'$SEMICOLON")
+        append(SEMICOLON)
     }
 
     override fun toString(): String = partImport

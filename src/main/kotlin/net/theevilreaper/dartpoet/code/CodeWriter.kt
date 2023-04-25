@@ -19,7 +19,8 @@ import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.DartClassSpec
 import net.theevilreaper.dartpoet.import.DartImport
-import net.theevilreaper.dartpoet.util.DEFAULT_INDENT
+import net.theevilreaper.dartpoet.util.*
+import net.theevilreaper.dartpoet.util.NEW_LINE
 import net.theevilreaper.dartpoet.util.escapeCharacterLiterals
 import net.theevilreaper.dartpoet.util.stringLiteralWithQuotes
 import net.theevilreaper.dartpoet.util.toEnumSet
@@ -123,7 +124,7 @@ class CodeWriter constructor(
         comment = true
         try {
             emitCode(codeBlock)
-            emit("\n")
+            emit(NEW_LINE)
         } finally {
             comment = false
         }
@@ -140,13 +141,6 @@ class CodeWriter constructor(
             kdoc = false
         }
         emit(" */\n")
-    }
-
-    fun emitAnnotations(annotations: List<AnnotationSpec>, inline: Boolean) {
-        for (annotationSpec in annotations) {
-           // annotationSpec.emit(this, inline)
-            emit(if (inline) " " else "\n")
-        }
     }
 
     /**
@@ -185,13 +179,9 @@ class CodeWriter constructor(
         val partIterator = codeBlock.formatParts.listIterator()
         while (partIterator.hasNext()) {
             val part = partIterator.next()
-            println("part is $part")
             when (part) {
                 "%L" -> emitLiteral(codeBlock.args[a++], isConstantContext)
-
-                "%N" -> emit(codeBlock.args[a++] as String)
-
-                "%S" -> {
+                "%S", "%C" -> {
                     val string = codeBlock.args[a++] as String?
                     // Emit null as a literal null: no quotes.
                     val literal = if (string != null) {
@@ -203,7 +193,12 @@ class CodeWriter constructor(
                     } else {
                         "null"
                     }
-                    emit(literal, nonWrapping = true)
+
+                    if (part == "%C") {
+                        emit(literal.replace("\"", "'"), nonWrapping = true)
+                    } else {
+                        emit(literal, nonWrapping = true)
+                    }
                 }
 
                 "%P" -> {
@@ -224,40 +219,11 @@ class CodeWriter constructor(
                     } else {
                         "null"
                     }
-                    emit(literal, nonWrapping = true)
+                    emit(literal.replace("\"", "'"), nonWrapping = true)
                 }
-
-             /*   "%T" -> {
-                    var typeName = codeBlock.args[a++] as TypeName
-                    if (typeName.isAnnotated) {
-                        typeName.emitAnnotations(this)
-                        typeName = typeName.copy(annotations = emptyList())
-                    }
-                    // defer "typeName.emit(this)" if next format part will be handled by the default case
-                    var defer = false
-                    if (typeName is ClassName && partIterator.hasNext()) {
-                        if (!codeBlock.formatParts[partIterator.nextIndex()].startsWith("%")) {
-                            val candidate = typeName
-                            if (candidate.canonicalName in memberImportNames) {
-                                check(deferredTypeName == null) { "pending type for static import?!" }
-                                deferredTypeName = candidate
-                                defer = true
-                            }
-                        }
-                    }
-                    if (!defer) typeName.emit(this)
-                    typeName.emitNullable(this)
-                }*/
-
-                "%M" -> {
-                }
-
                 "%%" -> emit("%")
-
                 "⇥" -> indent()
-
                 "⇤" -> unindent()
-
                 "«" -> {
                     check(statementLine == -1) {
                         """
@@ -290,22 +256,18 @@ class CodeWriter constructor(
                 }
 
                 else -> {
-                    // Handle deferred type.
-                    var doBreak = false
-                    if (!doBreak) {
-                        emit(part)
-                    }
+                    emit(part)
                 }
             }
         }
         if (ensureTrailingNewline && out.hasPendingSegments) {
-            emit("\n")
+            emit(NEW_LINE)
         }
     }
 
     private fun emitLiteral(o: Any?, isConstantContext: Boolean) {
         when (o) {
-          /*  is TypeSpec -> o.emit(this, null)
+            /*is TypeSpec -> o.emit(this, null)
             is AnnotationSpec -> o.emit(this, inline = true, asParameter = isConstantContext)
             is PropertySpec -> o.emit(this, emptySet())
             is FunSpec -> o.emit(
@@ -314,13 +276,11 @@ class CodeWriter constructor(
                 implicitModifiers = setOf(KModifier.PUBLIC),
                 includeKdocTags = true,
             )
-            is TypeAliasSpec -> o.emit(this)
-            is CodeBlock -> emitCode(o, isConstantContext = isConstantContext)*/
+            is TypeAliasSpec -> o.emit(this)*/
+            is CodeBlock -> emitCode(o, isConstantContext = isConstantContext)
             else -> emit(o.toString())
         }
     }
-
-    // TODO(luqasn): also honor superclass members when resolving names.
 
     /**
      * Emits `s` with indentation as required. It's important that all code that writes to

@@ -6,9 +6,11 @@ import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.meta.SpecData
 import net.theevilreaper.dartpoet.meta.SpecMethods
 import net.theevilreaper.dartpoet.parameter.DartParameterSpec
+import net.theevilreaper.dartpoet.util.CONSTRUCTOR
 
 class DartFunctionBuilder internal constructor(
-    val name: String
+    val name: String,
+    namedConstructor: Boolean = false
 ) : SpecMethods<DartFunctionBuilder> {
 
     internal val specData: SpecData = SpecData()
@@ -16,6 +18,25 @@ class DartFunctionBuilder internal constructor(
     internal var async: Boolean = false
     internal var returnType: String? = null
     internal val body: CodeBlock.Builder = CodeBlock.builder()
+    internal var nullable: Boolean = false
+    internal val isConstructor: Boolean = name == CONSTRUCTOR
+    internal val isNamedConstructor: Boolean = namedConstructor
+
+    fun nullable(nullable: Boolean) = apply {
+        this.nullable = nullable
+    }
+
+    fun addCode(format: String, vararg args: Any?) = apply {
+        body.add(format, *args)
+    }
+
+    fun addNamedCode(format: String, args: Map<String, *>) = apply {
+        body.addNamed(format, args)
+    }
+
+    fun addCode(codeBlock: CodeBlock) = apply {
+        body.add(codeBlock)
+    }
 
     fun returns(returnType: String) = apply {
         this.returnType = returnType
@@ -78,7 +99,14 @@ class DartFunctionBuilder internal constructor(
     }
 
     fun build(): DartFunctionSpec {
-        check(name.trim().isNotEmpty()) { "The name of a function can't be empty" }
+        //Check if the return type contains a nullable char and remove that and change nullable to true
+        if (returnType != null && returnType!!.endsWith("?")) {
+            println("Found nullable char at the last position. Updating returnType")
+            returnType = returnType!!.dropLast(1)
+            if (!nullable) {
+                nullable = true
+            }
+        }
         return DartFunctionSpec(this)
     }
 }

@@ -1,5 +1,8 @@
 package net.theevilreaper.dartpoet.parameter
 
+import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.buildCodeString
+import net.theevilreaper.dartpoet.code.writer.ParameterWriter
 import net.theevilreaper.dartpoet.util.toImmutableSet
 
 class DartParameterSpec internal constructor(
@@ -13,7 +16,6 @@ class DartParameterSpec internal constructor(
     internal val isRequired = builder.required
     internal val initializer = builder.initializer
     internal val annotations = builder.specData.annotations.toImmutableSet()
-    internal val modifiers = builder.specData.modifiers.toImmutableSet()
 
     init {
         check(name.trim().isNotEmpty()) { "The name of a parameter can't be empty" }
@@ -26,5 +28,24 @@ class DartParameterSpec internal constructor(
         builder.nullable = isNullable
         builder.required = isRequired
         return builder
+    }
+
+    internal fun write(
+        codeWriter: CodeWriter
+    ) {
+        ParameterWriter().write(this, codeWriter)
+    }
+
+    override fun toString() = buildCodeString {
+        write(
+            this,
+        )
+    }
+
+
+    companion object {
+
+        @JvmStatic
+        fun builder(name: String, type: String) = DartParameterBuilder(name, type)
     }
 }

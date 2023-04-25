@@ -1,6 +1,7 @@
 package net.theevilreaper.dartpoet.import
 
 import net.theevilreaper.dartpoet.util.IMPORT
+import net.theevilreaper.dartpoet.util.SEMICOLON
 import java.lang.IllegalStateException
 
 /**
@@ -40,9 +41,9 @@ class DartImport internal constructor(
             } else {
                 append("'package:$path'")
             }
-            append(";")
+            append(SEMICOLON)
         } else if (importCast != null && importCastType != null) {
-            append("'$path' ${importCastType.identifier} $importCast;")
+            append("'$path' ${importCastType.identifier} $importCast$SEMICOLON")
         } else {
             throw IllegalStateException("NOPE")
         }

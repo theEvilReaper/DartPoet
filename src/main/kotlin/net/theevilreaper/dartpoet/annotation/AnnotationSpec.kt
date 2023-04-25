@@ -1,8 +1,8 @@
 package net.theevilreaper.dartpoet.annotation
 
-import net.theevilreaper.dartpoet.code.CodeBlock
-import net.theevilreaper.dartpoet.code.CodeWriter
-import net.theevilreaper.dartpoet.util.ANNOTATION_CHAR
+import net.theevilreaper.dartpoet.code.*
+import net.theevilreaper.dartpoet.code.buildCodeString
+import net.theevilreaper.dartpoet.code.writer.AnnotationWriter
 import net.theevilreaper.dartpoet.util.toImmutableSet
 
 /**
@@ -10,36 +10,29 @@ import net.theevilreaper.dartpoet.util.toImmutableSet
  * @version 1.0.0
  * @since
  **/
-
 class AnnotationSpec(
     builder: AnnotationSpecBuilder
 ) {
 
-    private val name: String = builder.name
-    private val content: Set<CodeBlock> = builder.content.toImmutableSet()
+    internal val name: String = builder.name
+    internal val content: Set<CodeBlock> = builder.content.toImmutableSet()
+    internal val hasMultipleContentParts = content.size > 1
 
     init {
         check(name.trim().isNotEmpty()) { "The name can't be empty" }
     }
 
-    fun emit(codeWriter: CodeWriter) {
-
+    internal fun write(
+        codeWriter: CodeWriter,
+        inline: Boolean = true
+    ) {
+        AnnotationWriter().emit(this, codeWriter, inline = inline)
     }
 
-    //TODO: Update later to the class which writes the code. For now it is used to test the generation
-    fun write(): String {
-        val builder = StringBuilder()
-        builder.append("$ANNOTATION_CHAR$name")
-
-        if (content.isEmpty()) {
-            return builder.toString()
-        }
-
-        builder.append("(")
-        //TODO: Write content parts
-        builder.append(")")
-
-        return builder.toString()
+    override fun toString() = buildCodeString {
+        write(
+            this
+        )
     }
 
     companion object {

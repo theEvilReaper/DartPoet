@@ -13,7 +13,7 @@ class SpecData(vararg modifiers: DartModifier = emptyArray()) : SpecMethods<Unit
      * @param modifiers the modifiers to add
      */
     override fun modifiers(modifiers: Iterable<DartModifier>) {
-        this.modifiers += modifiers;
+        this.modifiers += modifiers
     }
 
     /**

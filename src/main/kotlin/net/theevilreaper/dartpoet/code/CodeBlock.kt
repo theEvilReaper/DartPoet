@@ -66,9 +66,9 @@ class CodeBlock private constructor(
 ) {
   /** A heterogeneous list containing string literals and value placeholders.  */
 
-  public fun isEmpty(): Boolean = formatParts.isEmpty()
+  fun isEmpty(): Boolean = formatParts.isEmpty()
 
-  public fun isNotEmpty(): Boolean = !isEmpty()
+  fun isNotEmpty(): Boolean = !isEmpty()
 
   /**
    * Returns a code block with `prefix` stripped off, or null if this code block doesn't start with
@@ -169,7 +169,7 @@ class CodeBlock private constructor(
     emitCode(this@CodeBlock)
   }
 
-  public fun toBuilder(): Builder {
+  fun toBuilder(): Builder {
     val builder = Builder()
     builder.formatParts += formatParts
     builder.args.addAll(args)
@@ -348,6 +348,7 @@ class CodeBlock private constructor(
         'S' -> this.args += argToString(arg)
         'P' -> this.args += if (arg is CodeBlock) arg else argToString(arg)
         'M' -> this.args += arg
+        'C' -> this.args += argToString(arg)
         else -> throw IllegalArgumentException(
           String.format("invalid format string: '%s'", format),
         )
@@ -455,7 +456,7 @@ class CodeBlock private constructor(
     public fun build(): CodeBlock = CodeBlock(formatParts.toImmutableList(), args.toImmutableList())
   }
 
-  public companion object {
+  companion object {
     private val NAMED_ARGUMENT = Regex("%([\\w_]+):([\\w]).*")
     private val LOWERCASE = Regex("[a-z]+[\\w_]*")
     private const val ARG_NAME = 1
@@ -480,7 +481,7 @@ class CodeBlock private constructor(
 }
 
 @JvmOverloads
-public fun Collection<CodeBlock>.joinToCode(
+fun Collection<CodeBlock>.joinToCode(
   separator: CharSequence = ", ",
   prefix: CharSequence = "",
   suffix: CharSequence = "",
@@ -494,7 +495,7 @@ public fun Collection<CodeBlock>.joinToCode(
  * Builds new [CodeBlock] by populating newly created [CodeBlock.Builder] using provided
  * [builderAction] and then converting it to [CodeBlock].
  */
-public inline fun buildCodeBlock(builderAction: CodeBlock.Builder.() -> Unit): CodeBlock {
+inline fun buildCodeBlock(builderAction: CodeBlock.Builder.() -> Unit): CodeBlock {
   return CodeBlock.builder().apply(builderAction).build()
 }
 
@@ -503,6 +504,6 @@ public inline fun buildCodeBlock(builderAction: CodeBlock.Builder.() -> Unit): C
  * [CodeBlock.Builder] and then executes [CodeBlock.Builder.unindent] before returning the
  * original [CodeBlock.Builder].
  */
-public inline fun CodeBlock.Builder.withIndent(builderAction: CodeBlock.Builder.() -> Unit): CodeBlock.Builder {
+inline fun CodeBlock.Builder.withIndent(builderAction: CodeBlock.Builder.() -> Unit): CodeBlock.Builder {
   return indent().also(builderAction).unindent()
 }
