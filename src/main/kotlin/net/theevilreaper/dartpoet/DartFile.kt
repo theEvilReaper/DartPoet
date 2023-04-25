@@ -55,7 +55,9 @@ class DartFile internal constructor(
         )
     }
 
-    internal val callEmit: (Any, CodeWriter) -> Unit = { o: Any, c: CodeWriter -> emitInternal(o, c) }
+    internal val callEmit: (Any, CodeWriter) -> Unit = {
+        o: Any, c: CodeWriter -> emitInternal(o, c)
+    }
 
     private fun emitInternal(o: Any, c: CodeWriter) {
         when (o::class) {
