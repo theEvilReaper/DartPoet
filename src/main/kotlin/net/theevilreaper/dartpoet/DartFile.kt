@@ -9,9 +9,13 @@ import net.theevilreaper.dartpoet.function.DartFunctionSpec
 import net.theevilreaper.dartpoet.import.DartImport
 import net.theevilreaper.dartpoet.import.LibraryImport
 import net.theevilreaper.dartpoet.import.PartImport
+import net.theevilreaper.dartpoet.util.DART_FILE_ENDING
+import net.theevilreaper.dartpoet.util.isDartConventionFileName
 import net.theevilreaper.dartpoet.util.toImmutableList
 import java.io.IOException
+import java.io.OutputStreamWriter
 import java.lang.Appendable
+import java.nio.file.Files
 import java.nio.file.Path
 
 class DartFile internal constructor(
@@ -43,6 +47,10 @@ class DartFile internal constructor(
         }
     }
 
+    init {
+        check(name.trim().isNotEmpty()) { "The name of a class can't be empty (ONLY SPACES ARE NOT ALLOWED" }
+    }
+
     internal fun write(
         codeWriter: CodeWriter
     ) {
@@ -71,13 +79,29 @@ class DartFile internal constructor(
     @Throws(IOException::class)
     fun write(out: Appendable) {
         val codeWriter = CodeWriter(
-            out
+            out,
+            indent = indent
         )
+        write(codeWriter)
         codeWriter.close()
     }
 
     @Throws(IOException::class)
     fun write(path: Path) {
+        require(Files.notExists(path) || Files.isDirectory(path)) {
+            "The given path $path exists but it is not a directory"
+        }
+
+        require(isDartConventionFileName(name)) {
+            """
+             The given name $name has some issues with the naming   
+             Please take a look at this page https://dart.dev/tools/linter-rules#file_names
+            """.trimIndent()
+        }
+
+        val outPutPath = path.resolve("$name$DART_FILE_ENDING")
+        OutputStreamWriter(Files.newOutputStream(outPutPath), Charsets.UTF_8)
+            .use { writer -> write(writer) }
     }
 
     companion object {
