@@ -99,7 +99,14 @@ class DartFile internal constructor(
             """.trimIndent()
         }
 
-        val outPutPath = path.resolve("$name$DART_FILE_ENDING")
+        val fileName = if (name.endsWith(DART_FILE_ENDING)) {
+            println("File name contains .dart ending.")
+            name
+        } else {
+            "$name$DART_FILE_ENDING"
+        }
+
+        val outPutPath = path.resolve(fileName)
         OutputStreamWriter(Files.newOutputStream(outPutPath), Charsets.UTF_8)
             .use { writer -> write(writer) }
     }
