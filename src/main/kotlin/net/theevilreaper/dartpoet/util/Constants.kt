@@ -30,7 +30,7 @@ internal const val CURLY_CLOSE = '}'
 
 internal val ALLOWED_PARAMETER_MODIFIERS = setOf(DartModifier.PUBLIC, DartModifier.PRIVATE, DartModifier.LATE, DartModifier.CONST, DartModifier.STATIC)
 
-private val namePattern: Pattern = Pattern.compile("([a-z]+)_+([a-z]+)")
+private val namePattern: Pattern = Pattern.compile("[a-z]+|([a-z]+)_+([a-z]+)")
 
 /**
  * Checks if a filename matches the DartFile conventions for file names (not class names!)
