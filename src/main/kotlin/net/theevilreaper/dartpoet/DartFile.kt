@@ -100,7 +100,6 @@ class DartFile internal constructor(
         }
 
         val fileName = if (name.endsWith(DART_FILE_ENDING)) {
-            println("File name contains .dart ending.")
             name
         } else {
             "$name$DART_FILE_ENDING"
