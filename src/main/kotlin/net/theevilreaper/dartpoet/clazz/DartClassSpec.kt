@@ -19,13 +19,15 @@ class DartClassSpec internal constructor(
     internal val isEnum = builder.isEnumClass
     internal val isAbstract = builder.isAbstract
     internal val isMixin = builder.isMixinClass
+    internal val isAnonymous = builder.isAnonymousClass
 
     internal val superClass = builder.superClass
     internal val inheritKeyWord = builder.inheritKeyWord
     internal val classModifiers = modifiers.filter { it != WITH }.toImmutableSet()
-    internal val functions = builder.functionStack.toImmutableSet()
+    internal val functions = builder.functionStack.filter { !it.isTypeDef }.toImmutableSet()
     internal val properties = builder.propertyStack.toImmutableSet()
     internal val constructors = builder.constructorStack.toImmutableSet()
+    internal val typeDefStack = builder.functionStack.filter { it.isTypeDef }.toImmutableSet()
 
     init {
         if (name != null) {
