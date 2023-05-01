@@ -55,6 +55,9 @@ class DartClassSpec internal constructor(
         )
     }
 
+    /**
+     * The class contains methods to create a new [DartClassBuilder] instance for a specific class.
+     */
     companion object {
 
         /**
@@ -62,34 +65,37 @@ class DartClassSpec internal constructor(
          * @return the created instance
          */
         @JvmStatic
-        fun builder(name: String): DartClassBuilder = DartClassBuilder(name, ClassType.CLASS, DartModifier.CLASS)
+        fun builder(name: String) = DartClassBuilder(name, ClassType.CLASS, DartModifier.CLASS)
 
         /**
          * Create a new [DartClassBuilder] instance for an anonymous dart class.
          * @return the created instance
          */
         @JvmStatic
-        fun anonymousClassBuilder(): DartClassBuilder = DartClassBuilder(null, ClassType.CLASS)
+        fun anonymousClassBuilder() = DartClassBuilder(null, ClassType.CLASS)
 
         /**
-         * Create a new [DartClassBuilder] instance for a enum dart class.
+         * Create a new [DartClassBuilder] instance for an enum dart class.
          * @return the created instance
          */
         @JvmStatic
-        fun enumClass(name: String): DartClassBuilder = DartClassBuilder(name, ClassType.ENUM)
+        fun enumClass(name: String) = DartClassBuilder(name, ClassType.ENUM)
 
         /**
          * Create a new [DartClassBuilder] instance for a mixin dart class.
          * @return the created instance
          */
         @JvmStatic
-        fun mixinClass(name: String): DartClassBuilder = DartClassBuilder(name, ClassType.MIXIN)
+        fun mixinClass(name: String) = DartClassBuilder(name, ClassType.MIXIN)
 
         /**
-         * Create a new [DartClassBuilder] instance for a abstract dart class.
+         * Create a new [DartClassBuilder] instance for an abstract dart class.
          * @return the created instance
          */
         @JvmStatic
-        fun abstractClass(name: String): DartClassBuilder = DartClassBuilder(name, ClassType.ABSTRACT)
+        fun abstractClass(name: String) = DartClassBuilder(name, ClassType.ABSTRACT)
+
+        @JvmStatic
+        fun libraryClass(name: String) = DartClassBuilder(name, ClassType.LIBRARY)
     }
 }
