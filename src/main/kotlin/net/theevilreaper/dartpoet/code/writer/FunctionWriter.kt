@@ -10,11 +10,14 @@ import net.theevilreaper.dartpoet.util.SEMICOLON
 class FunctionWriter {
 
     fun emit(functionSpec: DartFunctionSpec, writer: CodeWriter) {
-        if (functionSpec.returnType.orEmpty().trim().isEmpty()) {
+        if (functionSpec.isTypeDef) {
+            writeTypeDef(functionSpec, writer)
+            return
+        } else if (functionSpec.returnType.orEmpty().trim().isEmpty()) {
             if (functionSpec.isAsync) {
-                writer.emit("Future<void>·")
+                writer.emit("Future<${VOID.identifier}>·")
             } else {
-                writer.emit("void·")
+                writer.emit("${VOID.identifier}·")
             }
         } else {
             if (functionSpec.isAsync) {
@@ -28,25 +31,43 @@ class FunctionWriter {
             }
             writer.emit("·")
         }
-
         writer.emit("${if (functionSpec.isPrivate) PRIVATE.identifier else ""}${functionSpec.name}")
 
         functionSpec.parameters.emitParameters(writer) {
             it.write(writer)
         }
 
-        if (functionSpec.body.isEmpty()) {
+        writeBody(functionSpec, writer)
+    }
+
+    private fun writeBody(spec: DartFunctionSpec, writer: CodeWriter) {
+        if (spec.body.isEmpty()) {
             writer.emit(SEMICOLON)
-        } else {
-            if (functionSpec.isAsync) {
-                writer.emit("·${ASYNC.identifier}")
-            }
-            writer.emit("·{\n")
-            writer.indent()
-            writer.emitCode(functionSpec.body.returnsWithoutLinebreak(), ensureTrailingNewline = true)
-            writer.unindent()
-            writer.emit("}")
+            return
         }
+        if (spec.isAsync) {
+            writer.emit("·${ASYNC.identifier}")
+        }
+        writer.emit("·{\n")
+        writer.indent()
+        writer.emitCode(spec.body.returnsWithoutLinebreak(), ensureTrailingNewline = true)
+        writer.unindent()
+        writer.emit("}")
+    }
+
+    private fun writeTypeDef(spec: DartFunctionSpec, codeWriter: CodeWriter) {
+        codeWriter.emit("${TYPEDEF.identifier}·")
+        codeWriter.emit("${spec.name}·")
+        codeWriter.emit("=·")
+        codeWriter.emit("${spec.returnType}")
+        spec.parameters.emitParameters(
+            codeWriter,
+            emitBrackets = spec.parameters.isNotEmpty(),
+            forceNewLines = false
+        ) {
+            it.write(codeWriter)
+        }
+        codeWriter.emit(SEMICOLON)
     }
 
     private val RETURN_EXPRESSION_BODY_PREFIX_SPACE = CodeBlock.of("return ")
