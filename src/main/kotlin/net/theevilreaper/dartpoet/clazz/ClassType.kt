@@ -11,8 +11,9 @@ import net.theevilreaper.dartpoet.DartModifier
 enum class ClassType(
     internal val keyword: String,
 ) {
-    CLASS("class"),
-    ABSTRACT("abstract"),
-    MIXIN("mixin"),
-    ENUM("enum")
+    CLASS(DartModifier.CLASS.identifier),
+    ABSTRACT(DartModifier.ABSTRACT.identifier),
+    MIXIN(DartModifier.MIXIN.identifier),
+    ENUM(DartModifier.ENUM.identifier),
+    LIBRARY(DartModifier.LIBRARY.identifier)
 }
