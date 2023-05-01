@@ -1,16 +1,22 @@
 package net.theevilreaper.dartpoet.import
 
+import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.util.SEMICOLON
 
 class LibraryImport(
-    private val path: String
+    private val path: String,
+    private val asPartOf: Boolean = false
 ): Import {
     init {
         check(path.trim().isNotEmpty()) { "The path of an LibraryImport can't be empty" }
     }
 
     private val partImport: String = buildString {
-        append("part·of·")
+        if (asPartOf) {
+            append("part of ")
+        } else {
+            append("${DartModifier.LIBRARY.identifier} ")
+        }
         append(path)
         append(SEMICOLON)
     }
