@@ -19,6 +19,18 @@ import net.theevilreaper.dartpoet.util.NEW_LINE
 class ClassWriter {
 
     fun write(spec: DartClassSpec, codeWriter: CodeWriter) {
+        if (spec.isAnonymous) {
+            writeAnonymousClass(spec, codeWriter)
+            return
+        }
+        spec.typeDefStack.emitFunctions(codeWriter) {
+            it.write(codeWriter)
+        }
+
+        if (spec.typeDefStack.isNotEmpty()) {
+            codeWriter.emit(NEW_LINE)
+        }
+
         spec.annotations.emitAnnotations(codeWriter) {
             it.write(codeWriter)
         }
@@ -50,6 +62,21 @@ class ClassWriter {
         }
     }
 
+    private fun writeAnonymousClass(spec: DartClassSpec, writer: CodeWriter) {
+        spec.typeDefStack.emitFunctions(writer) {
+            it.write(writer)
+        }
+
+        spec.functions.emitFunctions(writer) {
+            it.write(writer)
+        }
+
+        if (spec.endsWithNewLine) {
+            writer.emit(NEW_LINE)
+        }
+
+    }
+
     /**
      * The method contains the logic to write the dart class declaration for a [DartClassSpec].
      * @param spec the [DartClassSpec] which contains all data for a class
@@ -61,12 +88,18 @@ class ClassWriter {
                 writer.emit(type.keyword)
                 writer.emit("·")
                 writer.emit(if (spec.modifiers.contains(PRIVATE)) PRIVATE.identifier else EMPTY_STRING)
-                writer.emit(spec.name!!)
+                if (!spec.name.orEmpty().trim().isEmpty()) {
+                    writer.emit(spec.name!!)
+                }
             }
             ClassType.ABSTRACT -> {
                 writer.emit("${type.keyword}·${ClassType.CLASS.keyword}·")
                 writer.emit(if (spec.modifiers.contains(PRIVATE)) PRIVATE.identifier else EMPTY_STRING)
                 writer.emit(spec.name!!)
+            }
+            else -> {
+                //TODO: Check if a library class needs a header
+                // A library class doesn't have any class header
             }
         }
         writer.emit("·")
