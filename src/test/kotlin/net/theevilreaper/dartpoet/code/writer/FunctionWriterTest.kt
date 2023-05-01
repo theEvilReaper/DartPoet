@@ -115,4 +115,15 @@ class FunctionWriterTest {
             """.trimIndent()
         )
     }
+
+    @Test
+    fun `test typedef write`() {
+        val function = DartFunctionSpec.builder("ValueUpdate<E>")
+            .typedef(true)
+            .parameter(DartParameterSpec.builder("value", "E")
+                .nullable(true).build())
+            .returns("void Function")
+            .build()
+        assertThat(function.toString()).isEqualTo("typedef ValueUpdate<E> = void Function(E? value);")
+    }
 }
