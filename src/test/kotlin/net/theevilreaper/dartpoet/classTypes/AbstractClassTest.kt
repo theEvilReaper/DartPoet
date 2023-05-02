@@ -28,12 +28,10 @@ class AbstractClassTest {
               TestModel getByID(int id);
             
               void test();
-            
             }
             
             """.trimIndent()
         )
-
     }
 
     @Test
@@ -50,7 +48,6 @@ class AbstractClassTest {
             abstract class Test {
             
               void test();
-            
             }
             """.trimIndent()
         )
