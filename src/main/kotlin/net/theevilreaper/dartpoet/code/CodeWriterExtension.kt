@@ -41,24 +41,18 @@ fun String.nextPotentialPlaceholderPosition(startIndex: Int) =
 
 internal fun Set<DartFunctionSpec>.emitFunctions(
     codeWriter: CodeWriter,
-    forceNewLines: Boolean = false,
     emitBlock: (DartFunctionSpec) -> Unit = { it.write(codeWriter) }
 ) = with(codeWriter) {
     if (isNotEmpty()) {
-        val emitNewLines = isNotEmpty() || forceNewLines
+        val newLines = size > 1
         forEachIndexed { index, functionSpec ->
-            if (index > 0 && emitNewLines) {
+            if (index > 0) {
                 emit(NEW_LINE)
             }
             emitBlock(functionSpec)
-
-            if (emitNewLines) {
+            if (newLines && index < size - 1) {
                 emit(NEW_LINE)
             }
-        }
-
-        if (emitNewLines) {
-            emit(NEW_LINE)
         }
     }
 }
@@ -177,7 +171,6 @@ internal fun <T: Import> List<T>.writeImports(
         if (newLineAtBegin) {
             writer.emit(NEW_LINE)
         }
-
         forEachIndexed { index, import ->
             if (index > 0) {
                 writer.emit(NEW_LINE)
