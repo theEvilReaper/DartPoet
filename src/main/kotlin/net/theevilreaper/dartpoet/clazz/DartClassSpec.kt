@@ -29,6 +29,9 @@ class DartClassSpec internal constructor(
     internal val constructors = builder.constructorStack.toImmutableSet()
     internal val typeDefStack = builder.functionStack.filter { it.isTypeDef }.toImmutableSet()
 
+    internal val hasNoContent: Boolean
+        get() = functions.isEmpty() && properties.isEmpty() && constructors.isEmpty()
+
     init {
         if (name != null) {
             check(name.trim().isNotEmpty()) { "The name can't be empty"}
