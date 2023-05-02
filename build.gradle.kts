@@ -18,7 +18,9 @@ repositories {
 dependencies {
     testImplementation(kotlin("test"))
     testImplementation(libs.truth)
-    // testImplementation(libs.kotlin.junit)
+    testImplementation(libs.junitApi)
+    testImplementation(libs.junitParams)
+    testRuntimeOnly(libs.junitEngine)
 }
 
 tasks {
@@ -32,7 +34,8 @@ tasks {
     compileKotlin {
         kotlinOptions {
             jvmTarget = "17"
-            languageVersion = "2.0"
+            //languageVersion = "2.0"
+
         }
     }
 

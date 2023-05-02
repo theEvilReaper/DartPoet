@@ -12,9 +12,7 @@ class ClassWriterTest {
         val clazz = DartClassSpec.builder("Test").build()
         assertThat(clazz.toString()).isEqualTo(
             """
-            class Test {
-            
-            }
+            class Test {}
             """.trimIndent()
         )
 
@@ -26,9 +24,7 @@ class ClassWriterTest {
             .build()
         assertThat(clazz.toString()).isEqualTo(
             """
-            mixin Test {
-            
-            }
+            mixin Test {}
             """.trimIndent()
         )
     }
@@ -39,9 +35,7 @@ class ClassWriterTest {
             .build()
         assertThat(clazz.toString()).isEqualTo(
             """
-            enum Test {
-            
-            }
+            enum Test {}
             """.trimIndent()
         )
     }
@@ -53,9 +47,7 @@ class ClassWriterTest {
             .build()
         assertThat(clazz.toString()).isEqualTo(
             """
-            class Model {
-            
-            }
+            class Model {}
             
             """.trimIndent()
         )
@@ -68,9 +60,7 @@ class ClassWriterTest {
             .build()
         assertThat(clazz.toString()).isEqualTo(
             """
-            abstract class DatabaseHandler {
-            
-            }
+            abstract class DatabaseHandler {}
             
             """.trimIndent()
         )

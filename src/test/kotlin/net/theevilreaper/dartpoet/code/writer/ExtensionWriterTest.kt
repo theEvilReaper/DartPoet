@@ -15,11 +15,9 @@ class ExtensionWriterTest {
 
         assertThat(extension.toString()).isEqualTo(
             """
-            extension TestExtension on String {
-            }
+            extension TestExtension on String { }
             """.trimIndent()
         )
-
     }
 
     @Test
@@ -41,10 +39,8 @@ class ExtensionWriterTest {
               bool hasSize() {
                 return this.length > 2;
               }
-            
             }
             """.trimIndent()
         )
-
     }
 }

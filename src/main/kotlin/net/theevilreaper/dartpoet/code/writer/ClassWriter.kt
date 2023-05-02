@@ -8,6 +8,8 @@ import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.code.emitConstructors
 import net.theevilreaper.dartpoet.code.emitFunctions
 import net.theevilreaper.dartpoet.property.DartPropertySpec
+import net.theevilreaper.dartpoet.util.CURLY_CLOSE
+import net.theevilreaper.dartpoet.util.CURLY_OPEN
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.NEW_LINE
 
@@ -19,10 +21,34 @@ import net.theevilreaper.dartpoet.util.NEW_LINE
 class ClassWriter {
 
     fun write(spec: DartClassSpec, codeWriter: CodeWriter) {
+        if (spec.isAnonymous) {
+            writeAnonymousClass(spec, codeWriter)
+            return
+        }
+        spec.typeDefStack.emitFunctions(codeWriter) {
+            it.write(codeWriter)
+        }
+
+        if (spec.typeDefStack.isNotEmpty()) {
+            codeWriter.emit(NEW_LINE)
+        }
+
         spec.annotations.emitAnnotations(codeWriter) {
             it.write(codeWriter)
         }
         writeClassHeader(spec, codeWriter)
+
+        //Only write {} when the class contains now content
+        if (spec.hasNoContent) {
+            codeWriter.emit("$CURLY_OPEN$CURLY_CLOSE")
+
+            if (spec.endsWithNewLine) {
+                codeWriter.emit(NEW_LINE)
+            }
+
+            return
+        }
+
         writeInheritance(spec, codeWriter)
 
         codeWriter.emit("{$NEW_LINE")
@@ -42,12 +68,29 @@ class ClassWriter {
         }
 
         codeWriter.unindent()
-
+        if (spec.functions.isNotEmpty()) {
+            codeWriter.emit(NEW_LINE)
+        }
         codeWriter.emit("}")
 
         if (spec.endsWithNewLine) {
             codeWriter.emit(NEW_LINE)
         }
+    }
+
+    private fun writeAnonymousClass(spec: DartClassSpec, writer: CodeWriter) {
+        spec.typeDefStack.emitFunctions(writer) {
+            it.write(writer)
+        }
+
+        spec.functions.emitFunctions(writer) {
+            it.write(writer)
+        }
+
+        if (spec.endsWithNewLine) {
+            writer.emit(NEW_LINE)
+        }
+
     }
 
     /**
@@ -61,12 +104,18 @@ class ClassWriter {
                 writer.emit(type.keyword)
                 writer.emit("·")
                 writer.emit(if (spec.modifiers.contains(PRIVATE)) PRIVATE.identifier else EMPTY_STRING)
-                writer.emit(spec.name!!)
+                if (spec.name.orEmpty().trim().isNotEmpty()) {
+                    writer.emit(spec.name!!)
+                }
             }
             ClassType.ABSTRACT -> {
                 writer.emit("${type.keyword}·${ClassType.CLASS.keyword}·")
                 writer.emit(if (spec.modifiers.contains(PRIVATE)) PRIVATE.identifier else EMPTY_STRING)
                 writer.emit(spec.name!!)
+            }
+            else -> {
+                //TODO: Check if a library class needs a header
+                // A library class doesn't have any class header
             }
         }
         writer.emit("·")

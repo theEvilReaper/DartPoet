@@ -6,6 +6,7 @@ internal enum class ModifierTarget {
     FUNCTION,
     INTERFACE,
     PROPERTY,
-    PARAMETER
+    PARAMETER,
+    TYPEDEF
 
 }

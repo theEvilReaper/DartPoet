@@ -23,7 +23,7 @@ enum class DartModifier(
     CLASS("class", ModifierTarget.CLASS),
     LIBRARY("library", ModifierTarget.CLASS),
     ON("on", ModifierTarget.CLASS),
-
+    TYPEDEF("typedef", ModifierTarget.TYPEDEF),
     VOID("void", ModifierTarget.INTERFACE, ModifierTarget.FUNCTION);
 
     internal fun containsTarget(modifierTarget: ModifierTarget): Boolean {

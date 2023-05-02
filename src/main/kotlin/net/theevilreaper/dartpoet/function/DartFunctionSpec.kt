@@ -24,6 +24,7 @@ class DartFunctionSpec(
     private var modifiers: Set<DartModifier> = builder.specData.modifiers.toImmutableSet()
     internal val isNullable: Boolean = builder.nullable
     internal val isPrivate = modifiers.contains(DartModifier.PRIVATE)
+    internal val isTypeDef = builder.typedef
 
     private val namedParameters: Set<DartParameterSpec> = if (parameters.isEmpty()) {
         setOf()
@@ -32,6 +33,7 @@ class DartFunctionSpec(
     }
 
     init {
+        //check(!isTypeDef && annotation.isNotEmpty()) { "A typedef can't have annotations" }
         require(name.trim().isNotEmpty()) { "The name of a function can't be empty" }
         require(body.isEmpty() || !modifiers.contains(DartModifier.ABSTRACT)) { "An abstract method can't have a body" }
 

@@ -21,6 +21,11 @@ class DartFunctionBuilder internal constructor(
     internal var nullable: Boolean = false
     internal val isConstructor: Boolean = name == CONSTRUCTOR
     internal val isNamedConstructor: Boolean = namedConstructor
+    internal var typedef: Boolean = false
+
+    fun typedef(typeDef: Boolean) = apply {
+        this.typedef = typeDef
+    }
 
     fun nullable(nullable: Boolean) = apply {
         this.nullable = nullable

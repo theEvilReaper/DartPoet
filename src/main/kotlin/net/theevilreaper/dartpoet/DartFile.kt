@@ -42,8 +42,13 @@ class DartFile internal constructor(
     internal val libImport: LibraryImport? = if (builder.imports.isEmpty()) {
         null
     } else {
-        builder.imports.filterIsInstance<LibraryImport>().let {
+        val possibleListImports = builder.imports.filterIsInstance<LibraryImport>()
+        if (possibleListImports.isEmpty()) {
             null
+        } else if (possibleListImports.size == 1) {
+            possibleListImports.first()
+        } else {
+            throw Exception("Only one library import is allowed")
         }
     }
 

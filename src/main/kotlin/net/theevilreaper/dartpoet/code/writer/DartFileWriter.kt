@@ -14,6 +14,7 @@ class DartFileWriter {
     fun emit(dartFile: DartFile, writer: CodeWriter) {
         if (dartFile.libImport != null) {
             writer.emit(dartFile.libImport.toString())
+            writer.emit("\n")
         }
 
         dartFile.imports.writeImports(writer, newLineAtBegin = dartFile.libImport != null) {
@@ -24,9 +25,8 @@ class DartFileWriter {
             it.toString()
         }
 
-        writer.emit(NEW_LINE)
-
         if (dartFile.types.isNotEmpty()) {
+            writer.emit(NEW_LINE)
             dartFile.types.forEach {
                 classWriter.write(it as DartClassSpec, writer)
             }

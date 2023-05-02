@@ -3,8 +3,11 @@ package net.theevilreaper.dartpoet
 import com.google.common.truth.Truth
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.DartClassSpec
+import net.theevilreaper.dartpoet.function.DartFunctionSpec
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.import.DartImport
+import net.theevilreaper.dartpoet.import.ImportCastType
+import net.theevilreaper.dartpoet.import.LibraryImport
 import net.theevilreaper.dartpoet.import.PartImport
 import net.theevilreaper.dartpoet.parameter.DartParameterSpec
 import org.junit.jupiter.api.Assertions.*
@@ -60,7 +63,7 @@ class DartFileTest {
                     .addCode("%L", "_${"$"}VersionModelFromJson(json);")
                     .build()
             }
-        val versionFile = DartFile.builder("version_model")
+        val versionFile = DartFile.builder("version.dart")
             .imports {
                 listOf(
                     DartImport("freezed_annotation/freezed_annotation.dart"),
@@ -90,6 +93,42 @@ class DartFileTest {
                   _${'$'}VersionModelFromJson(json);
             
             }
+            """.trimIndent()
+        )
+    }
+
+    @Test
+    fun `test library write`() {
+        val libClass = DartFile.builder("testLib")
+            .type(
+                DartClassSpec.anonymousClassBuilder()
+                    .endWithNewLine(true)
+                    .function(
+                        DartFunctionSpec.builder("JsonMap")
+                            .typedef(true)
+                            .returns("Map<String, dynamic>")
+                            .build()
+
+                    )
+                    .build()
+            )
+            .imports {
+                listOf(
+                    DartImport("dart:html"),
+                    LibraryImport("testLib"),
+                    DartImport("dart:math", ImportCastType.AS, "math"),
+                )
+            }
+            .build()
+        Truth.assertThat(libClass.toString()).isEqualTo(
+            """
+            library testLib;
+            
+            import 'dart:html';
+            import 'dart:math' as math;
+            
+            typedef JsonMap = Map<String, dynamic>;
+            
             """.trimIndent()
         )
     }
