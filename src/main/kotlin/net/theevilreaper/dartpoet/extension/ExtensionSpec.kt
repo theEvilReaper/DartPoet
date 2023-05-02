@@ -13,6 +13,7 @@ class ExtensionSpec(
     internal val extClass = builder.extClass
     internal val endWithNewLine = builder.endWithNewLine
     internal val functions = builder.functionStack.toImmutableSet()
+    internal val hasNoContent = builder.functionStack.isEmpty()
 
     init {
         require(name.trim().isNotEmpty()) { "The name can't be empty" }
