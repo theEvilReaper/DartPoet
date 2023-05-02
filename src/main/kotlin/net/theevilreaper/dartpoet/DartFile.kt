@@ -46,7 +46,7 @@ class DartFile internal constructor(
         if (possibleListImports.size == 1) {
             possibleListImports.first()
         } else {
-            throw Exception("NOPE")
+            throw Exception("Only one library import is allowed")
         }
     }
 
