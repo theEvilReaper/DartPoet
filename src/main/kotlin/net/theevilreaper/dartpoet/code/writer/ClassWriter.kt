@@ -8,6 +8,8 @@ import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.code.emitConstructors
 import net.theevilreaper.dartpoet.code.emitFunctions
 import net.theevilreaper.dartpoet.property.DartPropertySpec
+import net.theevilreaper.dartpoet.util.CURLY_CLOSE
+import net.theevilreaper.dartpoet.util.CURLY_OPEN
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.NEW_LINE
 
@@ -35,6 +37,18 @@ class ClassWriter {
             it.write(codeWriter)
         }
         writeClassHeader(spec, codeWriter)
+
+        //Only write {} when the class contains now content
+        if (spec.hasNoContent) {
+            codeWriter.emit("$CURLY_OPEN$CURLY_CLOSE")
+
+            if (spec.endsWithNewLine) {
+                codeWriter.emit(NEW_LINE)
+            }
+
+            return
+        }
+
         writeInheritance(spec, codeWriter)
 
         codeWriter.emit("{$NEW_LINE")
@@ -54,7 +68,9 @@ class ClassWriter {
         }
 
         codeWriter.unindent()
-
+        if (spec.functions.isNotEmpty()) {
+            codeWriter.emit(NEW_LINE)
+        }
         codeWriter.emit("}")
 
         if (spec.endsWithNewLine) {
@@ -88,7 +104,7 @@ class ClassWriter {
                 writer.emit(type.keyword)
                 writer.emit("·")
                 writer.emit(if (spec.modifiers.contains(PRIVATE)) PRIVATE.identifier else EMPTY_STRING)
-                if (!spec.name.orEmpty().trim().isEmpty()) {
+                if (spec.name.orEmpty().trim().isNotEmpty()) {
                     writer.emit(spec.name!!)
                 }
             }
