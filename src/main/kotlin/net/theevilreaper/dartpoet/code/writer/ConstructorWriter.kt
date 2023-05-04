@@ -36,6 +36,9 @@ class ConstructorWriter {
         }
 
         if (spec.hasNamedParameters) {
+            if (spec.parameters.isNotEmpty()) {
+                writer.emit(",$NEW_LINE")
+            }
             writer.emit("{")
             writer.emit("\n")
             writer.indent(1)
