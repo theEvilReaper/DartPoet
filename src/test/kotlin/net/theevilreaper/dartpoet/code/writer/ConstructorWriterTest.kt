@@ -107,4 +107,26 @@ class ConstructorWriterTest {
             """.trimIndent()
         )
     }
+
+    @Test
+    fun `test constructor with named and variable with initializer`() {
+        val constructor = ConstructorSpec.builder("Item")
+            .parameters {
+                listOf(
+                    DartParameterSpec.builder("name").required(true).build(),
+                    DartParameterSpec.builder("id").initializer("%L", 10L).build(),
+                    DartParameterSpec.builder("amount").required(true).build()
+                )
+            }
+            .build()
+        Truth.assertThat(constructor.toString()).isEqualTo(
+            """
+            Item(this.id = 10,
+            {
+              required this.name,
+              required this.amount
+            });
+            """.trimIndent()
+        )
+    }
 }
