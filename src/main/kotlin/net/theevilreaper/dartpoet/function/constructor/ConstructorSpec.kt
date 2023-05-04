@@ -4,6 +4,7 @@ import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.ConstructorWriter
 import net.theevilreaper.dartpoet.function.FunctionType
+import net.theevilreaper.dartpoet.util.toImmutableList
 import net.theevilreaper.dartpoet.util.toImmutableSet
 
 class ConstructorSpec(
@@ -15,16 +16,13 @@ class ConstructorSpec(
     internal val isNamed = named.orEmpty().trim().isNotEmpty()
     internal val isLambda = builder.lambda
     internal val isFactory = builder.factory
-    internal val body = builder.body
+    internal val initializer = builder.initializer
     internal val modifiers = builder.modifiers.toImmutableSet()
-
-
     private val modelParameters = builder.parameters.toImmutableSet()
-
-    internal val parameters = modelParameters.filter { !it.isRequired }.toList()
-    internal val requiredParameters = modelParameters.filter { it.isRequired }.toImmutableSet()
-
-    internal val namedParameters = modelParameters.filter { it.isNamed }.toImmutableSet()
+    internal val requiredAndNamedParameters = builder.parameters.filter { it.isRequired || it.isNamed }.toImmutableList()
+    internal val parameters = modelParameters.minus(requiredAndNamedParameters.toSet()).toImmutableList()
+    internal val hasParameters = builder.parameters.isNotEmpty()
+    internal val hasNamedParameters = requiredAndNamedParameters.isNotEmpty()
 
     internal fun write(
         codeWriter: CodeWriter

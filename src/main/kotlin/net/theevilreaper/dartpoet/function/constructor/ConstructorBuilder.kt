@@ -13,7 +13,7 @@ class ConstructorBuilder(
 
     internal val parameters: MutableList<DartParameterSpec> = mutableListOf()
     internal var lambda: Boolean = false
-    internal val body: CodeBlock.Builder = CodeBlock.builder()
+    internal val initializer: CodeBlock.Builder = CodeBlock.builder()
     internal var factory: Boolean = false
     internal val modifiers: MutableList<DartModifier> = mutableListOf(*modifiers)
 
@@ -39,15 +39,15 @@ class ConstructorBuilder(
     }
 
     fun addCode(format: String, vararg args: Any?) = apply {
-        body.add(format, *args)
+        initializer.add(format, *args)
     }
 
     fun addNamedCode(format: String, args: Map<String, *>) = apply {
-        body.addNamed(format, args)
+        initializer.addNamed(format, args)
     }
 
     fun addCode(codeBlock: CodeBlock) = apply {
-        body.add(codeBlock)
+        initializer.add(codeBlock)
     }
 
     fun lambda(lambda: Boolean) = apply {
