@@ -82,9 +82,13 @@ internal fun Set<AnnotationSpec>.emitAnnotations(
 internal fun Set<ConstructorSpec>.emitConstructors(
     codeWriter: CodeWriter,
     forceNewLines: Boolean = false,
-    emitBlock: (ConstructorSpec) -> Unit = { it.write(codeWriter)}
+    leadingNewLine: Boolean = false,
+    emitBlock: (ConstructorSpec) -> Unit = { it.write(codeWriter) }
 ) = with(codeWriter) {
     if (isNotEmpty()) {
+        if (leadingNewLine) {
+            codeWriter.emit(NEW_LINE)
+        }
         forEachIndexed { index, constructorSpec ->
             val emitNewLines = size > 1 || forceNewLines
 
@@ -105,35 +109,28 @@ internal fun List<DartParameterSpec>.emitParameters(
     codeWriter: CodeWriter,
     forceNewLines: Boolean = false,
     emitBrackets: Boolean = true,
+    emitSpace: Boolean = true,
     emitBlock: (DartParameterSpec) -> Unit = { it.write(codeWriter) }
 ) = with(codeWriter) {
     if (emitBrackets) {
         emit("(")
     }
     if (isNotEmpty()) {
-        val emitNewLines = size > 2 || forceNewLines
         val emitComma = size > 1
-        if (emitNewLines) {
-            emit(NEW_LINE)
-            indent()
-        }
-
         forEachIndexed { index, parameter ->
-            if (index > 0 && emitNewLines)  {
+            if (index > 0 && forceNewLines)  {
                 emit(NEW_LINE)
             }
+
             emitBlock(parameter)
             if (emitComma) {
-                emit(",")
                 if (index < size - 1) {
+                    emit(",")
+                }
+                if (emitSpace && index < size - 1) {
                     emit(SPACE)
                 }
             }
-        }
-
-        if (emitNewLines) {
-            unindent()
-            emit(NEW_LINE)
         }
     }
     if (emitBrackets) {
