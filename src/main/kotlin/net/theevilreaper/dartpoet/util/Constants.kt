@@ -28,7 +28,7 @@ internal const val CONSTRUCTOR = "CONSTRUCTOR"
 internal const val CURLY_OPEN = '{'
 internal const val CURLY_CLOSE = '}'
 
-internal val ALLOWED_PARAMETER_MODIFIERS = setOf(DartModifier.PUBLIC, DartModifier.PRIVATE, DartModifier.LATE, DartModifier.CONST, DartModifier.STATIC)
+internal val ALLOWED_PARAMETER_MODIFIERS = setOf(DartModifier.PUBLIC, DartModifier.PRIVATE, DartModifier.LATE, DartModifier.FINAL, DartModifier.CONST, DartModifier.STATIC)
 
 private val namePattern: Pattern = Pattern.compile("[a-z]+|([a-z]+)_+([a-z]+)")
 
