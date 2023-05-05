@@ -1,7 +1,6 @@
 package net.theevilreaper.dartpoet.util
 
 import net.theevilreaper.dartpoet.DartModifier
-import java.util.regex.Pattern
 
 // The documentation from dart says that maximum length of a line is 80
 internal const val MAX_LINE_LENGTH = 80
@@ -30,7 +29,8 @@ internal const val CURLY_CLOSE = '}'
 
 internal val ALLOWED_PARAMETER_MODIFIERS = setOf(DartModifier.PUBLIC, DartModifier.PRIVATE, DartModifier.LATE, DartModifier.CONST, DartModifier.STATIC)
 
-private val namePattern: Pattern = Pattern.compile("[a-z]+|([a-z]+)_+([a-z]+)")
+private val namePattern: Regex = Regex("[a-z]+|([a-z]+)_+([a-z]+)")
+private val lowerCamelCase: Regex = Regex("[a-z]+[A-Z0-9]*[a-z0-9]*[A-Za-z0-9]*")
 
 /**
  * Checks if a filename matches the DartFile conventions for file names (not class names!)
@@ -40,7 +40,17 @@ private val namePattern: Pattern = Pattern.compile("[a-z]+|([a-z]+)_+([a-z]+)")
 fun isDartConventionFileName(fileName: String): Boolean {
     if (fileName.trim().isEmpty()) return false
     if (fileName.contains(DART_FILE_ENDING)) {
-        return namePattern.matcher(fileName.replace(DART_FILE_ENDING, EMPTY_STRING)).matches()
+        return fileName.replace(DART_FILE_ENDING, EMPTY_STRING).matches(namePattern)
     }
-    return namePattern.matcher(fileName).matches()
+    return fileName.matches(namePattern)
+}
+
+/**
+ * Return a [Boolean] if the given string has the lowerCamelCase format.
+ * @param input the string to check
+ * @return true when the string has the format otherwise false
+ */
+fun isInLowerCamelCase(input: String): Boolean {
+    if (input.trim().isEmpty()) return false
+    return input.matches(lowerCamelCase)
 }
