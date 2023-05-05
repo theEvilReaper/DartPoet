@@ -4,6 +4,8 @@ import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.emitParameters
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
+import net.theevilreaper.dartpoet.util.CURLY_CLOSE
+import net.theevilreaper.dartpoet.util.CURLY_OPEN
 import net.theevilreaper.dartpoet.util.NEW_LINE
 import net.theevilreaper.dartpoet.util.SEMICOLON
 
@@ -39,17 +41,17 @@ class ConstructorWriter {
             if (spec.parameters.isNotEmpty()) {
                 writer.emit(",$NEW_LINE")
             }
-            writer.emit("{")
-            writer.emit("\n")
-            writer.indent(1)
+            writer.emit("$CURLY_OPEN")
+            writer.emit(NEW_LINE)
+            writer.indent()
 
             spec.requiredAndNamedParameters.emitParameters(writer, emitBrackets = false, emitSpace = false, forceNewLines = true) {
                 it.write(writer)
             }
 
-            writer.unindent(1)
+            writer.unindent()
             writer.emit(NEW_LINE)
-            writer.emit("}")
+            writer.emit("$CURLY_CLOSE")
         }
 
 
