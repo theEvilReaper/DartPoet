@@ -3,7 +3,7 @@
 
 kotlin = "1.8.21"
 googleTruth = "1.1.3"
-junit = "5.9.2"
+junit = "5.9.3"
 dokka = "1.8.10"
 changeLog = "2.0.0"
 
