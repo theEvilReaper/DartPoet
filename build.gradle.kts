@@ -1,10 +1,10 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
     application
-    id("org.jetbrains.changelog") version "2.0.0"
+    alias(libs.plugins.changeLog)
     `maven-publish`
     signing
-    id("org.jetbrains.dokka") version "1.8.10"
+    alias(libs.plugins.dokka)
     `java-library`
 }
 
