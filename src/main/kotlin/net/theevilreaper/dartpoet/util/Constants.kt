@@ -27,7 +27,7 @@ internal const val CONSTRUCTOR = "CONSTRUCTOR"
 internal const val CURLY_OPEN = '{'
 internal const val CURLY_CLOSE = '}'
 
-internal val ALLOWED_PARAMETER_MODIFIERS = setOf(DartModifier.PUBLIC, DartModifier.PRIVATE, DartModifier.LATE, DartModifier.CONST, DartModifier.STATIC)
+internal val ALLOWED_PARAMETER_MODIFIERS = setOf(DartModifier.PUBLIC, DartModifier.PRIVATE, DartModifier.LATE, DartModifier.FINAL, DartModifier.CONST, DartModifier.STATIC)
 
 private val namePattern: Regex = Regex("[a-z]+|([a-z]+)_+([a-z]+)")
 private val lowerCamelCase: Regex = Regex("[a-z]+[A-Z0-9]*[a-z0-9]*[A-Za-z0-9]*")

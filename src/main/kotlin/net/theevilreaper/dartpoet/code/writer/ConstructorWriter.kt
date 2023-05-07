@@ -4,43 +4,76 @@ import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.emitParameters
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
+import net.theevilreaper.dartpoet.util.CURLY_CLOSE
+import net.theevilreaper.dartpoet.util.CURLY_OPEN
 import net.theevilreaper.dartpoet.util.NEW_LINE
+import net.theevilreaper.dartpoet.util.SEMICOLON
 
 class ConstructorWriter {
 
-    fun emit(spec: ConstructorSpec, codeWriter: CodeWriter) {
-        for (modifier in spec.modifiers) {
-            codeWriter.emit("${modifier.identifier}·")
+    fun emit(spec: ConstructorSpec, writer: CodeWriter) {
+        if (spec.modifiers.contains(DartModifier.CONST)) {
+            writer.emit("${DartModifier.CONST.identifier}·")
         }
 
         if (spec.isFactory) {
-            codeWriter.emit("${DartModifier.FACTORY.identifier}·")
+            writer.emit("${DartModifier.FACTORY.identifier}·")
         }
 
-        codeWriter.emit(spec.name)
+        writer.emit(spec.name)
 
         if (spec.isNamed) {
-            codeWriter.emit(".${spec.named}")
-            spec.parameters.emitParameters(codeWriter) {
-                it.write(codeWriter)
+            writer.emit(".${spec.named}")
+        }
+
+        if (!spec.hasParameters) {
+            writer.emit("()$SEMICOLON")
+            return
+        }
+
+        writer.emit("(")
+
+        spec.parameters.emitParameters(writer, emitBrackets = false) {
+            it.write(writer)
+        }
+
+        if (spec.hasNamedParameters) {
+            if (spec.parameters.isNotEmpty()) {
+                writer.emit(",$NEW_LINE")
             }
-            if (spec.isLambda) {
-                codeWriter.emit("·=>$NEW_LINE")
-                codeWriter.indent(2)
-                codeWriter.emitCode(spec.body.build(), ensureTrailingNewline = true)
-                codeWriter.unindent(2)
+            writer.emit("$CURLY_OPEN")
+            writer.emit(NEW_LINE)
+            writer.indent()
+
+            spec.requiredAndNamedParameters.emitParameters(writer, emitBrackets = false, emitSpace = false, forceNewLines = true) {
+                it.write(writer)
             }
+
+            writer.unindent()
+            writer.emit(NEW_LINE)
+            writer.emit("$CURLY_CLOSE")
+        }
+
+
+        writer.emit(")")
+
+        if (spec.isLambda) {
+            writer.emit("·=>$NEW_LINE")
+            writer.indent(2)
+            writer.emitCode(spec.initializer.build(), ensureTrailingNewline = true)
+            writer.unindent(2)
         } else {
-            codeWriter.emitCode("({$NEW_LINE")
-            codeWriter.indent()
 
-            spec.parameters.emitParameters(codeWriter, emitBrackets = false) {
-                it.write(codeWriter)
+            if (spec.initializer.isNotEmpty()) {
+                writer.emit(":·")
+                writer.emitCode(spec.initializer.build(), ensureTrailingNewline = false)
             }
 
-            codeWriter.unindent()
-            codeWriter.emit(NEW_LINE)
-            codeWriter.emit("}) = _${spec.name};")
+            if (spec.isFactory) {
+                writer.emit(" = _${spec.name}")
+            }
+
+            writer.emit(SEMICOLON)
         }
     }
 }

@@ -8,7 +8,7 @@ import net.theevilreaper.dartpoet.meta.SpecMethods
 
 class DartParameterBuilder internal constructor(
     val name: String,
-    val type: String,
+    var type: String? = null,
 ): SpecMethods<DartParameterBuilder> {
 
     internal val specData: SpecData = SpecData()
@@ -17,6 +17,9 @@ class DartParameterBuilder internal constructor(
     internal var nullable: Boolean = false
     internal var initializer: CodeBlock? = null
 
+    fun type(type: String) = apply {
+        this.type = type
+    }
 
     fun initializer(format: String, vararg args: Any) = apply {
         initializer(CodeBlock.of(format, *args))

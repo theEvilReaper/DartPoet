@@ -3,6 +3,7 @@ package net.theevilreaper.dartpoet
 import com.google.common.truth.Truth.*
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.DartClassSpec
+import net.theevilreaper.dartpoet.code.buildCodeBlock
 import net.theevilreaper.dartpoet.enum.EnumPropertySpec
 import net.theevilreaper.dartpoet.function.DartFunctionSpec
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
@@ -15,7 +16,6 @@ import net.theevilreaper.dartpoet.property.DartPropertySpec
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.lang.IllegalArgumentException
-import javax.lang.model.element.Modifier
 
 class DartFileTest {
 
@@ -44,6 +44,7 @@ class DartFileTest {
                     .modifier { DartModifier.CONST }
                     .parameter {
                         DartParameterSpec.builder("version", "String")
+                            .named(true)
                             .annotations {
                                 listOf(
                                     AnnotationSpec.builder("JsonKey")

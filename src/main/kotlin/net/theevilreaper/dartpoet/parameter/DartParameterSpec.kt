@@ -19,7 +19,10 @@ class DartParameterSpec internal constructor(
 
     init {
         check(name.trim().isNotEmpty()) { "The name of a parameter can't be empty" }
-        check(type.trim().isNotEmpty()) { "The type can't be empty" }
+
+        if (type != null) {
+            check(type.trim().isNotEmpty()) { "The type can't be empty" }
+        }
     }
 
     fun toBuilder(): DartParameterBuilder {
@@ -45,6 +48,17 @@ class DartParameterSpec internal constructor(
 
     companion object {
 
+        /**
+         * Creates a new instance from the [DartParameterBuilder] with the given name.
+         * @return the created builder instance
+         */
+        @JvmStatic
+        fun builder(name: String) = DartParameterBuilder(name)
+
+        /**
+         * Creates a new instance from the [DartParameterBuilder] with the given values.
+         * @return the created builder instance
+         */
         @JvmStatic
         fun builder(name: String, type: String) = DartParameterBuilder(name, type)
     }
