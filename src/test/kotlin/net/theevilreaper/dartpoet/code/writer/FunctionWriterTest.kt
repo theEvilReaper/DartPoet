@@ -111,7 +111,7 @@ class FunctionWriterTest {
             .build()
         assertThat(method.toString()).isEqualTo(
             """
-            List<Model> getAllById(String id, int amount,);
+            List<Model> getAllById(String id, int amount);
             """.trimIndent()
         )
     }
