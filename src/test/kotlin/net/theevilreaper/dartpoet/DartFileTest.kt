@@ -3,7 +3,6 @@ package net.theevilreaper.dartpoet
 import com.google.common.truth.Truth.*
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.DartClassSpec
-import net.theevilreaper.dartpoet.code.buildCodeBlock
 import net.theevilreaper.dartpoet.enum.EnumPropertySpec
 import net.theevilreaper.dartpoet.function.DartFunctionSpec
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
@@ -161,10 +160,11 @@ class DartFileTest {
                     )
                     .constructor(
                         ConstructorSpec.builder("NavigationEntry")
+                            .modifier(DartModifier.CONST)
                             .parameters(
                                 listOf(
-                                    DartParameterSpec.builder("name", "").build(),
-                                    DartParameterSpec.builder("route", "").build()
+                                    DartParameterSpec.builder("name").build(),
+                                    DartParameterSpec.builder("route").build()
                                 )
                             )
                             .build()
@@ -175,13 +175,13 @@ class DartFileTest {
         assertThat(enumClass.toString()).isEqualTo(
             """
             enum NavigationEntry {
-              
+            
               dashboard('Dashboard', '/dashboard'),
               build('Build', '/build');
-              
+            
               final String name;
               final String route;
-              
+            
               const NavigationEntry(this.name, this.route);
             }
             """.trimIndent()
