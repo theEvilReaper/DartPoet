@@ -27,8 +27,12 @@ class EnumPropertyWriter {
 
         if (propertySpec.hasParameter) {
             writer.emit("(")
-            propertySpec.parameters.forEach {
-                writer.emitCode(it, false, false)
+            propertySpec.parameters.forEachIndexed { index, codeBlock ->
+                if (index > 0) {
+                    writer.emit(", ")
+                }
+
+                writer.emitCode(codeBlock, false, false)
             }
             writer.emit(")")
         }
