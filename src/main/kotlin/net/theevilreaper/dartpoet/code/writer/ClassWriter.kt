@@ -7,6 +7,7 @@ import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.code.emitConstructors
 import net.theevilreaper.dartpoet.code.emitFunctions
+import net.theevilreaper.dartpoet.enum.EnumPropertySpec
 import net.theevilreaper.dartpoet.property.DartPropertySpec
 import net.theevilreaper.dartpoet.util.CURLY_CLOSE
 import net.theevilreaper.dartpoet.util.CURLY_OPEN
@@ -20,6 +21,7 @@ import net.theevilreaper.dartpoet.util.NEW_LINE
  */
 class ClassWriter {
 
+    //TODO: Improve new lines after each generated code part block
     fun write(spec: DartClassSpec, codeWriter: CodeWriter) {
         if (spec.isAnonymous) {
             writeAnonymousClass(spec, codeWriter)
@@ -55,12 +57,35 @@ class ClassWriter {
         codeWriter.emit(NEW_LINE)
         codeWriter.indent()
 
+        if (spec.isEnum) {
+            spec.enumPropertyStack.emit(codeWriter) {
+                it.write(codeWriter)
+            }
+
+            if (!spec.hasNoContent) {
+                codeWriter.emit(";")
+                codeWriter.emit(NEW_LINE)
+            }
+        }
+
+        if (spec.isEnum && spec.enumPropertyStack.isNotEmpty()) {
+            codeWriter.emit(NEW_LINE)
+        }
+
         spec.properties.emit(codeWriter) {
             it.write(codeWriter)
         }
 
+        if (spec.properties.isNotEmpty()) {
+            codeWriter.emit(NEW_LINE)
+        }
+
         spec.constructors.emitConstructors(codeWriter) {
             it.write(codeWriter)
+        }
+
+        if (spec.constructors.isNotEmpty() && spec.constructors.size <= 1) {
+            codeWriter.emit(NEW_LINE)
         }
 
         spec.functions.emitFunctions(codeWriter) {
@@ -125,6 +150,20 @@ class ClassWriter {
         if (spec.superClass.orEmpty().trim().isNotEmpty()) {
             writer.emit("${spec.inheritKeyWord!!.identifier}·")
             writer.emit("${spec.superClass!!}·")
+        }
+    }
+
+    private fun List<EnumPropertySpec>.emit(
+        codeWriter: CodeWriter,
+        emitBlock: (EnumPropertySpec) -> Unit  = { it.write(codeWriter) }
+    ) = with(codeWriter) {
+        if (isNotEmpty()) {
+            forEachIndexed { index, enumPropertySpec ->
+                emitBlock(enumPropertySpec)
+                if (index < size - 1) {
+                    codeWriter.emit(",$NEW_LINE")
+                }
+            }
         }
     }
 
