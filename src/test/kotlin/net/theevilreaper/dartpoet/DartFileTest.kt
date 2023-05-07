@@ -1,8 +1,9 @@
 package net.theevilreaper.dartpoet
 
-import com.google.common.truth.Truth
+import com.google.common.truth.Truth.*
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.DartClassSpec
+import net.theevilreaper.dartpoet.enum.EnumPropertySpec
 import net.theevilreaper.dartpoet.function.DartFunctionSpec
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.import.DartImport
@@ -10,9 +11,11 @@ import net.theevilreaper.dartpoet.import.ImportCastType
 import net.theevilreaper.dartpoet.import.LibraryImport
 import net.theevilreaper.dartpoet.import.PartImport
 import net.theevilreaper.dartpoet.parameter.DartParameterSpec
+import net.theevilreaper.dartpoet.property.DartPropertySpec
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.lang.IllegalArgumentException
+import javax.lang.model.element.Modifier
 
 class DartFileTest {
 
@@ -75,7 +78,7 @@ class DartFileTest {
                 versionFreezedClass
             )
             .build()
-        Truth.assertThat(versionFile.toString()).isEqualTo(
+        assertThat(versionFile.toString()).isEqualTo(
             """
             import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -120,7 +123,7 @@ class DartFileTest {
                 )
             }
             .build()
-        Truth.assertThat(libClass.toString()).isEqualTo(
+        assertThat(libClass.toString()).isEqualTo(
             """
             library testLib;
             
@@ -129,6 +132,57 @@ class DartFileTest {
             
             typedef JsonMap = Map<String, dynamic>;
             
+            """.trimIndent()
+        )
+    }
+
+    @Test
+    fun `test enum class write`() {
+        val enumClass = DartFile.builder("navigation_entry")
+            .type(
+                DartClassSpec.enumClass("NavigationEntry")
+                    .properties(
+                        DartPropertySpec.builder("name", "String")
+                            .modifier { DartModifier.FINAL }.build(),
+                        DartPropertySpec.builder("route", "String")
+                            .modifier { DartModifier.FINAL }.build()
+
+                    )
+                    .enumProperties(
+                        EnumPropertySpec.builder("dashboard")
+                            .parameter("%C", "Dashboard")
+                            .parameter("%C", "/dashboard")
+                            .build(),
+                        EnumPropertySpec.builder("build")
+                            .parameter("%C", "Build")
+                            .parameter("%C", "/build")
+                            .build()
+                    )
+                    .constructor(
+                        ConstructorSpec.builder("NavigationEntry")
+                            .parameters(
+                                listOf(
+                                    DartParameterSpec.builder("name", "").build(),
+                                    DartParameterSpec.builder("route", "").build()
+                                )
+                            )
+                            .build()
+                    )
+                    .build()
+            )
+            .build()
+        assertThat(enumClass.toString()).isEqualTo(
+            """
+            enum NavigationEntry {
+              
+              dashboard('Dashboard', '/dashboard'),
+              build('Build', '/build');
+              
+              final String name;
+              final String route;
+              
+              const NavigationEntry(this.name, this.route);
+            }
             """.trimIndent()
         )
     }
