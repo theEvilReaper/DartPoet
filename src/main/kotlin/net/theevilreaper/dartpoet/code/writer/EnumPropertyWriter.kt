@@ -2,6 +2,8 @@ package net.theevilreaper.dartpoet.code.writer
 
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.enum.EnumPropertySpec
+import net.theevilreaper.dartpoet.util.ROUND_CLOSE
+import net.theevilreaper.dartpoet.util.ROUND_OPEN
 
 /**
  * The class contains the logic to transform a [EnumPropertySpec] into code.
@@ -26,7 +28,7 @@ class EnumPropertyWriter {
         }
 
         if (propertySpec.hasParameter) {
-            writer.emit("(")
+            writer.emit(ROUND_OPEN)
             propertySpec.parameters.forEachIndexed { index, codeBlock ->
                 if (index > 0) {
                     writer.emit(", ")
@@ -34,7 +36,7 @@ class EnumPropertyWriter {
 
                 writer.emitCode(codeBlock, false, false)
             }
-            writer.emit(")")
+            writer.emit(ROUND_CLOSE)
         }
     }
 }

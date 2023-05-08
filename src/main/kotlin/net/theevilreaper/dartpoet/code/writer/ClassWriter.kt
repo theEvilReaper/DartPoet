@@ -13,6 +13,7 @@ import net.theevilreaper.dartpoet.util.CURLY_CLOSE
 import net.theevilreaper.dartpoet.util.CURLY_OPEN
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.NEW_LINE
+import net.theevilreaper.dartpoet.util.SEMICOLON
 
 /**
  * @version 1.0.0
@@ -63,7 +64,7 @@ class ClassWriter {
             }
 
             if (!spec.hasNoContent) {
-                codeWriter.emit(";")
+                codeWriter.emit(SEMICOLON)
                 codeWriter.emit(NEW_LINE)
             }
         }
