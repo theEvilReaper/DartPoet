@@ -27,6 +27,9 @@ internal const val CONSTRUCTOR = "CONSTRUCTOR"
 internal const val CURLY_OPEN = '{'
 internal const val CURLY_CLOSE = '}'
 
+internal const val ROUND_OPEN = "("
+internal const val ROUND_CLOSE = ")"
+
 internal val ALLOWED_PARAMETER_MODIFIERS = setOf(DartModifier.PUBLIC, DartModifier.PRIVATE, DartModifier.LATE, DartModifier.FINAL, DartModifier.CONST, DartModifier.STATIC)
 
 private val namePattern: Regex = Regex("[a-z]+|([a-z]+)_+([a-z]+)")
