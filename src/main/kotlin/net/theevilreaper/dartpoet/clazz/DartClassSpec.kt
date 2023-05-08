@@ -21,6 +21,7 @@ class DartClassSpec internal constructor(
     internal val isAbstract = builder.isAbstract
     internal val isMixin = builder.isMixinClass
     internal val isAnonymous = builder.isAnonymousClass
+    internal val isLibrary = builder.isLibrary
 
     internal val superClass = builder.superClass
     internal val inheritKeyWord = builder.inheritKeyWord
