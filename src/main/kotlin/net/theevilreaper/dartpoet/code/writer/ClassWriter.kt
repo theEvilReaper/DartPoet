@@ -36,7 +36,7 @@ class ClassWriter {
             codeWriter.emit(NEW_LINE)
         }
 
-        spec.annotations.emitAnnotations(codeWriter) {
+        spec.annotations.emitAnnotations(codeWriter, inLineAnnotations = false) {
             it.write(codeWriter)
         }
         writeClassHeader(spec, codeWriter)
