@@ -5,6 +5,7 @@ import net.theevilreaper.dartpoet.DartModifier.*
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.ClassWriter
+import net.theevilreaper.dartpoet.util.toImmutableList
 import net.theevilreaper.dartpoet.util.toImmutableSet
 
 class DartClassSpec internal constructor(
@@ -28,6 +29,7 @@ class DartClassSpec internal constructor(
     internal val properties = builder.propertyStack.toImmutableSet()
     internal val constructors = builder.constructorStack.toImmutableSet()
     internal val typeDefStack = builder.functionStack.filter { it.isTypeDef }.toImmutableSet()
+    internal val enumPropertyStack = builder.enumPropertyStack.toImmutableList()
 
     internal val hasNoContent: Boolean
         get() = functions.isEmpty() && properties.isEmpty() && constructors.isEmpty()

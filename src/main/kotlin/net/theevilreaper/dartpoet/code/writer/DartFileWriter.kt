@@ -21,14 +21,25 @@ class DartFileWriter {
             it.toString()
         }
 
+        if (dartFile.imports.isNotEmpty() && dartFile.partImports.isEmpty()) {
+            writer.emit(NEW_LINE)
+        }
+
         dartFile.partImports.writeImports(writer, newLineAtBegin = dartFile.imports.isNotEmpty()) {
             it.toString()
         }
 
-        if (dartFile.types.isNotEmpty()) {
+        if (dartFile.partImports.isNotEmpty()) {
             writer.emit(NEW_LINE)
+        }
+
+        if (dartFile.types.isNotEmpty()) {
             dartFile.types.forEach {
                 classWriter.write(it as DartClassSpec, writer)
+                if (dartFile.types.size > 1) {
+                    writer.emit(NEW_LINE)
+                }
+
             }
         }
 

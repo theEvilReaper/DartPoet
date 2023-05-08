@@ -3,6 +3,7 @@ package net.theevilreaper.dartpoet.clazz
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.InheritKeyword
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
+import net.theevilreaper.dartpoet.enum.EnumPropertySpec
 import net.theevilreaper.dartpoet.function.DartFunctionSpec
 import net.theevilreaper.dartpoet.meta.SpecData
 import net.theevilreaper.dartpoet.meta.SpecMethods
@@ -17,7 +18,7 @@ class DartClassBuilder internal constructor(
 ) : SpecMethods<DartClassBuilder> {
     internal val classMetaData: SpecData = SpecData(*modifiers)
     internal val isAnonymousClass get() = name == null && classType == ClassType.CLASS
-    internal val isEnumClass get() = classType == ClassType.CLASS && DartModifier.ENUM in classMetaData.modifiers
+    internal val isEnumClass get() = classType == ClassType.ENUM
     internal val isMixinClass get() = classType == ClassType.MIXIN && DartModifier.MIXIN in classMetaData.modifiers
     internal val isAbstract get() = classType == ClassType.CLASS && DartModifier.ABSTRACT in classMetaData.modifiers
     internal val isLibrary get() = classType == ClassType.CLASS && DartModifier.LIBRARY in classMetaData.modifiers
@@ -26,6 +27,7 @@ class DartClassBuilder internal constructor(
     internal val constructorStack: MutableList<ConstructorSpec> = mutableListOf()
     internal val propertyStack: MutableList<DartPropertySpec> = mutableListOf()
     internal val functionStack: MutableList<DartFunctionSpec> = mutableListOf()
+    internal val enumPropertyStack: MutableList<EnumPropertySpec> = mutableListOf()
 
     internal var superClass: String? = null
     internal var inheritKeyWord: InheritKeyword? = null
@@ -44,6 +46,14 @@ class DartClassBuilder internal constructor(
     fun withImplements(className: String) = apply {
         setClassName(className)
         this.inheritKeyWord = InheritKeyword.IMPLEMENTS
+    }
+
+    fun enumProperty(enumPropertySpec: EnumPropertySpec) = apply {
+        this.enumPropertyStack += enumPropertySpec
+    }
+
+    fun enumProperties(vararg properties: EnumPropertySpec) = apply {
+        this.enumPropertyStack += properties
     }
 
     private fun setClassName(className: String) {
