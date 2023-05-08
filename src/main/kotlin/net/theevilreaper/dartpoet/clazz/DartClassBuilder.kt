@@ -19,9 +19,9 @@ class DartClassBuilder internal constructor(
     internal val classMetaData: SpecData = SpecData(*modifiers)
     internal val isAnonymousClass get() = name == null && classType == ClassType.CLASS
     internal val isEnumClass get() = classType == ClassType.ENUM
-    internal val isMixinClass get() = classType == ClassType.MIXIN && DartModifier.MIXIN in classMetaData.modifiers
-    internal val isAbstract get() = classType == ClassType.CLASS && DartModifier.ABSTRACT in classMetaData.modifiers
-    internal val isLibrary get() = classType == ClassType.CLASS && DartModifier.LIBRARY in classMetaData.modifiers
+    internal val isMixinClass get() = classType == ClassType.MIXIN
+    internal val isAbstract get() = classType == ClassType.ABSTRACT
+    internal val isLibrary get() = classType == ClassType.CLASS
     private val isNormalClass get() = classType == ClassType.CLASS && !isEnumClass && !isMixinClass && !isAbstract && !isLibrary
 
     internal val constructorStack: MutableList<ConstructorSpec> = mutableListOf()
