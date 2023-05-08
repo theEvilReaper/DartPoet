@@ -17,7 +17,7 @@ import java.lang.IllegalStateException
  * @author theEvilReaper
  * @since 1.0.0
  */
-class DartImport internal constructor(
+class DartImport(
     private val path: String,
     private val importCastType: ImportCastType? = null,
     private val importCast: String? = null

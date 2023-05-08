@@ -2,7 +2,7 @@ package net.theevilreaper.dartpoet.import
 
 import net.theevilreaper.dartpoet.util.SEMICOLON
 
-class PartImport internal constructor(
+class PartImport(
     private val path: String
 ) : Import {
 
