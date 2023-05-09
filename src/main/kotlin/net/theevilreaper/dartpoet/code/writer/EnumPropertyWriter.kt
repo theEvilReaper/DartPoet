@@ -22,9 +22,7 @@ class EnumPropertyWriter {
     fun write(propertySpec: EnumPropertySpec, writer: CodeWriter) {
         writer.emit(propertySpec.name)
         if (propertySpec.hasGeneric) {
-            writer.emit("<")
-            writer.emit(propertySpec.generic!!)
-            writer.emit(">")
+            writer.emitCode("<%L>", propertySpec.generic!!)
         }
 
         if (propertySpec.hasParameter) {
