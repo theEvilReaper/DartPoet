@@ -126,4 +126,13 @@ class FunctionWriterTest {
             .build()
         assertThat(function.toString()).isEqualTo("typedef ValueUpdate<E> = void Function(E? value);")
     }
+
+    @Test
+    fun `test cast write`() {
+        val function = DartFunctionSpec.builder("getId")
+            .returns("int")
+            .typeCast("int")
+            .build()
+        assertThat(function.toString()).isEqualTo("int getId<int>();")
+    }
 }
