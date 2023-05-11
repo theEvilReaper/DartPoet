@@ -3,6 +3,7 @@ package net.theevilreaper.dartpoet
 import com.google.common.truth.Truth.*
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.DartClassSpec
+import net.theevilreaper.dartpoet.code.buildCodeBlock
 import net.theevilreaper.dartpoet.enum.EnumPropertySpec
 import net.theevilreaper.dartpoet.function.DartFunctionSpec
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
@@ -183,6 +184,69 @@ class DartFileTest {
               final String route;
             
               const NavigationEntry(this.name, this.route);
+            }
+            """.trimIndent()
+        )
+    }
+
+    @Test
+    fun `test api handler write`() {
+        val className = "DefectApi"
+        val apiClient = "ApiClient"
+
+        val handlerApiClass = DartClassSpec.builder(className)
+            .property(DartPropertySpec.builder(apiClient.replaceFirstChar { it.lowercase() }, apiClient)
+                .modifier { DartModifier.FINAL }
+                .build()
+            )
+            .constructor(
+                ConstructorSpec.builder(className)
+                    .parameter(
+                        DartParameterSpec.builder(apiClient.replaceFirstChar { it.lowercase() }, apiClient).build()
+                    )
+                    .addCode(buildCodeBlock {
+                    addStatement("%L = %L", apiClient.replaceFirstChar { it.lowercase() }, apiClient.replaceFirstChar { it.lowercase() })
+                    })
+                    .build()
+            )
+            .function(
+                DartFunctionSpec.builder("getByID")
+                    .async(true)
+                    .returns("DefectDTO")
+                    .parameter(DartParameterSpec.builder("id", "int").build())
+                    .addCode(buildCodeBlock {
+                        addStatement("final queryParams = %L;", "<String, dynamic>{}")
+                        addStatement("final baseUri = Uri.parse(apiClient.baseUrl);")
+                        addStatement("final uri = baseUri.replace(queryParameters: queryParameters, path: '\${baseUri.path}/defect/\$id/');")
+                        addStatement("return await apiClient.dio.getUri<JsonMap>(")
+                        indent()
+                        addStatement("uri,")
+                        unindent()
+                        addStatement(").then((response) {")
+                        indent()
+                        addStatement("return DefectDTO.from(response.data!);")
+                        unindent()
+                        addStatement("});")
+
+                    })
+                    .build()
+            )
+            .build()
+
+        val file = DartFile.builder("${className}Handler")
+            .import(LibraryImport("testLibrary", true))
+            .type(handlerApiClass)
+            .build()
+        assertThat(file.toString()).isEqualTo(
+            """
+            part of testLibrary;
+            
+            class DefectApi {
+              
+              final ApiClient apiClient;
+              
+              DefectApi(ApiClient apiClient): apiClient = apiClient;
+              
             }
             """.trimIndent()
         )
