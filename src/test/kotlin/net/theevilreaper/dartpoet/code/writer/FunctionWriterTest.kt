@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test
 import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.buildCodeBlock
 import net.theevilreaper.dartpoet.parameter.DartParameterSpec
 
 class FunctionWriterTest {
@@ -134,5 +135,36 @@ class FunctionWriterTest {
             .typeCast("int")
             .build()
         assertThat(function.toString()).isEqualTo("int getId<int>();")
+    }
+
+    @Test
+    fun `test other getter variant write`() {
+        val function = DartFunctionSpec.builder("value")
+            .returns("int")
+            .getter(true)
+            .addCode("%L", "_value")
+            .build()
+        assertThat(function.toString()).isEqualTo("int get value => _value");
+    }
+
+    @Test
+    fun `test other setter variant write`() {
+        val function = DartFunctionSpec.builder("value")
+            .parameter(
+                DartParameterSpec.builder("value", "int")
+                    .build()
+            )
+            .setter(true)
+            .addCode(buildCodeBlock {
+                addStatement("%L = %L;", "_value", "value")
+            })
+            .build()
+        assertThat(function.toString()).isEqualTo(
+            """
+            set value(int value) {
+              _value = value;
+            }
+            """.trimIndent()
+        )
     }
 }
