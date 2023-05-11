@@ -26,6 +26,8 @@ class DartFunctionSpec(
     internal val isPrivate = modifiers.contains(DartModifier.PRIVATE)
     internal val isTypeDef = builder.typedef
     internal val typeCast = builder.typeCast
+    internal val asSetter = builder.setter
+    internal val isGetter = builder.getter
 
     private val namedParameters: Set<DartParameterSpec> = if (parameters.isEmpty()) {
         setOf()

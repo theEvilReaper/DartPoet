@@ -23,6 +23,16 @@ class DartFunctionBuilder internal constructor(
     internal val isNamedConstructor: Boolean = namedConstructor
     internal var typedef: Boolean = false
     internal var typeCast: String? = null
+    internal var setter: Boolean = false
+    internal var getter: Boolean = false
+
+    fun setter(setter: Boolean) = apply {
+        this.setter = setter
+    }
+
+    fun getter(getter: Boolean) = apply {
+        this.getter = getter
+    }
 
     fun typeCast(cast: String) = apply {
         this.typeCast = cast
