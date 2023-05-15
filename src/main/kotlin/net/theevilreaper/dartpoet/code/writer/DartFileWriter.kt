@@ -15,7 +15,10 @@ class DartFileWriter {
         if (dartFile.libImport != null) {
             writer.emit(dartFile.libImport.toString())
             writer.emit(NEW_LINE)
-            writer.emit(NEW_LINE)
+
+            if (dartFile.imports.isEmpty()) {
+                writer.emit(NEW_LINE)
+            }
         }
 
         dartFile.imports.writeImports(writer, newLineAtBegin = dartFile.libImport != null) {
@@ -35,9 +38,6 @@ class DartFileWriter {
         }
 
         if (dartFile.types.isNotEmpty()) {
-            if (dartFile.imports.isNotEmpty()) {
-                writer.emit(NEW_LINE)
-            }
             dartFile.types.forEach {
                 classWriter.write(it as DartClassSpec, writer)
                 if (dartFile.types.size > 1) {
