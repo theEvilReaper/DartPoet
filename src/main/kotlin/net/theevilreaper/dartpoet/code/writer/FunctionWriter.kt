@@ -5,7 +5,9 @@ import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.emitParameters
 import net.theevilreaper.dartpoet.function.DartFunctionSpec
+import net.theevilreaper.dartpoet.util.NEW_LINE
 import net.theevilreaper.dartpoet.util.SEMICOLON
+import net.theevilreaper.dartpoet.util.toImmutableSet
 
 class FunctionWriter {
 
@@ -13,11 +15,26 @@ class FunctionWriter {
         if (functionSpec.isTypeDef) {
             writeTypeDef(functionSpec, writer)
             return
-        } else if (functionSpec.returnType.orEmpty().trim().isEmpty()) {
+        }
+
+        val writeableModifiers = functionSpec.modifiers.filter { it != PRIVATE && it != PUBLIC }.toImmutableSet()
+
+        if (writeableModifiers.isNotEmpty()) {
+            for (modifier in writeableModifiers) {
+                writer.emit(modifier.identifier)
+                writer.emit("·")
+            }
+        }
+
+        if (functionSpec.returnType.orEmpty().trim().isEmpty()) {
             if (functionSpec.isAsync) {
-                writer.emit("Future<${VOID.identifier}>·")
+                writer.emitCode("Future<%L>", VOID.identifier)
             } else {
-                writer.emit("${VOID.identifier}·")
+                if (functionSpec.asSetter) {
+                    writer.emitCode("set·")
+                } else {
+                    writer.emit("${VOID.identifier}·")
+                }
             }
         } else {
             if (functionSpec.isAsync) {
@@ -26,6 +43,10 @@ class FunctionWriter {
             writer.emit(functionSpec.returnType!!)
             writer.emit(if (functionSpec.isNullable) "?" else "")
 
+            if (functionSpec.isGetter) {
+                writer.emit("·get")
+            }
+
             if (functionSpec.isAsync) {
                 writer.emit(">")
             }
@@ -33,11 +54,20 @@ class FunctionWriter {
         }
         writer.emit("${if (functionSpec.isPrivate) PRIVATE.identifier else ""}${functionSpec.name}")
 
-        functionSpec.parameters.emitParameters(writer) {
-            it.write(writer)
+        if (functionSpec.typeCast.orEmpty().trim().isNotEmpty()) {
+            writer.emitCode("<%L>", functionSpec.typeCast)
         }
 
-        writeBody(functionSpec, writer)
+        if (functionSpec.isGetter) {
+            writer.emit("·=>·")
+            writer.emitCode(functionSpec.body.returnsWithoutLinebreak(), ensureTrailingNewline = false)
+        } else {
+            functionSpec.parameters.emitParameters(writer) {
+                it.write(writer)
+            }
+
+            writeBody(functionSpec, writer)
+        }
     }
 
     private fun writeBody(spec: DartFunctionSpec, writer: CodeWriter) {
@@ -48,11 +78,17 @@ class FunctionWriter {
         if (spec.isAsync) {
             writer.emit("·${ASYNC.identifier}")
         }
-        writer.emit("·{\n")
-        writer.indent()
-        writer.emitCode(spec.body.returnsWithoutLinebreak(), ensureTrailingNewline = true)
-        writer.unindent()
-        writer.emit("}")
+        if (spec.asLambda) {
+            writer.emit("·=>·")
+        } else {
+            writer.emit("·{\n")
+            writer.indent()
+        }
+        writer.emitCode(spec.body.returnsWithoutLinebreak(), ensureTrailingNewline = false)
+        if (!spec.asLambda) {
+            writer.unindent()
+            writer.emit("\n}")
+        }
     }
 
     private fun writeTypeDef(spec: DartFunctionSpec, codeWriter: CodeWriter) {
