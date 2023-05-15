@@ -90,7 +90,7 @@ internal fun Set<ConstructorSpec>.emitConstructors(
             codeWriter.emit(NEW_LINE)
         }
         forEachIndexed { index, constructorSpec ->
-            val emitNewLines = size > 1 || forceNewLines
+            val emitNewLines = size >= 1 || forceNewLines
 
             if (index > 0 && emitNewLines) {
                 codeWriter.emit(NEW_LINE)
