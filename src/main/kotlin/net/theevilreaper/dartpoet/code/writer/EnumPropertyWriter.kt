@@ -31,8 +31,7 @@ class EnumPropertyWriter {
                 if (index > 0) {
                     writer.emit(", ")
                 }
-
-                writer.emitCode(codeBlock, false, false)
+                writer.emitCode(codeBlock, isConstantContext = false, ensureTrailingNewline = false)
             }
             writer.emit(ROUND_CLOSE)
         }
