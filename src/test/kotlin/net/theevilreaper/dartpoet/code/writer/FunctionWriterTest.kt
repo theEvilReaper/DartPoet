@@ -12,6 +12,14 @@ import net.theevilreaper.dartpoet.parameter.DartParameterSpec
 class FunctionWriterTest {
 
     @Test
+    fun `write void method`() {
+        val method = DartFunctionSpec.builder("test")
+            .returns("void")
+            .build()
+        assertThat(method.toString()).isEqualTo("void test();")
+    }
+
+    @Test
     fun `write simple method without parameters`() {
         val writer = CodeWriter(StringBuilder())
         val method = DartFunctionSpec.builder("getName")
@@ -86,7 +94,7 @@ class FunctionWriterTest {
                 DartParameterSpec.builder("id", "int").build()
             }
             .addCode(CodeBlock.builder()
-                .addStatement("return 'Thomas';")
+                .add("return 'Thomas';")
                 .build()
             )
             .build()
@@ -142,9 +150,9 @@ class FunctionWriterTest {
         val function = DartFunctionSpec.builder("value")
             .returns("int")
             .getter(true)
-            .addCode("%L", "_value")
+            .addCode("%L", "_value;")
             .build()
-        assertThat(function.toString()).isEqualTo("int get value => _value");
+        assertThat(function.toString()).isEqualTo("int get value => _value;");
     }
 
     @Test
@@ -156,7 +164,7 @@ class FunctionWriterTest {
             )
             .setter(true)
             .addCode(buildCodeBlock {
-                addStatement("%L = %L;", "_value", "value")
+                add("%L = %L;", "_value", "value")
             })
             .build()
         assertThat(function.toString()).isEqualTo(
