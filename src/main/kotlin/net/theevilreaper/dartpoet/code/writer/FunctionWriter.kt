@@ -37,7 +37,12 @@ class FunctionWriter {
             it.write(writer)
         }
 
-        writeBody(functionSpec, writer)
+        if (functionSpec.isLambda) {
+            writer.emit("·=>·")
+            writer.emitCode(functionSpec.body.returnsWithoutLinebreak())
+        } else {
+            writeBody(functionSpec, writer)
+        }
     }
 
     private fun writeBody(spec: DartFunctionSpec, writer: CodeWriter) {
