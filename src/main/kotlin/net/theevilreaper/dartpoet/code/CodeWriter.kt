@@ -16,9 +16,8 @@
 package net.theevilreaper.dartpoet.code
 
 import net.theevilreaper.dartpoet.DartModifier
-import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.DartClassSpec
-import net.theevilreaper.dartpoet.import.DartImport
+import net.theevilreaper.dartpoet.directive.DartDirective
 import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.util.NEW_LINE
 import net.theevilreaper.dartpoet.util.escapeCharacterLiterals
@@ -63,7 +62,7 @@ internal fun buildCodeString(
 class CodeWriter constructor(
     out: Appendable,
     private val indent: String = DEFAULT_INDENT,
-    imports: Map<String, DartImport> = emptyMap(),
+    imports: Map<String, DartDirective> = emptyMap(),
     columnLimit: Int = 100,
 ) : Closeable {
     var out = LineWrapper(out, indent, columnLimit)
