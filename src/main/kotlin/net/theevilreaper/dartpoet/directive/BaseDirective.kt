@@ -1,4 +1,4 @@
-package net.theevilreaper.dartpoet.import
+package net.theevilreaper.dartpoet.directive
 
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.buildCodeString

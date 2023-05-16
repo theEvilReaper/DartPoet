@@ -1,4 +1,4 @@
-package net.theevilreaper.dartpoet.import
+package net.theevilreaper.dartpoet.directive
 
 /**
  * Represent all available import casts from flutter.
