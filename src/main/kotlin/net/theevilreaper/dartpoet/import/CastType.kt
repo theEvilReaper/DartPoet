@@ -5,7 +5,7 @@ package net.theevilreaper.dartpoet.import
  * @author theEvilReaper
  * @since 1.0.0
  */
-enum class ImportCastType(
+enum class CastType(
     val identifier: String
 ) {
     AS("as"),
