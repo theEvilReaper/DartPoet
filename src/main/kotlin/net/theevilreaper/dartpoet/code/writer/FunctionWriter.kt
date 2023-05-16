@@ -78,14 +78,14 @@ class FunctionWriter {
         if (spec.isAsync) {
             writer.emit("·${ASYNC.identifier}")
         }
-        if (spec.asLambda) {
+        if (spec.isLambda) {
             writer.emit("·=>·")
         } else {
             writer.emit("·{\n")
             writer.indent()
         }
         writer.emitCode(spec.body.returnsWithoutLinebreak(), ensureTrailingNewline = false)
-        if (!spec.asLambda) {
+        if (!spec.isLambda) {
             writer.unindent()
             writer.emit("\n}")
         }

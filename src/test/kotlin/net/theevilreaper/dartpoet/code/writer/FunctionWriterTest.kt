@@ -94,7 +94,7 @@ class FunctionWriterTest {
                 DartParameterSpec.builder("id", "int").build()
             }
             .addCode(CodeBlock.builder()
-                .addStatement("return 'Thomas';")
+                .add("return 'Thomas';")
                 .build()
             )
             .build()
