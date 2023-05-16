@@ -1,6 +1,6 @@
 package net.theevilreaper.dartpoet
 
-import net.theevilreaper.dartpoet.import.PartDirective
+import net.theevilreaper.dartpoet.directive.PartDirective
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals

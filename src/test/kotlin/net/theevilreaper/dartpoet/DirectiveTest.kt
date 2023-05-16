@@ -1,6 +1,6 @@
 package net.theevilreaper.dartpoet
 
-import net.theevilreaper.dartpoet.import.*
+import net.theevilreaper.dartpoet.directive.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest

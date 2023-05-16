@@ -5,7 +5,7 @@ import net.theevilreaper.dartpoet.clazz.DartClassBuilder
 import net.theevilreaper.dartpoet.clazz.DartClassSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.extension.ExtensionSpec
-import net.theevilreaper.dartpoet.import.Directive
+import net.theevilreaper.dartpoet.directive.Directive
 import net.theevilreaper.dartpoet.util.DEFAULT_INDENT
 import java.lang.IllegalArgumentException
 

@@ -6,9 +6,9 @@ import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.DartFileWriter
 import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.function.DartFunctionSpec
-import net.theevilreaper.dartpoet.import.DartDirective
-import net.theevilreaper.dartpoet.import.LibraryDirective
-import net.theevilreaper.dartpoet.import.PartDirective
+import net.theevilreaper.dartpoet.directive.DartDirective
+import net.theevilreaper.dartpoet.directive.LibraryDirective
+import net.theevilreaper.dartpoet.directive.PartDirective
 import net.theevilreaper.dartpoet.util.DART_FILE_ENDING
 import net.theevilreaper.dartpoet.util.isDartConventionFileName
 import net.theevilreaper.dartpoet.util.toImmutableList

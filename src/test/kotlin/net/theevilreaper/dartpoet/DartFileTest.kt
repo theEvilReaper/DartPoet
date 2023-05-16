@@ -7,10 +7,10 @@ import net.theevilreaper.dartpoet.code.buildCodeBlock
 import net.theevilreaper.dartpoet.enum.EnumPropertySpec
 import net.theevilreaper.dartpoet.function.DartFunctionSpec
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
-import net.theevilreaper.dartpoet.import.DartDirective
-import net.theevilreaper.dartpoet.import.CastType
-import net.theevilreaper.dartpoet.import.LibraryDirective
-import net.theevilreaper.dartpoet.import.PartDirective
+import net.theevilreaper.dartpoet.directive.DartDirective
+import net.theevilreaper.dartpoet.directive.CastType
+import net.theevilreaper.dartpoet.directive.LibraryDirective
+import net.theevilreaper.dartpoet.directive.PartDirective
 import net.theevilreaper.dartpoet.parameter.DartParameterSpec
 import net.theevilreaper.dartpoet.property.DartPropertySpec
 import org.junit.jupiter.api.Assertions.*
@@ -234,7 +234,7 @@ class DartFileTest {
             .build()
 
         val file = DartFile.builder("${className}Handler")
-            .import(LibraryDirective("testLibrary", true))
+            .directive(LibraryDirective("testLibrary", true))
             .type(handlerApiClass)
             .build()
         assertThat(file.toString()).isEqualTo(
