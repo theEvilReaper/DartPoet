@@ -4,6 +4,7 @@ import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.EnumPropertyWriter
 import net.theevilreaper.dartpoet.util.toImmutableList
+import net.theevilreaper.dartpoet.util.toImmutableSet
 
 /**
  *
@@ -19,6 +20,7 @@ class EnumPropertySpec(
     internal val hasGeneric = builder.genericValueCast.orEmpty().isNotEmpty()
     internal val parameters = builder.parameters.toImmutableList()
     internal val hasParameter = builder.parameters.isNotEmpty()
+    internal val annotations = builder.annotations.toImmutableSet()
 
     /**
      * Contains some checks for the variable.
