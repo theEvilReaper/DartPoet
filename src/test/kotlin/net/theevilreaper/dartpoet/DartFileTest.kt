@@ -68,13 +68,11 @@ class DartFileTest {
                     .build()
             }
         val versionFile = DartFile.builder("version.dart")
-            .imports {
-                listOf(
-                    DartDirective("freezed_annotation/freezed_annotation.dart"),
-                    PartDirective("version.freezed.dart"),
-                    PartDirective("version.g.dart")
-                )
-            }
+            .directives(
+                DartDirective("freezed_annotation/freezed_annotation.dart"),
+                PartDirective("version.freezed.dart"),
+                PartDirective("version.g.dart")
+            )
             .type(
                 versionFreezedClass
             )
@@ -116,13 +114,11 @@ class DartFileTest {
                     )
                     .build()
             )
-            .imports {
-                listOf(
-                    DartDirective("dart:html"),
-                    LibraryDirective("testLib"),
-                    DartDirective("dart:math", CastType.AS, "math"),
-                )
-            }
+            .directives(
+                DartDirective("dart:html"),
+                LibraryDirective("testLib"),
+                DartDirective("dart:math", CastType.AS, "math"),
+            )
             .build()
         assertThat(libClass.toString()).isEqualTo(
             """
