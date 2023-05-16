@@ -14,7 +14,11 @@ class DartFileWriter {
     fun emit(dartFile: DartFile, writer: CodeWriter) {
         if (dartFile.libImport != null) {
             writer.emit(dartFile.libImport.toString())
-            writer.emit("\n")
+            writer.emit(NEW_LINE)
+
+            if (dartFile.imports.isEmpty()) {
+                writer.emit(NEW_LINE)
+            }
         }
 
         dartFile.imports.writeImports(writer, newLineAtBegin = dartFile.libImport != null) {

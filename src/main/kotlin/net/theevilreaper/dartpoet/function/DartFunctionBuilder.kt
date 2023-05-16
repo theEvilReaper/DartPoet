@@ -6,11 +6,14 @@ import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.meta.SpecData
 import net.theevilreaper.dartpoet.meta.SpecMethods
 import net.theevilreaper.dartpoet.parameter.DartParameterSpec
-import net.theevilreaper.dartpoet.util.CONSTRUCTOR
 
+/**
+ * The builder class allows the creation of an [DartFunctionBuilder] without any effort.
+ * @author 1.0.0
+ * @since 1.0.0
+ */
 class DartFunctionBuilder internal constructor(
     val name: String,
-    namedConstructor: Boolean = false
 ) : SpecMethods<DartFunctionBuilder> {
 
     internal val specData: SpecData = SpecData()
@@ -21,20 +24,50 @@ class DartFunctionBuilder internal constructor(
     internal var nullable: Boolean = false
     internal var typedef: Boolean = false
     internal var typeCast: String? = null
+    internal var setter: Boolean = false
+    internal var getter: Boolean = false
     internal var lambda: Boolean = false
 
+    /**
+     * Indicates if the method should be generated as lambda method.
+     * @param lambda True when the method should be lambda otherwise false
+     */
     fun lambda(lambda: Boolean) = apply {
         this.lambda = lambda
+    }
+
+    /**
+     * Indicates if the method should be generated as set function.
+     * @param setter True for a setter generation
+     */
+    fun setter(setter: Boolean) = apply {
+        this.setter = setter
+    }
+
+    /**
+     * Indicates if the method should be generated as get function.
+     * @param getter True for a get generation
+     */
+    fun getter(getter: Boolean) = apply {
+        this.getter = getter
     }
 
     fun typeCast(cast: String) = apply {
         this.typeCast = cast
     }
 
+    /**
+     * If the function should be generated as typedef definition.
+     * @param typeDef true for a typedef
+     */
     fun typedef(typeDef: Boolean) = apply {
         this.typedef = typeDef
     }
 
+    /**
+     * Set if the return type of the function can be nullable.
+     * @param nullable if the function can be nullable
+     */
     fun nullable(nullable: Boolean) = apply {
         this.nullable = nullable
     }
@@ -51,6 +84,11 @@ class DartFunctionBuilder internal constructor(
         body.add(codeBlock)
     }
 
+    /**
+     * Set the returnType for a generated function.
+     * If the type should be void you can set the type to void or ignore this option
+     * @param returnType the given type
+     */
     fun returns(returnType: String) = apply {
         this.returnType = returnType
     }
@@ -111,6 +149,10 @@ class DartFunctionBuilder internal constructor(
         this.specData.modifiers(modifiers)
     }
 
+    /**
+     * Constructs a new reference from the [DartFunctionSpec].
+     * @return the created instance
+     */
     fun build(): DartFunctionSpec {
         //Check if the return type contains a nullable char and remove that and change nullable to true
         if (returnType != null && returnType!!.endsWith("?")) {
@@ -120,6 +162,13 @@ class DartFunctionBuilder internal constructor(
                 nullable = true
             }
         }
+
+        // Remove typedef keyword from the list to prevent problems
+        if (specData.modifiers.contains(DartModifier.TYPEDEF)) {
+            typedef(true)
+            specData.modifiers.remove(DartModifier.TYPEDEF)
+        }
+
         return DartFunctionSpec(this)
     }
 }

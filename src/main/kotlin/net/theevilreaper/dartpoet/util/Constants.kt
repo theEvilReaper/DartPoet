@@ -32,8 +32,21 @@ internal const val ROUND_CLOSE = ")"
 
 internal val ALLOWED_PARAMETER_MODIFIERS = setOf(DartModifier.PUBLIC, DartModifier.PRIVATE, DartModifier.LATE, DartModifier.FINAL, DartModifier.CONST, DartModifier.STATIC)
 
+internal val ALLOWED_FUNCTION_MODIFIERS = setOf(DartModifier.PUBLIC, DartModifier.PRIVATE, DartModifier.STATIC, DartModifier.TYPEDEF)
+
 private val namePattern: Regex = Regex("[a-z]+|([a-z]+)_+([a-z]+)")
 private val lowerCamelCase: Regex = Regex("[a-z]+[A-Z0-9]*[a-z0-9]*[A-Za-z0-9]*")
+
+fun hasAllowedModifiers(rawModifiers: Set<DartModifier>, allowedModifiers: Set<DartModifier>, context: String) {
+    rawModifiers.also {
+        LinkedHashSet(it).apply {
+            removeAll(allowedModifiers)
+            if (!isEmpty()) {
+                throw IllegalArgumentException("These modifiers $this are not allowed in a $context context. Allowed modifiers: $allowedModifiers")
+            }
+        }
+    }
+}
 
 /**
  * Checks if a filename matches the DartFile conventions for file names (not class names!)
