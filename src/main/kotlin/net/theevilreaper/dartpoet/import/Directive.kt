@@ -17,4 +17,4 @@ package net.theevilreaper.dartpoet.import
  * @since 1.0.0
  * @author theEvilReaper
  */
-sealed interface Import : Comparable<Import>
+sealed interface Directive : Comparable<Directive>
