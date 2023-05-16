@@ -26,6 +26,7 @@ class DartFunctionSpec(
     internal val isPrivate = modifiers.contains(DartModifier.PRIVATE)
     internal val isTypeDef = builder.typedef
     internal val typeCast = builder.typeCast
+    internal val isLambda = builder.lambda
 
     private val namedParameters: Set<DartParameterSpec> = if (parameters.isEmpty()) {
         setOf()
@@ -37,6 +38,10 @@ class DartFunctionSpec(
         //check(!isTypeDef && annotation.isNotEmpty()) { "A typedef can't have annotations" }
         require(name.trim().isNotEmpty()) { "The name of a function can't be empty" }
         require(body.isEmpty() || !modifiers.contains(DartModifier.ABSTRACT)) { "An abstract method can't have a body" }
+
+        if (isLambda && body.isEmpty()) {
+            throw IllegalArgumentException("Lambda can only be used with a body")
+        }
 
         //require (isFactory && returnType == null && !isNullable) { "A void function can't be nullable" }
     }

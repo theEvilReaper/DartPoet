@@ -19,10 +19,13 @@ class DartFunctionBuilder internal constructor(
     internal var returnType: String? = null
     internal val body: CodeBlock.Builder = CodeBlock.builder()
     internal var nullable: Boolean = false
-    internal val isConstructor: Boolean = name == CONSTRUCTOR
-    internal val isNamedConstructor: Boolean = namedConstructor
     internal var typedef: Boolean = false
     internal var typeCast: String? = null
+    internal var lambda: Boolean = false
+
+    fun lambda(lambda: Boolean) = apply {
+        this.lambda = lambda
+    }
 
     fun typeCast(cast: String) = apply {
         this.typeCast = cast
