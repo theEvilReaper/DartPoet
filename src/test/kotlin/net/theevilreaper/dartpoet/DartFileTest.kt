@@ -7,10 +7,10 @@ import net.theevilreaper.dartpoet.code.buildCodeBlock
 import net.theevilreaper.dartpoet.enum.EnumPropertySpec
 import net.theevilreaper.dartpoet.function.DartFunctionSpec
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
-import net.theevilreaper.dartpoet.import.DartImport
-import net.theevilreaper.dartpoet.import.ImportCastType
-import net.theevilreaper.dartpoet.import.LibraryImport
-import net.theevilreaper.dartpoet.import.PartImport
+import net.theevilreaper.dartpoet.import.DartDirective
+import net.theevilreaper.dartpoet.import.CastType
+import net.theevilreaper.dartpoet.import.LibraryDirective
+import net.theevilreaper.dartpoet.import.PartDirective
 import net.theevilreaper.dartpoet.parameter.DartParameterSpec
 import net.theevilreaper.dartpoet.property.DartPropertySpec
 import org.junit.jupiter.api.Assertions.*
@@ -70,9 +70,9 @@ class DartFileTest {
         val versionFile = DartFile.builder("version.dart")
             .imports {
                 listOf(
-                    DartImport("freezed_annotation/freezed_annotation.dart"),
-                    PartImport("version.freezed.dart"),
-                    PartImport("version.g.dart")
+                    DartDirective("freezed_annotation/freezed_annotation.dart"),
+                    PartDirective("version.freezed.dart"),
+                    PartDirective("version.g.dart")
                 )
             }
             .type(
@@ -118,9 +118,9 @@ class DartFileTest {
             )
             .imports {
                 listOf(
-                    DartImport("dart:html"),
-                    LibraryImport("testLib"),
-                    DartImport("dart:math", ImportCastType.AS, "math"),
+                    DartDirective("dart:html"),
+                    LibraryDirective("testLib"),
+                    DartDirective("dart:math", CastType.AS, "math"),
                 )
             }
             .build()
@@ -234,7 +234,7 @@ class DartFileTest {
             .build()
 
         val file = DartFile.builder("${className}Handler")
-            .import(LibraryImport("testLibrary", true))
+            .import(LibraryDirective("testLibrary", true))
             .type(handlerApiClass)
             .build()
         assertThat(file.toString()).isEqualTo(
