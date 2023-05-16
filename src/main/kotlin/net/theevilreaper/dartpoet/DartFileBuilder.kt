@@ -5,7 +5,7 @@ import net.theevilreaper.dartpoet.clazz.DartClassBuilder
 import net.theevilreaper.dartpoet.clazz.DartClassSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.extension.ExtensionSpec
-import net.theevilreaper.dartpoet.import.Import
+import net.theevilreaper.dartpoet.import.Directive
 import net.theevilreaper.dartpoet.util.DEFAULT_INDENT
 import java.lang.IllegalArgumentException
 
@@ -14,25 +14,21 @@ class DartFileBuilder(
 ) {
     internal val comment: CodeBlock.Builder = CodeBlock.builder()
     internal val specTypes: MutableList<DartClassSpec> = mutableListOf()
-    internal val imports: MutableList<Import> = mutableListOf()
+    internal val directives: MutableList<Directive> = mutableListOf()
     internal val annotations: MutableList<AnnotationSpec> = mutableListOf()
     internal val extensionStack: MutableList<ExtensionSpec> = mutableListOf()
     internal var indent = DEFAULT_INDENT
 
-    fun import(import: Import) = apply {
-        this.imports += import
+    fun directive(directive: Directive) = apply {
+        this.directives += directive
     }
 
-    fun import(import: () -> Import) = apply {
-        this.imports += import()
+    fun directive(directive: () -> Directive) = apply {
+        this.directives += directive()
     }
 
-    fun imports(import: Iterable<Import>) = apply {
-        this.imports += import
-    }
-
-    fun imports(import: () -> Iterable<Import>) = apply {
-        this.imports += import()
+    fun directives(vararg directive: Directive) = apply {
+        this.directives += directive
     }
 
     fun indent(indent: String) = apply {

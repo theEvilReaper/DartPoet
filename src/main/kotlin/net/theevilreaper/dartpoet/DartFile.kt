@@ -6,9 +6,9 @@ import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.DartFileWriter
 import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.function.DartFunctionSpec
-import net.theevilreaper.dartpoet.import.DartImport
-import net.theevilreaper.dartpoet.import.LibraryImport
-import net.theevilreaper.dartpoet.import.PartImport
+import net.theevilreaper.dartpoet.import.DartDirective
+import net.theevilreaper.dartpoet.import.LibraryDirective
+import net.theevilreaper.dartpoet.import.PartDirective
 import net.theevilreaper.dartpoet.util.DART_FILE_ENDING
 import net.theevilreaper.dartpoet.util.isDartConventionFileName
 import net.theevilreaper.dartpoet.util.toImmutableList
@@ -27,22 +27,22 @@ class DartFile internal constructor(
     internal val types: List<Any> = builder.specTypes.toImmutableList()
     internal val extensions: List<ExtensionSpec> = builder.extensionStack
 
-    internal val imports: List<DartImport> = if (builder.imports.isEmpty()) {
+    internal val imports: List<DartDirective> = if (builder.directives.isEmpty()) {
         emptyList()
     } else {
-        builder.imports.filterIsInstance<DartImport>().toList()
+        builder.directives.filterIsInstance<DartDirective>().toList()
     }
 
-    internal val partImports: List<PartImport> = if (builder.imports.isEmpty()) {
+    internal val partImports: List<PartDirective> = if (builder.directives.isEmpty()) {
         emptyList()
     } else {
-        builder.imports.filterIsInstance<PartImport>().toList()
+        builder.directives.filterIsInstance<PartDirective>().toList()
     }
 
-    internal val libImport: LibraryImport? = if (builder.imports.isEmpty()) {
+    internal val libImport: LibraryDirective? = if (builder.directives.isEmpty()) {
         null
     } else {
-        val possibleListImports = builder.imports.filterIsInstance<LibraryImport>()
+        val possibleListImports = builder.directives.filterIsInstance<LibraryDirective>()
         if (possibleListImports.isEmpty()) {
             null
         } else if (possibleListImports.size == 1) {
@@ -56,17 +56,9 @@ class DartFile internal constructor(
         check(name.trim().isNotEmpty()) { "The name of a class can't be empty (ONLY SPACES ARE NOT ALLOWED" }
     }
 
-    internal fun write(
-        codeWriter: CodeWriter
-    ) {
-        DartFileWriter().emit(this, codeWriter)
-    }
+    internal fun write(codeWriter: CodeWriter) { DartFileWriter().emit(this, codeWriter) }
 
-    override fun toString() = buildCodeString {
-        write(
-            this,
-        )
-    }
+    override fun toString() = buildCodeString { write(this) }
 
     internal val callEmit: (Any, CodeWriter) -> Unit = {
         o: Any, c: CodeWriter -> emitInternal(o, c)
