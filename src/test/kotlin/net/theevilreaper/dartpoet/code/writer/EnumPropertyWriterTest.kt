@@ -1,5 +1,6 @@
 package net.theevilreaper.dartpoet.code.writer
 
+import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.enum.EnumPropertySpec
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.params.ParameterizedTest
@@ -31,8 +32,38 @@ class EnumPropertyWriterTest {
                 .build(),
                 "dashboard('Dashboard', '/dashboard', false)"
             ),
-
         )
+
+        @JvmStatic
+        private fun propertiesWithAnnotations() = Stream.of(
+            Arguments.of(
+                EnumPropertySpec.builder("test")
+                    .annotations(AnnotationSpec.builder("jsonIgnore").build()).build(),
+                """
+                @jsonIgnore
+                test
+                """.trimIndent()
+            ),
+            Arguments.of(
+                EnumPropertySpec.builder("test")
+                    .annotations(
+                        AnnotationSpec.builder("jsonIgnore").build(),
+                        AnnotationSpec.builder("JsonKey")
+                            .content("name: %C", "test").build()
+                    ).build(),
+                """
+                @jsonIgnore
+                @JsonKey(name: 'test')
+                test
+                """.trimIndent()
+            )
+        )
+    }
+
+    @ParameterizedTest
+    @MethodSource("propertiesWithAnnotations")
+    fun `test property generation with annotations`(propertySpec: EnumPropertySpec, expected: String) {
+        assertEquals(expected, propertySpec.toString())
     }
 
     @ParameterizedTest

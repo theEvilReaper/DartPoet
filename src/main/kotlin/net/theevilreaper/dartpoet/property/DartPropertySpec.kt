@@ -8,6 +8,12 @@ import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.util.toImmutableSet
 import net.theevilreaper.dartpoet.util.ALLOWED_PARAMETER_MODIFIERS
 
+/**
+ * The property spec class contains all variables which are comes from the [DartPropertyBuilder].
+ * Some values are checked for certain conditions to avoid errors during the generation.
+ * @author theEvilReaper
+ * @since 1.0.0
+ */
 class DartPropertySpec(
     builder: DartPropertyBuilder
 ) {
@@ -37,25 +43,32 @@ class DartPropertySpec(
         }**/
     }
 
-    internal fun write(
-        codeWriter: CodeWriter
-    ) {
+    /**
+     * Trigger the write process from the [PropertyWriter] to write the spec into dart code.
+     * @param codeWriter the [CodeWriter] to apply the content from the spec
+     */
+    internal fun write(codeWriter: CodeWriter) {
         PropertyWriter().write(this, codeWriter)
     }
 
-    override fun toString() = buildCodeString {
-        write(
-            this
-        )
-    }
+    /**
+     * Returns a textual representation of the spec class.
+     * It calls the [write] method to get the representation
+     * @return the created representation
+     */
+    override fun toString() = buildCodeString { write(this) }
 
     companion object {
 
+        /**
+         * Creates a new instance from the [DartPropertyBuilder].
+         * The modifier parameter is optional
+         */
         @JvmStatic
         fun builder(
             name: String,
             type: String,
-            vararg modifiers: DartModifier
+            vararg modifiers: DartModifier = emptyArray()
         ): DartPropertyBuilder {
             return DartPropertyBuilder(name, type).modifiers { listOf(*modifiers) }
         }

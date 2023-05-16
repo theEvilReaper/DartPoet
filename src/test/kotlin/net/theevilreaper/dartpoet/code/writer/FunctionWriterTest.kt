@@ -94,7 +94,7 @@ class FunctionWriterTest {
                 DartParameterSpec.builder("id", "int").build()
             }
             .addCode(CodeBlock.builder()
-                .add("return 'Thomas';")
+                .addStatement("return 'Thomas';")
                 .build()
             )
             .build()
@@ -174,5 +174,16 @@ class FunctionWriterTest {
             }
             """.trimIndent()
         )
+    }
+
+    @Test
+    fun `test lambda method write`() {
+        val function = DartFunctionSpec.builder("isNoble")
+            .lambda(true)
+            .parameter(DartParameterSpec.builder("atomicNumber", "int").build())
+            .returns("bool")
+            .addCode("_nobleGases[atomicNumber] != null;")
+            .build()
+        assertThat(function.toString()).isEqualTo("bool isNoble(int atomicNumber) => _nobleGases[atomicNumber] != null;")
     }
 }

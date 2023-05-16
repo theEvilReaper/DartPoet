@@ -4,13 +4,12 @@ import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
 
-
 /**
+ * The builder is used to set all values that describe a property in Dart.
  * @author theEvilReaper
  * @version 1.0.0
- * @since
+ * @since 1.0.0
  **/
-
 class DartPropertyBuilder internal constructor(
     var name: String,
     var type: String,
@@ -20,10 +19,19 @@ class DartPropertyBuilder internal constructor(
     internal val annotations: MutableList<AnnotationSpec> = mutableListOf()
     internal var initBlock: CodeBlock.Builder = CodeBlock.builder()
 
+    /**
+     * Apply a given format which contains the parts for the init block of the [DartPropertySpec].
+     * @param format the given format
+     * @param args the arguments for the format
+     */
     fun initWith(format: String, vararg args: Any?): DartPropertyBuilder = apply {
         this.initBlock.add(format, *args)
     }
 
+    /**
+     * Set the initializer block directly as [CodeBlock.Builder] to the property.
+     * @param codeFragment the [CodeBlock.Builder] to set
+     */
     fun initWith(codeFragment: CodeBlock.Builder): DartPropertyBuilder = apply {
         this.initBlock = codeFragment
     }
@@ -101,6 +109,10 @@ class DartPropertyBuilder internal constructor(
         this.modifiers += modifiers()
     }
 
+    /**
+     * Creates a new reference from the [DartPropertySpec] with the given builder reference.
+     * @return the created [DartPropertySpec] instance
+     */
     fun build(): DartPropertySpec {
         return DartPropertySpec(this)
     }

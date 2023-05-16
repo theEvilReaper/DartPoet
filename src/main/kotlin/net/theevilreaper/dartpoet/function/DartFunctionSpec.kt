@@ -38,7 +38,7 @@ class DartFunctionSpec(
     internal val typeCast = builder.typeCast
     internal val asSetter = builder.setter
     internal val isGetter = builder.getter
-    internal val asLambda = builder.lambda
+    internal val isLambda = builder.lambda
 
     private val namedParameters: Set<DartParameterSpec> = if (parameters.isEmpty()) {
         setOf()
@@ -53,6 +53,10 @@ class DartFunctionSpec(
 
         if (isGetter && asSetter) {
             throw IllegalArgumentException("The function can't be a setter and a getter twice")
+        }
+
+        if (isLambda && body.isEmpty()) {
+            throw IllegalArgumentException("Lambda can only be used with a body")
         }
 
         //require (isFactory && returnType == null && !isNullable) { "A void function can't be nullable" }
