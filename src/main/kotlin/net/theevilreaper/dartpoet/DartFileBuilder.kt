@@ -6,6 +6,7 @@ import net.theevilreaper.dartpoet.clazz.DartClassSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.import.Import
+import net.theevilreaper.dartpoet.property.DartPropertySpec
 import net.theevilreaper.dartpoet.util.DEFAULT_INDENT
 import java.lang.IllegalArgumentException
 
@@ -18,6 +19,23 @@ class DartFileBuilder(
     internal val annotations: MutableList<AnnotationSpec> = mutableListOf()
     internal val extensionStack: MutableList<ExtensionSpec> = mutableListOf()
     internal var indent = DEFAULT_INDENT
+    internal val constants: MutableSet<DartPropertySpec> = mutableSetOf()
+
+    /**
+     * Add a constant [DartPropertySpec] to the file.
+     * @param constant the property to add
+     */
+    fun constant(constant: DartPropertySpec) = apply {
+        this.constants += constant
+    }
+
+    /**
+     * Add an array of constant [DartPropertySpec] to the file.
+     * @param constants the array to add
+     */
+    fun constants(vararg constants: DartPropertySpec) = apply {
+        this.constants += constants
+    }
 
     fun import(import: Import) = apply {
         this.imports += import
@@ -62,8 +80,8 @@ class DartFileBuilder(
         this.specTypes += dartFileSpec
     }
 
-    fun type(dartFileSpec: () -> DartClassSpec) = apply {
-        this.specTypes += dartFileSpec()
+    fun type(vararg classSpecs: DartClassSpec) = apply {
+        this.specTypes += classSpecs
     }
 
     fun type(dartFileSpec: DartClassBuilder) = apply {
@@ -74,14 +92,18 @@ class DartFileBuilder(
         this.annotations += annotations
     }
 
-    fun annotation(annotation: () -> AnnotationSpec) = apply {
-        this.annotations += annotation()
+    fun annotation(vararg annotations: AnnotationSpec) = apply {
+        this.annotations += annotations
     }
 
     fun annotation(annotation: AnnotationSpec) = apply {
         this.annotations += annotation
     }
 
+    /**
+     * Creates a new reference from the [DartFile] class.
+     * @return the created instance
+     */
     fun build(): DartFile {
         return DartFile(this)
     }
