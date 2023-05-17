@@ -3,7 +3,7 @@ package net.theevilreaper.dartpoet.code.writer
 import net.theevilreaper.dartpoet.DartModifier.*
 import net.theevilreaper.dartpoet.clazz.ClassType
 import net.theevilreaper.dartpoet.clazz.DartClassSpec
-import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.*
 import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.code.emitConstructors
 import net.theevilreaper.dartpoet.code.emitFunctions
@@ -73,17 +73,13 @@ class ClassWriter {
             codeWriter.emit(NEW_LINE)
         }
 
-        spec.constantStack.emit(codeWriter) {
-            it.write(codeWriter)
-        }
+        spec.constantStack.emitProperties(codeWriter)
 
         if (spec.constantStack.isNotEmpty()) {
             codeWriter.emit(NEW_LINE)
         }
 
-        spec.properties.emit(codeWriter) {
-            it.write(codeWriter)
-        }
+        spec.properties.emitProperties(codeWriter)
 
         if (spec.properties.isNotEmpty()) {
             codeWriter.emit(NEW_LINE)
@@ -173,24 +169,6 @@ class ClassWriter {
                     codeWriter.emit(",$NEW_LINE")
                 }
             }
-        }
-    }
-
-    private fun Set<DartPropertySpec>.emit(
-        codeWriter: CodeWriter,
-        forceNewLines: Boolean = false,
-        emitBlock: (DartPropertySpec) -> Unit = { it.write(codeWriter) }
-    ) = with(codeWriter) {
-        if (isNotEmpty()) {
-            val emitNewLines = size > 1 || forceNewLines
-
-            forEachIndexed { index, property ->
-                if (index > 0) {
-                    emit(if (emitNewLines) NEW_LINE else EMPTY_STRING)
-                }
-                emitBlock(property)
-            }
-            emit(NEW_LINE)
         }
     }
 }
