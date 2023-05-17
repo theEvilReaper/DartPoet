@@ -15,12 +15,19 @@ class PropertyWriter {
             it.write(writer, inline = false)
         }
 
-        for (modifier in property.modifiers) {
+        property.modifiers.forEachIndexed { index, modifier ->
+            if (index > 0) {
+                writer.emit(SPACE)
+            }
             writer.emit(modifier.identifier)
-            writer.emit(SPACE)
         }
 
-        writer.emit(property.type)
+        if (!property.isConst) {
+            if (property.modifiers.isNotEmpty()) {
+                writer.emit(SPACE)
+            }
+            writer.emit(property.type)
+        }
 
         if (property.nullable) {
             writer.emit("? ")
