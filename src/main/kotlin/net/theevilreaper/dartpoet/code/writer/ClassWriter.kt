@@ -73,6 +73,14 @@ class ClassWriter {
             codeWriter.emit(NEW_LINE)
         }
 
+        spec.constantStack.emit(codeWriter) {
+            it.write(codeWriter)
+        }
+
+        if (spec.constantStack.isNotEmpty()) {
+            codeWriter.emit(NEW_LINE)
+        }
+
         spec.properties.emit(codeWriter) {
             it.write(codeWriter)
         }
