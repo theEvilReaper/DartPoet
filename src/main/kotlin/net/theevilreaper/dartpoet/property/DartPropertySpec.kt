@@ -24,6 +24,7 @@ class DartPropertySpec(
     internal var nullable = builder.nullable
     internal var initBlock = builder.initBlock
     internal var isPrivate = builder.modifiers.contains(DartModifier.PRIVATE)
+    internal val isConst = builder.type == "CONST"
     internal var modifiers: Set<DartModifier> = builder.modifiers
         .also {
             hasAllowedModifiers(it, ALLOWED_PROPERTY_MODIFIERS, "property")
@@ -66,5 +67,8 @@ class DartPropertySpec(
         ): DartPropertyBuilder {
             return DartPropertyBuilder(name, type).modifiers { listOf(*modifiers) }
         }
+
+        @JvmStatic
+        fun constBuilder(name: String) = DartPropertyBuilder(name, "CONST").modifier(DartModifier.CONST)
     }
 }
