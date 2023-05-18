@@ -4,6 +4,7 @@ import net.theevilreaper.dartpoet.DartFile
 import net.theevilreaper.dartpoet.clazz.DartClassSpec
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.emitExtensions
+import net.theevilreaper.dartpoet.code.emitProperties
 import net.theevilreaper.dartpoet.code.writeImports
 import net.theevilreaper.dartpoet.util.NEW_LINE
 
@@ -14,7 +15,11 @@ class DartFileWriter {
     fun emit(dartFile: DartFile, writer: CodeWriter) {
         if (dartFile.libImport != null) {
             writer.emit(dartFile.libImport.toString())
-            writer.emit("\n")
+            writer.emit(NEW_LINE)
+
+            if (dartFile.imports.isEmpty()) {
+                writer.emit(NEW_LINE)
+            }
         }
 
         dartFile.imports.writeImports(writer, newLineAtBegin = dartFile.libImport != null) {
@@ -30,6 +35,14 @@ class DartFileWriter {
         }
 
         if (dartFile.partImports.isNotEmpty()) {
+            writer.emit(NEW_LINE)
+        }
+
+        dartFile.constants.emitProperties(writer) {
+            it.write(writer)
+        }
+
+        if (dartFile.constants.isNotEmpty()) {
             writer.emit(NEW_LINE)
         }
 

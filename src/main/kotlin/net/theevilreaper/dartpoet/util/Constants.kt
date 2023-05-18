@@ -21,7 +21,6 @@ internal const val IMPORT = "import"
 internal const val ANNOTATION_CHAR = "@"
 
 internal const val DART_FILE_ENDING = ".dart"
-internal const val CONSTRUCTOR = "CONSTRUCTOR"
 
 //Brackets
 internal const val CURLY_OPEN = '{'
@@ -31,9 +30,23 @@ internal const val ROUND_OPEN = "("
 internal const val ROUND_CLOSE = ")"
 
 internal val ALLOWED_PARAMETER_MODIFIERS = setOf(DartModifier.PUBLIC, DartModifier.PRIVATE, DartModifier.LATE, DartModifier.FINAL, DartModifier.CONST, DartModifier.STATIC)
-
+internal val ALLOWED_FUNCTION_MODIFIERS = setOf(DartModifier.PUBLIC, DartModifier.PRIVATE, DartModifier.STATIC, DartModifier.TYPEDEF)
+internal val ALLOWED_PROPERTY_MODIFIERS = setOf(DartModifier.PRIVATE, DartModifier.FINAL, DartModifier.LATE, DartModifier.STATIC, DartModifier.CONST)
+internal val ALLOWED_CLASS_CONST_MODIFIERS = setOf(DartModifier.STATIC, DartModifier.CONST)
+internal val ALLOWED_CONST_MODIFIERS = setOf(DartModifier.CONST)
 private val namePattern: Regex = Regex("[a-z]+|([a-z]+)_+([a-z]+)")
 private val lowerCamelCase: Regex = Regex("[a-z]+[A-Z0-9]*[a-z0-9]*[A-Za-z0-9]*")
+
+fun hasAllowedModifiers(rawModifiers: Set<DartModifier>, allowedModifiers: Set<DartModifier>, context: String) {
+    rawModifiers.also {
+        LinkedHashSet(it).apply {
+            removeAll(allowedModifiers)
+            if (!isEmpty()) {
+                throw IllegalArgumentException("These modifiers $this are not allowed in a $context context. Allowed modifiers: $allowedModifiers")
+            }
+        }
+    }
+}
 
 /**
  * Checks if a filename matches the DartFile conventions for file names (not class names!)

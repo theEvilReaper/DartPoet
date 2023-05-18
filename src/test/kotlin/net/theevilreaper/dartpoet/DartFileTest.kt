@@ -180,6 +180,7 @@ class DartFileTest {
               final String route;
             
               const NavigationEntry(this.name, this.route);
+            
             }
             """.trimIndent()
         )
@@ -201,7 +202,7 @@ class DartFileTest {
                         DartParameterSpec.builder(apiClient.replaceFirstChar { it.lowercase() }, apiClient).build()
                     )
                     .addCode(buildCodeBlock {
-                    addStatement("%L = %L", apiClient.replaceFirstChar { it.lowercase() }, apiClient.replaceFirstChar { it.lowercase() })
+                        add("%L = %L", apiClient.replaceFirstChar { it.lowercase() }, apiClient.replaceFirstChar { it.lowercase() })
                     })
                     .build()
             )
@@ -238,12 +239,102 @@ class DartFileTest {
             part of testLibrary;
             
             class DefectApi {
-              
+            
               final ApiClient apiClient;
-              
+            
               DefectApi(ApiClient apiClient): apiClient = apiClient;
-              
+           
+              Future<DefectDTO> getByID(int id) async {
+                final queryParams = <String, dynamic>{};
+                final baseUri = Uri.parse(apiClient.baseUrl);
+                final uri = baseUri.replace(queryParameters: queryParameters, path: '${"$"}{baseUri.path}/defect/${"$"}id/');
+                return await apiClient.dio.getUri<JsonMap>(
+                  uri,
+                ).then((response) {
+                  return DefectDTO.from(response.data!);
+                });
+  
+              }
             }
+            """.trimIndent()
+        )
+    }
+
+    @Test
+    fun `test model class write`() {
+        val name = "HousePart"
+        val serializer = "standardSerializers"
+        val modelClass = DartClassSpec.abstractClass(name)
+            .withImplements("Built<$name, ${name}Builder>")
+            .function(
+                DartFunctionSpec.builder("serializer")
+                    .returns("Serializer<$name>")
+                    .lambda(true)
+                    .getter(true)
+                    .modifier(DartModifier.STATIC)
+                    .addCode("%L", "_\$${name}Serializer;")
+                    .build()
+            )
+            .function(
+                DartFunctionSpec.builder("fromJson")
+                    .lambda(true)
+                    .returns(name)
+                    .modifier(DartModifier.STATIC)
+                    .parameter(DartParameterSpec.builder("json", "dynamic").build())
+                    .addCode(buildCodeBlock {
+                        add("%L.deserialize(json);", serializer)
+                    })
+                    .build()
+            )
+            .function(
+                DartFunctionSpec.builder("toJson")
+                    .lambda(true)
+                    .returns("dynamic")
+                    .addCode(buildCodeBlock {
+                        add("%L.serialize(this);", "standardSerializers")
+                    })
+                    .build()
+            )
+            .build()
+        assertThat(modelClass.toString()).isEqualTo(
+            """
+            abstract class $name implements Built<$name, ${name}Builder> {
+            
+              static Serializer<$name> get serializer => _$${name}Serializer;
+            
+              static $name fromJson(dynamic json) => $serializer.deserialize(json);
+            
+              dynamic toJson() => $serializer.serialize(this);
+            }
+            """.trimIndent()
+        )
+    }
+
+    @Test
+    fun `test class write with constant values`() {
+        val name = "environment"
+        val classFile = DartFile.builder(name)
+            .import(DartImport("dart:html"))
+            .constants(
+                DartPropertySpec.constBuilder("typeLive").initWith("1").build(),
+                DartPropertySpec.constBuilder("typeTest").initWith("10").build(),
+                DartPropertySpec.constBuilder("typeDev").initWith("100").build(),
+            )
+            .type(
+                DartClassSpec.builder(name.replaceFirstChar { it.uppercase() })
+                    .annotation(AnnotationSpec.builder("freezed").build())
+            )
+            .build()
+        assertThat(classFile.toString()).isEqualTo(
+            """
+            import 'dart:html';
+            
+            const typeLive = 1;
+            const typeTest = 10;
+            const typeDev = 100;
+            
+            @freezed
+            class Environment {}
             """.trimIndent()
         )
     }

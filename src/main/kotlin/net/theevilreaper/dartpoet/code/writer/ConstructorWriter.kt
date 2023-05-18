@@ -63,10 +63,11 @@ class ConstructorWriter {
             writer.emitCode(spec.initializer.build(), ensureTrailingNewline = true)
             writer.unindent(2)
         } else {
-
             if (spec.initializer.isNotEmpty()) {
                 writer.emit(":·")
                 writer.emitCode(spec.initializer.build(), ensureTrailingNewline = false)
+                writer.emit(SEMICOLON)
+                return
             }
 
             if (spec.isFactory) {

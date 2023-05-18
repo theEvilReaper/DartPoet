@@ -28,6 +28,7 @@ class DartClassBuilder internal constructor(
     internal val propertyStack: MutableList<DartPropertySpec> = mutableListOf()
     internal val functionStack: MutableList<DartFunctionSpec> = mutableListOf()
     internal val enumPropertyStack: MutableList<EnumPropertySpec> = mutableListOf()
+    internal val constantStack: MutableSet<DartPropertySpec> = mutableSetOf()
 
     internal var superClass: String? = null
     internal var inheritKeyWord: InheritKeyword? = null
@@ -46,6 +47,22 @@ class DartClassBuilder internal constructor(
     fun withImplements(className: String) = apply {
         setClassName(className)
         this.inheritKeyWord = InheritKeyword.IMPLEMENTS
+    }
+
+    /**
+     * Add a constant [DartPropertySpec] to the file.
+     * @param constant the property to add
+     */
+    fun constant(constant: DartPropertySpec) = apply {
+        this.constantStack += constant
+    }
+
+    /**
+     * Add an array of constant [DartPropertySpec] to the file.
+     * @param constants the array to add
+     */
+    fun constants(vararg constants: DartPropertySpec) = apply {
+        this.constantStack += constants
     }
 
     fun enumProperty(enumPropertySpec: EnumPropertySpec) = apply {

@@ -6,6 +6,7 @@ import net.theevilreaper.dartpoet.function.DartFunctionSpec
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.directive.Directive
 import net.theevilreaper.dartpoet.parameter.DartParameterSpec
+import net.theevilreaper.dartpoet.property.DartPropertySpec
 import net.theevilreaper.dartpoet.util.CURLY_CLOSE
 import net.theevilreaper.dartpoet.util.CURLY_OPEN
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
@@ -90,7 +91,7 @@ internal fun Set<ConstructorSpec>.emitConstructors(
             codeWriter.emit(NEW_LINE)
         }
         forEachIndexed { index, constructorSpec ->
-            val emitNewLines = size > 1 || forceNewLines
+            val emitNewLines = size >= 1 || forceNewLines
 
             if (index > 0 && emitNewLines) {
                 codeWriter.emit(NEW_LINE)
@@ -176,5 +177,23 @@ internal fun <T: Directive> List<T>.writeImports(
         }
 
         writer.emit(NEW_LINE)
+    }
+}
+
+fun Set<DartPropertySpec>.emitProperties(
+    codeWriter: CodeWriter,
+    forceNewLines: Boolean = false,
+    emitBlock: (DartPropertySpec) -> Unit = { it.write(codeWriter) }
+) = with(codeWriter) {
+    if (isNotEmpty()) {
+        val emitNewLines = size > 1 || forceNewLines
+
+        forEachIndexed { index, property ->
+            if (index > 0) {
+                emit(if (emitNewLines) NEW_LINE else EMPTY_STRING)
+            }
+            emitBlock(property)
+        }
+        emit(NEW_LINE)
     }
 }

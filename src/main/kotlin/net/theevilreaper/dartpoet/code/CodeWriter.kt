@@ -142,29 +142,6 @@ class CodeWriter constructor(
         emit(" */\n")
     }
 
-    /**
-     * Emits `modifiers` in the standard order. Modifiers in `implicitModifiers` will not
-     * be emitted except for [KModifier.PUBLIC]
-     */
-    fun emitModifiers(
-        modifiers: Set<DartModifier>,
-        implicitModifiers: Set<DartModifier> = emptySet(),
-    ) {
-        if (shouldEmitPublicModifier(modifiers, implicitModifiers)) {
-            emit(DartModifier.PUBLIC.identifier)
-            emit(" ")
-        }
-        val uniqueNonPublicExplicitOnlyModifiers =
-            modifiers
-                .filterNot { it == DartModifier.PUBLIC }
-                .filterNot { implicitModifiers.contains(it) }
-                .toEnumSet()
-        for (modifier in uniqueNonPublicExplicitOnlyModifiers) {
-            emit(modifier.identifier)
-            emit(" ")
-        }
-    }
-
     fun emitCode(s: String) = emitCode(CodeBlock.of(s))
 
     fun emitCode(format: String, vararg args: Any?) = emitCode(CodeBlock.of(format, *args))
@@ -335,32 +312,6 @@ class CodeWriter constructor(
         for (j in 0 until indentLevel) {
             out.appendNonWrapping(indent)
         }
-    }
-
-    /**
-     * Returns whether a [KModifier.PUBLIC] should be emitted.
-     *
-     * If [modifiers] contains [KModifier.PUBLIC], this method always returns `true`.
-     *
-     * Otherwise, this will return `true` when [KModifier.PUBLIC] is one of the [implicitModifiers]
-     * and there are no other opposing modifiers (like [KModifier.PROTECTED] etc.) supplied by the
-     * consumer in [modifiers].
-     */
-    private fun shouldEmitPublicModifier(
-        modifiers: Set<DartModifier>,
-        implicitModifiers: Set<DartModifier>,
-    ): Boolean {
-        if (modifiers.contains(DartModifier.PUBLIC)) {
-            return true
-        }
-
-        if (!implicitModifiers.contains(DartModifier.PUBLIC)) {
-            return false
-        }
-
-        val hasOtherConsumerSpecifiedVisibility = true
-
-        return !hasOtherConsumerSpecifiedVisibility
     }
 
     /**

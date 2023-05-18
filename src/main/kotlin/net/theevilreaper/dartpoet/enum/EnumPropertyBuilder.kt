@@ -1,5 +1,6 @@
 package net.theevilreaper.dartpoet.enum
 
+import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
 
 /**
@@ -15,6 +16,15 @@ class EnumPropertyBuilder(
 ) {
     internal var genericValueCast: String? = null
     internal val parameters: MutableList<CodeBlock> = mutableListOf()
+    internal val annotations: MutableList<AnnotationSpec> = mutableListOf()
+
+    fun annotation(annotation: AnnotationSpec) = apply {
+        this.annotations += annotation
+    }
+
+    fun annotations(vararg annotations: AnnotationSpec) = apply {
+        this.annotations += annotations
+    }
 
     /**
      * Add a new parameter to the property.

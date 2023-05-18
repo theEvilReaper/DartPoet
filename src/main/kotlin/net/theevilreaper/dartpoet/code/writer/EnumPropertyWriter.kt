@@ -1,6 +1,7 @@
 package net.theevilreaper.dartpoet.code.writer
 
 import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.enum.EnumPropertySpec
 import net.theevilreaper.dartpoet.util.ROUND_CLOSE
 import net.theevilreaper.dartpoet.util.ROUND_OPEN
@@ -20,6 +21,9 @@ class EnumPropertyWriter {
      * @param writer the [CodeWriter] instance to apply the code
      */
     fun write(propertySpec: EnumPropertySpec, writer: CodeWriter) {
+        propertySpec.annotations.emitAnnotations(codeWriter = writer, inLineAnnotations = false) {
+            it.write(writer)
+        }
         writer.emit(propertySpec.name)
         if (propertySpec.hasGeneric) {
             writer.emitCode("<%L>", propertySpec.generic!!)
