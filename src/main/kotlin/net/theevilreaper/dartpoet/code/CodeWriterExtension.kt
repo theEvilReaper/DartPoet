@@ -4,7 +4,7 @@ import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.function.DartFunctionSpec
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
-import net.theevilreaper.dartpoet.import.Import
+import net.theevilreaper.dartpoet.directive.Directive
 import net.theevilreaper.dartpoet.parameter.DartParameterSpec
 import net.theevilreaper.dartpoet.property.DartPropertySpec
 import net.theevilreaper.dartpoet.util.CURLY_CLOSE
@@ -160,7 +160,7 @@ internal fun List<ExtensionSpec>.emitExtensions(
     }
 }
 
-internal fun <T: Import> List<T>.writeImports(
+internal fun <T: Directive> List<T>.writeImports(
     writer: CodeWriter,
     newLineAtBegin: Boolean = true,
     emitBlock: (T) -> String = { it.toString() }
