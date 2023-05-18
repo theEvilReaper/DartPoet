@@ -19,6 +19,10 @@ class DartFileBuilder(
     internal val extensionStack: MutableList<ExtensionSpec> = mutableListOf()
     internal var indent = DEFAULT_INDENT
 
+    fun fileComment(format: String, vararg args: Any) = apply {
+        this.comment.add(format.replace(' ', '·'), *args)
+    }
+
     fun import(import: Import) = apply {
         this.imports += import
     }

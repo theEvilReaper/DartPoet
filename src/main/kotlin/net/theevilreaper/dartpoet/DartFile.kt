@@ -26,6 +26,7 @@ class DartFile internal constructor(
     internal val annotations: List<AnnotationSpec> = builder.annotations.toImmutableList()
     internal val types: List<Any> = builder.specTypes.toImmutableList()
     internal val extensions: List<ExtensionSpec> = builder.extensionStack
+    internal val comments = builder.comment.build()
 
     internal val imports: List<DartImport> = if (builder.imports.isEmpty()) {
         emptyList()
