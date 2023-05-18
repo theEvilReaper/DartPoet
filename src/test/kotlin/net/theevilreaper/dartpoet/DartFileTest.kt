@@ -314,7 +314,7 @@ class DartFileTest {
     fun `test class write with constant values`() {
         val name = "environment"
         val classFile = DartFile.builder(name)
-            .import(DartImport("dart:html"))
+            .directive(DartDirective("dart:html"))
             .constants(
                 DartPropertySpec.constBuilder("typeLive").initWith("1").build(),
                 DartPropertySpec.constBuilder("typeTest").initWith("10").build(),
