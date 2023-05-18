@@ -132,14 +132,14 @@ class CodeWriter constructor(
     fun emitKdoc(kdocCodeBlock: CodeBlock) {
         if (kdocCodeBlock.isEmpty()) return
 
-        emit("/**\n")
+        emit("///")
         kdoc = true
         try {
             emitCode(kdocCodeBlock, ensureTrailingNewline = true)
         } finally {
             kdoc = false
         }
-        emit(" */\n")
+        emit("\n")
     }
 
     fun emitCode(s: String) = emitCode(CodeBlock.of(s))
@@ -270,7 +270,7 @@ class CodeWriter constructor(
             if (!first) {
                 if ((kdoc || comment) && trailingNewline) {
                     emitIndentation()
-                    out.appendNonWrapping(if (kdoc) " *" else "//")
+                    out.appendNonWrapping(if (kdoc) " *" else "///")
                 }
                 out.newline()
                 trailingNewline = true
@@ -291,7 +291,7 @@ class CodeWriter constructor(
                 if (kdoc) {
                     out.appendNonWrapping(" * ")
                 } else if (comment) {
-                    out.appendNonWrapping("// ")
+                    out.appendNonWrapping("/// ")
                 }
             }
 
