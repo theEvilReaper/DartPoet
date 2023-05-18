@@ -9,8 +9,10 @@ import net.theevilreaper.dartpoet.function.DartFunctionSpec
 import net.theevilreaper.dartpoet.import.DartImport
 import net.theevilreaper.dartpoet.import.LibraryImport
 import net.theevilreaper.dartpoet.import.PartImport
+import net.theevilreaper.dartpoet.property.DartPropertySpec
+import net.theevilreaper.dartpoet.util.*
+import net.theevilreaper.dartpoet.util.ALLOWED_CONST_MODIFIERS
 import net.theevilreaper.dartpoet.util.DART_FILE_ENDING
-import net.theevilreaper.dartpoet.util.isDartConventionFileName
 import net.theevilreaper.dartpoet.util.toImmutableList
 import java.io.IOException
 import java.io.OutputStreamWriter
@@ -26,6 +28,12 @@ class DartFile internal constructor(
     internal val annotations: List<AnnotationSpec> = builder.annotations.toImmutableList()
     internal val types: List<Any> = builder.specTypes.toImmutableList()
     internal val extensions: List<ExtensionSpec> = builder.extensionStack
+    internal val constants: Set<DartPropertySpec> = builder.constants.onEach {
+        // Only check modifiers when the size is not zero
+        if (it.modifiers.isNotEmpty()) {
+            hasAllowedModifiers(it.modifiers, ALLOWED_CONST_MODIFIERS, "file const")
+        }
+    }.toImmutableSet()
 
     internal val imports: List<DartImport> = if (builder.imports.isEmpty()) {
         emptyList()

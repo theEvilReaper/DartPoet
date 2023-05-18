@@ -313,4 +313,33 @@ class DartFileTest {
             """.trimIndent()
         )
     }
+
+    @Test
+    fun `test class write with constant values`() {
+        val name = "environment"
+        val classFile = DartFile.builder(name)
+            .import(DartImport("dart:html"))
+            .constants(
+                DartPropertySpec.constBuilder("typeLive").initWith("1").build(),
+                DartPropertySpec.constBuilder("typeTest").initWith("10").build(),
+                DartPropertySpec.constBuilder("typeDev").initWith("100").build(),
+            )
+            .type(
+                DartClassSpec.builder(name.replaceFirstChar { it.uppercase() })
+                    .annotation(AnnotationSpec.builder("freezed").build())
+            )
+            .build()
+        assertThat(classFile.toString()).isEqualTo(
+            """
+            import 'dart:html';
+            
+            const typeLive = 1;
+            const typeTest = 10;
+            const typeDev = 100;
+            
+            @freezed
+            class Environment {}
+            """.trimIndent()
+        )
+    }
 }

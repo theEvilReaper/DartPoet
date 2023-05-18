@@ -5,75 +5,68 @@ import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.property.DartPropertySpec
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
+import java.util.stream.Stream
+import kotlin.test.assertEquals
 
 class PropertyWriterTest {
 
-    @Test
-    fun `write simple variable without initializer`() {
-        val parameter = DartPropertySpec.builder("id", "int").build()
-        assertThat(parameter.toString()).isEqualTo(
-            """
-            int id;
-            """.trimIndent()
+    companion object {
+
+        @JvmStatic
+        private fun simpleProperties(): Stream<Arguments> = Stream.of(
+            Arguments.of(DartPropertySpec.builder("id", "int").build(), "int id;"),
+            Arguments.of(DartPropertySpec.builder("id", "String")
+                .nullable(true)
+                .build(),
+                "String? id;"
+            ),
+            Arguments.of(
+                DartPropertySpec.builder("test", "String")
+                    .modifier { DartModifier.PRIVATE }
+                    .nullable(true)
+                    .build(),
+                "String? _test;"
+            ),
+            Arguments.of(
+                DartPropertySpec.builder("abc", "String")
+                    .modifier { DartModifier.LATE }
+                    .build(),
+                "late String abc;"
+            ),
+            Arguments.of(
+                DartPropertySpec.builder("age", "int")
+                    .initWith("%L", "12")
+                    .build(),
+                "int age = 12;"
+            )
         )
     }
 
-    @Test
-    fun `write simple nullable variable without initializer`() {
-        val parameter = DartPropertySpec.builder("id", "String")
-            .nullable(true)
-            .build()
-        assertThat(parameter.toString()).isEqualTo(
-            """
-            String? id;
-            """.trimIndent()
-        )
+    @ParameterizedTest
+    @MethodSource("simpleProperties")
+    fun `test simple properties`(propertySpec: DartPropertySpec, expected: String) {
+        assertEquals(expected, propertySpec.toString())
     }
 
     @Test
-    fun `write simple private nullable variable without initializer`() {
-        val parameter = DartPropertySpec.builder("test", "String")
-            .modifier { DartModifier.PRIVATE }
-            .nullable(true)
+    fun `write const property`() {
+        val property = DartPropertySpec.builder("maxID", "int")
+            .modifiers { listOf(DartModifier.STATIC, DartModifier.CONST) }
+            .initWith("%L", "1000")
             .build()
-        assertThat(parameter.toString()).isEqualTo(
-            """
-            String? _test;
-            """.trimIndent()
-        )
-    }
-
-    @Test
-    fun `write simple variable with late as keyword`() {
-        val parameter = DartPropertySpec.builder("abc", "String")
-            .modifier { DartModifier.LATE }
-            .build()
-        assertThat(parameter.toString()).isEqualTo(
-            """
-            late String abc;
-            """.trimIndent()
-        )
-    }
-
-    @Test
-    fun `write simple variable with initializer`() {
-        val parameter = DartPropertySpec.builder("age", "int")
-            .initWith("%L", "12")
-            .build()
-        assertThat(parameter.toString()).isEqualTo(
-            """
-            int age = 12;
-            """.trimIndent()
-        )
+        assertEquals("static const int maxID = 1000;", property.toString())
     }
 
     @Test
     fun `write simple variable with one annotation`() {
-        val parameter = DartPropertySpec.builder("age", "int")
+        val property = DartPropertySpec.builder("age", "int")
             .annotation { AnnotationSpec.builder("jsonIgnore").build() }
             .initWith("%L", "12")
             .build()
-        assertThat(parameter.toString()).isEqualTo(
+        assertThat(property.toString()).isEqualTo(
             """
             @jsonIgnore
             int age = 12;
@@ -82,8 +75,8 @@ class PropertyWriterTest {
     }
 
     @Test
-    fun `write parameter with annotations`() {
-        val param = DartPropertySpec.builder("description", "String")
+    fun `write property with annotations`() {
+        val property = DartPropertySpec.builder("description", "String")
             .nullable(true)
             .annotation {
                 AnnotationSpec.builder("JsonKey")
@@ -91,7 +84,7 @@ class PropertyWriterTest {
                     .build()
             }
             .build()
-        assertThat(param.toString()).isEqualTo(
+        assertThat(property.toString()).isEqualTo(
             """
             @JsonKey(name: 'description')
             String? description;
