@@ -313,4 +313,20 @@ class DartFileTest {
             """.trimIndent()
         )
     }
+
+    @Test
+    fun `test class with comment`() {
+        val clazz = DartFile.builder("test")
+            .fileComment("Hallo")
+            .fileComment("This is a [%L]", "Test")
+            .type(
+                DartClassSpec.builder("Test")
+            )
+            .build()
+        assertThat(clazz.toString()).isEqualTo(
+            """
+            class Test {}    
+            """.trimIndent()
+        )
+    }
 }
