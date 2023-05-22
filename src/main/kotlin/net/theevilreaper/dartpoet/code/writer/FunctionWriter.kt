@@ -12,6 +12,9 @@ import net.theevilreaper.dartpoet.util.toImmutableSet
 class FunctionWriter {
 
     fun emit(functionSpec: DartFunctionSpec, writer: CodeWriter) {
+        if (functionSpec.hasComments) {
+            functionSpec.comments.forEach { writer.emitComment(it) }
+        }
         if (functionSpec.isTypeDef) {
             writeTypeDef(functionSpec, writer)
             return

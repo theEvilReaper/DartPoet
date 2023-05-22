@@ -39,6 +39,8 @@ class DartFunctionSpec(
     internal val asSetter = builder.setter
     internal val isGetter = builder.getter
     internal val isLambda = builder.lambda
+    internal val comments = builder.comments
+    internal val hasComments = builder.comments.isNotEmpty()
 
     private val namedParameters: Set<DartParameterSpec> = if (parameters.isEmpty()) {
         setOf()
