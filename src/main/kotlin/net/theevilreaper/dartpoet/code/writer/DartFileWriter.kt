@@ -13,7 +13,7 @@ class DartFileWriter {
 
     fun emit(dartFile: DartFile, writer: CodeWriter) {
         if (dartFile.comments.isNotEmpty()) {
-            writer.emitComment(dartFile.comments)
+            dartFile.comments.forEach { writer.emitComment(it) }
         }
         if (dartFile.libImport != null) {
             writer.emit(dartFile.libImport.toString())

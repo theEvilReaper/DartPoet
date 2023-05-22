@@ -325,7 +325,9 @@ class DartFileTest {
             .build()
         assertThat(clazz.toString()).isEqualTo(
             """
-            class Test {}    
+            /// Hallo
+            /// This is a [Test]
+            class Test {}
             """.trimIndent()
         )
     }
