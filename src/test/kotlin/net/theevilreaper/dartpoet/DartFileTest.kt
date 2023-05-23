@@ -332,4 +332,54 @@ class DartFileTest {
             """.trimIndent()
         )
     }
+
+    @Test
+    fun `test class with a bunch of comments`() {
+        val spec = DartClassSpec.builder("TestModel")
+            .property {
+                DartPropertySpec.builder("name", "String")
+                    .comment("Property comment")
+                    .build()
+            }
+            .constructor(
+                ConstructorSpec.builder("TestModel")
+                    .parameter(DartParameterSpec.builder("name").build())
+                    .comment("Good comment")
+                    .build()
+            )
+            .function(
+                DartFunctionSpec.builder("getName")
+                    .comment("Returns the given name from the object")
+                    .returns("String")
+                    .addCode(buildCodeBlock {
+                        add("return name;")
+                    })
+                    .build()
+            )
+        val file = DartFile.builder("test_model")
+            .type(spec.build())
+            .fileComment("Class documentation is good")
+            .fileComment("And its working")
+            .build()
+
+        assertThat(file.toString()).isEqualTo(
+            """
+            /// Class documentation is good
+            /// And its working
+            class TestModel {
+            
+              /// Property comment
+              String name;
+            
+              /// Good comment
+              TestModel(this.name);
+            
+              /// Returns the given name from the object
+              String getName() {
+                return name;
+              }
+            }
+            """.trimIndent()
+        )
+    }
 }
