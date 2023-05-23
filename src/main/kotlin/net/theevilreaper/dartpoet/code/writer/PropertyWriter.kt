@@ -11,6 +11,9 @@ import net.theevilreaper.dartpoet.util.SPACE
 class PropertyWriter {
 
     fun write(property: DartPropertySpec, writer: CodeWriter) {
+        if (property.hasComment) {
+            property.comments.forEach { writer.emitComment(it) }
+        }
         property.annotations.emitAnnotations(writer) {
             it.write(writer, inline = false)
         }

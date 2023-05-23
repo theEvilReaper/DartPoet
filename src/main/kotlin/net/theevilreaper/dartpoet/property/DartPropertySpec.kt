@@ -24,7 +24,8 @@ class DartPropertySpec(
     internal var nullable = builder.nullable
     internal var initBlock = builder.initBlock
     internal var isPrivate = builder.modifiers.contains(DartModifier.PRIVATE)
-
+    internal val comments = builder.comments
+    internal val hasComment = builder.comments.isNotEmpty()
     internal var modifiers: Set<DartModifier> = builder.modifiers
         .also {
             LinkedHashSet(it).apply {

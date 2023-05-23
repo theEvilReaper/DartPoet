@@ -18,6 +18,17 @@ class DartPropertyBuilder internal constructor(
     internal val modifiers: MutableList<DartModifier> = mutableListOf()
     internal val annotations: MutableList<AnnotationSpec> = mutableListOf()
     internal var initBlock: CodeBlock.Builder = CodeBlock.builder()
+    internal val comments: MutableList<CodeBlock> = mutableListOf()
+
+    /**
+     * Add a comment over for the extension class.
+     * Note this comments will be generated over the extension class
+     * @param format the string which contains the content and the format
+     * @param args the arguments for the format string
+     */
+    fun comment(format: String, vararg args: Any) = apply {
+        this.comments.add(CodeBlock.of(format.replace(' ', '·'), *args))
+    }
 
     /**
      * Apply a given format which contains the parts for the init block of the [DartPropertySpec].
