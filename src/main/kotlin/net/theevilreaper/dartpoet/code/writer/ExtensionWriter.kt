@@ -24,7 +24,7 @@ class ExtensionWriter {
      */
     fun write(spec: ExtensionSpec, writer: CodeWriter) {
         if (spec.hasComments) {
-            spec.comments.forEach { writer.emitComment(it) }
+            spec.comments.forEach { writer.emitDoc(it) }
         }
         writer.emit("${EXTENSION.identifier}·")
         writer.emit("${spec.name}·")

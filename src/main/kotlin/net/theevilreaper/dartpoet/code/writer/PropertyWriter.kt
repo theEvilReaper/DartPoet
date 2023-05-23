@@ -12,7 +12,7 @@ class PropertyWriter {
 
     fun write(property: DartPropertySpec, writer: CodeWriter) {
         if (property.hasComment) {
-            property.comments.forEach { writer.emitComment(it) }
+            property.comments.forEach { writer.emitDoc(it) }
         }
         property.annotations.emitAnnotations(writer) {
             it.write(writer, inline = false)
