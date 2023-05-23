@@ -5,7 +5,8 @@ import net.theevilreaper.dartpoet.clazz.DartClassBuilder
 import net.theevilreaper.dartpoet.clazz.DartClassSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.extension.ExtensionSpec
-import net.theevilreaper.dartpoet.import.Import
+import net.theevilreaper.dartpoet.directive.Directive
+import net.theevilreaper.dartpoet.property.DartPropertySpec
 import net.theevilreaper.dartpoet.util.DEFAULT_INDENT
 import java.lang.IllegalArgumentException
 
@@ -14,30 +15,36 @@ class DartFileBuilder(
 ) {
     internal val comment: MutableList<CodeBlock> = mutableListOf()
     internal val specTypes: MutableList<DartClassSpec> = mutableListOf()
-    internal val imports: MutableList<Import> = mutableListOf()
+    internal val directives: MutableList<Directive> = mutableListOf()
     internal val annotations: MutableList<AnnotationSpec> = mutableListOf()
     internal val extensionStack: MutableList<ExtensionSpec> = mutableListOf()
     internal var indent = DEFAULT_INDENT
+    internal val constants: MutableSet<DartPropertySpec> = mutableSetOf()
+
+    /**
+     * Add a constant [DartPropertySpec] to the file.
+     * @param constant the property to add
+     */
+    fun constant(constant: DartPropertySpec) = apply {
+        this.constants += constant
+    }
+
+    fun directive(directive: Directive) = apply {
+        this.directives += directive
+    }
+
+    fun directive(directive: () -> Directive) = apply {
+        this.directives += directive()
+    }
+
+    fun directives(vararg directive: Directive) = apply {
+        this.directives += directive
+    }
 
     fun fileComment(format: String, vararg args: Any) = apply {
         this.comment.add(CodeBlock.of(format.replace(' ', '·'), *args))
     }
 
-    fun import(import: Import) = apply {
-        this.imports += import
-    }
-
-    fun import(import: () -> Import) = apply {
-        this.imports += import()
-    }
-
-    fun imports(import: Iterable<Import>) = apply {
-        this.imports += import
-    }
-
-    fun imports(import: () -> Iterable<Import>) = apply {
-        this.imports += import()
-    }
 
     fun indent(indent: String) = apply {
         if (indent.trim().isEmpty()) {
@@ -66,8 +73,8 @@ class DartFileBuilder(
         this.specTypes += dartFileSpec
     }
 
-    fun type(dartFileSpec: () -> DartClassSpec) = apply {
-        this.specTypes += dartFileSpec()
+    fun type(vararg classSpecs: DartClassSpec) = apply {
+        this.specTypes += classSpecs
     }
 
     fun type(dartFileSpec: DartClassBuilder) = apply {
@@ -78,14 +85,18 @@ class DartFileBuilder(
         this.annotations += annotations
     }
 
-    fun annotation(annotation: () -> AnnotationSpec) = apply {
-        this.annotations += annotation()
+    fun annotation(vararg annotations: AnnotationSpec) = apply {
+        this.annotations += annotations
     }
 
     fun annotation(annotation: AnnotationSpec) = apply {
         this.annotations += annotation
     }
 
+    /**
+     * Creates a new reference from the [DartFile] class.
+     * @return the created instance
+     */
     fun build(): DartFile {
         return DartFile(this)
     }

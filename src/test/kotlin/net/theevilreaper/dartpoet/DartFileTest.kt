@@ -7,10 +7,10 @@ import net.theevilreaper.dartpoet.code.buildCodeBlock
 import net.theevilreaper.dartpoet.enum.EnumPropertySpec
 import net.theevilreaper.dartpoet.function.DartFunctionSpec
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
-import net.theevilreaper.dartpoet.import.DartImport
-import net.theevilreaper.dartpoet.import.ImportCastType
-import net.theevilreaper.dartpoet.import.LibraryImport
-import net.theevilreaper.dartpoet.import.PartImport
+import net.theevilreaper.dartpoet.directive.DartDirective
+import net.theevilreaper.dartpoet.directive.CastType
+import net.theevilreaper.dartpoet.directive.LibraryDirective
+import net.theevilreaper.dartpoet.directive.PartDirective
 import net.theevilreaper.dartpoet.parameter.DartParameterSpec
 import net.theevilreaper.dartpoet.property.DartPropertySpec
 import org.junit.jupiter.api.Assertions.*
@@ -68,13 +68,11 @@ class DartFileTest {
                     .build()
             }
         val versionFile = DartFile.builder("version.dart")
-            .imports {
-                listOf(
-                    DartImport("freezed_annotation/freezed_annotation.dart"),
-                    PartImport("version.freezed.dart"),
-                    PartImport("version.g.dart")
-                )
-            }
+            .directives(
+                DartDirective("freezed_annotation/freezed_annotation.dart"),
+                PartDirective("version.freezed.dart"),
+                PartDirective("version.g.dart")
+            )
             .type(
                 versionFreezedClass
             )
@@ -116,13 +114,11 @@ class DartFileTest {
                     )
                     .build()
             )
-            .imports {
-                listOf(
-                    DartImport("dart:html"),
-                    LibraryImport("testLib"),
-                    DartImport("dart:math", ImportCastType.AS, "math"),
-                )
-            }
+            .directives(
+                DartDirective("dart:html"),
+                LibraryDirective("testLib"),
+                DartDirective("dart:math", CastType.AS, "math"),
+            )
             .build()
         assertThat(libClass.toString()).isEqualTo(
             """
@@ -236,7 +232,7 @@ class DartFileTest {
             .build()
 
         val file = DartFile.builder("${className}Handler")
-            .import(LibraryImport("testLibrary", true))
+            .directive(LibraryDirective("testLibrary", true))
             .type(handlerApiClass)
             .build()
         assertThat(file.toString()).isEqualTo(
@@ -311,6 +307,35 @@ class DartFileTest {
             
               dynamic toJson() => $serializer.serialize(this);
             }
+            """.trimIndent()
+        )
+    }
+
+    @Test
+    fun `test class write with constant values`() {
+        val name = "environment"
+        val classFile = DartFile.builder(name)
+            .directive(DartDirective("dart:html"))
+            .constants(
+                DartPropertySpec.constBuilder("typeLive").initWith("1").build(),
+                DartPropertySpec.constBuilder("typeTest").initWith("10").build(),
+                DartPropertySpec.constBuilder("typeDev").initWith("100").build(),
+            )
+            .type(
+                DartClassSpec.builder(name.replaceFirstChar { it.uppercase() })
+                    .annotation(AnnotationSpec.builder("freezed").build())
+            )
+            .build()
+        assertThat(classFile.toString()).isEqualTo(
+            """
+            import 'dart:html';
+            
+            const typeLive = 1;
+            const typeTest = 10;
+            const typeDev = 100;
+            
+            @freezed
+            class Environment {}
             """.trimIndent()
         )
     }

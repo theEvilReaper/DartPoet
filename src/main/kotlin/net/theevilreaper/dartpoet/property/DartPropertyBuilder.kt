@@ -15,7 +15,7 @@ class DartPropertyBuilder internal constructor(
     var type: String,
 ) {
     internal var nullable = false
-    internal val modifiers: MutableList<DartModifier> = mutableListOf()
+    internal val modifiers: MutableSet<DartModifier> = mutableSetOf()
     internal val annotations: MutableList<AnnotationSpec> = mutableListOf()
     internal var initBlock: CodeBlock.Builder = CodeBlock.builder()
     internal val comments: MutableList<CodeBlock> = mutableListOf()

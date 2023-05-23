@@ -1,4 +1,4 @@
-package net.theevilreaper.dartpoet.import
+package net.theevilreaper.dartpoet.directive
 
 /**
  * The import interface is a marker interface which is used to restrict what an import can be.
@@ -17,4 +17,4 @@ package net.theevilreaper.dartpoet.import
  * @since 1.0.0
  * @author theEvilReaper
  */
-sealed interface Import : Comparable<Import>
+sealed interface Directive : Comparable<Directive>
