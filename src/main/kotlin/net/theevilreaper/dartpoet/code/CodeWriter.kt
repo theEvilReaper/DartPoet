@@ -96,8 +96,8 @@ class CodeWriter constructor(
         this.typeSpecStack.removeAt(typeSpecStack.size - 1)
     }
 
-    fun emitComment(codeBlock: CodeBlock) {
-        trailingNewline = true // Force the '//' prefix for the comment.
+    fun emitDoc(codeBlock: CodeBlock) {
+        trailingNewline = true // Force the '///' prefix for the documentation.
         comment = true
         try {
             emitCode(codeBlock)
@@ -254,6 +254,8 @@ class CodeWriter constructor(
             if (trailingNewline) {
                 emitIndentation()
                 if (comment) {
+                    // To get insides why we are writing /// for documentation
+                    // Plase take a look at this side https://dart.dev/effective-dart/documentation
                     out.appendNonWrapping("/// ")
 
                 }
