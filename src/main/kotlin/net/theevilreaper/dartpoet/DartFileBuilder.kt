@@ -49,7 +49,6 @@ class DartFileBuilder(
         this.comment.add(CodeBlock.of(format.replace(' ', '·'), *args))
     }
 
-
     fun indent(indent: String) = apply {
         if (indent.trim().isEmpty()) {
             throw IllegalArgumentException("The indent can't be empty")
