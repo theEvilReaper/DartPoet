@@ -41,7 +41,7 @@ class DartFileTest {
             .constructor {
                 ConstructorSpec.builder("VersionModel")
                     .asFactory(true)
-                    .modifier { DartModifier.CONST }
+                    .modifier(DartModifier.CONST)
                     .parameter {
                         DartParameterSpec.builder("version", "String")
                             .named(true)
@@ -163,10 +163,8 @@ class DartFileTest {
                         ConstructorSpec.builder("NavigationEntry")
                             .modifier(DartModifier.CONST)
                             .parameters(
-                                listOf(
-                                    DartParameterSpec.builder("name").build(),
-                                    DartParameterSpec.builder("route").build()
-                                )
+                                DartParameterSpec.builder("name").build(),
+                                DartParameterSpec.builder("route").build()
                             )
                             .build()
                     )
@@ -206,7 +204,10 @@ class DartFileTest {
                         DartParameterSpec.builder(apiClient.replaceFirstChar { it.lowercase() }, apiClient).build()
                     )
                     .addCode(buildCodeBlock {
-                        add("%L = %L", apiClient.replaceFirstChar { it.lowercase() }, apiClient.replaceFirstChar { it.lowercase() })
+                        add(
+                            "%L = %L",
+                            apiClient.replaceFirstChar { it.lowercase() },
+                            apiClient.replaceFirstChar { it.lowercase() })
                     })
                     .build()
             )
