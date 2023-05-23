@@ -96,7 +96,7 @@ class PropertyWriterTest {
     fun `test property with comment`() {
         val property = DartPropertySpec.builder("name", "String")
             .nullable(true)
-            .comment("Represents the name from something")
+            .docs("Represents the name from something")
             .build()
         assertThat(property.toString()).isEqualTo(
             """

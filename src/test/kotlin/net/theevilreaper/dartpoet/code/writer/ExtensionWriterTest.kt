@@ -18,7 +18,7 @@ class ExtensionWriterTest {
         private fun comments() = Stream.of(
             Arguments.of(
                 ExtensionSpec.builder("StringExt", "String")
-                    .comment("This is a first line of documentation")
+                    .doc("This is a first line of documentation")
                     .build(),
                 """
                 /// This is a first line of documentation
@@ -27,8 +27,8 @@ class ExtensionWriterTest {
             ),
             Arguments.of(
                 ExtensionSpec.builder("StringExt", "String")
-                    .comment("This is a first line of documentation")
-                    .comment("Second line of comment")
+                    .doc("This is a first line of documentation")
+                    .doc("Second line of comment")
                     .build(),
                 """
                 /// This is a first line of documentation

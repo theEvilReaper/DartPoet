@@ -192,8 +192,8 @@ class FunctionWriterTest {
         val function = DartFunctionSpec.builder("getName")
             .returns("String")
             .addCode("return %C;", "Test")
-            .comment("Returns the name from an object")
-            .comment("For generation tests it returns 'Test'")
+            .doc("Returns the name from an object")
+            .doc("For generation tests it returns 'Test'")
             .build()
         assertThat(function.toString()).isEqualTo(
             """

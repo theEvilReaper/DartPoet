@@ -123,7 +123,7 @@ class ConstructorWriterTest {
     @Test
     fun `test constructor with documentation or comments`() {
         val constructor = ConstructorSpec.builder("Item")
-            .comment("Creates a new item object")
+            .doc("Creates a new item object")
             .parameters(
                 DartParameterSpec.builder("name").build())
             .build()

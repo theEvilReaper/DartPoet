@@ -343,8 +343,8 @@ class DartFileTest {
     @Test
     fun `test class with comment`() {
         val clazz = DartFile.builder("test")
-            .fileComment("Hallo")
-            .fileComment("This is a [%L]", "Test")
+            .doc("Hallo")
+            .doc("This is a [%L]", "Test")
             .type(
                 DartClassSpec.builder("Test")
             )
@@ -363,18 +363,18 @@ class DartFileTest {
         val spec = DartClassSpec.builder("TestModel")
             .property {
                 DartPropertySpec.builder("name", "String")
-                    .comment("Property comment")
+                    .docs("Property comment")
                     .build()
             }
             .constructor(
                 ConstructorSpec.builder("TestModel")
                     .parameter(DartParameterSpec.builder("name").build())
-                    .comment("Good comment")
+                    .doc("Good comment")
                     .build()
             )
             .function(
                 DartFunctionSpec.builder("getName")
-                    .comment("Returns the given name from the object")
+                    .doc("Returns the given name from the object")
                     .returns("String")
                     .addCode(buildCodeBlock {
                         add("return name;")
@@ -383,8 +383,8 @@ class DartFileTest {
             )
         val file = DartFile.builder("test_model")
             .type(spec.build())
-            .fileComment("Class documentation is good")
-            .fileComment("And its working")
+            .doc("Class documentation is good")
+            .doc("And its working")
             .build()
 
         assertThat(file.toString()).isEqualTo(
