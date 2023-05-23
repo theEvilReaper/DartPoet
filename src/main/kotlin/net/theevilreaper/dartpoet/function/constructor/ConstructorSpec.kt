@@ -23,6 +23,7 @@ class ConstructorSpec(
     internal val parameters = modelParameters.minus(requiredAndNamedParameters.toSet()).toImmutableList()
     internal val hasParameters = builder.parameters.isNotEmpty()
     internal val hasNamedParameters = requiredAndNamedParameters.isNotEmpty()
+    internal val comments = builder.comments
 
     internal fun write(
         codeWriter: CodeWriter
