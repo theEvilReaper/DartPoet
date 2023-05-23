@@ -13,7 +13,7 @@ import java.lang.IllegalArgumentException
 class DartFileBuilder(
     val name: String
 ) {
-    internal val comment: MutableList<CodeBlock> = mutableListOf()
+    internal val docs: MutableList<CodeBlock> = mutableListOf()
     internal val specTypes: MutableList<DartClassSpec> = mutableListOf()
     internal val directives: MutableList<Directive> = mutableListOf()
     internal val annotations: MutableList<AnnotationSpec> = mutableListOf()
@@ -45,8 +45,8 @@ class DartFileBuilder(
         this.directives += directive
     }
 
-    fun fileComment(format: String, vararg args: Any) = apply {
-        this.comment.add(CodeBlock.of(format.replace(' ', '·'), *args))
+    fun doc(format: String, vararg args: Any) = apply {
+        this.docs.add(CodeBlock.of(format.replace(' ', '·'), *args))
     }
 
     fun indent(indent: String) = apply {

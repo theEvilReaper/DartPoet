@@ -27,7 +27,7 @@ class DartFunctionBuilder internal constructor(
     internal var setter: Boolean = false
     internal var getter: Boolean = false
     internal var lambda: Boolean = false
-    internal val comments: MutableList<CodeBlock> = mutableListOf()
+    internal val docs: MutableList<CodeBlock> = mutableListOf()
 
     /**
      * Add a comment over for the extension class.
@@ -35,8 +35,8 @@ class DartFunctionBuilder internal constructor(
      * @param format the string which contains the content and the format
      * @param args the arguments for the format string
      */
-    fun comment(format: String, vararg args: Any) = apply {
-        this.comments.add(CodeBlock.of(format.replace(' ', '·'), *args))
+    fun doc(format: String, vararg args: Any) = apply {
+        this.docs.add(CodeBlock.of(format.replace(' ', '·'), *args))
     }
 
     /**

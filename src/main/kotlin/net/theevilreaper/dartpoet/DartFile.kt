@@ -29,7 +29,7 @@ class DartFile internal constructor(
     internal val annotations: List<AnnotationSpec> = builder.annotations.toImmutableList()
     internal val types: List<Any> = builder.specTypes.toImmutableList()
     internal val extensions: List<ExtensionSpec> = builder.extensionStack
-    internal val comments = builder.comment
+    internal val docs = builder.docs
 
     internal val constants: Set<DartPropertySpec> = builder.constants.onEach {
         // Only check modifiers when the size is not zero

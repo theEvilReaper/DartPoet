@@ -13,8 +13,8 @@ class DartFileWriter {
     private val classWriter = ClassWriter()
 
     fun emit(dartFile: DartFile, writer: CodeWriter) {
-        if (dartFile.comments.isNotEmpty()) {
-            dartFile.comments.forEach { writer.emitDoc(it) }
+        if (dartFile.docs.isNotEmpty()) {
+            dartFile.docs.forEach { writer.emitDoc(it) }
         }
         if (dartFile.libImport != null) {
             writer.emit(dartFile.libImport.toString())

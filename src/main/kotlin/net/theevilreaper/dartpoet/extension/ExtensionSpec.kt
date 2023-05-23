@@ -22,8 +22,8 @@ class ExtensionSpec(
     internal val endWithNewLine = builder.endWithNewLine
     internal val functions = builder.functionStack.toImmutableSet()
     internal val hasNoContent = builder.functionStack.isEmpty()
-    internal val comments = builder.comments
-    internal val hasComments = builder.comments.isNotEmpty()
+    internal val docs = builder.docs
+    internal val hasDocs = builder.docs.isNotEmpty()
 
     /**
      * Performs some checks on variables to avoid unwanted or incorrect data.
