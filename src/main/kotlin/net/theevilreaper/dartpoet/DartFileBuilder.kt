@@ -29,6 +29,10 @@ class DartFileBuilder(
         this.constants += constant
     }
 
+    fun constants(vararg constants: DartPropertySpec) = apply {
+        this.constants += constants
+    }
+
     fun directive(directive: Directive) = apply {
         this.directives += directive
     }
