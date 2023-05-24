@@ -5,13 +5,15 @@ import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.emitParameters
 import net.theevilreaper.dartpoet.function.DartFunctionSpec
-import net.theevilreaper.dartpoet.util.NEW_LINE
 import net.theevilreaper.dartpoet.util.SEMICOLON
 import net.theevilreaper.dartpoet.util.toImmutableSet
 
 class FunctionWriter {
 
     fun emit(functionSpec: DartFunctionSpec, writer: CodeWriter) {
+        if (functionSpec.hasDocs) {
+            functionSpec.docs.forEach { writer.emitDoc(it) }
+        }
         if (functionSpec.isTypeDef) {
             writeTypeDef(functionSpec, writer)
             return

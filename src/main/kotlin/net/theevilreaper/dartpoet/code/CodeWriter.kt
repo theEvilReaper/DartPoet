@@ -15,28 +15,16 @@
  */
 package net.theevilreaper.dartpoet.code
 
-import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.clazz.DartClassSpec
 import net.theevilreaper.dartpoet.directive.DartDirective
 import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.util.NEW_LINE
 import net.theevilreaper.dartpoet.util.escapeCharacterLiterals
 import net.theevilreaper.dartpoet.util.stringLiteralWithQuotes
-import net.theevilreaper.dartpoet.util.toEnumSet
 import java.io.Closeable
 
 /** Sentinel value that indicates that no user-provided package has been set.  */
 private val NO_PACKAGE = String()
-
-private fun extractMemberName(part: String): String {
-    require(Character.isJavaIdentifierStart(part[0])) { "not an identifier: $part" }
-    for (i in 1..part.length) {
-        if (!part.substring(0, i).isPlaceholder) {
-            return part.substring(0, i - 1)
-        }
-    }
-    return part
-}
 
 internal inline fun buildCodeString(builderAction: CodeWriter.() -> Unit): String {
     val stringBuilder = StringBuilder()
@@ -68,21 +56,11 @@ class CodeWriter constructor(
     var out = LineWrapper(out, indent, columnLimit)
     private var indentLevel = 0
 
-    private var kdoc = false
     private var comment = false
     private var packageName = NO_PACKAGE
     private val typeSpecStack = mutableListOf<DartClassSpec>()
     private val memberImportNames = mutableSetOf<String>()
     private var trailingNewline = false
-
-    val imports = imports.also {
-        for ((memberName, _) in imports) {
-            val lastDotIndex = memberName.lastIndexOf('.')
-            if (lastDotIndex >= 0) {
-                memberImportNames.add(memberName.substring(0, lastDotIndex))
-            }
-        }
-    }
 
     /**
      * When emitting a statement, this is the line of the statement currently being written. The first
@@ -118,8 +96,8 @@ class CodeWriter constructor(
         this.typeSpecStack.removeAt(typeSpecStack.size - 1)
     }
 
-    fun emitComment(codeBlock: CodeBlock) {
-        trailingNewline = true // Force the '//' prefix for the comment.
+    fun emitDoc(codeBlock: CodeBlock) {
+        trailingNewline = true // Force the '///' prefix for the documentation.
         comment = true
         try {
             emitCode(codeBlock)
@@ -127,19 +105,6 @@ class CodeWriter constructor(
         } finally {
             comment = false
         }
-    }
-
-    fun emitKdoc(kdocCodeBlock: CodeBlock) {
-        if (kdocCodeBlock.isEmpty()) return
-
-        emit("/**\n")
-        kdoc = true
-        try {
-            emitCode(kdocCodeBlock, ensureTrailingNewline = true)
-        } finally {
-            kdoc = false
-        }
-        emit(" */\n")
     }
 
     fun emitCode(s: String) = emitCode(CodeBlock.of(s))
@@ -268,9 +233,9 @@ class CodeWriter constructor(
         for (line in s.split('\n')) {
             // Emit a newline character. Make sure blank lines in KDoc & comments look good.
             if (!first) {
-                if ((kdoc || comment) && trailingNewline) {
+                if ( comment && trailingNewline) {
                     emitIndentation()
-                    out.appendNonWrapping(if (kdoc) " *" else "//")
+                    out.appendNonWrapping("///")
                 }
                 out.newline()
                 trailingNewline = true
@@ -288,10 +253,11 @@ class CodeWriter constructor(
             // Emit indentation and comment prefix if necessary.
             if (trailingNewline) {
                 emitIndentation()
-                if (kdoc) {
-                    out.appendNonWrapping(" * ")
-                } else if (comment) {
-                    out.appendNonWrapping("// ")
+                if (comment) {
+                    // To get insides why we are writing /// for documentation
+                    // Plase take a look at this side https://dart.dev/effective-dart/documentation
+                    out.appendNonWrapping("/// ")
+
                 }
             }
 
@@ -300,8 +266,7 @@ class CodeWriter constructor(
             } else {
                 out.append(
                     line,
-                    indentLevel = if (kdoc) indentLevel else indentLevel + 2,
-                    linePrefix = if (kdoc) " * " else "",
+                    indentLevel = indentLevel + 2,
                 )
             }
             trailingNewline = false

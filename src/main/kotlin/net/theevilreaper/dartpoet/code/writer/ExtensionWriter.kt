@@ -23,6 +23,9 @@ class ExtensionWriter {
      * @param writer the [CodeWriter] instance to append the generated code into a [Appendable]
      */
     fun write(spec: ExtensionSpec, writer: CodeWriter) {
+        if (spec.hasDocs) {
+            spec.docs.forEach { writer.emitDoc(it) }
+        }
         writer.emit("${EXTENSION.identifier}·")
         writer.emit("${spec.name}·")
         writer.emit("${ON.identifier}·")

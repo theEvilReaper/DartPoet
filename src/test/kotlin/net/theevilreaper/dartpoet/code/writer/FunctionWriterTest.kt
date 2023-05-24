@@ -186,4 +186,23 @@ class FunctionWriterTest {
             .build()
         assertThat(function.toString()).isEqualTo("bool isNoble(int atomicNumber) => _nobleGases[atomicNumber] != null;")
     }
+
+    @Test
+    fun `test method with documentation`() {
+        val function = DartFunctionSpec.builder("getName")
+            .returns("String")
+            .addCode("return %C;", "Test")
+            .doc("Returns the name from an object")
+            .doc("For generation tests it returns 'Test'")
+            .build()
+        assertThat(function.toString()).isEqualTo(
+            """
+            /// Returns the name from an object
+            /// For generation tests it returns 'Test'
+            String getName() {
+              return 'Test';
+            }
+            """.trimIndent()
+        )
+    }
 }

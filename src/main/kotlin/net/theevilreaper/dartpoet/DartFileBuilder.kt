@@ -13,7 +13,7 @@ import java.lang.IllegalArgumentException
 class DartFileBuilder(
     val name: String
 ) {
-    internal val comment: CodeBlock.Builder = CodeBlock.builder()
+    internal val docs: MutableList<CodeBlock> = mutableListOf()
     internal val specTypes: MutableList<DartClassSpec> = mutableListOf()
     internal val directives: MutableList<Directive> = mutableListOf()
     internal val annotations: MutableList<AnnotationSpec> = mutableListOf()
@@ -29,10 +29,6 @@ class DartFileBuilder(
         this.constants += constant
     }
 
-    /**
-     * Add an array of constant [DartPropertySpec] to the file.
-     * @param constants the array to add
-     */
     fun constants(vararg constants: DartPropertySpec) = apply {
         this.constants += constants
     }
@@ -47,6 +43,10 @@ class DartFileBuilder(
 
     fun directives(vararg directive: Directive) = apply {
         this.directives += directive
+    }
+
+    fun doc(format: String, vararg args: Any) = apply {
+        this.docs.add(CodeBlock.of(format.replace(' ', '·'), *args))
     }
 
     fun indent(indent: String) = apply {

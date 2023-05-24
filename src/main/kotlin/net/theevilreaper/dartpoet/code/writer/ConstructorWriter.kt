@@ -12,6 +12,9 @@ import net.theevilreaper.dartpoet.util.SEMICOLON
 class ConstructorWriter {
 
     fun emit(spec: ConstructorSpec, writer: CodeWriter) {
+        if (spec.docs.isNotEmpty()) {
+            spec.docs.forEach { writer.emitDoc(it) }
+        }
         if (spec.modifiers.contains(DartModifier.CONST)) {
             writer.emit("${DartModifier.CONST.identifier}·")
         }

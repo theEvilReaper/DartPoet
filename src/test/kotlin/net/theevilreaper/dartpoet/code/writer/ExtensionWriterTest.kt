@@ -5,8 +5,46 @@ import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.function.DartFunctionSpec
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
+import java.util.stream.Stream
 
 class ExtensionWriterTest {
+
+    companion object {
+
+        @JvmStatic
+        private fun comments() = Stream.of(
+            Arguments.of(
+                ExtensionSpec.builder("StringExt", "String")
+                    .doc("This is a first line of documentation")
+                    .build(),
+                """
+                /// This is a first line of documentation
+                extension StringExt on String { }
+                """.trimIndent()
+            ),
+            Arguments.of(
+                ExtensionSpec.builder("StringExt", "String")
+                    .doc("This is a first line of documentation")
+                    .doc("Second line of comment")
+                    .build(),
+                """
+                /// This is a first line of documentation
+                /// Second line of comment
+                extension StringExt on String { }
+                """.trimIndent()
+            ),
+
+        )
+    }
+
+    @ParameterizedTest
+    @MethodSource("comments")
+    fun `test comments on extension classes`(extensionSpec: ExtensionSpec, expected: String) {
+        assertThat(extensionSpec.toString()).isEqualTo(expected)
+    }
 
     @Test
     fun `test simple extension write`() {

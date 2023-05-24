@@ -27,6 +27,17 @@ class DartFunctionBuilder internal constructor(
     internal var setter: Boolean = false
     internal var getter: Boolean = false
     internal var lambda: Boolean = false
+    internal val docs: MutableList<CodeBlock> = mutableListOf()
+
+    /**
+     * Add a comment over for the extension class.
+     * Note this comments will be generated over the extension class
+     * @param format the string which contains the content and the format
+     * @param args the arguments for the format string
+     */
+    fun doc(format: String, vararg args: Any) = apply {
+        this.docs.add(CodeBlock.of(format.replace(' ', '·'), *args))
+    }
 
     /**
      * Indicates if the method should be generated as lambda method.

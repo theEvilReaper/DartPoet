@@ -91,4 +91,18 @@ class PropertyWriterTest {
             """.trimIndent()
         )
     }
+
+    @Test
+    fun `test property with comment`() {
+        val property = DartPropertySpec.builder("name", "String")
+            .nullable(true)
+            .docs("Represents the name from something")
+            .build()
+        assertThat(property.toString()).isEqualTo(
+            """
+            /// Represents the name from something
+            String? name;
+            """.trimIndent()
+        )
+    }
 }

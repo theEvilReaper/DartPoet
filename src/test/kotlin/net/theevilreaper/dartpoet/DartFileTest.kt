@@ -41,7 +41,7 @@ class DartFileTest {
             .constructor {
                 ConstructorSpec.builder("VersionModel")
                     .asFactory(true)
-                    .modifier { DartModifier.CONST }
+                    .modifier(DartModifier.CONST)
                     .parameter {
                         DartParameterSpec.builder("version", "String")
                             .named(true)
@@ -159,10 +159,8 @@ class DartFileTest {
                         ConstructorSpec.builder("NavigationEntry")
                             .modifier(DartModifier.CONST)
                             .parameters(
-                                listOf(
-                                    DartParameterSpec.builder("name").build(),
-                                    DartParameterSpec.builder("route").build()
-                                )
+                                DartParameterSpec.builder("name").build(),
+                                DartParameterSpec.builder("route").build()
                             )
                             .build()
                     )
@@ -202,7 +200,10 @@ class DartFileTest {
                         DartParameterSpec.builder(apiClient.replaceFirstChar { it.lowercase() }, apiClient).build()
                     )
                     .addCode(buildCodeBlock {
-                        add("%L = %L", apiClient.replaceFirstChar { it.lowercase() }, apiClient.replaceFirstChar { it.lowercase() })
+                        add(
+                            "%L = %L",
+                            apiClient.replaceFirstChar { it.lowercase() },
+                            apiClient.replaceFirstChar { it.lowercase() })
                     })
                     .build()
             )
@@ -335,6 +336,74 @@ class DartFileTest {
             
             @freezed
             class Environment {}
+            """.trimIndent()
+        )
+    }
+
+    @Test
+    fun `test class with comment`() {
+        val clazz = DartFile.builder("test")
+            .doc("Hallo")
+            .doc("This is a [%L]", "Test")
+            .type(
+                DartClassSpec.builder("Test")
+            )
+            .build()
+        assertThat(clazz.toString()).isEqualTo(
+            """
+            /// Hallo
+            /// This is a [Test]
+            class Test {}
+            """.trimIndent()
+        )
+    }
+
+    @Test
+    fun `test class with a bunch of comments`() {
+        val spec = DartClassSpec.builder("TestModel")
+            .property {
+                DartPropertySpec.builder("name", "String")
+                    .docs("Property comment")
+                    .build()
+            }
+            .constructor(
+                ConstructorSpec.builder("TestModel")
+                    .parameter(DartParameterSpec.builder("name").build())
+                    .doc("Good comment")
+                    .build()
+            )
+            .function(
+                DartFunctionSpec.builder("getName")
+                    .doc("Returns the given name from the object")
+                    .returns("String")
+                    .addCode(buildCodeBlock {
+                        add("return name;")
+                    })
+                    .build()
+            )
+        val file = DartFile.builder("test_model")
+            .type(spec.build())
+            .doc("Class documentation is good")
+            .doc("And its working")
+            .build()
+
+        assertThat(file.toString()).isEqualTo(
+            """
+            /// Class documentation is good
+            /// And its working
+            class TestModel {
+            
+              /// Property comment
+              String name;
+            
+              /// Good comment
+              TestModel(this.name);
+            
+              /// Returns the given name from the object
+              String getName() {
+                return name;
+              }
+            }
             """.trimIndent()
         )
     }
