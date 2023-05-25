@@ -1,5 +1,10 @@
 package net.theevilreaper.dartpoet
 
+/**
+ * The enum contains all modifiers which are exists in the programming language dart.
+ * @author theEvilReaper
+ * @since 1.0.0
+ */
 enum class DartModifier(
     internal val identifier: String,
     private vararg val modifiers: ModifierTarget
@@ -26,6 +31,10 @@ enum class DartModifier(
     TYPEDEF("typedef", ModifierTarget.TYPEDEF),
     VOID("void", ModifierTarget.INTERFACE, ModifierTarget.FUNCTION);
 
+    /**
+     * Checks if an [ModifierTarget] is present in a specific [DartModifier].
+     * @param modifierTarget the [ModifierTarget] to test
+     */
     internal fun containsTarget(modifierTarget: ModifierTarget): Boolean {
         return modifiers.contains(modifierTarget)
     }
