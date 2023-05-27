@@ -11,18 +11,6 @@ import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 internal interface SpecMethods<T> {
 
     /**
-     * Add a [Iterable] of [AnnotationSpec].
-     * @param annotations the annotations to add
-     */
-    fun annotations(annotations: Iterable<AnnotationSpec>): T
-
-    /**
-     * Add a [Iterable] of [AnnotationSpec].
-     * @param annotations the annotations to add
-     */
-    fun annotations(annotations: () -> Iterable<AnnotationSpec>): T
-
-    /**
      * Add a single [AnnotationSpec].
      * @param annotation the annotation to add
      */
@@ -33,6 +21,12 @@ internal interface SpecMethods<T> {
      * @param annotation the annotation to add
      */
     fun annotation(annotation: AnnotationSpec): T
+
+    /**
+     * Add an array of [AnnotationSpec].
+     * @param annotations the annotations to add
+     */
+    fun annotations(vararg annotations: AnnotationSpec): T
 
     /**
      * Add a new [DartModifier].
@@ -51,16 +45,4 @@ internal interface SpecMethods<T> {
      * @param modifiers the modifiers to add
      */
     fun modifiers(vararg modifiers: DartModifier): T
-
-    /**
-     * Add a [Iterable] of [DartModifier].
-     * @param modifiers the modifiers to add
-     */
-    fun modifiers(modifiers: Iterable<DartModifier>): T
-
-    /**
-     * Add a [Iterable] of [DartModifier].
-     * @param modifiers the modifiers to add
-     */
-    fun modifiers(modifiers: () -> Iterable<DartModifier>): T
 }
