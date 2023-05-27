@@ -110,20 +110,16 @@ class DartClassBuilder internal constructor(
         this.constructorStack += constructor()
     }
 
-    override fun annotations(annotations: Iterable<AnnotationSpec>) = apply {
-        this.classMetaData.annotations(annotations)
-    }
-
-    override fun annotations(annotations: () -> Iterable<AnnotationSpec>) = apply {
-        this.classMetaData.annotations(annotations)
-    }
-
     override fun annotation(annotation: () -> AnnotationSpec) = apply {
         this.classMetaData.annotation(annotation)
     }
 
     override fun annotation(annotation: AnnotationSpec) = apply {
         this.classMetaData.annotation(annotation)
+    }
+
+    override fun annotations(vararg annotations: AnnotationSpec) = apply {
+        this.classMetaData.annotations(*annotations)
     }
 
     override fun modifier(modifier: DartModifier) = apply {
@@ -135,17 +131,13 @@ class DartClassBuilder internal constructor(
     }
 
     override fun modifiers(vararg modifiers: DartModifier) = apply {
-        throw UnsupportedOperationException("Not implemented yet")
+        this.classMetaData.modifiers(*modifiers)
     }
 
-    override fun modifiers(modifiers: Iterable<DartModifier>) = apply {
-        this.classMetaData.modifiers(modifiers)
-    }
-
-    override fun modifiers(modifiers: () -> Iterable<DartModifier>) = apply {
-        this.classMetaData.modifiers(modifiers)
-    }
-
+    /**
+     * Creates a new instance from the [DartClassSpec].
+     * @return the created instance
+     */
     fun build(): DartClassSpec {
         return DartClassSpec(this)
     }

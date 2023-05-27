@@ -41,20 +41,16 @@ class DartParameterBuilder internal constructor(
         this.required = required
     }
 
-    override fun annotations(annotations: Iterable<AnnotationSpec>) = apply {
-        this.specData.annotations += annotations
-    }
-
-    override fun annotations(annotations: () -> Iterable<AnnotationSpec>) = apply {
-        this.specData.annotations += annotations()
-    }
-
     override fun annotation(annotation: () -> AnnotationSpec) = apply {
         this.specData.annotations += annotation()
     }
 
     override fun annotation(annotation: AnnotationSpec) = apply {
         this.specData.annotations += annotation
+    }
+
+    override fun annotations(vararg annotations: AnnotationSpec) = apply {
+        this.specData.annotations(*annotations)
     }
 
     override fun modifier(modifier: DartModifier) = apply {
@@ -67,14 +63,6 @@ class DartParameterBuilder internal constructor(
 
     override fun modifiers(vararg modifiers: DartModifier) = apply {
         TODO("Not yet implemented")
-    }
-
-    override fun modifiers(modifiers: Iterable<DartModifier>) = apply {
-        this.specData.modifiers += modifiers
-    }
-
-    override fun modifiers(modifiers: () -> Iterable<DartModifier>) = apply {
-        this.specData.modifiers += modifiers()
     }
 
     fun build(): DartParameterSpec {
