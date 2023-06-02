@@ -40,10 +40,12 @@ tasks {
     }
 
 }
+
 val sourceJar by tasks.register<Jar>("kotlinJar") {
     from(sourceSets.main.get().allSource)
     archiveClassifier.set("sources")
 }
+
 val dokkaJavadocJar by tasks.register<Jar>("dokkaHtmlJar") {
     dependsOn(rootProject.tasks.dokkaHtml)
     from(rootProject.tasks.dokkaHtml.flatMap { it.outputDirectory })
@@ -55,9 +57,11 @@ val dokkaHtmlJar by tasks.register<Jar>("dokkaJavadocJar") {
     from(rootProject.tasks.dokkaJavadoc.flatMap { it.outputDirectory })
     archiveClassifier.set("javadoc")
 }
+
 kotlin {
     jvmToolchain(17)
 }
+
 application {
     mainClass.set("MainKt")
 }
@@ -69,18 +73,19 @@ changelog {
     unreleasedTerm.set("[Unreleased]")
     groups.set(listOf("Added", "Changed", "Deprecated", "Removed", "Fixed", "Security"))
 }
+
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
             from(components.findByName("java"))
             groupId = "dev.themeinerlp"
-            artifactId = "dartPoet"
+            artifactId = "dartpoet"
             version = rootProject.version.toString()
             artifact(dokkaJavadocJar)
             artifact(dokkaHtmlJar)
             artifact(sourceJar)
             pom {
-                name.set("Dart Poet")
+                name.set("DartPoet")
                 description.set("A Kotlin API which allows the generation of code for dart")
                 url.set("https://github.com/theEvilReaper/DartPoet")
                 licenses {
