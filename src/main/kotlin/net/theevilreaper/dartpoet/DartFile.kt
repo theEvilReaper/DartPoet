@@ -100,7 +100,7 @@ class DartFile internal constructor(
             "The given path $path exists but it is not a directory"
         }
 
-        require(!isDartConventionFileName(name)) {
+        require(isDartConventionFileName(name)) {
             """
              The given name $name has some issues with the naming   
              Please take a look at this page https://dart.dev/tools/linter-rules#file_names
