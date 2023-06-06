@@ -45,14 +45,12 @@ class DartFileTest {
                     .parameter {
                         DartParameterSpec.builder("version", "String")
                             .named(true)
-                            .annotations {
-                                listOf(
+                            .annotations(
                                     AnnotationSpec.builder("JsonKey")
                                         .content("name: %C", "version").build(),
                                     AnnotationSpec.builder("Default")
                                         .content("%C", "1.0.0").build()
                                 )
-                            }
                             .build()
                     }
                     .build()
