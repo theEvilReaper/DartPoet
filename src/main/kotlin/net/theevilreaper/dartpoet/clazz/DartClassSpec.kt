@@ -9,10 +9,16 @@ import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.util.toImmutableList
 import net.theevilreaper.dartpoet.util.toImmutableSet
 
+/**
+ * A [DartClassBuilder] describes the actual content of the class.
+ * The content includes functions, typedefs, const values etc.
+ * Partly some things are also only allowed to be set on certain classes.
+ * @since 1.0.0
+ * @author theEvilReaper
+ */
 class DartClassSpec internal constructor(
     builder: DartClassBuilder
 ) {
-
     internal val name = builder.name
     internal val classType = builder.classType
     internal val modifiers = builder.classMetaData.modifiers.toImmutableSet()
@@ -37,12 +43,15 @@ class DartClassSpec internal constructor(
         it.modifiers = it.modifiers.sorted().toSet()
     }.toImmutableSet()
 
+    /**
+     * Returns true when the class has no content to generate.
+     */
     internal val hasNoContent: Boolean
-        get() = functions.isEmpty() && properties.isEmpty() && constructors.isEmpty() && constantStack.isEmpty()
+        get() = functions.isEmpty() && properties.isEmpty() && constructors.isEmpty() && constantStack.isEmpty() && enumPropertyStack.isEmpty()
 
     init {
         if (name != null) {
-            check(name.trim().isNotEmpty()) { "The name can't be empty"}
+            check(name.trim().isNotEmpty()) { "The name can't be empty" }
         }
 
         /*check(isEnum && !this.modifiers.containsAnyOf(ABSTRACT, MIXIN)) {
@@ -54,17 +63,17 @@ class DartClassSpec internal constructor(
         }*/
     }
 
-    internal fun write(
-        codeWriter: CodeWriter
-    ) {
-        ClassWriter().write(this, codeWriter)
-    }
+    /**
+     * Calls the [ClassWriter] to write the data from the spec into code for dart
+     * @param codeWriter the [CodeWriter] instance to apply the data
+     */
+    internal fun write(codeWriter: CodeWriter) { ClassWriter().write(this, codeWriter) }
 
-    override fun toString() = buildCodeString {
-        write(
-            this
-        )
-    }
+    /**
+     * Returns a [String] representation from the class spec.
+     * @return the generated representation as string
+     */
+    override fun toString() = buildCodeString { write(this) }
 
     /**
      * The class contains methods to create a new [DartClassBuilder] instance for a specific class.
@@ -106,6 +115,10 @@ class DartClassSpec internal constructor(
         @JvmStatic
         fun abstractClass(name: String) = DartClassBuilder(name, ClassType.ABSTRACT)
 
+        /**
+         * Creates a new [DartClassBuilder] instance for a library class.
+         * @return the created instance
+         */
         @JvmStatic
         fun libraryClass(name: String) = DartClassBuilder(name, ClassType.LIBRARY)
     }
