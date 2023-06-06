@@ -22,30 +22,28 @@ class DartClassBuilder internal constructor(
     internal val isMixinClass get() = classType == ClassType.MIXIN
     internal val isAbstract get() = classType == ClassType.ABSTRACT
     internal val isLibrary get() = classType == ClassType.CLASS
-    private val isNormalClass get() = classType == ClassType.CLASS && !isEnumClass && !isMixinClass && !isAbstract && !isLibrary
-
     internal val constructorStack: MutableList<ConstructorSpec> = mutableListOf()
     internal val propertyStack: MutableList<DartPropertySpec> = mutableListOf()
     internal val functionStack: MutableList<DartFunctionSpec> = mutableListOf()
     internal val enumPropertyStack: MutableList<EnumPropertySpec> = mutableListOf()
     internal val constantStack: MutableSet<DartPropertySpec> = mutableSetOf()
-
     internal var superClass: String? = null
     internal var inheritKeyWord: InheritKeyword? = null
     internal var endWithNewLine = false
 
+
     fun withMixin(className: String) = apply {
-        setClassName(className)
+        superClass(className)
         this.inheritKeyWord = InheritKeyword.MIXIN
     }
 
     fun withExtends(className: String) = apply {
-        setClassName(className)
+        superClass(className)
         this.inheritKeyWord = InheritKeyword.EXTENDS
     }
 
     fun withImplements(className: String) = apply {
-        setClassName(className)
+        superClass(className)
         this.inheritKeyWord = InheritKeyword.IMPLEMENTS
     }
 
@@ -65,19 +63,36 @@ class DartClassBuilder internal constructor(
         this.constantStack += constants
     }
 
+    /**
+     * Add a [EnumPropertySpec] to the spec.
+     * @param enumPropertySpec the property to add
+     */
     fun enumProperty(enumPropertySpec: EnumPropertySpec) = apply {
+        require(classType == ClassType.ENUM) { "Only a enum class can have enum properties" }
         this.enumPropertyStack += enumPropertySpec
     }
 
+    /**
+     * Add an array of [EnumPropertySpec] to the spec.
+     * @param properties the properties to add
+     */
     fun enumProperties(vararg properties: EnumPropertySpec) = apply {
+        require(classType == ClassType.ENUM) { "Only a enum class can have enum properties" }
         this.enumPropertyStack += properties
     }
 
-    private fun setClassName(className: String) {
+    /**
+     * Set the class from which the generated class should inherit.
+     * @param className the name from the class
+     */
+    private fun superClass(className: String) {
         this.superClass = className
     }
 
-
+    /**
+     * Indicates if the class should end with an empty line.
+     * @param endWithNewLine True for a new line at the end otherwise false
+     */
     fun endWithNewLine(endWithNewLine: Boolean) = apply {
         this.endWithNewLine = endWithNewLine
     }
