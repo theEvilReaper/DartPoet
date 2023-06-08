@@ -3,13 +3,12 @@ package net.theevilreaper.dartpoet.function.constructor
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.ConstructorWriter
-import net.theevilreaper.dartpoet.function.FunctionType
 import net.theevilreaper.dartpoet.util.toImmutableList
 import net.theevilreaper.dartpoet.util.toImmutableSet
 
 class ConstructorSpec(
     builder: ConstructorBuilder
-): FunctionType {
+) {
 
     internal val name = builder.name
     internal val named = builder.named

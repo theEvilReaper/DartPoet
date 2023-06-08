@@ -21,7 +21,7 @@ import net.theevilreaper.dartpoet.util.toImmutableSet
  */
 class DartFunctionSpec(
     builder: DartFunctionBuilder
-) : FunctionType {
+) {
 
     internal val name = builder.name
     internal val returnType: String? = builder.returnType
