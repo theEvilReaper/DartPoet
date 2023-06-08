@@ -12,7 +12,6 @@ package net.theevilreaper.dartpoet.directive
  *    - import '../model/test.dart';
  * - PartImports
  *    - part 'test.freezed.dart';
- * - TODO: Add export
  *
  * @since 1.0.0
  * @author theEvilReaper
