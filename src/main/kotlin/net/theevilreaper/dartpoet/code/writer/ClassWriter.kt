@@ -8,7 +8,6 @@ import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.code.emitConstructors
 import net.theevilreaper.dartpoet.code.emitFunctions
 import net.theevilreaper.dartpoet.enum.EnumPropertySpec
-import net.theevilreaper.dartpoet.property.DartPropertySpec
 import net.theevilreaper.dartpoet.util.CURLY_CLOSE
 import net.theevilreaper.dartpoet.util.CURLY_OPEN
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
