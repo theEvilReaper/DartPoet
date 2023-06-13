@@ -3,7 +3,6 @@ package net.theevilreaper.dartpoet.directive
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.util.IMPORT
 import net.theevilreaper.dartpoet.util.SEMICOLON
-import java.lang.IllegalStateException
 
 /**
  * The class represents a normal import from dart.
@@ -53,7 +52,7 @@ class DartDirective(
             writer.emit("${path.ensureDartFileEnding()}' ${castType.identifier} $importCast")
             writer.emit(SEMICOLON)
         } else {
-            throw IllegalStateException("")
+            throw Error("Something went wrong during the DartDirective write prozess")
         }
     }
 }
