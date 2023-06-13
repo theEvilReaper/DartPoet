@@ -15,7 +15,7 @@ internal const val NEW_LINE_CHAR = '\n'
 internal const val NEW_LINE = NEW_LINE_CHAR.toString()
 
 internal const val SEMICOLON = ";"
-internal const val COMMENT = "//"
+internal const val DOCUMENTATION_CHAR = "///"
 internal const val AS_PART = "as"
 internal const val IMPORT = "import"
 internal const val ANNOTATION_CHAR = "@"
@@ -37,13 +37,17 @@ internal val ALLOWED_CONST_MODIFIERS = setOf(DartModifier.CONST)
 private val namePattern: Regex = Regex("[a-z]+|([a-z]+)_+([a-z]+)")
 private val lowerCamelCase: Regex = Regex("[a-z]+[A-Z0-9]*[a-z0-9]*[A-Za-z0-9]*")
 
+/**
+ * Checks if a given set of [DartModifier] matches with a given set which contains the allowed [DartModifier].
+ * @param rawModifiers contains all modifiers from the context
+ * @param allowedModifiers contains all modifiers which are allowed for context
+ * @param context contains the context from where the method is called
+ */
 fun hasAllowedModifiers(rawModifiers: Set<DartModifier>, allowedModifiers: Set<DartModifier>, context: String) {
     rawModifiers.also {
         LinkedHashSet(it).apply {
             removeAll(allowedModifiers)
-            if (!isEmpty()) {
-                throw IllegalArgumentException("These modifiers $this are not allowed in a $context context. Allowed modifiers: $allowedModifiers")
-            }
+            require(isEmpty()) { "These modifiers $this are not allowed in a $context context. Allowed modifiers: $allowedModifiers" }
         }
     }
 }
@@ -67,6 +71,5 @@ fun isDartConventionFileName(fileName: String): Boolean {
  * @return true when the string has the format otherwise false
  */
 fun isInLowerCamelCase(input: String): Boolean {
-    if (input.trim().isEmpty()) return false
-    return input.matches(lowerCamelCase)
+    return input.trim().isNotEmpty() && input.matches(lowerCamelCase)
 }
