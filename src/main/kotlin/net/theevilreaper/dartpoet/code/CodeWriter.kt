@@ -12,19 +12,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * Changes to the file compared to the original:
+ *
+ * The file contains only this methods which are needed to write the code for Dart.
+ * All main method which writes the code in KotlinPoet still exists in this writer adaption.
+ * Some others has been removed because they are not required
  */
 package net.theevilreaper.dartpoet.code
 
-import net.theevilreaper.dartpoet.clazz.DartClassSpec
-import net.theevilreaper.dartpoet.directive.DartDirective
 import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.util.NEW_LINE
 import net.theevilreaper.dartpoet.util.escapeCharacterLiterals
 import net.theevilreaper.dartpoet.util.stringLiteralWithQuotes
 import java.io.Closeable
-
-/** Sentinel value that indicates that no user-provided package has been set.  */
-private val NO_PACKAGE = String()
 
 internal inline fun buildCodeString(builderAction: CodeWriter.() -> Unit): String {
     val stringBuilder = StringBuilder()
@@ -50,16 +51,11 @@ internal fun buildCodeString(
 class CodeWriter constructor(
     out: Appendable,
     private val indent: String = DEFAULT_INDENT,
-    imports: Map<String, DartDirective> = emptyMap(),
     columnLimit: Int = 100,
 ) : Closeable {
     var out = LineWrapper(out, indent, columnLimit)
     private var indentLevel = 0
-
     private var comment = false
-    private var packageName = NO_PACKAGE
-    private val typeSpecStack = mutableListOf<DartClassSpec>()
-    private val memberImportNames = mutableSetOf<String>()
     private var trailingNewline = false
 
     /**
@@ -67,7 +63,7 @@ class CodeWriter constructor(
      * line of a statement is indented normally and subsequent wrapped lines are double-indented. This
      * is -1 when the currently-written line isn't part of a statement.
      */
-    var statementLine = -1
+    private var statementLine = -1
 
     fun indent(levels: Int = 1) = apply {
         indentLevel += levels
@@ -76,24 +72,6 @@ class CodeWriter constructor(
     fun unindent(levels: Int = 1) = apply {
         require(indentLevel - levels >= 0) { "cannot unindent $levels from $indentLevel" }
         indentLevel -= levels
-    }
-
-    fun pushPackage(packageName: String) = apply {
-        check(this.packageName === NO_PACKAGE) { "package already set: ${this.packageName}" }
-        this.packageName = packageName
-    }
-
-    fun popPackage() = apply {
-        check(packageName !== NO_PACKAGE) { "package already set: $packageName" }
-        packageName = NO_PACKAGE
-    }
-
-    fun pushType(type: DartClassSpec) = apply {
-        this.typeSpecStack.add(type)
-    }
-
-    fun popType() = apply {
-        this.typeSpecStack.removeAt(typeSpecStack.size - 1)
     }
 
     fun emitDoc(codeBlock: CodeBlock) {
@@ -119,8 +97,7 @@ class CodeWriter constructor(
         var a = 0
         val partIterator = codeBlock.formatParts.listIterator()
         while (partIterator.hasNext()) {
-            val part = partIterator.next()
-            when (part) {
+            when (val part = partIterator.next()) {
                 "%L" -> emitLiteral(codeBlock.args[a++], isConstantContext)
                 "%S", "%C" -> {
                     val string = codeBlock.args[a++] as String?
@@ -132,7 +109,7 @@ class CodeWriter constructor(
                             isConstantContext = isConstantContext,
                         )
                     } else {
-                        "null"
+                        NULL_STRING
                     }
 
                     if (part == "%C") {
@@ -141,7 +118,6 @@ class CodeWriter constructor(
                         emit(literal, nonWrapping = true)
                     }
                 }
-
                 "%P" -> {
                     val string = codeBlock.args[a++]?.let { arg ->
                         if (arg is CodeBlock) {
@@ -158,7 +134,7 @@ class CodeWriter constructor(
                             isConstantContext = isConstantContext,
                         )
                     } else {
-                        "null"
+                        NULL_STRING
                     }
                     emit(literal.replace("\"", "'"), nonWrapping = true)
                 }
@@ -195,7 +171,6 @@ class CodeWriter constructor(
                     }
                     statementLine = -1
                 }
-
                 else -> {
                     emit(part)
                 }
@@ -235,7 +210,7 @@ class CodeWriter constructor(
             if (!first) {
                 if ( comment && trailingNewline) {
                     emitIndentation()
-                    out.appendNonWrapping("///")
+                    out.appendNonWrapping(DOCUMENTATION_CHAR)
                 }
                 out.newline()
                 trailingNewline = true
@@ -255,8 +230,8 @@ class CodeWriter constructor(
                 emitIndentation()
                 if (comment) {
                     // To get insides why we are writing /// for documentation
-                    // Plase take a look at this side https://dart.dev/effective-dart/documentation
-                    out.appendNonWrapping("/// ")
+                    // Please take a look at this side https://dart.dev/effective-dart/documentation
+                    out.appendNonWrapping("$DOCUMENTATION_CHAR ")
 
                 }
             }
@@ -293,6 +268,9 @@ class CodeWriter constructor(
         }
     }
 
+    /**
+     * Closes the underlying [Appendable].
+     */
     override fun close() {
         out.close()
     }
