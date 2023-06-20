@@ -2,8 +2,8 @@ package net.theevilreaper.dartpoet.classTypes
 
 import com.google.common.truth.Truth.*
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
-import net.theevilreaper.dartpoet.clazz.DartClassSpec
-import net.theevilreaper.dartpoet.function.DartFunctionSpec
+import net.theevilreaper.dartpoet.clazz.ClassSpec
+import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.parameter.DartParameterSpec
 import org.junit.jupiter.api.Test
 
@@ -11,14 +11,14 @@ class AbstractClassTest {
 
     @Test
     fun `test simple abstract class`() {
-        val abstractClass = DartClassSpec.abstractClass("DatabaseHandler")
+        val abstractClass = ClassSpec.abstractClass("DatabaseHandler")
             .endWithNewLine(true)
-            .function(DartFunctionSpec.builder("getByID")
+            .function(FunctionSpec.builder("getByID")
                 .returns("TestModel")
                 .parameter(DartParameterSpec.builder("id", "int").build())
                 .build()
             )
-            .function(DartFunctionSpec.builder("test").build())
+            .function(FunctionSpec.builder("test").build())
             .build()
 
         assertThat(abstractClass.toString()).isEqualTo(
@@ -36,11 +36,11 @@ class AbstractClassTest {
 
     @Test
     fun `test abstract class with annotation`() {
-        val abstractClass = DartClassSpec.abstractClass("Test")
+        val abstractClass = ClassSpec.abstractClass("Test")
             .annotation(
                 AnnotationSpec.builder("abc").build()
             )
-            .function(DartFunctionSpec.builder("test").build())
+            .function(FunctionSpec.builder("test").build())
             .build()
         assertThat(abstractClass.toString()).isEqualTo(
             """

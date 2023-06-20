@@ -1,7 +1,7 @@
 package net.theevilreaper.dartpoet.code.writer
 
 import net.theevilreaper.dartpoet.DartModifier
-import net.theevilreaper.dartpoet.function.DartFunctionSpec
+import net.theevilreaper.dartpoet.function.FunctionSpec
 import org.junit.jupiter.api.Test
 import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.code.CodeBlock
@@ -13,7 +13,7 @@ class FunctionWriterTest {
 
     @Test
     fun `write void method`() {
-        val method = DartFunctionSpec.builder("test")
+        val method = FunctionSpec.builder("test")
             .returns("void")
             .build()
         assertThat(method.toString()).isEqualTo("void test();")
@@ -22,7 +22,7 @@ class FunctionWriterTest {
     @Test
     fun `write simple method without parameters`() {
         val writer = CodeWriter(StringBuilder())
-        val method = DartFunctionSpec.builder("getName")
+        val method = FunctionSpec.builder("getName")
             .modifier(DartModifier.PUBLIC)
             .returns("String")
             .addCode("return %C;", "test")
@@ -41,7 +41,7 @@ class FunctionWriterTest {
     @Test
     fun `test simple private method`() {
         val writer = CodeWriter(StringBuilder())
-        val method = DartFunctionSpec.builder("name")
+        val method = FunctionSpec.builder("name")
             .returns("String")
             .modifier(DartModifier.PRIVATE)
             .addCode("return %C;", "Tobi").build()
@@ -57,7 +57,7 @@ class FunctionWriterTest {
 
     @Test
     fun `write simple nullable function`() {
-        val method = DartFunctionSpec.builder("getId")
+        val method = FunctionSpec.builder("getId")
             .returns("int")
             .nullable(true)
             .addCode("return %L;", 10).build()
@@ -72,7 +72,7 @@ class FunctionWriterTest {
 
     @Test
     fun `write another nullable method`() {
-        val method = DartFunctionSpec.builder("getValue")
+        val method = FunctionSpec.builder("getValue")
             .returns("int?")
             .addCode("return 1;")
             .build()
@@ -87,7 +87,7 @@ class FunctionWriterTest {
 
     @Test
     fun `write simple async function`() {
-        val method = DartFunctionSpec.builder("getNameById")
+        val method = FunctionSpec.builder("getNameById")
             .returns("String")
             .async(true)
             .parameter {
@@ -109,7 +109,7 @@ class FunctionWriterTest {
 
     @Test
     fun `write method with two parameters`() {
-        val method = DartFunctionSpec.builder("getAllById")
+        val method = FunctionSpec.builder("getAllById")
             .returns("List<Model>")
             .parameters {
                 listOf(
@@ -127,7 +127,7 @@ class FunctionWriterTest {
 
     @Test
     fun `test typedef write`() {
-        val function = DartFunctionSpec.builder("ValueUpdate<E>")
+        val function = FunctionSpec.builder("ValueUpdate<E>")
             .typedef(true)
             .parameter(DartParameterSpec.builder("value", "E")
                 .nullable(true).build())
@@ -138,7 +138,7 @@ class FunctionWriterTest {
 
     @Test
     fun `test cast write`() {
-        val function = DartFunctionSpec.builder("getId")
+        val function = FunctionSpec.builder("getId")
             .returns("int")
             .typeCast("int")
             .build()
@@ -147,7 +147,7 @@ class FunctionWriterTest {
 
     @Test
     fun `test other getter variant write`() {
-        val function = DartFunctionSpec.builder("value")
+        val function = FunctionSpec.builder("value")
             .returns("int")
             .getter(true)
             .addCode("%L", "_value;")
@@ -157,7 +157,7 @@ class FunctionWriterTest {
 
     @Test
     fun `test other setter variant write`() {
-        val function = DartFunctionSpec.builder("value")
+        val function = FunctionSpec.builder("value")
             .parameter(
                 DartParameterSpec.builder("value", "int")
                     .build()
@@ -178,7 +178,7 @@ class FunctionWriterTest {
 
     @Test
     fun `test lambda method write`() {
-        val function = DartFunctionSpec.builder("isNoble")
+        val function = FunctionSpec.builder("isNoble")
             .lambda(true)
             .parameter(DartParameterSpec.builder("atomicNumber", "int").build())
             .returns("bool")
@@ -189,7 +189,7 @@ class FunctionWriterTest {
 
     @Test
     fun `test method with documentation`() {
-        val function = DartFunctionSpec.builder("getName")
+        val function = FunctionSpec.builder("getName")
             .returns("String")
             .addCode("return %C;", "Test")
             .doc("Returns the name from an object")

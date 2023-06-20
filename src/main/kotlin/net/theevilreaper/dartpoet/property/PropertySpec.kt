@@ -10,13 +10,13 @@ import net.theevilreaper.dartpoet.util.ALLOWED_PROPERTY_MODIFIERS
 import net.theevilreaper.dartpoet.util.hasAllowedModifiers
 
 /**
- * The property spec class contains all variables which are comes from the [DartPropertyBuilder].
+ * The property spec class contains all variables which are comes from the [PropertyBuilder].
  * Some values are checked for certain conditions to avoid errors during the generation.
  * @author theEvilReaper
  * @since 1.0.0
  */
-class DartPropertySpec(
-    builder: DartPropertyBuilder
+class PropertySpec(
+    builder: PropertyBuilder
 ) {
     internal var name = builder.name
     internal var type = builder.type
@@ -58,7 +58,7 @@ class DartPropertySpec(
     companion object {
 
         /**
-         * Creates a new instance from the [DartPropertyBuilder].
+         * Creates a new instance from the [PropertyBuilder].
          * The modifier parameter is optional
          */
         @JvmStatic
@@ -66,11 +66,11 @@ class DartPropertySpec(
             name: String,
             type: String,
             vararg modifiers: DartModifier = emptyArray()
-        ): DartPropertyBuilder {
-            return DartPropertyBuilder(name, type).modifiers { listOf(*modifiers) }
+        ): PropertyBuilder {
+            return PropertyBuilder(name, type).modifiers { listOf(*modifiers) }
         }
 
         @JvmStatic
-        fun constBuilder(name: String) = DartPropertyBuilder(name, "CONST").modifier(DartModifier.CONST)
+        fun constBuilder(name: String) = PropertyBuilder(name, "CONST").modifier(DartModifier.CONST)
     }
 }

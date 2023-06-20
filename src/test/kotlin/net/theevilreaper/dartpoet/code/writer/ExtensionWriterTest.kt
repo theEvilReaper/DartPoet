@@ -3,7 +3,7 @@ package net.theevilreaper.dartpoet.code.writer
 import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.extension.ExtensionSpec
-import net.theevilreaper.dartpoet.function.DartFunctionSpec
+import net.theevilreaper.dartpoet.function.FunctionSpec
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -62,7 +62,7 @@ class ExtensionWriterTest {
     fun `test simple extension with method`() {
         val extension = ExtensionSpec.builder("TestExtension", "String")
             .function {
-                DartFunctionSpec.builder("hasSize")
+                FunctionSpec.builder("hasSize")
                     .returns("bool")
                     .addCode(CodeBlock.of(
                         "return this.length > 2;"

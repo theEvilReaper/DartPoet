@@ -2,8 +2,8 @@ package net.theevilreaper.dartpoet.code.writer
 
 import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.DartModifier
-import net.theevilreaper.dartpoet.clazz.DartClassSpec
-import net.theevilreaper.dartpoet.property.DartPropertySpec
+import net.theevilreaper.dartpoet.clazz.ClassSpec
+import net.theevilreaper.dartpoet.property.PropertySpec
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -16,18 +16,18 @@ class ClassWriterTest {
 
         @JvmStatic
         private fun simpleClasses() = Stream.of(
-            Arguments.of(DartClassSpec.builder("Test").build(), "class Test {}"),
-            Arguments.of(DartClassSpec.mixinClass("Test").build(), "mixin Test {}"),
-            Arguments.of(DartClassSpec.enumClass("Test").build(), "enum Test {}"),
+            Arguments.of(ClassSpec.builder("Test").build(), "class Test {}"),
+            Arguments.of(ClassSpec.mixinClass("Test").build(), "mixin Test {}"),
+            Arguments.of(ClassSpec.enumClass("Test").build(), "enum Test {}"),
             Arguments.of(
-                DartClassSpec.builder("Model").endWithNewLine(true).build(),
+                ClassSpec.builder("Model").endWithNewLine(true).build(),
                 """
                 class Model {}
                 
                 """.trimIndent()
             ),
             Arguments.of(
-                DartClassSpec.abstractClass("DatabaseHandler").endWithNewLine(true).build(),
+                ClassSpec.abstractClass("DatabaseHandler").endWithNewLine(true).build(),
                 """
                 abstract class DatabaseHandler {}
                 
@@ -38,19 +38,19 @@ class ClassWriterTest {
 
     @ParameterizedTest
     @MethodSource("simpleClasses")
-    fun `test simple classes`(classSpec: DartClassSpec, expected: String) {
+    fun `test simple classes`(classSpec: ClassSpec, expected: String) {
         assertThat(classSpec.toString()).isEqualTo(expected)
     }
 
     @Test
     fun `test class writing with some constants`() {
-        val clazz = DartClassSpec.builder("TestClass")
+        val clazz = ClassSpec.builder("TestClass")
             .constants(
-                DartPropertySpec.builder("test", "String")
+                PropertySpec.builder("test", "String")
                     .modifiers { listOf(DartModifier.STATIC, DartModifier.CONST) }
                     .initWith("%C", "Test")
                     .build(),
-                DartPropertySpec.builder("maxId", "int")
+                PropertySpec.builder("maxId", "int")
                     .modifiers { listOf(DartModifier.CONST, DartModifier.STATIC) }
                     .initWith("%L", "100")
                     .build(),

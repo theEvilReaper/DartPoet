@@ -2,7 +2,7 @@ package net.theevilreaper.dartpoet.code.writer
 
 import net.theevilreaper.dartpoet.DartModifier.*
 import net.theevilreaper.dartpoet.clazz.ClassType
-import net.theevilreaper.dartpoet.clazz.DartClassSpec
+import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.code.*
 import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.code.emitConstructors
@@ -22,7 +22,7 @@ import net.theevilreaper.dartpoet.util.SEMICOLON
 class ClassWriter {
 
     //TODO: Improve new lines after each generated code part block
-    fun write(spec: DartClassSpec, codeWriter: CodeWriter) {
+    fun write(spec: ClassSpec, codeWriter: CodeWriter) {
         if (spec.isAnonymous) {
             writeAnonymousClass(spec, codeWriter)
             return
@@ -107,7 +107,7 @@ class ClassWriter {
         }
     }
 
-    private fun writeAnonymousClass(spec: DartClassSpec, writer: CodeWriter) {
+    private fun writeAnonymousClass(spec: ClassSpec, writer: CodeWriter) {
         spec.typeDefStack.emitFunctions(writer) {
             it.write(writer)
         }
@@ -123,11 +123,11 @@ class ClassWriter {
     }
 
     /**
-     * The method contains the logic to write the dart class declaration for a [DartClassSpec].
-     * @param spec the [DartClassSpec] which contains all data for a class
+     * The method contains the logic to write the dart class declaration for a [ClassSpec].
+     * @param spec the [ClassSpec] which contains all data for a class
      * @param writer the [CodeWriter] to write the class declaration
      */
-    private fun writeClassHeader(spec: DartClassSpec, writer: CodeWriter) {
+    private fun writeClassHeader(spec: ClassSpec, writer: CodeWriter) {
         when (val type = spec.classType) {
             ClassType.CLASS, ClassType.MIXIN, ClassType.ENUM -> {
                 writer.emit(type.keyword)
@@ -150,7 +150,7 @@ class ClassWriter {
         writer.emit("·")
     }
 
-    private fun writeInheritance(spec: DartClassSpec, writer: CodeWriter) {
+    private fun writeInheritance(spec: ClassSpec, writer: CodeWriter) {
         if (spec.superClass.orEmpty().trim().isNotEmpty()) {
             writer.emit("${spec.inheritKeyWord!!.identifier}·")
             writer.emit("${spec.superClass!!}·")

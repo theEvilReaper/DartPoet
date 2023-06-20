@@ -2,11 +2,11 @@ package net.theevilreaper.dartpoet.code
 
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.extension.ExtensionSpec
-import net.theevilreaper.dartpoet.function.DartFunctionSpec
+import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.directive.Directive
 import net.theevilreaper.dartpoet.parameter.DartParameterSpec
-import net.theevilreaper.dartpoet.property.DartPropertySpec
+import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.util.CURLY_CLOSE
 import net.theevilreaper.dartpoet.util.CURLY_OPEN
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
@@ -40,9 +40,9 @@ internal val String.isPlaceholder
 fun String.nextPotentialPlaceholderPosition(startIndex: Int) =
     indexOfAny(NO_ARG_PLACEHOLDERS, startIndex)
 
-internal fun Set<DartFunctionSpec>.emitFunctions(
+internal fun Set<FunctionSpec>.emitFunctions(
     codeWriter: CodeWriter,
-    emitBlock: (DartFunctionSpec) -> Unit = { it.write(codeWriter) }
+    emitBlock: (FunctionSpec) -> Unit = { it.write(codeWriter) }
 ) = with(codeWriter) {
     if (isNotEmpty()) {
         val newLines = size > 1
@@ -180,10 +180,10 @@ internal fun <T: Directive> List<T>.writeImports(
     }
 }
 
-fun Set<DartPropertySpec>.emitProperties(
+fun Set<PropertySpec>.emitProperties(
     codeWriter: CodeWriter,
     forceNewLines: Boolean = false,
-    emitBlock: (DartPropertySpec) -> Unit = { it.write(codeWriter) }
+    emitBlock: (PropertySpec) -> Unit = { it.write(codeWriter) }
 ) = with(codeWriter) {
     if (isNotEmpty()) {
         val emitNewLines = size > 1 || forceNewLines

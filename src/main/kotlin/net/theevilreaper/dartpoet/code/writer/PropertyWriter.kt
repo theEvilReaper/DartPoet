@@ -3,14 +3,14 @@ package net.theevilreaper.dartpoet.code.writer
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.emitAnnotations
-import net.theevilreaper.dartpoet.property.DartPropertySpec
+import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.SEMICOLON
 import net.theevilreaper.dartpoet.util.SPACE
 
 class PropertyWriter {
 
-    fun write(property: DartPropertySpec, writer: CodeWriter) {
+    fun write(property: PropertySpec, writer: CodeWriter) {
         if (property.hasDocs) {
             property.docs.forEach { writer.emitDoc(it) }
         }

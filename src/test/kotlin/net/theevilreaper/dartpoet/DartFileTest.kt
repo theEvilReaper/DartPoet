@@ -2,17 +2,17 @@ package net.theevilreaper.dartpoet
 
 import com.google.common.truth.Truth.*
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
-import net.theevilreaper.dartpoet.clazz.DartClassSpec
+import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.code.buildCodeBlock
 import net.theevilreaper.dartpoet.enum.EnumPropertySpec
-import net.theevilreaper.dartpoet.function.DartFunctionSpec
+import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.directive.DartDirective
 import net.theevilreaper.dartpoet.directive.CastType
 import net.theevilreaper.dartpoet.directive.LibraryDirective
 import net.theevilreaper.dartpoet.directive.PartDirective
 import net.theevilreaper.dartpoet.parameter.DartParameterSpec
-import net.theevilreaper.dartpoet.property.DartPropertySpec
+import net.theevilreaper.dartpoet.property.PropertySpec
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.lang.IllegalArgumentException
@@ -35,7 +35,7 @@ class DartFileTest {
 
     @Test
     fun `write test model with freezed`() {
-        val versionFreezedClass = DartClassSpec.builder("VersionModel")
+        val versionFreezedClass = ClassSpec.builder("VersionModel")
             .withMixin("_${'$'}VersionModel")
             .annotation { AnnotationSpec.builder("freezed").build() }
             .constructor {
@@ -101,10 +101,10 @@ class DartFileTest {
     fun `test library write`() {
         val libClass = DartFile.builder("testLib")
             .type(
-                DartClassSpec.anonymousClassBuilder()
+                ClassSpec.anonymousClassBuilder()
                     .endWithNewLine(true)
                     .function(
-                        DartFunctionSpec.builder("JsonMap")
+                        FunctionSpec.builder("JsonMap")
                             .typedef(true)
                             .returns("Map<String, dynamic>")
                             .build()
@@ -135,11 +135,11 @@ class DartFileTest {
     fun `test enum class write`() {
         val enumClass = DartFile.builder("navigation_entry")
             .type(
-                DartClassSpec.enumClass("NavigationEntry")
+                ClassSpec.enumClass("NavigationEntry")
                     .properties(
-                        DartPropertySpec.builder("name", "String")
+                        PropertySpec.builder("name", "String")
                             .modifier { DartModifier.FINAL }.build(),
-                        DartPropertySpec.builder("route", "String")
+                        PropertySpec.builder("route", "String")
                             .modifier { DartModifier.FINAL }.build()
 
                     )
@@ -187,8 +187,8 @@ class DartFileTest {
         val className = "DefectApi"
         val apiClient = "ApiClient"
 
-        val handlerApiClass = DartClassSpec.builder(className)
-            .property(DartPropertySpec.builder(apiClient.replaceFirstChar { it.lowercase() }, apiClient)
+        val handlerApiClass = ClassSpec.builder(className)
+            .property(PropertySpec.builder(apiClient.replaceFirstChar { it.lowercase() }, apiClient)
                 .modifier { DartModifier.FINAL }
                 .build()
             )
@@ -206,7 +206,7 @@ class DartFileTest {
                     .build()
             )
             .function(
-                DartFunctionSpec.builder("getByID")
+                FunctionSpec.builder("getByID")
                     .async(true)
                     .returns("DefectDTO")
                     .parameter(DartParameterSpec.builder("id", "int").build())
@@ -263,10 +263,10 @@ class DartFileTest {
     fun `test model class write`() {
         val name = "HousePart"
         val serializer = "standardSerializers"
-        val modelClass = DartClassSpec.abstractClass(name)
+        val modelClass = ClassSpec.abstractClass(name)
             .withImplements("Built<$name, ${name}Builder>")
             .function(
-                DartFunctionSpec.builder("serializer")
+                FunctionSpec.builder("serializer")
                     .returns("Serializer<$name>")
                     .lambda(true)
                     .getter(true)
@@ -275,7 +275,7 @@ class DartFileTest {
                     .build()
             )
             .function(
-                DartFunctionSpec.builder("fromJson")
+                FunctionSpec.builder("fromJson")
                     .lambda(true)
                     .returns(name)
                     .modifier(DartModifier.STATIC)
@@ -286,7 +286,7 @@ class DartFileTest {
                     .build()
             )
             .function(
-                DartFunctionSpec.builder("toJson")
+                FunctionSpec.builder("toJson")
                     .lambda(true)
                     .returns("dynamic")
                     .addCode(buildCodeBlock {
@@ -315,12 +315,12 @@ class DartFileTest {
         val classFile = DartFile.builder(name)
             .directive(DartDirective("dart:html"))
             .constants(
-                DartPropertySpec.constBuilder("typeLive").initWith("1").build(),
-                DartPropertySpec.constBuilder("typeTest").initWith("10").build(),
-                DartPropertySpec.constBuilder("typeDev").initWith("100").build(),
+                PropertySpec.constBuilder("typeLive").initWith("1").build(),
+                PropertySpec.constBuilder("typeTest").initWith("10").build(),
+                PropertySpec.constBuilder("typeDev").initWith("100").build(),
             )
             .type(
-                DartClassSpec.builder(name.replaceFirstChar { it.uppercase() })
+                ClassSpec.builder(name.replaceFirstChar { it.uppercase() })
                     .annotation(AnnotationSpec.builder("freezed").build())
             )
             .build()
@@ -344,7 +344,7 @@ class DartFileTest {
             .doc("Hallo")
             .doc("This is a [%L]", "Test")
             .type(
-                DartClassSpec.builder("Test")
+                ClassSpec.builder("Test")
             )
             .build()
         assertThat(clazz.toString()).isEqualTo(
@@ -358,9 +358,9 @@ class DartFileTest {
 
     @Test
     fun `test class with a bunch of comments`() {
-        val spec = DartClassSpec.builder("TestModel")
+        val spec = ClassSpec.builder("TestModel")
             .property {
-                DartPropertySpec.builder("name", "String")
+                PropertySpec.builder("name", "String")
                     .docs("Property comment")
                     .build()
             }
@@ -371,7 +371,7 @@ class DartFileTest {
                     .build()
             )
             .function(
-                DartFunctionSpec.builder("getName")
+                FunctionSpec.builder("getName")
                     .doc("Returns the given name from the object")
                     .returns("String")
                     .addCode(buildCodeBlock {
