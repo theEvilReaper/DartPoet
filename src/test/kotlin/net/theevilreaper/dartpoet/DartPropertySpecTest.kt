@@ -2,6 +2,8 @@ package net.theevilreaper.dartpoet
 
 import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.property.DartPropertySpec
+import net.theevilreaper.dartpoet.type.asClassName
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
@@ -40,5 +42,16 @@ class DartPropertySpecTest {
     @MethodSource("parameters")
     fun `test properties`(propertySpec: DartPropertySpec, expected: String) {
         assertThat(propertySpec.toString()).isEqualTo(expected)
+    }
+
+    @Test
+    fun `test typeName property`() {
+
+        // DartPropertySpec.builder("value", "int").build() is equal to this after toString ->  "int value;"
+        val property = DartPropertySpec.builder("test", Int::class.asClassName())
+            .initWith("%L", "4")
+            .build()
+
+        assertThat(property.toString()).isEqualTo("int test = 4;")
     }
 }
