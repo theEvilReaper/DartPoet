@@ -5,7 +5,7 @@ kotlin = "1.8.22"
 googleTruth = "1.1.5"
 junit = "5.9.3"
 dokka = "1.8.20"
-changeLog = "2.0.0"
+changeLog = "2.1.0"
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
