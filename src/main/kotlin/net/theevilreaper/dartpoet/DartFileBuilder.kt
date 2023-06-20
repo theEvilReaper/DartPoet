@@ -8,7 +8,7 @@ import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.directive.Directive
 import net.theevilreaper.dartpoet.property.DartPropertySpec
 import net.theevilreaper.dartpoet.util.DEFAULT_INDENT
-import java.lang.IllegalArgumentException
+import net.theevilreaper.dartpoet.util.isIndent
 
 class DartFileBuilder(
     val name: String
@@ -50,9 +50,7 @@ class DartFileBuilder(
     }
 
     fun indent(indent: String) = apply {
-        if (indent.trim().isEmpty()) {
-            throw IllegalArgumentException("The indent can't be empty")
-        }
+        check(isIndent(indent)) { "An indent can only contains only spaces" }
         this.indent = indent
     }
 
