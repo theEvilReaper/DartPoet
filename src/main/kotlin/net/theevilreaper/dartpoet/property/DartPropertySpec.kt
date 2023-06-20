@@ -5,6 +5,7 @@ import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.writer.PropertyWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
+import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.util.toImmutableSet
 import net.theevilreaper.dartpoet.util.ALLOWED_PROPERTY_MODIFIERS
 import net.theevilreaper.dartpoet.util.hasAllowedModifiers
@@ -15,7 +16,7 @@ import net.theevilreaper.dartpoet.util.hasAllowedModifiers
  * @author theEvilReaper
  * @since 1.0.0
  */
-class DartPropertySpec(
+class DartPropertySpec constructor(
     builder: DartPropertyBuilder
 ) {
     internal var name = builder.name
@@ -31,10 +32,10 @@ class DartPropertySpec(
         .also {
             hasAllowedModifiers(it, ALLOWED_PROPERTY_MODIFIERS, "property")
         }.filter { it != DartModifier.PRIVATE && it != DartModifier.PUBLIC }.toImmutableSet()
-
+    internal val typeName: TypeName? = builder.typeName
     init {
         check(name.trim().isNotEmpty()) { "The name of a parameter can't be empty" }
-        check(type.trim().isNotEmpty()) { "The type can't be empty" }
+//        check(type.trim().isNotEmpty()) { "The type can't be empty" }
        /** check(!modifiers.contains(DartModifier.CONST) && !modifiers.contains(DartModifier.STATIC)) {
             "Only"
         }**/
@@ -68,6 +69,14 @@ class DartPropertySpec(
             vararg modifiers: DartModifier = emptyArray()
         ): DartPropertyBuilder {
             return DartPropertyBuilder(name, type).modifiers { listOf(*modifiers) }
+        }
+
+        @JvmStatic
+        fun builder(
+            name: String,
+            typeName: TypeName,
+        ): DartPropertyBuilder {
+            return DartPropertyBuilder(name, "", typeName)
         }
 
         @JvmStatic

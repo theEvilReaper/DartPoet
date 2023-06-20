@@ -3,6 +3,7 @@ package net.theevilreaper.dartpoet.property
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
+import net.theevilreaper.dartpoet.type.TypeName
 
 /**
  * The builder is used to set all values that describe a property in Dart.
@@ -13,6 +14,7 @@ import net.theevilreaper.dartpoet.code.CodeBlock
 class DartPropertyBuilder internal constructor(
     var name: String,
     var type: String,
+    var typeName: TypeName? = null
 ) {
     internal var nullable = false
     internal val modifiers: MutableSet<DartModifier> = mutableSetOf()
