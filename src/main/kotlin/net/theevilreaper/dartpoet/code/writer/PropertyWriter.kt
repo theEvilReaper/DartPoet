@@ -29,6 +29,9 @@ class PropertyWriter {
             if (property.modifiers.isNotEmpty()) {
                 writer.emit(SPACE)
             }
+            if (property.type == "" && property.typeName != null) {
+                property.typeName.emit(writer)
+            }
             writer.emit(property.type)
         }
 
