@@ -30,8 +30,11 @@ internal val ALLOWED_FUNCTION_MODIFIERS = setOf(DartModifier.PUBLIC, DartModifie
 internal val ALLOWED_PROPERTY_MODIFIERS = setOf(DartModifier.PRIVATE, DartModifier.FINAL, DartModifier.LATE, DartModifier.STATIC, DartModifier.CONST)
 internal val ALLOWED_CLASS_CONST_MODIFIERS = setOf(DartModifier.STATIC, DartModifier.CONST)
 internal val ALLOWED_CONST_MODIFIERS = setOf(DartModifier.CONST)
+
+//RegEx
 private val namePattern: Regex = Regex("[a-z]+|([a-z]+)_+([a-z]+)")
 private val lowerCamelCase: Regex = Regex("[a-z]+[A-Z0-9]*[a-z0-9]*[A-Za-z0-9]*")
+private val indentPattern: Regex = Regex(" +")
 
 /**
  * Checks if a given set of [DartModifier] matches with a given set which contains the allowed [DartModifier].
@@ -67,5 +70,24 @@ fun isDartConventionFileName(fileName: String): Boolean {
  * @return true when the string has the format otherwise false
  */
 fun isInLowerCamelCase(input: String): Boolean {
-    return input.trim().isNotEmpty() && input.matches(lowerCamelCase)
+    return testStringForPattern(input, lowerCamelCase)
+}
+
+/**
+ * Checks if a given [String] can be used as an indent.
+ * @param input the string to check
+ * @return true when the string only contains spaces otherwise false
+ */
+fun isIndent(input: String): Boolean {
+    return testStringForPattern(input, indentPattern)
+}
+
+/**
+ * Add base method for all the method which tests a string for a pattern.
+ * @param input the string to check
+ * @param pattern the pattern for the check
+ * @return true when the string matches with the pattern otherwise false
+ */
+private fun testStringForPattern(input: String, pattern: Regex): Boolean {
+    return input.isNotEmpty() && input.matches(pattern)
 }
