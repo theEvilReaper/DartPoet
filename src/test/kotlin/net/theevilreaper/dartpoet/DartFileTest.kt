@@ -22,13 +22,13 @@ class DartFileTest {
     @Test
     fun `test indent set`() {
         assertThrows(
-            IllegalArgumentException::class.java,
+            IllegalStateException::class.java,
             { DartFile.builder("Test").indent("") },
             "The indent can't be empty"
         )
         assertThrows(
-            IllegalArgumentException::class.java,
-            { DartFile.builder("Test").indent { "" } },
+            IllegalStateException::class.java,
+            { DartFile.builder("Test").indent { " 123AB" } },
             "The indent can't be empty"
         )
     }
