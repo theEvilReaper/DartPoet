@@ -3,7 +3,7 @@ package net.theevilreaper.dartpoet.code.writer
 import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
-import net.theevilreaper.dartpoet.property.DartPropertySpec
+import net.theevilreaper.dartpoet.property.PropertySpec
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -17,27 +17,27 @@ class PropertyWriterTest {
 
         @JvmStatic
         private fun simpleProperties(): Stream<Arguments> = Stream.of(
-            Arguments.of(DartPropertySpec.builder("id", "int").build(), "int id;"),
-            Arguments.of(DartPropertySpec.builder("id", "String")
+            Arguments.of(PropertySpec.builder("id", "int").build(), "int id;"),
+            Arguments.of(PropertySpec.builder("id", "String")
                 .nullable(true)
                 .build(),
                 "String? id;"
             ),
             Arguments.of(
-                DartPropertySpec.builder("test", "String")
+                PropertySpec.builder("test", "String")
                     .modifier { DartModifier.PRIVATE }
                     .nullable(true)
                     .build(),
                 "String? _test;"
             ),
             Arguments.of(
-                DartPropertySpec.builder("abc", "String")
+                PropertySpec.builder("abc", "String")
                     .modifier { DartModifier.LATE }
                     .build(),
                 "late String abc;"
             ),
             Arguments.of(
-                DartPropertySpec.builder("age", "int")
+                PropertySpec.builder("age", "int")
                     .initWith("%L", "12")
                     .build(),
                 "int age = 12;"
@@ -47,13 +47,13 @@ class PropertyWriterTest {
 
     @ParameterizedTest
     @MethodSource("simpleProperties")
-    fun `test simple properties`(propertySpec: DartPropertySpec, expected: String) {
+    fun `test simple properties`(propertySpec: PropertySpec, expected: String) {
         assertEquals(expected, propertySpec.toString())
     }
 
     @Test
     fun `write const property`() {
-        val property = DartPropertySpec.builder("maxID", "int")
+        val property = PropertySpec.builder("maxID", "int")
             .modifiers { listOf(DartModifier.STATIC, DartModifier.CONST) }
             .initWith("%L", "1000")
             .build()
@@ -62,7 +62,7 @@ class PropertyWriterTest {
 
     @Test
     fun `write simple variable with one annotation`() {
-        val property = DartPropertySpec.builder("age", "int")
+        val property = PropertySpec.builder("age", "int")
             .annotation { AnnotationSpec.builder("jsonIgnore").build() }
             .initWith("%L", "12")
             .build()
@@ -76,7 +76,7 @@ class PropertyWriterTest {
 
     @Test
     fun `write property with annotations`() {
-        val property = DartPropertySpec.builder("description", "String")
+        val property = PropertySpec.builder("description", "String")
             .nullable(true)
             .annotation {
                 AnnotationSpec.builder("JsonKey")
@@ -94,7 +94,7 @@ class PropertyWriterTest {
 
     @Test
     fun `test property with comment`() {
-        val property = DartPropertySpec.builder("name", "String")
+        val property = PropertySpec.builder("name", "String")
             .nullable(true)
             .docs("Represents the name from something")
             .build()

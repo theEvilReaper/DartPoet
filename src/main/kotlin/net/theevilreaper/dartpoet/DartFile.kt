@@ -5,13 +5,13 @@ import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.DartFileWriter
 import net.theevilreaper.dartpoet.extension.ExtensionSpec
-import net.theevilreaper.dartpoet.function.DartFunctionSpec
+import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.util.ALLOWED_CONST_MODIFIERS
 import net.theevilreaper.dartpoet.directive.DartDirective
 import net.theevilreaper.dartpoet.directive.LibraryDirective
 import net.theevilreaper.dartpoet.directive.PartDirective
-import net.theevilreaper.dartpoet.property.DartPropertySpec
+import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.util.DART_FILE_ENDING
 import net.theevilreaper.dartpoet.util.isDartConventionFileName
 import net.theevilreaper.dartpoet.util.toImmutableList
@@ -31,7 +31,7 @@ class DartFile internal constructor(
     internal val extensions: List<ExtensionSpec> = builder.extensionStack
     internal val docs = builder.docs
 
-    internal val constants: Set<DartPropertySpec> = builder.constants.onEach {
+    internal val constants: Set<PropertySpec> = builder.constants.onEach {
         // Only check modifiers when the size is not zero
         if (it.modifiers.isNotEmpty()) {
             hasAllowedModifiers(it.modifiers, ALLOWED_CONST_MODIFIERS, "file const")
@@ -77,7 +77,7 @@ class DartFile internal constructor(
 
     private fun emitInternal(o: Any, c: CodeWriter) {
         when (o::class) {
-            DartFunctionSpec::class -> {
+            FunctionSpec::class -> {
                 callEmit(o, c)
             }
         }

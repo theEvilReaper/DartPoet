@@ -4,13 +4,13 @@ import net.theevilreaper.dartpoet.DartModifier.*
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.emitParameters
-import net.theevilreaper.dartpoet.function.DartFunctionSpec
+import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.util.SEMICOLON
 import net.theevilreaper.dartpoet.util.toImmutableSet
 
 class FunctionWriter {
 
-    fun emit(functionSpec: DartFunctionSpec, writer: CodeWriter) {
+    fun emit(functionSpec: FunctionSpec, writer: CodeWriter) {
         if (functionSpec.hasDocs) {
             functionSpec.docs.forEach { writer.emitDoc(it) }
         }
@@ -72,7 +72,7 @@ class FunctionWriter {
         }
     }
 
-    private fun writeBody(spec: DartFunctionSpec, writer: CodeWriter) {
+    private fun writeBody(spec: FunctionSpec, writer: CodeWriter) {
         if (spec.body.isEmpty()) {
             writer.emit(SEMICOLON)
             return
@@ -93,7 +93,7 @@ class FunctionWriter {
         }
     }
 
-    private fun writeTypeDef(spec: DartFunctionSpec, codeWriter: CodeWriter) {
+    private fun writeTypeDef(spec: FunctionSpec, codeWriter: CodeWriter) {
         codeWriter.emit("${TYPEDEF.identifier}·")
         codeWriter.emit("${spec.name}·")
         codeWriter.emit("=·")

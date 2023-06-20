@@ -1,12 +1,12 @@
 package net.theevilreaper.dartpoet
 
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
-import net.theevilreaper.dartpoet.clazz.DartClassBuilder
-import net.theevilreaper.dartpoet.clazz.DartClassSpec
+import net.theevilreaper.dartpoet.clazz.ClassBuilder
+import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.directive.Directive
-import net.theevilreaper.dartpoet.property.DartPropertySpec
+import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.util.DEFAULT_INDENT
 import java.lang.IllegalArgumentException
 
@@ -14,22 +14,22 @@ class DartFileBuilder(
     val name: String
 ) {
     internal val docs: MutableList<CodeBlock> = mutableListOf()
-    internal val specTypes: MutableList<DartClassSpec> = mutableListOf()
+    internal val specTypes: MutableList<ClassSpec> = mutableListOf()
     internal val directives: MutableList<Directive> = mutableListOf()
     internal val annotations: MutableList<AnnotationSpec> = mutableListOf()
     internal val extensionStack: MutableList<ExtensionSpec> = mutableListOf()
     internal var indent = DEFAULT_INDENT
-    internal val constants: MutableSet<DartPropertySpec> = mutableSetOf()
+    internal val constants: MutableSet<PropertySpec> = mutableSetOf()
 
     /**
-     * Add a constant [DartPropertySpec] to the file.
+     * Add a constant [PropertySpec] to the file.
      * @param constant the property to add
      */
-    fun constant(constant: DartPropertySpec) = apply {
+    fun constant(constant: PropertySpec) = apply {
         this.constants += constant
     }
 
-    fun constants(vararg constants: DartPropertySpec) = apply {
+    fun constants(vararg constants: PropertySpec) = apply {
         this.constants += constants
     }
 
@@ -50,6 +50,7 @@ class DartFileBuilder(
     }
 
     fun indent(indent: String) = apply {
+        //TODO: Only accept spaces
         if (indent.trim().isEmpty()) {
             throw IllegalArgumentException("The indent can't be empty")
         }
@@ -72,15 +73,15 @@ class DartFileBuilder(
         this.extensionStack += extensions
     }
 
-    fun type(dartFileSpec: DartClassSpec) = apply {
+    fun type(dartFileSpec: ClassSpec) = apply {
         this.specTypes += dartFileSpec
     }
 
-    fun type(vararg classSpecs: DartClassSpec) = apply {
+    fun type(vararg classSpecs: ClassSpec) = apply {
         this.specTypes += classSpecs
     }
 
-    fun type(dartFileSpec: DartClassBuilder) = apply {
+    fun type(dartFileSpec: ClassBuilder) = apply {
         this.specTypes += dartFileSpec.build()
     }
 
