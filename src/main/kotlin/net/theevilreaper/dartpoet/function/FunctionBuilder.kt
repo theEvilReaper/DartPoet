@@ -8,13 +8,13 @@ import net.theevilreaper.dartpoet.meta.SpecMethods
 import net.theevilreaper.dartpoet.parameter.DartParameterSpec
 
 /**
- * The builder class allows the creation of an [DartFunctionBuilder] without any effort.
+ * The builder class allows the creation of an [FunctionBuilder] without any effort.
  * @author 1.0.0
  * @since 1.0.0
  */
-class DartFunctionBuilder internal constructor(
+class FunctionBuilder internal constructor(
     val name: String,
-) : SpecMethods<DartFunctionBuilder> {
+) : SpecMethods<FunctionBuilder> {
 
     internal val specData: SpecData = SpecData()
     internal val parameters: MutableList<DartParameterSpec> = mutableListOf()
@@ -149,10 +149,10 @@ class DartFunctionBuilder internal constructor(
     }
 
     /**
-     * Constructs a new reference from the [DartFunctionSpec].
+     * Constructs a new reference from the [FunctionSpec].
      * @return the created instance
      */
-    fun build(): DartFunctionSpec {
+    fun build(): FunctionSpec {
         //Check if the return type contains a nullable char and remove that and change nullable to true
         if (returnType != null && returnType!!.endsWith("?")) {
             println("Found nullable char at the last position. Updating returnType")
@@ -168,6 +168,6 @@ class DartFunctionBuilder internal constructor(
             specData.modifiers.remove(DartModifier.TYPEDEF)
         }
 
-        return DartFunctionSpec(this)
+        return FunctionSpec(this)
     }
 }

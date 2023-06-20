@@ -10,7 +10,7 @@ import net.theevilreaper.dartpoet.code.CodeBlock
  * @version 1.0.0
  * @since 1.0.0
  **/
-class DartPropertyBuilder internal constructor(
+class PropertyBuilder internal constructor(
     var name: String,
     var type: String,
 ) {
@@ -31,11 +31,11 @@ class DartPropertyBuilder internal constructor(
     }
 
     /**
-     * Apply a given format which contains the parts for the init block of the [DartPropertySpec].
+     * Apply a given format which contains the parts for the init block of the [PropertySpec].
      * @param format the given format
      * @param args the arguments for the format
      */
-    fun initWith(format: String, vararg args: Any?): DartPropertyBuilder = apply {
+    fun initWith(format: String, vararg args: Any?): PropertyBuilder = apply {
         this.initBlock.add(format, *args)
     }
 
@@ -43,7 +43,7 @@ class DartPropertyBuilder internal constructor(
      * Set the initializer block directly as [CodeBlock.Builder] to the property.
      * @param codeFragment the [CodeBlock.Builder] to set
      */
-    fun initWith(codeFragment: CodeBlock.Builder): DartPropertyBuilder = apply {
+    fun initWith(codeFragment: CodeBlock.Builder): PropertyBuilder = apply {
         this.initBlock = codeFragment
     }
 
@@ -51,7 +51,7 @@ class DartPropertyBuilder internal constructor(
      * Set if the property should be nullable or not. A property which is nullable in Dart contains a '?' after the type.
      * @param nullable if the property should be nullable or not
      */
-    fun nullable(nullable: Boolean): DartPropertyBuilder {
+    fun nullable(nullable: Boolean): PropertyBuilder {
         this.nullable = nullable
         return this
     }
@@ -60,7 +60,7 @@ class DartPropertyBuilder internal constructor(
      * Add a [Iterable] of [AnnotationSpec] to the property.
      * @param annotations the annotations to add
      */
-    fun annotations(annotations: Iterable<AnnotationSpec>): DartPropertyBuilder = apply {
+    fun annotations(annotations: Iterable<AnnotationSpec>): PropertyBuilder = apply {
         this.annotations += annotations
     }
 
@@ -68,7 +68,7 @@ class DartPropertyBuilder internal constructor(
      * Add a [Iterable] of [AnnotationSpec] to the property.
      * @param annotations the annotations to add
      */
-    fun annotations(annotations: () -> Iterable<AnnotationSpec>): DartPropertyBuilder = apply {
+    fun annotations(annotations: () -> Iterable<AnnotationSpec>): PropertyBuilder = apply {
         this.annotations += annotations()
     }
 
@@ -76,7 +76,7 @@ class DartPropertyBuilder internal constructor(
      * Add a single [AnnotationSpec] to the property.
      * @param annotation the annotation to add
      */
-    fun annotation(annotation: () -> AnnotationSpec): DartPropertyBuilder = apply {
+    fun annotation(annotation: () -> AnnotationSpec): PropertyBuilder = apply {
         this.annotations += annotation()
     }
 
@@ -84,7 +84,7 @@ class DartPropertyBuilder internal constructor(
      * Add a single [AnnotationSpec] to the property.
      * @param annotation the annotation to add
      */
-    fun annotation(annotation: AnnotationSpec): DartPropertyBuilder = apply {
+    fun annotation(annotation: AnnotationSpec): PropertyBuilder = apply {
         this.annotations += annotation
     }
 
@@ -92,7 +92,7 @@ class DartPropertyBuilder internal constructor(
      * Add a new [DartModifier] to the property.
      * @param modifier the modifier to add
      */
-    fun modifier(modifier: DartModifier): DartPropertyBuilder = apply {
+    fun modifier(modifier: DartModifier): PropertyBuilder = apply {
         this.modifiers += modifier
     }
 
@@ -100,7 +100,7 @@ class DartPropertyBuilder internal constructor(
      * Add a new [DartModifier] to the property.
      * @param modifier the modifier to add
      */
-    fun modifier(modifier: () -> DartModifier): DartPropertyBuilder = apply {
+    fun modifier(modifier: () -> DartModifier): PropertyBuilder = apply {
         this.modifiers += modifier()
     }
 
@@ -108,7 +108,7 @@ class DartPropertyBuilder internal constructor(
      * Add a [Iterable] of [DartModifier] to the property.
      * @param modifiers the modifiers to add
      */
-    fun modifiers(modifiers: Iterable<DartModifier>): DartPropertyBuilder = apply {
+    fun modifiers(modifiers: Iterable<DartModifier>): PropertyBuilder = apply {
         this.modifiers += modifiers
     }
 
@@ -116,15 +116,15 @@ class DartPropertyBuilder internal constructor(
      * Add a [Iterable] of [DartModifier] to the property.
      * @param modifiers the modifiers to add
      */
-    fun modifiers(modifiers: () -> Iterable<DartModifier>): DartPropertyBuilder = apply {
+    fun modifiers(modifiers: () -> Iterable<DartModifier>): PropertyBuilder = apply {
         this.modifiers += modifiers()
     }
 
     /**
-     * Creates a new reference from the [DartPropertySpec] with the given builder reference.
-     * @return the created [DartPropertySpec] instance
+     * Creates a new reference from the [PropertySpec] with the given builder reference.
+     * @return the created [PropertySpec] instance
      */
-    fun build(): DartPropertySpec {
-        return DartPropertySpec(this)
+    fun build(): PropertySpec {
+        return PropertySpec(this)
     }
 }

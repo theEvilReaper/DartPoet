@@ -1,7 +1,7 @@
 package net.theevilreaper.dartpoet.extension
 
 import net.theevilreaper.dartpoet.code.CodeBlock
-import net.theevilreaper.dartpoet.function.DartFunctionSpec
+import net.theevilreaper.dartpoet.function.FunctionSpec
 
 /**
  * @since 1.0.0
@@ -12,7 +12,7 @@ class ExtensionBuilder(
     val extClass: String
 ) {
     internal var endWithNewLine: Boolean = false
-    internal val functionStack: MutableList<DartFunctionSpec> = mutableListOf()
+    internal val functionStack: MutableList<FunctionSpec> = mutableListOf()
     internal val docs: MutableList<CodeBlock> = mutableListOf()
 
     /**
@@ -26,26 +26,26 @@ class ExtensionBuilder(
     }
 
     /**
-     * Add a new [DartFunctionSpec] to the extension.
+     * Add a new [FunctionSpec] to the extension.
      * @param function the function to add
      */
-    fun function(function: DartFunctionSpec) = apply {
+    fun function(function: FunctionSpec) = apply {
         this.functionStack += function
     }
 
     /**
-     * Add a new [DartFunctionSpec] to the extension.
+     * Add a new [FunctionSpec] to the extension.
      * @param function the function to add
      */
-    fun function(function: () -> DartFunctionSpec) = apply {
+    fun function(function: () -> FunctionSpec) = apply {
         this.functionStack += function()
     }
 
     /**
-     * Add a multiple [DartFunctionSpec] to the extension.
+     * Add a multiple [FunctionSpec] to the extension.
      * @param functions the functions to add
      */
-    fun functions(vararg functions: DartFunctionSpec) = apply {
+    fun functions(vararg functions: FunctionSpec) = apply {
         this.functionStack += functions
     }
 

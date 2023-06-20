@@ -4,18 +4,18 @@ import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.InheritKeyword
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.enum.EnumPropertySpec
-import net.theevilreaper.dartpoet.function.DartFunctionSpec
+import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.meta.SpecData
 import net.theevilreaper.dartpoet.meta.SpecMethods
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
-import net.theevilreaper.dartpoet.property.DartPropertySpec
+import net.theevilreaper.dartpoet.property.PropertySpec
 
 //TODO: Add check to prevent illegal modifiers on some class combinations
-class DartClassBuilder internal constructor(
+class ClassBuilder internal constructor(
     internal val name: String?,
     internal val classType: ClassType,
     vararg modifiers: DartModifier
-) : SpecMethods<DartClassBuilder> {
+) : SpecMethods<ClassBuilder> {
     internal val classMetaData: SpecData = SpecData(*modifiers)
     internal val isAnonymousClass get() = name == null && classType == ClassType.CLASS
     internal val isEnumClass get() = classType == ClassType.ENUM
@@ -23,10 +23,10 @@ class DartClassBuilder internal constructor(
     internal val isAbstract get() = classType == ClassType.ABSTRACT
     internal val isLibrary get() = classType == ClassType.CLASS
     internal val constructorStack: MutableList<ConstructorSpec> = mutableListOf()
-    internal val propertyStack: MutableList<DartPropertySpec> = mutableListOf()
-    internal val functionStack: MutableList<DartFunctionSpec> = mutableListOf()
+    internal val propertyStack: MutableList<PropertySpec> = mutableListOf()
+    internal val functionStack: MutableList<FunctionSpec> = mutableListOf()
     internal val enumPropertyStack: MutableList<EnumPropertySpec> = mutableListOf()
-    internal val constantStack: MutableSet<DartPropertySpec> = mutableSetOf()
+    internal val constantStack: MutableSet<PropertySpec> = mutableSetOf()
     internal var superClass: String? = null
     internal var inheritKeyWord: InheritKeyword? = null
     internal var endWithNewLine = false
@@ -48,18 +48,18 @@ class DartClassBuilder internal constructor(
     }
 
     /**
-     * Add a constant [DartPropertySpec] to the file.
+     * Add a constant [PropertySpec] to the file.
      * @param constant the property to add
      */
-    fun constant(constant: DartPropertySpec) = apply {
+    fun constant(constant: PropertySpec) = apply {
         this.constantStack += constant
     }
 
     /**
-     * Add an array of constant [DartPropertySpec] to the file.
+     * Add an array of constant [PropertySpec] to the file.
      * @param constants the array to add
      */
-    fun constants(vararg constants: DartPropertySpec) = apply {
+    fun constants(vararg constants: PropertySpec) = apply {
         this.constantStack += constants
     }
 
@@ -97,23 +97,23 @@ class DartClassBuilder internal constructor(
         this.endWithNewLine = endWithNewLine
     }
 
-    fun property(dartPropertySpec: DartPropertySpec) = apply {
-        this.propertyStack += dartPropertySpec
+    fun property(propertySpec: PropertySpec) = apply {
+        this.propertyStack += propertySpec
     }
 
-    fun property(dartPropertySpec: () -> DartPropertySpec) = apply {
-        this.propertyStack += dartPropertySpec()
+    fun property(propertySpec: () -> PropertySpec) = apply {
+        this.propertyStack += propertySpec()
     }
 
-    fun properties(vararg properties: DartPropertySpec) = apply {
+    fun properties(vararg properties: PropertySpec) = apply {
         this.propertyStack += properties
     }
 
-    fun function(function: DartFunctionSpec) = apply {
+    fun function(function: FunctionSpec) = apply {
         this.functionStack += function
     }
 
-    fun function(function: () -> DartFunctionSpec) = apply {
+    fun function(function: () -> FunctionSpec) = apply {
         this.functionStack += function()
     }
 
@@ -150,10 +150,10 @@ class DartClassBuilder internal constructor(
     }
 
     /**
-     * Creates a new instance from the [DartClassSpec].
+     * Creates a new instance from the [ClassSpec].
      * @return the created instance
      */
-    fun build(): DartClassSpec {
-        return DartClassSpec(this)
+    fun build(): ClassSpec {
+        return ClassSpec(this)
     }
 }

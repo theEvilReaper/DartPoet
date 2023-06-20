@@ -10,14 +10,14 @@ import net.theevilreaper.dartpoet.util.toImmutableList
 import net.theevilreaper.dartpoet.util.toImmutableSet
 
 /**
- * A [DartClassBuilder] describes the actual content of the class.
+ * A [ClassBuilder] describes the actual content of the class.
  * The content includes functions, typedefs, const values etc.
  * Partly some things are also only allowed to be set on certain classes.
  * @since 1.0.0
  * @author theEvilReaper
  */
-class DartClassSpec internal constructor(
-    builder: DartClassBuilder
+class ClassSpec internal constructor(
+    builder: ClassBuilder
 ) {
     internal val name = builder.name
     internal val classType = builder.classType
@@ -76,50 +76,50 @@ class DartClassSpec internal constructor(
     override fun toString() = buildCodeString { write(this) }
 
     /**
-     * The class contains methods to create a new [DartClassBuilder] instance for a specific class.
+     * The class contains methods to create a new [ClassBuilder] instance for a specific class.
      */
     companion object {
 
         /**
-         * Create a new [DartClassBuilder] instance for a normal dart class.
+         * Create a new [ClassBuilder] instance for a normal dart class.
          * @return the created instance
          */
         @JvmStatic
-        fun builder(name: String) = DartClassBuilder(name, ClassType.CLASS, DartModifier.CLASS)
+        fun builder(name: String) = ClassBuilder(name, ClassType.CLASS, DartModifier.CLASS)
 
         /**
-         * Create a new [DartClassBuilder] instance for an anonymous dart class.
+         * Create a new [ClassBuilder] instance for an anonymous dart class.
          * @return the created instance
          */
         @JvmStatic
-        fun anonymousClassBuilder() = DartClassBuilder(null, ClassType.CLASS)
+        fun anonymousClassBuilder() = ClassBuilder(null, ClassType.CLASS)
 
         /**
-         * Create a new [DartClassBuilder] instance for an enum dart class.
+         * Create a new [ClassBuilder] instance for an enum dart class.
          * @return the created instance
          */
         @JvmStatic
-        fun enumClass(name: String) = DartClassBuilder(name, ClassType.ENUM)
+        fun enumClass(name: String) = ClassBuilder(name, ClassType.ENUM)
 
         /**
-         * Create a new [DartClassBuilder] instance for a mixin dart class.
+         * Create a new [ClassBuilder] instance for a mixin dart class.
          * @return the created instance
          */
         @JvmStatic
-        fun mixinClass(name: String) = DartClassBuilder(name, ClassType.MIXIN)
+        fun mixinClass(name: String) = ClassBuilder(name, ClassType.MIXIN)
 
         /**
-         * Create a new [DartClassBuilder] instance for an abstract dart class.
+         * Create a new [ClassBuilder] instance for an abstract dart class.
          * @return the created instance
          */
         @JvmStatic
-        fun abstractClass(name: String) = DartClassBuilder(name, ClassType.ABSTRACT)
+        fun abstractClass(name: String) = ClassBuilder(name, ClassType.ABSTRACT)
 
         /**
-         * Creates a new [DartClassBuilder] instance for a library class.
+         * Creates a new [ClassBuilder] instance for a library class.
          * @return the created instance
          */
         @JvmStatic
-        fun libraryClass(name: String) = DartClassBuilder(name, ClassType.LIBRARY)
+        fun libraryClass(name: String) = ClassBuilder(name, ClassType.LIBRARY)
     }
 }

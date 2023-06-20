@@ -19,8 +19,8 @@ import net.theevilreaper.dartpoet.util.toImmutableSet
  * @since 1.0.0
  * @version 1.0.0
  */
-class DartFunctionSpec(
-    builder: DartFunctionBuilder
+class FunctionSpec(
+    builder: FunctionBuilder
 ) {
 
     internal val name = builder.name
@@ -81,10 +81,10 @@ class DartFunctionSpec(
     companion object {
 
         /**
-         * Static method to create a new instance from the [DartFunctionBuilder].
+         * Static method to create a new instance from the [FunctionBuilder].
          * @return the created instance
          */
         @JvmStatic
-        fun builder(name: String) = DartFunctionBuilder(name)
+        fun builder(name: String) = FunctionBuilder(name)
     }
 }
