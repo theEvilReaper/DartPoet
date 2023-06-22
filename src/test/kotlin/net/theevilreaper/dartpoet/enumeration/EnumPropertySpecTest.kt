@@ -2,7 +2,6 @@ package net.theevilreaper.dartpoet.enumeration
 
 import com.google.common.truth.Truth
 import net.theevilreaper.dartpoet.enum.EnumPropertySpec
-import net.theevilreaper.dartpoet.parameter.DartParameterSpec
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.params.ParameterizedTest
