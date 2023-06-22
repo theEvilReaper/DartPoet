@@ -5,8 +5,8 @@ import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.ParameterWriter
 import net.theevilreaper.dartpoet.util.toImmutableSet
 
-class DartParameterSpec internal constructor(
-    builder: DartParameterBuilder
+class ParameterSpec internal constructor(
+    builder: ParameterBuilder
 ) {
 
     internal val name = builder.name
@@ -25,8 +25,8 @@ class DartParameterSpec internal constructor(
         }
     }
 
-    fun toBuilder(): DartParameterBuilder {
-        val builder = DartParameterBuilder(name, type)
+    fun toBuilder(): ParameterBuilder {
+        val builder = ParameterBuilder(name, type)
         builder.named = isNamed
         builder.nullable = isNullable
         builder.required = isRequired
@@ -49,17 +49,17 @@ class DartParameterSpec internal constructor(
     companion object {
 
         /**
-         * Creates a new instance from the [DartParameterBuilder] with the given name.
+         * Creates a new instance from the [ParameterBuilder] with the given name.
          * @return the created builder instance
          */
         @JvmStatic
-        fun builder(name: String) = DartParameterBuilder(name)
+        fun builder(name: String) = ParameterBuilder(name)
 
         /**
-         * Creates a new instance from the [DartParameterBuilder] with the given values.
+         * Creates a new instance from the [ParameterBuilder] with the given values.
          * @return the created builder instance
          */
         @JvmStatic
-        fun builder(name: String, type: String) = DartParameterBuilder(name, type)
+        fun builder(name: String, type: String) = ParameterBuilder(name, type)
     }
 }

@@ -6,10 +6,10 @@ import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.meta.SpecData
 import net.theevilreaper.dartpoet.meta.SpecMethods
 
-class DartParameterBuilder internal constructor(
+class ParameterBuilder internal constructor(
     val name: String,
     var type: String? = null,
-): SpecMethods<DartParameterBuilder> {
+): SpecMethods<ParameterBuilder> {
 
     internal val specData: SpecData = SpecData()
     internal var named: Boolean = false
@@ -65,7 +65,7 @@ class DartParameterBuilder internal constructor(
         TODO("Not yet implemented")
     }
 
-    fun build(): DartParameterSpec {
-        return DartParameterSpec(this)
+    fun build(): ParameterSpec {
+        return ParameterSpec(this)
     }
 }
