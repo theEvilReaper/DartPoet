@@ -4,7 +4,7 @@ import com.google.common.truth.Truth.*
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
-import net.theevilreaper.dartpoet.parameter.DartParameterSpec
+import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import org.junit.jupiter.api.Test
 
 class AbstractClassTest {
@@ -15,7 +15,7 @@ class AbstractClassTest {
             .endWithNewLine(true)
             .function(FunctionSpec.builder("getByID")
                 .returns("TestModel")
-                .parameter(DartParameterSpec.builder("id", "int").build())
+                .parameter(ParameterSpec.builder("id", "int").build())
                 .build()
             )
             .function(FunctionSpec.builder("test").build())

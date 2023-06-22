@@ -7,7 +7,7 @@ import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.buildCodeBlock
-import net.theevilreaper.dartpoet.parameter.DartParameterSpec
+import net.theevilreaper.dartpoet.parameter.ParameterSpec
 
 class FunctionWriterTest {
 
@@ -91,7 +91,7 @@ class FunctionWriterTest {
             .returns("String")
             .async(true)
             .parameter {
-                DartParameterSpec.builder("id", "int").build()
+                ParameterSpec.builder("id", "int").build()
             }
             .addCode(CodeBlock.builder()
                 .add("return 'Thomas';")
@@ -113,8 +113,8 @@ class FunctionWriterTest {
             .returns("List<Model>")
             .parameters {
                 listOf(
-                    DartParameterSpec.builder("id", "String").build(),
-                    DartParameterSpec.builder("amount", "int").build()
+                    ParameterSpec.builder("id", "String").build(),
+                    ParameterSpec.builder("amount", "int").build()
                 )
             }
             .build()
@@ -129,7 +129,7 @@ class FunctionWriterTest {
     fun `test typedef write`() {
         val function = FunctionSpec.builder("ValueUpdate<E>")
             .typedef(true)
-            .parameter(DartParameterSpec.builder("value", "E")
+            .parameter(ParameterSpec.builder("value", "E")
                 .nullable(true).build())
             .returns("void Function")
             .build()
@@ -159,7 +159,7 @@ class FunctionWriterTest {
     fun `test other setter variant write`() {
         val function = FunctionSpec.builder("value")
             .parameter(
-                DartParameterSpec.builder("value", "int")
+                ParameterSpec.builder("value", "int")
                     .build()
             )
             .setter(true)
@@ -180,7 +180,7 @@ class FunctionWriterTest {
     fun `test lambda method write`() {
         val function = FunctionSpec.builder("isNoble")
             .lambda(true)
-            .parameter(DartParameterSpec.builder("atomicNumber", "int").build())
+            .parameter(ParameterSpec.builder("atomicNumber", "int").build())
             .returns("bool")
             .addCode("_nobleGases[atomicNumber] != null;")
             .build()

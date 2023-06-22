@@ -18,8 +18,8 @@ class DartFileBuilder(
     internal val directives: MutableList<Directive> = mutableListOf()
     internal val annotations: MutableList<AnnotationSpec> = mutableListOf()
     internal val extensionStack: MutableList<ExtensionSpec> = mutableListOf()
-    internal var indent = DEFAULT_INDENT
     internal val constants: MutableSet<PropertySpec> = mutableSetOf()
+    internal var indent = DEFAULT_INDENT
 
     /**
      * Add a constant [PropertySpec] to the file.
@@ -83,10 +83,6 @@ class DartFileBuilder(
     }
 
     fun annotations(vararg annotations: AnnotationSpec) = apply {
-        this.annotations += annotations
-    }
-
-    fun annotation(vararg annotations: AnnotationSpec) = apply {
         this.annotations += annotations
     }
 

@@ -5,7 +5,7 @@ import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.directive.Directive
-import net.theevilreaper.dartpoet.parameter.DartParameterSpec
+import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.util.CURLY_CLOSE
 import net.theevilreaper.dartpoet.util.CURLY_OPEN
@@ -106,12 +106,12 @@ internal fun Set<ConstructorSpec>.emitConstructors(
     }
 }
 
-internal fun List<DartParameterSpec>.emitParameters(
+internal fun List<ParameterSpec>.emitParameters(
     codeWriter: CodeWriter,
     forceNewLines: Boolean = false,
     emitBrackets: Boolean = true,
     emitSpace: Boolean = true,
-    emitBlock: (DartParameterSpec) -> Unit = { it.write(codeWriter) }
+    emitBlock: (ParameterSpec) -> Unit = { it.write(codeWriter) }
 ) = with(codeWriter) {
     if (emitBrackets) {
         emit("(")

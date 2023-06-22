@@ -11,11 +11,10 @@ import net.theevilreaper.dartpoet.directive.DartDirective
 import net.theevilreaper.dartpoet.directive.CastType
 import net.theevilreaper.dartpoet.directive.LibraryDirective
 import net.theevilreaper.dartpoet.directive.PartDirective
-import net.theevilreaper.dartpoet.parameter.DartParameterSpec
+import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import java.lang.IllegalArgumentException
 
 class DartFileTest {
 
@@ -43,7 +42,7 @@ class DartFileTest {
                     .asFactory(true)
                     .modifier(DartModifier.CONST)
                     .parameter {
-                        DartParameterSpec.builder("version", "String")
+                        ParameterSpec.builder("version", "String")
                             .named(true)
                             .annotations(
                                     AnnotationSpec.builder("JsonKey")
@@ -60,7 +59,7 @@ class DartFileTest {
                     .lambda(true)
                     .asFactory(true)
                     .parameter(
-                        DartParameterSpec.builder("json", "Map<String, dynamic>").build()
+                        ParameterSpec.builder("json", "Map<String, dynamic>").build()
                     )
                     .addCode("%L", "_${"$"}VersionModelFromJson(json);")
                     .build()
@@ -157,8 +156,8 @@ class DartFileTest {
                         ConstructorSpec.builder("NavigationEntry")
                             .modifier(DartModifier.CONST)
                             .parameters(
-                                DartParameterSpec.builder("name").build(),
-                                DartParameterSpec.builder("route").build()
+                                ParameterSpec.builder("name").build(),
+                                ParameterSpec.builder("route").build()
                             )
                             .build()
                     )
@@ -195,7 +194,7 @@ class DartFileTest {
             .constructor(
                 ConstructorSpec.builder(className)
                     .parameter(
-                        DartParameterSpec.builder(apiClient.replaceFirstChar { it.lowercase() }, apiClient).build()
+                        ParameterSpec.builder(apiClient.replaceFirstChar { it.lowercase() }, apiClient).build()
                     )
                     .addCode(buildCodeBlock {
                         add(
@@ -209,7 +208,7 @@ class DartFileTest {
                 FunctionSpec.builder("getByID")
                     .async(true)
                     .returns("DefectDTO")
-                    .parameter(DartParameterSpec.builder("id", "int").build())
+                    .parameter(ParameterSpec.builder("id", "int").build())
                     .addCode(buildCodeBlock {
                         addStatement("final queryParams = %L;", "<String, dynamic>{}")
                         addStatement("final baseUri = Uri.parse(apiClient.baseUrl);")
@@ -279,7 +278,7 @@ class DartFileTest {
                     .lambda(true)
                     .returns(name)
                     .modifier(DartModifier.STATIC)
-                    .parameter(DartParameterSpec.builder("json", "dynamic").build())
+                    .parameter(ParameterSpec.builder("json", "dynamic").build())
                     .addCode(buildCodeBlock {
                         add("%L.deserialize(json);", serializer)
                     })
@@ -366,7 +365,7 @@ class DartFileTest {
             }
             .constructor(
                 ConstructorSpec.builder("TestModel")
-                    .parameter(DartParameterSpec.builder("name").build())
+                    .parameter(ParameterSpec.builder("name").build())
                     .doc("Good comment")
                     .build()
             )

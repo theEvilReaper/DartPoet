@@ -2,14 +2,14 @@ package net.theevilreaper.dartpoet.function.constructor
 
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeBlock
-import net.theevilreaper.dartpoet.parameter.DartParameterSpec
+import net.theevilreaper.dartpoet.parameter.ParameterSpec
 
 class ConstructorBuilder(
     val name: String,
     val named: String? = null,
     vararg modifiers: DartModifier
 ) {
-    internal val parameters: MutableList<DartParameterSpec> = mutableListOf()
+    internal val parameters: MutableList<ParameterSpec> = mutableListOf()
     internal var lambda: Boolean = false
     internal val initializer: CodeBlock.Builder = CodeBlock.builder()
     internal var factory: Boolean = false
@@ -85,26 +85,26 @@ class ConstructorBuilder(
     }
 
     /**
-     * Add a [DartParameterSpec] to the builder.
+     * Add a [ParameterSpec] to the builder.
      * @param parameterSpec the parameter to add
      */
-    fun parameter(parameterSpec: DartParameterSpec) = apply {
+    fun parameter(parameterSpec: ParameterSpec) = apply {
         this.parameters += parameterSpec
     }
 
     /**
-     * Add a [DartParameterSpec] to the builder.
+     * Add a [ParameterSpec] to the builder.
      * @param parameterSpec the parameter to add
      */
-    fun parameter(parameterSpec: () -> DartParameterSpec) = apply {
+    fun parameter(parameterSpec: () -> ParameterSpec) = apply {
         this.parameters += parameterSpec()
     }
 
     /**
-     * Add an array of [DartParameterSpec] to the builder.
+     * Add an array of [ParameterSpec] to the builder.
      * @param parameterSpec an array of parameters
      */
-    fun parameters(vararg parameterSpec: DartParameterSpec) = apply {
+    fun parameters(vararg parameterSpec: ParameterSpec) = apply {
         this.parameters += parameterSpec
     }
 

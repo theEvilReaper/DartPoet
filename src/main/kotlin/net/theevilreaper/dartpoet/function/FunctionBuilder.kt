@@ -5,7 +5,7 @@ import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.meta.SpecData
 import net.theevilreaper.dartpoet.meta.SpecMethods
-import net.theevilreaper.dartpoet.parameter.DartParameterSpec
+import net.theevilreaper.dartpoet.parameter.ParameterSpec
 
 /**
  * The builder class allows the creation of an [FunctionBuilder] without any effort.
@@ -17,7 +17,7 @@ class FunctionBuilder internal constructor(
 ) : SpecMethods<FunctionBuilder> {
 
     internal val specData: SpecData = SpecData()
-    internal val parameters: MutableList<DartParameterSpec> = mutableListOf()
+    internal val parameters: MutableList<ParameterSpec> = mutableListOf()
     internal var async: Boolean = false
     internal var returnType: String? = null
     internal val body: CodeBlock.Builder = CodeBlock.builder()
@@ -108,19 +108,19 @@ class FunctionBuilder internal constructor(
         this.async = async
     }
 
-    fun parameter(parameter: DartParameterSpec) = apply {
+    fun parameter(parameter: ParameterSpec) = apply {
         this.parameters += parameter
     }
 
-    fun parameter(parameter: () -> DartParameterSpec) = apply {
+    fun parameter(parameter: () -> ParameterSpec) = apply {
         this.parameters += parameter()
     }
 
-    fun parameters(parameterSpec: Iterable<DartParameterSpec>) = apply {
+    fun parameters(parameterSpec: Iterable<ParameterSpec>) = apply {
         this.parameters += parameterSpec
     }
 
-    fun parameters(parameterSpec: () -> Iterable<DartParameterSpec>) = apply {
+    fun parameters(parameterSpec: () -> Iterable<ParameterSpec>) = apply {
         this.parameters += parameterSpec()
     }
 

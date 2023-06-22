@@ -4,7 +4,7 @@ import com.google.common.truth.Truth.*
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
-import net.theevilreaper.dartpoet.parameter.DartParameterSpec
+import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import org.junit.jupiter.api.Test
 
 class ConstructorWriterTest {
@@ -13,10 +13,10 @@ class ConstructorWriterTest {
     fun `test constructor write without any special parameter`() {
         val constructor = ConstructorSpec.builder("Car")
             .parameters(
-                DartParameterSpec.builder("maker").build(),
-                DartParameterSpec.builder("model").build(),
-                DartParameterSpec.builder("yearMade").build(),
-                DartParameterSpec.builder("hasABS").build()
+                ParameterSpec.builder("maker").build(),
+                ParameterSpec.builder("model").build(),
+                ParameterSpec.builder("yearMade").build(),
+                ParameterSpec.builder("hasABS").build()
             )
             .build()
         assertThat(constructor.toString()).isEqualTo(
@@ -30,9 +30,9 @@ class ConstructorWriterTest {
     fun `test named constructor write without any special parameter`() {
         val constructor = ConstructorSpec.named("Car", "withoutABS")
             .parameters(
-                DartParameterSpec.builder("maker").build(),
-                DartParameterSpec.builder("model").build(),
-                DartParameterSpec.builder("yearMade").build(),
+                ParameterSpec.builder("maker").build(),
+                ParameterSpec.builder("model").build(),
+                ParameterSpec.builder("yearMade").build(),
             )
             .build()
         assertThat(constructor.toString()).isEqualTo(
@@ -46,9 +46,9 @@ class ConstructorWriterTest {
     fun `test named constructor2 write without any special parameter`() {
         val constructor = ConstructorSpec.named("Car", "withoutABS")
             .parameters(
-                DartParameterSpec.builder("maker").build(),
-                DartParameterSpec.builder("model").build(),
-                DartParameterSpec.builder("yearMade").build(),
+                ParameterSpec.builder("maker").build(),
+                ParameterSpec.builder("model").build(),
+                ParameterSpec.builder("yearMade").build(),
             )
             .addCode(
                 CodeBlock.of(
@@ -68,9 +68,9 @@ class ConstructorWriterTest {
         val constructor = ConstructorSpec.builder("Car")
             .modifier(DartModifier.CONST)
             .parameters(
-                DartParameterSpec.builder("maker").build(),
-                DartParameterSpec.builder("model").build(),
-                DartParameterSpec.builder("yearMade").build(),
+                ParameterSpec.builder("maker").build(),
+                ParameterSpec.builder("model").build(),
+                ParameterSpec.builder("yearMade").build(),
             )
             .build()
         assertThat(constructor.toString()).isEqualTo(
@@ -84,9 +84,9 @@ class ConstructorWriterTest {
     fun `test constructor with required and named parameters`() {
         val constructor = ConstructorSpec.builder("Car")
             .parameters(
-                DartParameterSpec.builder("maker").required(true).build(),
-                DartParameterSpec.builder("model").named(true).build(),
-                DartParameterSpec.builder("yearMade").required(true).build(),
+                ParameterSpec.builder("maker").required(true).build(),
+                ParameterSpec.builder("model").named(true).build(),
+                ParameterSpec.builder("yearMade").required(true).build(),
             )
             .build()
         assertThat(constructor.toString()).isEqualTo(
@@ -104,9 +104,9 @@ class ConstructorWriterTest {
     fun `test constructor with named and variable with initializer`() {
         val constructor = ConstructorSpec.builder("Item")
             .parameters(
-                DartParameterSpec.builder("name").required(true).build(),
-                DartParameterSpec.builder("id").initializer("%L", 10L).build(),
-                DartParameterSpec.builder("amount").required(true).build()
+                ParameterSpec.builder("name").required(true).build(),
+                ParameterSpec.builder("id").initializer("%L", 10L).build(),
+                ParameterSpec.builder("amount").required(true).build()
             )
             .build()
         assertThat(constructor.toString()).isEqualTo(
@@ -125,7 +125,7 @@ class ConstructorWriterTest {
         val constructor = ConstructorSpec.builder("Item")
             .doc("Creates a new item object")
             .parameters(
-                DartParameterSpec.builder("name").build())
+                ParameterSpec.builder("name").build())
             .build()
         assertThat(constructor.toString()).isEqualTo(
             """

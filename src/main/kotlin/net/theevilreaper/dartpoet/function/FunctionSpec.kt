@@ -6,7 +6,7 @@ import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.writer.FunctionWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
-import net.theevilreaper.dartpoet.parameter.DartParameterSpec
+import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.util.toImmutableList
 import net.theevilreaper.dartpoet.util.toImmutableSet
@@ -26,7 +26,7 @@ class FunctionSpec(
     internal val name = builder.name
     internal val returnType: String? = builder.returnType
     internal val body: CodeBlock = builder.body.build()
-    internal val parameters: List<DartParameterSpec> = builder.parameters.toImmutableList()
+    internal val parameters: List<ParameterSpec> = builder.parameters.toImmutableList()
     internal val isAsync: Boolean = builder.async
     internal val annotation: Set<AnnotationSpec> = builder.specData.annotations.toImmutableSet()
     internal var modifiers: Set<DartModifier> = builder.specData.modifiers.also {
@@ -42,7 +42,7 @@ class FunctionSpec(
     internal val docs = builder.docs
     internal val hasDocs = builder.docs.isNotEmpty()
 
-    private val namedParameters: Set<DartParameterSpec> = if (parameters.isEmpty()) {
+    private val namedParameters: Set<ParameterSpec> = if (parameters.isEmpty()) {
         setOf()
     } else {
         parameters.filter { it.isNamed }.toSet()
