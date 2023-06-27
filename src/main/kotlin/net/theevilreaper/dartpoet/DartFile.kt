@@ -41,13 +41,13 @@ class DartFile internal constructor(
     internal val imports: List<DartDirective> = if (builder.directives.isEmpty()) {
         emptyList()
     } else {
-        builder.directives.filterIsInstance<DartDirective>().toList()
+        builder.directives.filterIsInstance<DartDirective>().sortedBy { it.toString() }.toList()
     }
 
     internal val partImports: List<PartDirective> = if (builder.directives.isEmpty()) {
         emptyList()
     } else {
-        builder.directives.filterIsInstance<PartDirective>().toList()
+        builder.directives.filterIsInstance<PartDirective>().sortedBy { it.toString() }.toList()
     }
 
     internal val libImport: LibraryDirective? = if (builder.directives.isEmpty()) {
@@ -62,6 +62,8 @@ class DartFile internal constructor(
             throw Exception("Only one library import is allowed")
         }
     }
+
+    val hasImports get() = imports.isNotEmpty() || partImports.isNotEmpty() || libImport != null
 
     init {
         check(name.trim().isNotEmpty()) { "The name of a class can't be empty (ONLY SPACES ARE NOT ALLOWED" }
