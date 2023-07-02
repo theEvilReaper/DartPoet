@@ -53,4 +53,17 @@ abstract class BaseDirective(
     protected fun isDartImport(): Boolean {
         return path.startsWith("dart")
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as BaseDirective
+
+        return path == other.path
+    }
+
+    override fun hashCode(): Int {
+        return path.hashCode()
+    }
 }
