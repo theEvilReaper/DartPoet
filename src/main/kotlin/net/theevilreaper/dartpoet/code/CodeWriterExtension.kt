@@ -161,25 +161,28 @@ internal fun List<ExtensionSpec>.emitExtensions(
 }
 
 internal fun <T: Directive> List<T>.writeImports(
-    writer: CodeWriter,
-    newLineAtBegin: Boolean = true,
+    writer: CodeBlock.Builder,
+    newLineAtEnd: Boolean = false,
     emitBlock: (T) -> String = { it.toString() }
 ) {
     if (isNotEmpty()) {
-        if (newLineAtBegin) {
-            writer.emit(NEW_LINE)
+        forEach { import ->
+            writer.addStatement(emitBlock(import))
         }
-        forEachIndexed { index, import ->
-            if (index > 0) {
-                writer.emit(NEW_LINE)
-            }
-            writer.emit(emitBlock(import))
-        }
+    }
 
-        writer.emit(NEW_LINE)
+    if (newLineAtEnd) {
+        writer.add(NEW_LINE)
     }
 }
 
+/**
+ * Represents an extension function for a [Set] which contains [PropertySpec] to write them all into a
+ * [CodeWriter] reference.
+ * @param codeWriter the writer instance to apply the code parts
+ * @param forceNewLines indicates if each generation should end with an empty lines
+ * @param emitBlock the lambda block which holds the emit logic for the properties
+ */
 fun Set<PropertySpec>.emitProperties(
     codeWriter: CodeWriter,
     forceNewLines: Boolean = false,
