@@ -1,6 +1,8 @@
 package net.theevilreaper.dartpoet.util
 
 import net.theevilreaper.dartpoet.DartModifier
+import net.theevilreaper.dartpoet.directive.BaseDirective
+import net.theevilreaper.dartpoet.directive.Directive
 
 // The documentation from dart says that maximum length of a line is 80
 internal const val MAX_LINE_LENGTH = 80
@@ -90,4 +92,17 @@ fun isIndent(input: String): Boolean {
  */
 private fun testStringForPattern(input: String, pattern: Regex): Boolean {
     return input.isNotEmpty() && input.matches(pattern)
+}
+
+/**
+ * Filter about a list which contains [Directive] object to filter them for a given implementation.
+ * @param transform the lambda reference to sort the entries
+ * @return the list with the sorted entries
+ */
+inline fun <reified T : BaseDirective> List<Directive>.filterAndSort(crossinline transform: (T) -> String): List<T> {
+    return if (isEmpty()) {
+        emptyList()
+    } else {
+        filterIsInstance<T>().sortedBy { transform(it) }.toList()
+    }
 }
