@@ -4,13 +4,11 @@ import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.DartFileWriter
+import net.theevilreaper.dartpoet.directive.*
 import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.util.ALLOWED_CONST_MODIFIERS
-import net.theevilreaper.dartpoet.directive.DartDirective
-import net.theevilreaper.dartpoet.directive.LibraryDirective
-import net.theevilreaper.dartpoet.directive.PartDirective
 import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.util.DART_FILE_ENDING
 import net.theevilreaper.dartpoet.util.isDartConventionFileName
@@ -38,32 +36,28 @@ class DartFile internal constructor(
         }
     }.toImmutableSet()
 
-    internal val imports: List<DartDirective> = if (builder.directives.isEmpty()) {
-        emptyList()
-    } else {
-        builder.directives.filterIsInstance<DartDirective>().sortedBy { it.toString() }.toList()
-    }
+    private val importList: List<Directive> = builder.directives.toList()
 
-    internal val partImports: List<PartDirective> = if (builder.directives.isEmpty()) {
-        emptyList()
-    } else {
-        builder.directives.filterIsInstance<PartDirective>().sortedBy { it.toString() }.toList()
-    }
+    internal val dartDirectives: List<DartDirective> = importList.filterAndSort<DartDirective> { it.toString() }
 
-    internal val libImport: LibraryDirective? = if (builder.directives.isEmpty()) {
-        null
-    } else {
-        val possibleListImports = builder.directives.filterIsInstance<LibraryDirective>()
-        if (possibleListImports.isEmpty()) {
-            null
-        } else if (possibleListImports.size == 1) {
-            possibleListImports.first()
-        } else {
+    internal val relativeImports: List<RelativeDirective> = importList.filterAndSort<RelativeDirective> { it.toString() }
+
+    internal val partDirectives: List<PartDirective> = importList.filterAndSort<PartDirective> { it.toString() }
+
+    internal val libImport: LibraryDirective? = importList.filterAndSort<LibraryDirective> { it.toString() }.let {
+        if (it.size > 1) {
             throw Exception("Only one library import is allowed")
         }
+        if (it.isEmpty()) { null } else { it.first() }
     }
 
-    val hasImports get() = imports.isNotEmpty() || partImports.isNotEmpty() || libImport != null
+    internal val exports: List<ExportDirective> = importList.filterAndSort<ExportDirective> { it.toString() }
+
+    val hasImports get() = dartDirectives.isNotEmpty() || partDirectives.isNotEmpty() || libImport != null
+
+    private val hasOnlyImports get() = dartDirectives.isNotEmpty() || partDirectives.isNotEmpty() || relativeImports.isNotEmpty()
+
+    val emitTrailingDirective = hasOnlyImports && constants.isEmpty()
 
     init {
         check(name.trim().isNotEmpty()) { "The name of a class can't be empty (ONLY SPACES ARE NOT ALLOWED" }
