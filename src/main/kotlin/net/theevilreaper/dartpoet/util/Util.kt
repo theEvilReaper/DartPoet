@@ -23,36 +23,11 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.LinkedHashSet
 
-internal object NullAppendable : Appendable {
-    override fun append(charSequence: CharSequence) = this
-    override fun append(charSequence: CharSequence, start: Int, end: Int) = this
-    override fun append(c: Char) = this
-}
-
-internal fun <K, V> Map<K, V>.toImmutableMap(): Map<K, V> =
-    Collections.unmodifiableMap(LinkedHashMap(this))
-
 internal fun <T> Collection<T>.toImmutableList(): List<T> =
     Collections.unmodifiableList(ArrayList(this))
 
 internal fun <T> Collection<T>.toImmutableSet(): Set<T> =
     Collections.unmodifiableSet(LinkedHashSet(this))
-
-internal inline fun <reified T : Enum<T>> Collection<T>.toEnumSet(): Set<T> =
-    enumValues<T>().filterTo(mutableSetOf(), this::contains)
-
-internal fun requireNoneOrOneOf(modifiers: Set<DartModifier>, vararg mutuallyExclusive: DartModifier) {
-    val count = mutuallyExclusive.count(modifiers::contains)
-    require(count <= 1) {
-        "modifiers $modifiers must contain none or only one of ${mutuallyExclusive.contentToString()}"
-    }
-}
-
-internal fun requireNoneOf(modifiers: Set<DartModifier>, vararg forbidden: DartModifier) {
-    require(forbidden.none(modifiers::contains)) {
-        "modifiers $modifiers must contain none of ${forbidden.contentToString()}"
-    }
-}
 
 internal fun <T> T.isOneOf(t1: T, t2: T, t3: T? = null, t4: T? = null, t5: T? = null, t6: T? = null) =
     this == t1 || this == t2 || this == t3 || this == t4 || this == t5 || this == t6
