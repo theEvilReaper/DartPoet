@@ -193,8 +193,3 @@ private fun String.escapeIfNotJavaIdentifier(): String {
 internal fun String.escapeSegmentsIfNecessary(delimiter: Char = '.') = split(delimiter)
     .filter { it.isNotEmpty() }
     .joinToString(delimiter.toString()) { it.escapeIfNecessary() }
-
-internal inline fun <reified T : Directive> List<T>.filterByImplementation(classType: Class<DartDirective>, crossinline predicate: (T) -> String): List<T> {
-    return this.filter { classType.isInstance(it) }.sortedBy { predicate(it) }.toList()
-}
-
