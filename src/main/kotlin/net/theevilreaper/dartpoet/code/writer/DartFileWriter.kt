@@ -2,43 +2,32 @@ package net.theevilreaper.dartpoet.code.writer
 
 import net.theevilreaper.dartpoet.DartFile
 import net.theevilreaper.dartpoet.clazz.ClassSpec
-import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.*
 import net.theevilreaper.dartpoet.code.emitExtensions
-import net.theevilreaper.dartpoet.code.emitProperties
 import net.theevilreaper.dartpoet.code.writeImports
 import net.theevilreaper.dartpoet.util.NEW_LINE
 
+/**
+ * The writer implementation contains the structure and logic to write the data from a [DartFile] into a [CodeWriter] instance.
+ * @author theEvilReaper
+ * @since 1.0.0
+ */
 class DartFileWriter {
 
     private val classWriter = ClassWriter()
 
+    /**
+     * The method contains the logic to append the data from a [DartFile] into a [CodeWriter] instance.
+     * @param dartFile the [DartFile] reference to get the data from it
+     * @param writer the [CodeWriter] reference to
+     */
     fun emit(dartFile: DartFile, writer: CodeWriter) {
         if (dartFile.docs.isNotEmpty()) {
             dartFile.docs.forEach { writer.emitDoc(it) }
         }
-        if (dartFile.libImport != null) {
-            writer.emit(dartFile.libImport.toString())
-            writer.emit(NEW_LINE)
 
-            if (dartFile.imports.isEmpty()) {
-                writer.emit(NEW_LINE)
-            }
-        }
-
-        dartFile.imports.writeImports(writer, newLineAtBegin = dartFile.libImport != null) {
-            it.toString()
-        }
-
-        if (dartFile.imports.isNotEmpty() && dartFile.partImports.isEmpty()) {
-            writer.emit(NEW_LINE)
-        }
-
-        dartFile.partImports.writeImports(writer, newLineAtBegin = dartFile.imports.isNotEmpty()) {
-            it.toString()
-        }
-
-        if (dartFile.partImports.isNotEmpty()) {
-            writer.emit(NEW_LINE)
+        if (dartFile.hasImports) {
+            writer.emitCode(emitImports(dartFile))
         }
 
         dartFile.constants.emitProperties(writer) {
@@ -61,6 +50,31 @@ class DartFileWriter {
 
         dartFile.extensions.emitExtensions(writer) {
             it.write(writer)
+        }
+    }
+
+    /**
+     * Contains the logic to append the all given [net.theevilreaper.dartpoet.directive.Directive] from a
+     * [DartFile] into a [CodeBlock.Builder] instance.
+     * @param dartFile the file spec which contains the data
+     * @return the created [CodeBlock.Builder] reference
+     */
+    private fun emitImports(dartFile: DartFile) = buildCodeBlock {
+        if (dartFile.libImport != null) {
+            addStatement("%L", dartFile.libImport.toString())
+            addStatement("")
+        }
+
+        dartFile.dartDirectives.writeImports(this, newLineAtEnd = dartFile.partDirectives.isNotEmpty()) {
+            it.toString()
+        }
+
+        dartFile.partDirectives.writeImports(this, newLineAtEnd = dartFile.constants.isNotEmpty()) {
+            it.toString()
+        }
+
+        if (dartFile.emitTrailingDirective) {
+            add(NEW_LINE)
         }
     }
 }
