@@ -16,7 +16,7 @@ class DartFileImportOrderingTest {
     companion object {
 
         @JvmStatic
-        private fun importData()  = Stream.of(
+        private fun importData() = Stream.of(
             Arguments.of(
                 listOf(DartDirective("model_b"), DartDirective("model_c"), DartDirective("model_a")),
                 DartDirective::class
@@ -54,7 +54,10 @@ class DartFileImportOrderingTest {
 
     @ParameterizedTest
     @MethodSource("testData")
-    fun `test import with all imports implementation in a list`(imports: List<DartDirective>, importClass: KClass<LibraryDirective>) {
+    fun `test import with all imports implementation in a list`(
+        imports: List<DartDirective>,
+        importClass: KClass<LibraryDirective>
+    ) {
         val rootImports = mutableListOf<Directive>()
         rootImports.addAll(imports)
         repeat(4) {
@@ -71,4 +74,6 @@ class DartFileImportOrderingTest {
         assertEquals(importClass, libraryImport.first()::class)
         assertEquals(templateLibDirective, libraryImport.first())
     }
+
+
 }
