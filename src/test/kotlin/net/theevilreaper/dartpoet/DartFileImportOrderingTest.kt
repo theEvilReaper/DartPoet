@@ -74,6 +74,4 @@ class DartFileImportOrderingTest {
         assertEquals(importClass, libraryImport.first()::class)
         assertEquals(templateLibDirective, libraryImport.first())
     }
-
-
 }
