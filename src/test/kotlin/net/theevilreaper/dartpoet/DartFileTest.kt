@@ -9,8 +9,10 @@ import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.directive.DartDirective
 import net.theevilreaper.dartpoet.directive.CastType
+import net.theevilreaper.dartpoet.directive.Directive
 import net.theevilreaper.dartpoet.directive.LibraryDirective
 import net.theevilreaper.dartpoet.directive.PartDirective
+import net.theevilreaper.dartpoet.directive.RelativeDirective
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
 import org.junit.jupiter.api.Assertions.*
@@ -45,11 +47,11 @@ class DartFileTest {
                         ParameterSpec.builder("version", "String")
                             .named(true)
                             .annotations(
-                                    AnnotationSpec.builder("JsonKey")
-                                        .content("name: %C", "version").build(),
-                                    AnnotationSpec.builder("Default")
-                                        .content("%C", "1.0.0").build()
-                                )
+                                AnnotationSpec.builder("JsonKey")
+                                    .content("name: %C", "version").build(),
+                                AnnotationSpec.builder("Default")
+                                    .content("%C", "1.0.0").build()
+                            )
                             .build()
                     }
                     .build()
@@ -401,6 +403,30 @@ class DartFileTest {
                 return name;
               }
             }
+            """.trimIndent()
+        )
+    }
+
+    @Test
+    fun `test file write with all directives`() {
+        val file = DartFile.builder("TestClass")
+            .directives(
+                DartDirective("dart:html"),
+                DartDirective("dart:math", CastType.AS, "math"),
+                RelativeDirective(".../sdk/api/model/item_model.dart"),
+                PartDirective("version.freezed.dart"),
+                PartDirective("version.g.dart")
+            )
+            .build()
+        assertThat(file.toString()).isEqualTo(
+            """
+            import 'dart:html';
+            import 'dart:math' as math;
+            
+            import '.../sdk/api/model/item_model.dart';
+            
+            part 'version.freezed.dart';
+            part 'version.g.dart';
             """.trimIndent()
         )
     }
