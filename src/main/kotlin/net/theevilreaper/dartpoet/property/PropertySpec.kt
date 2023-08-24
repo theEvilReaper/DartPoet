@@ -55,6 +55,21 @@ class PropertySpec(
      */
     override fun toString() = buildCodeString { write(this) }
 
+    /**
+     * Creates a new [PropertyBuilder] reference from an existing [PropertySpec] object.
+     * @return the created [PropertyBuilder] instance
+     */
+    fun toBuilder(): PropertyBuilder {
+        val builder = PropertyBuilder(this.name, this.type)
+        builder.modifiers.addAll(this.modifiers)
+        builder.annotations.addAll(this.annotations)
+        builder.nullable = this.nullable
+        builder.initBlock = this.initBlock
+        builder.docs.addAll(this.docs)
+        builder.modifiers.addAll(this.modifiers)
+        return builder
+    }
+
     companion object {
 
         /**

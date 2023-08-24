@@ -18,11 +18,12 @@ class ConstructorSpec(
     internal val initializer = builder.initializer
     internal val modifiers = builder.modifiers.toImmutableSet()
     private val modelParameters = builder.parameters.toImmutableSet()
-    internal val requiredAndNamedParameters = builder.parameters.filter { it.isRequired || it.isNamed }.toImmutableList()
+    internal val requiredAndNamedParameters =
+        builder.parameters.filter { it.isRequired || it.isNamed }.toImmutableList()
     internal val parameters = modelParameters.minus(requiredAndNamedParameters.toSet()).toImmutableList()
     internal val hasParameters = builder.parameters.isNotEmpty()
     internal val hasNamedParameters = requiredAndNamedParameters.isNotEmpty()
-    internal val docs = builder.docs
+    internal val docs = builder.docs.toImmutableList()
 
     internal fun write(
         codeWriter: CodeWriter
@@ -30,10 +31,26 @@ class ConstructorSpec(
         ConstructorWriter().emit(this, codeWriter)
     }
 
-    override fun toString() = buildCodeString {
-        write(
-            this,
-        )
+    override fun toString() = buildCodeString { write(this,) }
+
+    /**
+     * Creates a new [ConstructorBuilder] reference from an existing [ConstructorSpec] object.
+     * @return the created [ConstructorBuilder] instance
+     */
+    fun toBuilder(): ConstructorBuilder {
+        val builder = ConstructorBuilder(this.name, this.named)
+        builder.lambda = this.isLambda
+        builder.factory = this.isFactory
+        builder.modifiers.addAll(this.modifiers)
+        builder.parameters.addAll(this.modelParameters)
+
+        if (this.initializer.build().isNotEmpty()) {
+            builder.initializer.formatParts.addAll(this.initializer.formatParts)
+            builder.initializer.args.addAll(this.initializer.args)
+        }
+
+        builder.docs.addAll(this.docs)
+        return builder
     }
 
     companion object {

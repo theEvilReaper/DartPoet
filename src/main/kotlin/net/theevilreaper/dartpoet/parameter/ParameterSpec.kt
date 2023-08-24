@@ -25,26 +25,24 @@ class ParameterSpec internal constructor(
         }
     }
 
-    fun toBuilder(): ParameterBuilder {
-        val builder = ParameterBuilder(name, type)
-        builder.named = isNamed
-        builder.nullable = isNullable
-        builder.required = isRequired
-        return builder
-    }
-
-    internal fun write(
-        codeWriter: CodeWriter
-    ) {
+    internal fun write(codeWriter: CodeWriter) {
         ParameterWriter().write(this, codeWriter)
     }
 
-    override fun toString() = buildCodeString {
-        write(
-            this,
-        )
-    }
+    override fun toString() = buildCodeString { write(this) }
 
+    /**
+     * Creates a new [ParameterBuilder] reference from an existing [ParameterSpec] object.
+     * @return the created [ParameterBuilder] instance
+     */
+    fun toBuilder(): ParameterBuilder {
+        val builder = ParameterBuilder(this.name, this.type)
+        builder.named = isNamed
+        builder.nullable = isNullable
+        builder.required = isRequired
+        builder.annotations(*this.annotations.toTypedArray())
+        return builder
+    }
 
     companion object {
 

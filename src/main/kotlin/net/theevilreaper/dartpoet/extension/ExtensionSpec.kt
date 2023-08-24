@@ -1,5 +1,7 @@
 package net.theevilreaper.dartpoet.extension
 
+import net.theevilreaper.dartpoet.annotation.AnnotationSpec
+import net.theevilreaper.dartpoet.annotation.AnnotationSpecBuilder
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.ExtensionWriter
@@ -45,6 +47,18 @@ class ExtensionSpec(
      * @return the created string representation
      */
     override fun toString() = buildCodeString { write(this) }
+
+    /**
+     * Creates a new [ExtensionBuilder] reference from an existing [ExtensionSpec] object.
+     * @return the created [ExtensionBuilder] instance
+     */
+    fun toBuilder(): ExtensionBuilder {
+        val builder = ExtensionBuilder(this.name, this.extClass)
+        builder.endWithNewLine = this.endWithNewLine
+        builder.docs.addAll(this.docs)
+        builder.functionStack.addAll(this.functions)
+        return builder
+    }
 
     companion object {
 
