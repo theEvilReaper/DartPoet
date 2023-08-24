@@ -17,10 +17,10 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
-    testImplementation(libs.truth)
-    testImplementation(libs.junitApi)
-    testImplementation(libs.junitParams)
-    testRuntimeOnly(libs.junitEngine)
+    testImplementation(libs.google.truth)
+    testImplementation(libs.junit.api)
+    testImplementation(libs.junit.params)
+    testRuntimeOnly(libs.junit.engine)
 }
 
 tasks {
