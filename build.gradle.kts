@@ -1,11 +1,11 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
     application
-    alias(libs.plugins.changeLog)
+    alias(libs.plugins.changelog)
     `maven-publish`
     signing
-    alias(libs.plugins.dokka)
     `java-library`
+    alias(libs.plugins.dokka)
 }
 
 group = "net.theevilreaper.dartpoet"
@@ -81,9 +81,9 @@ publishing {
             groupId = "dev.themeinerlp"
             artifactId = "dartpoet"
             version = rootProject.version.toString()
-            artifact(dokkaJavadocJar)
-            artifact(dokkaHtmlJar)
-            artifact(sourceJar)
+         //   artifact(dokkaJavadocJar)
+         //   artifact(dokkaHtmlJar)
+         //   artifact(sourceJar)
             pom {
                 name.set("DartPoet")
                 description.set("A Kotlin API which allows the generation of code for dart")
