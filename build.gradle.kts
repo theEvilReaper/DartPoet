@@ -1,11 +1,10 @@
 plugins {
-    alias(libs.plugins.kotlin.jvm)
-    application
-    alias(libs.plugins.changeLog)
-    `maven-publish`
     signing
-    alias(libs.plugins.dokka)
+    `maven-publish`
     `java-library`
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.changelog)
+    alias(libs.plugins.dokka)
 }
 
 group = "net.theevilreaper.dartpoet"
@@ -17,10 +16,10 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
-    testImplementation(libs.truth)
-    testImplementation(libs.junitApi)
-    testImplementation(libs.junitParams)
-    testRuntimeOnly(libs.junitEngine)
+    testImplementation(libs.google.truth)
+    testImplementation(libs.junit.api)
+    testImplementation(libs.junit.params)
+    testRuntimeOnly(libs.junit.engine)
 }
 
 tasks {
@@ -35,10 +34,8 @@ tasks {
         kotlinOptions {
             jvmTarget = "17"
             //languageVersion = "2.0"
-
         }
     }
-
 }
 
 val sourceJar by tasks.register<Jar>("kotlinJar") {
@@ -60,10 +57,6 @@ val dokkaHtmlJar by tasks.register<Jar>("dokkaJavadocJar") {
 
 kotlin {
     jvmToolchain(17)
-}
-
-application {
-    mainClass.set("MainKt")
 }
 
 changelog {
