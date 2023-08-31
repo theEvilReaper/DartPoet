@@ -1,10 +1,9 @@
 plugins {
-    alias(libs.plugins.kotlin.jvm)
-    application
-    alias(libs.plugins.changelog)
-    `maven-publish`
     signing
+    `maven-publish`
     `java-library`
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.changelog)
     alias(libs.plugins.dokka)
 }
 
@@ -35,10 +34,8 @@ tasks {
         kotlinOptions {
             jvmTarget = "17"
             //languageVersion = "2.0"
-
         }
     }
-
 }
 
 val sourceJar by tasks.register<Jar>("kotlinJar") {
@@ -62,10 +59,6 @@ kotlin {
     jvmToolchain(17)
 }
 
-application {
-    mainClass.set("MainKt")
-}
-
 changelog {
     path.set("${project.projectDir}/CHANGELOG.md")
     itemPrefix.set("-")
@@ -81,9 +74,9 @@ publishing {
             groupId = "dev.themeinerlp"
             artifactId = "dartpoet"
             version = rootProject.version.toString()
-         //   artifact(dokkaJavadocJar)
-         //   artifact(dokkaHtmlJar)
-         //   artifact(sourceJar)
+            artifact(dokkaJavadocJar)
+            artifact(dokkaHtmlJar)
+            artifact(sourceJar)
             pom {
                 name.set("DartPoet")
                 description.set("A Kotlin API which allows the generation of code for dart")
