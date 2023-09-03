@@ -1,7 +1,6 @@
 package net.theevilreaper.dartpoet.code.writer
 
 import net.theevilreaper.dartpoet.DartFile
-import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.emitExtensions
 import net.theevilreaper.dartpoet.code.emitProperties
@@ -51,7 +50,7 @@ class DartFileWriter {
 
         if (dartFile.types.isNotEmpty()) {
             dartFile.types.forEach {
-                classWriter.write(it as ClassSpec, writer)
+                classWriter.write(it, writer)
                 if (dartFile.types.size > 1) {
                     writer.emit(NEW_LINE)
                 }

@@ -1,7 +1,5 @@
 package net.theevilreaper.dartpoet.extension
 
-import net.theevilreaper.dartpoet.annotation.AnnotationSpec
-import net.theevilreaper.dartpoet.annotation.AnnotationSpecBuilder
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.ExtensionWriter
