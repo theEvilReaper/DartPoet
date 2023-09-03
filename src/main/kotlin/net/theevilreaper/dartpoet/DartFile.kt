@@ -132,6 +132,8 @@ class DartFile internal constructor(
         builder.annotations.addAll(this.annotations)
         builder.extensionStack.addAll(this.extensions)
         builder.constants.addAll(this.constants)
+        builder.docs.addAll(this.docs.toMutableList())
+        builder.indent = this.indent
         return builder
     }
 

@@ -41,6 +41,7 @@ class ParameterSpec internal constructor(
         builder.nullable = isNullable
         builder.required = isRequired
         builder.annotations(*this.annotations.toTypedArray())
+        builder.initializer = initializer
         return builder
     }
 
