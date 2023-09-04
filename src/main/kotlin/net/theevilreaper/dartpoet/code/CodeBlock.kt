@@ -61,303 +61,303 @@ import java.text.DecimalFormatSymbols
  *  * `»` ends a statement.
  */
 class CodeBlock private constructor(
-  internal val formatParts: List<String>,
-  internal val args: List<Any?>,
+    internal val formatParts: List<String>,
+    internal val args: List<Any?>,
 ) {
-  /** A heterogeneous list containing string literals and value placeholders.  */
+    /** A heterogeneous list containing string literals and value placeholders.  */
 
-  fun isEmpty(): Boolean = formatParts.isEmpty()
+    fun isEmpty(): Boolean = formatParts.isEmpty()
 
-  fun isNotEmpty(): Boolean = !isEmpty()
-
-  /**
-   * Returns a code block with `prefix` stripped off, or null if this code block doesn't start with
-   * `prefix`.
-   *
-   * This is a pretty basic implementation that might not cover cases like mismatched whitespace. We
-   * could offer something more lenient if necessary.
-   */
-  internal fun withoutPrefix(prefix: CodeBlock): CodeBlock? {
-    if (formatParts.size < prefix.formatParts.size) return null
-    if (args.size < prefix.args.size) return null
-
-    var prefixArgCount = 0
-    var firstFormatPart: String? = null
-
-    // Walk through the formatParts of prefix to confirm that it's a of this.
-    prefix.formatParts.forEachIndexed { index, formatPart ->
-      if (formatParts[index] != formatPart) {
-        // We've found a format part that doesn't match. If this is the very last format part check
-        // for a string prefix match. If that doesn't match, we're done.
-        if (index == prefix.formatParts.size - 1 && formatParts[index].startsWith(formatPart)) {
-          firstFormatPart = formatParts[index].substring(formatPart.length)
-        } else {
-          return null
-        }
-      }
-
-      // If the matching format part has an argument, check that too.
-      if (formatPart.startsWith("%") && !formatPart[1].isMultiCharNoArgPlaceholder) {
-        if (args[prefixArgCount] != prefix.args[prefixArgCount]) {
-          return null // Argument doesn't match.
-        }
-        prefixArgCount++
-      }
-    }
-
-    // We found a prefix. Prepare the suffix as a result.
-    val resultFormatParts = ArrayList<String>()
-    firstFormatPart?.let {
-      resultFormatParts.add(it)
-    }
-    for (i in prefix.formatParts.size until formatParts.size) {
-      resultFormatParts.add(formatParts[i])
-    }
-
-    val resultArgs = ArrayList<Any?>()
-    for (i in prefix.args.size until args.size) {
-      resultArgs.add(args[i])
-    }
-
-    return CodeBlock(resultFormatParts, resultArgs)
-  }
-
-  /**
-   * Returns a copy of the code block without leading and trailing no-arg placeholders
-   * (`⇥`, `⇤`, `«`, `»`).
-   */
-  internal fun trim(): CodeBlock {
-    var start = 0
-    var end = formatParts.size
-    while (start < end && formatParts[start] in NO_ARG_PLACEHOLDERS) {
-      start++
-    }
-    while (start < end && formatParts[end - 1] in NO_ARG_PLACEHOLDERS) {
-      end--
-    }
-    return when {
-      start > 0 || end < formatParts.size -> CodeBlock(formatParts.subList(start, end), args)
-      else -> this
-    }
-  }
-
-  /**
-   * Returns a copy of the code block with selected format parts replaced, similar to
-   * [java.lang.String.replaceAll].
-   *
-   * **Warning!** This method leaves the arguments list unchanged. Take care when replacing
-   * placeholders with arguments, such as `%L`, as it can result in a code block, where
-   * placeholders don't match their arguments.
-   */
-  internal fun replaceAll(oldValue: String, newValue: String) =
-    CodeBlock(formatParts.map { it.replace(oldValue, newValue) }, args)
-
-  internal fun hasStatements() = formatParts.any { "«" in it }
-
-  override fun equals(other: Any?): Boolean {
-    if (this === other) return true
-    if (other == null) return false
-    if (javaClass != other.javaClass) return false
-    return toString() == other.toString()
-  }
-
-  override fun hashCode(): Int = toString().hashCode()
-
-  override fun toString(): String = buildCodeString { emitCode(this@CodeBlock) }
-
-  internal fun toString(codeWriter: CodeWriter): String = buildCodeString(codeWriter) {
-    emitCode(this@CodeBlock)
-  }
-
-  fun toBuilder(): Builder {
-    val builder = Builder()
-    builder.formatParts += formatParts
-    builder.args.addAll(args)
-    return builder
-  }
-
-  public class Builder {
-    internal val formatParts = mutableListOf<String>()
-    internal val args = mutableListOf<Any?>()
-
-    public fun isEmpty(): Boolean = formatParts.isEmpty()
-
-    public fun isNotEmpty(): Boolean = !isEmpty()
+    fun isNotEmpty(): Boolean = !isEmpty()
 
     /**
-     * Adds code using named arguments.
+     * Returns a code block with `prefix` stripped off, or null if this code block doesn't start with
+     * `prefix`.
      *
-     * Named arguments specify their name after the '%' followed by : and the corresponding type
-     * character. Argument names consist of characters in `a-z, A-Z, 0-9, and _` and must start
-     * with a lowercase character.
-     *
-     * For example, to refer to the type [java.lang.Integer] with the argument name `clazz` use a
-     * format string containing `%clazz:T` and include the key `clazz` with value
-     * `java.lang.Integer.class` in the argument map.
+     * This is a pretty basic implementation that might not cover cases like mismatched whitespace. We
+     * could offer something more lenient if necessary.
      */
-    public fun addNamed(format: String, arguments: Map<String, *>): Builder = apply {
-      var p = 0
+    internal fun withoutPrefix(prefix: CodeBlock): CodeBlock? {
+        if (formatParts.size < prefix.formatParts.size) return null
+        if (args.size < prefix.args.size) return null
 
-      for (argument in arguments.keys) {
-        require(LOWERCASE matches argument) {
-          "argument '$argument' must start with a lowercase character"
-        }
-      }
+        var prefixArgCount = 0
+        var firstFormatPart: String? = null
 
-      while (p < format.length) {
-        val nextP = format.nextPotentialPlaceholderPosition(startIndex = p)
-        if (nextP == -1) {
-          formatParts += format.substring(p, format.length)
-          break
+        // Walk through the formatParts of prefix to confirm that it's a of this.
+        prefix.formatParts.forEachIndexed { index, formatPart ->
+            if (formatParts[index] != formatPart) {
+                // We've found a format part that doesn't match. If this is the very last format part check
+                // for a string prefix match. If that doesn't match, we're done.
+                if (index == prefix.formatParts.size - 1 && formatParts[index].startsWith(formatPart)) {
+                    firstFormatPart = formatParts[index].substring(formatPart.length)
+                } else {
+                    return null
+                }
+            }
+
+            // If the matching format part has an argument, check that too.
+            if (formatPart.startsWith("%") && !formatPart[1].isMultiCharNoArgPlaceholder) {
+                if (args[prefixArgCount] != prefix.args[prefixArgCount]) {
+                    return null // Argument doesn't match.
+                }
+                prefixArgCount++
+            }
         }
 
-        if (p != nextP) {
-          formatParts += format.substring(p, nextP)
-          p = nextP
+        // We found a prefix. Prepare the suffix as a result.
+        val resultFormatParts = ArrayList<String>()
+        firstFormatPart?.let {
+            resultFormatParts.add(it)
+        }
+        for (i in prefix.formatParts.size until formatParts.size) {
+            resultFormatParts.add(formatParts[i])
         }
 
-        var matchResult: MatchResult? = null
-        val colon = format.indexOf(':', p)
-        if (colon != -1) {
-          val endIndex = (colon + 2).coerceAtMost(format.length)
-          matchResult = NAMED_ARGUMENT.matchEntire(format.substring(p, endIndex))
+        val resultArgs = ArrayList<Any?>()
+        for (i in prefix.args.size until args.size) {
+            resultArgs.add(args[i])
         }
-        if (matchResult != null) {
-          val argumentName = matchResult.groupValues[ARG_NAME]
-          require(arguments.containsKey(argumentName)) {
-            "Missing named argument for %$argumentName"
-          }
-          val formatChar = matchResult.groupValues[TYPE_NAME].first()
-          addArgument(format, formatChar, arguments[argumentName])
-          formatParts += "%$formatChar"
-          p += matchResult.range.last + 1
-        } else if (format[p].isSingleCharNoArgPlaceholder) {
-          formatParts += format.substring(p, p + 1)
-          p++
-        } else {
-          require(p < format.length - 1) { "dangling % at end" }
-          require(format[p + 1].isMultiCharNoArgPlaceholder) {
-            "unknown format %${format[p + 1]} at ${p + 1} in '$format'"
-          }
-          formatParts += format.substring(p, p + 2)
-          p += 2
-        }
-      }
+
+        return CodeBlock(resultFormatParts, resultArgs)
     }
 
     /**
-     * Add code with positional or relative arguments.
-     *
-     * Relative arguments map 1:1 with the placeholders in the format string.
-     *
-     * Positional arguments use an index after the placeholder to identify which argument index
-     * to use. For example, for a literal to reference the 3rd argument: "%3L" (1 based index)
-     *
-     * Mixing relative and positional arguments in a call to add is invalid and will result in an
-     * error.
+     * Returns a copy of the code block without leading and trailing no-arg placeholders
+     * (`⇥`, `⇤`, `«`, `»`).
      */
-    public fun add(format: String, vararg args: Any?): Builder = apply {
-      var hasRelative = false
-      var hasIndexed = false
-
-      var relativeParameterCount = 0
-      val indexedParameterCount = IntArray(args.size)
-
-      var p = 0
-      while (p < format.length) {
-        if (format[p].isSingleCharNoArgPlaceholder) {
-          formatParts += format[p].toString()
-          p++
-          continue
+    internal fun trim(): CodeBlock {
+        var start = 0
+        var end = formatParts.size
+        while (start < end && formatParts[start] in NO_ARG_PLACEHOLDERS) {
+            start++
         }
-
-        if (format[p] != '%') {
-          var nextP = format.nextPotentialPlaceholderPosition(startIndex = p + 1)
-          if (nextP == -1) nextP = format.length
-          formatParts += format.substring(p, nextP)
-          p = nextP
-          continue
+        while (start < end && formatParts[end - 1] in NO_ARG_PLACEHOLDERS) {
+            end--
         }
-
-        p++ // '%'.
-
-        // Consume zero or more digits, leaving 'c' as the first non-digit char after the '%'.
-        val indexStart = p
-        var c: Char
-        do {
-          require(p < format.length) { "dangling format characters in '$format'" }
-          c = format[p++]
-        } while (c in '0'..'9')
-        val indexEnd = p - 1
-
-        // If 'c' doesn't take an argument, we're done.
-        if (c.isMultiCharNoArgPlaceholder) {
-          require(indexStart == indexEnd) { "%% may not have an index" }
-          formatParts += "%$c"
-          continue
+        return when {
+            start > 0 || end < formatParts.size -> CodeBlock(formatParts.subList(start, end), args)
+            else -> this
         }
-
-        // Find either the indexed argument, or the relative argument. (0-based).
-        val index: Int
-        if (indexStart < indexEnd) {
-          index = Integer.parseInt(format.substring(indexStart, indexEnd)) - 1
-          hasIndexed = true
-          if (args.isNotEmpty()) {
-            indexedParameterCount[index % args.size]++ // modulo is needed, checked below anyway
-          }
-        } else {
-          index = relativeParameterCount
-          hasRelative = true
-          relativeParameterCount++
-        }
-
-        require(index >= 0 && index < args.size) {
-          "index ${index + 1} for '${format.substring(
-            indexStart - 1,
-            indexEnd + 1,
-          )}' not in range (received ${args.size} arguments)"
-        }
-        require(!hasIndexed || !hasRelative) { "cannot mix indexed and positional parameters" }
-
-        addArgument(format, c, args[index])
-
-        formatParts += "%$c"
-      }
-
-      if (hasRelative) {
-        require(relativeParameterCount >= args.size) {
-          "unused arguments: expected $relativeParameterCount, received ${args.size}"
-        }
-      }
-      if (hasIndexed) {
-        val unused = mutableListOf<String>()
-        for (i in args.indices) {
-          if (indexedParameterCount[i] == 0) {
-            unused += "%" + (i + 1)
-          }
-        }
-        val s = if (unused.size == 1) "" else "s"
-        require(unused.isEmpty()) { "unused argument$s: ${unused.joinToString(", ")}" }
-      }
     }
 
-    private fun addArgument(format: String, c: Char, arg: Any?) {
-      when (c) {
-        'N' -> this.args += argToName(arg).escapeIfNecessary()
-        'L' -> this.args += argToLiteral(arg)
-        'S' -> this.args += argToString(arg)
-        'P' -> this.args += if (arg is CodeBlock) arg else argToString(arg)
-        'M' -> this.args += arg
-        'C' -> this.args += argToString(arg)
-        else -> throw IllegalArgumentException(
-          String.format("invalid format string: '%s'", format),
-        )
-      }
+    /**
+     * Returns a copy of the code block with selected format parts replaced, similar to
+     * [java.lang.String.replaceAll].
+     *
+     * **Warning!** This method leaves the arguments list unchanged. Take care when replacing
+     * placeholders with arguments, such as `%L`, as it can result in a code block, where
+     * placeholders don't match their arguments.
+     */
+    internal fun replaceAll(oldValue: String, newValue: String) =
+        CodeBlock(formatParts.map { it.replace(oldValue, newValue) }, args)
+
+    internal fun hasStatements() = formatParts.any { "«" in it }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null) return false
+        if (javaClass != other.javaClass) return false
+        return toString() == other.toString()
     }
 
-    private fun argToName(o: Any?) = when (o) {
-      is CharSequence -> o.toString()
-   /*   is ParameterSpec -> o.name
+    override fun hashCode(): Int = toString().hashCode()
+
+    override fun toString(): String = buildCodeString { emitCode(this@CodeBlock) }
+
+    internal fun toString(codeWriter: CodeWriter): String = buildCodeString(codeWriter) {
+        emitCode(this@CodeBlock)
+    }
+
+    fun toBuilder(): Builder {
+        val builder = Builder()
+        builder.formatParts += formatParts
+        builder.args.addAll(args)
+        return builder
+    }
+
+    public class Builder {
+        internal val formatParts = mutableListOf<String>()
+        internal val args = mutableListOf<Any?>()
+
+        public fun isEmpty(): Boolean = formatParts.isEmpty()
+
+        public fun isNotEmpty(): Boolean = !isEmpty()
+
+        /**
+         * Adds code using named arguments.
+         *
+         * Named arguments specify their name after the '%' followed by : and the corresponding type
+         * character. Argument names consist of characters in `a-z, A-Z, 0-9, and _` and must start
+         * with a lowercase character.
+         *
+         * For example, to refer to the type [java.lang.Integer] with the argument name `clazz` use a
+         * format string containing `%clazz:T` and include the key `clazz` with value
+         * `java.lang.Integer.class` in the argument map.
+         */
+        public fun addNamed(format: String, arguments: Map<String, *>): Builder = apply {
+            var p = 0
+
+            for (argument in arguments.keys) {
+                require(LOWERCASE matches argument) {
+                    "argument '$argument' must start with a lowercase character"
+                }
+            }
+
+            while (p < format.length) {
+                val nextP = format.nextPotentialPlaceholderPosition(startIndex = p)
+                if (nextP == -1) {
+                    formatParts += format.substring(p, format.length)
+                    break
+                }
+
+                if (p != nextP) {
+                    formatParts += format.substring(p, nextP)
+                    p = nextP
+                }
+
+                var matchResult: MatchResult? = null
+                val colon = format.indexOf(':', p)
+                if (colon != -1) {
+                    val endIndex = (colon + 2).coerceAtMost(format.length)
+                    matchResult = NAMED_ARGUMENT.matchEntire(format.substring(p, endIndex))
+                }
+                if (matchResult != null) {
+                    val argumentName = matchResult.groupValues[ARG_NAME]
+                    require(arguments.containsKey(argumentName)) {
+                        "Missing named argument for %$argumentName"
+                    }
+                    val formatChar = matchResult.groupValues[TYPE_NAME].first()
+                    addArgument(format, formatChar, arguments[argumentName])
+                    formatParts += "%$formatChar"
+                    p += matchResult.range.last + 1
+                } else if (format[p].isSingleCharNoArgPlaceholder) {
+                    formatParts += format.substring(p, p + 1)
+                    p++
+                } else {
+                    require(p < format.length - 1) { "dangling % at end" }
+                    require(format[p + 1].isMultiCharNoArgPlaceholder) {
+                        "unknown format %${format[p + 1]} at ${p + 1} in '$format'"
+                    }
+                    formatParts += format.substring(p, p + 2)
+                    p += 2
+                }
+            }
+        }
+
+        /**
+         * Add code with positional or relative arguments.
+         *
+         * Relative arguments map 1:1 with the placeholders in the format string.
+         *
+         * Positional arguments use an index after the placeholder to identify which argument index
+         * to use. For example, for a literal to reference the 3rd argument: "%3L" (1 based index)
+         *
+         * Mixing relative and positional arguments in a call to add is invalid and will result in an
+         * error.
+         */
+        public fun add(format: String, vararg args: Any?): Builder = apply {
+            var hasRelative = false
+            var hasIndexed = false
+
+            var relativeParameterCount = 0
+            val indexedParameterCount = IntArray(args.size)
+
+            var p = 0
+            while (p < format.length) {
+                if (format[p].isSingleCharNoArgPlaceholder) {
+                    formatParts += format[p].toString()
+                    p++
+                    continue
+                }
+
+                if (format[p] != '%') {
+                    var nextP = format.nextPotentialPlaceholderPosition(startIndex = p + 1)
+                    if (nextP == -1) nextP = format.length
+                    formatParts += format.substring(p, nextP)
+                    p = nextP
+                    continue
+                }
+
+                p++ // '%'.
+
+                // Consume zero or more digits, leaving 'c' as the first non-digit char after the '%'.
+                val indexStart = p
+                var c: Char
+                do {
+                    require(p < format.length) { "dangling format characters in '$format'" }
+                    c = format[p++]
+                } while (c in '0'..'9')
+                val indexEnd = p - 1
+
+                // If 'c' doesn't take an argument, we're done.
+                if (c.isMultiCharNoArgPlaceholder) {
+                    require(indexStart == indexEnd) { "%% may not have an index" }
+                    formatParts += "%$c"
+                    continue
+                }
+
+                // Find either the indexed argument, or the relative argument. (0-based).
+                val index: Int
+                if (indexStart < indexEnd) {
+                    index = Integer.parseInt(format.substring(indexStart, indexEnd)) - 1
+                    hasIndexed = true
+                    if (args.isNotEmpty()) {
+                        indexedParameterCount[index % args.size]++ // modulo is needed, checked below anyway
+                    }
+                } else {
+                    index = relativeParameterCount
+                    hasRelative = true
+                    relativeParameterCount++
+                }
+
+                require(index >= 0 && index < args.size) {
+                    "index ${index + 1} for '${format.substring(
+                            indexStart - 1,
+                            indexEnd + 1,
+                        )}' not in range (received ${args.size} arguments)"
+                }
+                require(!hasIndexed || !hasRelative) { "cannot mix indexed and positional parameters" }
+
+                addArgument(format, c, args[index])
+
+                formatParts += "%$c"
+            }
+
+            if (hasRelative) {
+                require(relativeParameterCount >= args.size) {
+                    "unused arguments: expected $relativeParameterCount, received ${args.size}"
+                }
+            }
+            if (hasIndexed) {
+                val unused = mutableListOf<String>()
+                for (i in args.indices) {
+                    if (indexedParameterCount[i] == 0) {
+                        unused += "%" + (i + 1)
+                    }
+                }
+                val s = if (unused.size == 1) "" else "s"
+                require(unused.isEmpty()) { "unused argument$s: ${unused.joinToString(", ")}" }
+            }
+        }
+
+        private fun addArgument(format: String, c: Char, arg: Any?) {
+            when (c) {
+                'N' -> this.args += argToName(arg).escapeIfNecessary()
+                'L' -> this.args += argToLiteral(arg)
+                'S' -> this.args += argToString(arg)
+                'P' -> this.args += if (arg is CodeBlock) arg else argToString(arg)
+                'M' -> this.args += arg
+                'C' -> this.args += argToString(arg)
+                else -> throw IllegalArgumentException(
+                    String.format("invalid format string: '%s'", format),
+                )
+            }
+        }
+
+        private fun argToName(o: Any?) = when (o) {
+            is CharSequence -> o.toString()
+            /*   is ParameterSpec -> o.name
       is PropertySpec -> o.name
       is FunSpec -> o.name
       is TypeSpec -> o.name!!

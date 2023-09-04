@@ -44,20 +44,17 @@ class EnumPropertySpec(
      * Creates a string representation from the spec object.
      * @return the created string
      */
-    override fun toString() = buildCodeString {
-        write(
-            this,
-        )
-    }
+    override fun toString() = buildCodeString { write(this) }
 
     /**
      * Converts a [EnumPropertySpec] to a [EnumPropertyWriter] instance.
      * @return the created instance
      */
     fun toBuilder(): EnumPropertyBuilder {
-        val builder = EnumPropertyBuilder(name)
-        builder.genericValueCast = generic
-        builder.parameters += parameters
+        val builder = EnumPropertyBuilder(this.name)
+        builder.annotations.addAll(this.annotations)
+        builder.genericValueCast = this.generic
+        builder.parameters.addAll(this.parameters)
         return builder
     }
 

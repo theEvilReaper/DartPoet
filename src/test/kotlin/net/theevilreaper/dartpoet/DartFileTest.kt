@@ -15,6 +15,7 @@ import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import kotlin.test.assertContentEquals
 
 class DartFileTest {
 
@@ -33,6 +34,18 @@ class DartFileTest {
     }
 
     @Test
+    fun `test spec to builder conversation`() {
+        val dartFileSpec = DartFile.builder("TestClass")
+            .indent(" ")
+            .annotation(AnnotationSpec.builder("ignore").build())
+            .build()
+        val specAsBuilder = dartFileSpec.toBuilder()
+        assertEquals(dartFileSpec.name, specAsBuilder.name)
+        assertEquals(dartFileSpec.indent, specAsBuilder.indent)
+        assertContentEquals(dartFileSpec.annotations, specAsBuilder.annotations)
+    }
+
+    @Test
     fun `write test model with freezed`() {
         val versionFreezedClass = ClassSpec.builder("VersionModel")
             .withMixin("_${'$'}VersionModel")
@@ -45,11 +58,11 @@ class DartFileTest {
                         ParameterSpec.builder("version", "String")
                             .named(true)
                             .annotations(
-                                    AnnotationSpec.builder("JsonKey")
-                                        .content("name: %C", "version").build(),
-                                    AnnotationSpec.builder("Default")
-                                        .content("%C", "1.0.0").build()
-                                )
+                                AnnotationSpec.builder("JsonKey")
+                                    .content("name: %C", "version").build(),
+                                AnnotationSpec.builder("Default")
+                                    .content("%C", "1.0.0").build()
+                            )
                             .build()
                     }
                     .build()

@@ -44,6 +44,16 @@ class AnnotationSpec(
      */
     override fun toString() = buildCodeString { write(this) }
 
+    /**
+     * Creates a new [AnnotationSpecBuilder] reference from an existing [AnnotationSpec] object.
+     * @return the created [AnnotationSpecBuilder] instance
+     */
+    fun toBuilder(): AnnotationSpecBuilder {
+        val builder = AnnotationSpecBuilder(this.name)
+        builder.content.addAll(this.content)
+        return builder
+    }
+
     companion object {
 
         /**

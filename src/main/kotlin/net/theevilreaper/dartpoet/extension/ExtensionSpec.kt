@@ -46,6 +46,18 @@ class ExtensionSpec(
      */
     override fun toString() = buildCodeString { write(this) }
 
+    /**
+     * Creates a new [ExtensionBuilder] reference from an existing [ExtensionSpec] object.
+     * @return the created [ExtensionBuilder] instance
+     */
+    fun toBuilder(): ExtensionBuilder {
+        val builder = ExtensionBuilder(this.name, this.extClass)
+        builder.endWithNewLine = this.endWithNewLine
+        builder.docs.addAll(this.docs)
+        builder.functionStack.addAll(this.functions)
+        return builder
+    }
+
     companion object {
 
         /**

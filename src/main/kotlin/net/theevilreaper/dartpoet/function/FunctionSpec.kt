@@ -78,6 +78,29 @@ class FunctionSpec(
      */
     override fun toString() = buildCodeString { write(this) }
 
+    /**
+     * Creates a new [FunctionBuilder] reference from an existing [FunctionSpec] object.
+     * @return the created [FunctionBuilder] instance
+     */
+    fun toBuilder(): FunctionBuilder {
+        val builder = FunctionBuilder(this.name)
+        builder.returnType = this.returnType
+        builder.annotations(*this.annotation.toTypedArray())
+        builder.modifiers(*this.modifiers.toTypedArray())
+        builder.parameters.addAll(this.parameters)
+        builder.async = this.isAsync
+        builder.nullable = this.isNullable
+        builder.typedef = this.isTypeDef
+        builder.typeCast = this.typeCast
+        builder.setter = this.asSetter
+        builder.getter = this.isGetter
+        builder.lambda = this.isLambda
+        builder.body.formatParts.addAll(this.body.formatParts)
+        builder.body.args.add(this.body.args)
+        builder.docs.addAll(this.docs)
+        return builder
+    }
+
     companion object {
 
         /**

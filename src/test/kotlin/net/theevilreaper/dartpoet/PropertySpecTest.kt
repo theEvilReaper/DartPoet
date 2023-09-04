@@ -2,17 +2,21 @@ package net.theevilreaper.dartpoet
 
 import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.property.PropertySpec
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
+import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 class PropertySpecTest {
 
     companion object {
 
         @JvmStatic
-        fun parameters() = Stream.of(
+        fun parameters(): Stream<Arguments> = Stream.of(
             Arguments.of(
                 PropertySpec.builder("test", "String").nullable(true).build(),
                 "String? test;"
@@ -30,7 +34,8 @@ class PropertySpecTest {
                 "final int data = 4;"
             ),
             Arguments.of(
-                PropertySpec.builder("id", "String").modifiers { listOf(DartModifier.FINAL, DartModifier.PRIVATE) }.build(),
+                PropertySpec.builder("id", "String").modifiers { listOf(DartModifier.FINAL, DartModifier.PRIVATE) }
+                    .build(),
                 "final String _id;"
             )
         )
@@ -40,5 +45,18 @@ class PropertySpecTest {
     @MethodSource("parameters")
     fun `test properties`(propertySpec: PropertySpec, expected: String) {
         assertThat(propertySpec.toString()).isEqualTo(expected)
+    }
+
+    @Test
+    fun `test spec to builder conversation`() {
+        val propertySpec = PropertySpec.builder("amount", "int")
+            .nullable(true)
+            .build()
+        val specAsBuilder = propertySpec.toBuilder().modifier(DartModifier.FINAL)
+        assertNotNull(specAsBuilder)
+        assertEquals(propertySpec.name, specAsBuilder.name)
+        assertEquals(propertySpec.type, specAsBuilder.type)
+        assertEquals(propertySpec.nullable, specAsBuilder.nullable)
+        assertTrue { specAsBuilder.modifiers.isNotEmpty() }
     }
 }
