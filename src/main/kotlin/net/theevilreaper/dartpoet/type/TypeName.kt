@@ -2,6 +2,7 @@ package net.theevilreaper.dartpoet.type
 
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
+import net.theevilreaper.dartpoet.util.NULLABLE_CHAR
 import java.lang.reflect.Type
 import kotlin.reflect.KClass
 
@@ -10,7 +11,7 @@ sealed class TypeName(val isNullable: Boolean) {
     private val cachedString: String by lazy {
         buildCodeString {
             emit(this)
-            if (isNullable) emit("?")
+            if (isNullable) emit(NULLABLE_CHAR)
         }
     }
 
@@ -18,6 +19,9 @@ sealed class TypeName(val isNullable: Boolean) {
     override fun toString(): String = cachedString
 
     internal abstract fun emit(out: CodeWriter): CodeWriter
+
+    internal abstract fun copy(nullable: Boolean = this.isNullable): TypeName
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -51,16 +55,21 @@ sealed class TypeName(val isNullable: Boolean) {
     }
 }
 
-@JvmField val BOOLEAN: ClassName = ClassName("bool")
+@JvmField
+val BOOLEAN: ClassName = ClassName("bool")
 
-@JvmField val INTEGER: ClassName = ClassName("int")
+@JvmField
+val INTEGER: ClassName = ClassName("int")
 
-@JvmField val DOUBLE: ClassName = ClassName("double")
+@JvmField
+val DOUBLE: ClassName = ClassName("double")
 
-@JvmField val STRING: ClassName = ClassName("String")
+@JvmField
+val STRING: ClassName = ClassName("String")
 
 @JvmName("get")
 fun KClass<*>.asTypeName(): TypeName = asClassName()
 
+/** Returns a [TypeName] equivalent to this [Type].  */
 @JvmName("get")
-fun Type.asClassName(): TypeName = TypeName.get(this)
+fun Type.asTypeName(): TypeName = TypeName.get(this)

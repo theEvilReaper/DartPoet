@@ -6,9 +6,13 @@ import kotlin.reflect.KClass
 class ClassName(
     val name: String,
     isNullable: Boolean = false
-): TypeName(isNullable) {
+) : TypeName(isNullable) {
 
     override fun emit(out: CodeWriter): CodeWriter = out.emit(name)
+
+    override fun copy(nullable: Boolean): TypeName {
+        return ClassName(name, nullable)
+    }
 
     companion object {
 
@@ -32,13 +36,7 @@ class ClassName(
                 names += part
             }
 
-            names.remove("kotlin")
-
-            return if (names[0] == "String") {
-                ClassName(names[0])
-            } else {
-                ClassName(names[0].lowercase())
-            }
+            return ClassName(names[names.size - 1].lowercase())
         }
     }
 }
@@ -69,7 +67,7 @@ fun Class<*>.asClassName(): ClassName {
     }
 
     val lastDot = c.name.lastIndexOf(".")
-    if (lastDot != -1 ) names += c.name.substring(0, lastDot)
+    if (lastDot != -1) names += c.name.substring(0, lastDot)
     names.reverse()
     return ClassName(names[0])
 }
