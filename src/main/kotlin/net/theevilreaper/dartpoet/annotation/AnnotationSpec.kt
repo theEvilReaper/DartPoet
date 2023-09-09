@@ -3,7 +3,11 @@ package net.theevilreaper.dartpoet.annotation
 import net.theevilreaper.dartpoet.code.*
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.AnnotationWriter
+import net.theevilreaper.dartpoet.type.ClassName
+import net.theevilreaper.dartpoet.type.TypeName
+import net.theevilreaper.dartpoet.type.asClassName
 import net.theevilreaper.dartpoet.util.toImmutableSet
+import kotlin.reflect.KClass
 
 /**
  * The [AnnotationSpec] contain all relevant data about a annotation.
@@ -16,16 +20,9 @@ class AnnotationSpec(
     builder: AnnotationSpecBuilder
 ) {
 
-    internal val name: String = builder.name
+    internal val typeName: TypeName = builder.typeName
     internal val content: Set<CodeBlock> = builder.content.toImmutableSet()
     internal val hasMultipleContentParts = content.size > 1
-
-    /**
-     * Performs some check calls on some variables.
-     */
-    init {
-        check(name.trim().isNotEmpty()) { "The name can't be empty" }
-    }
 
     /**
      * Triggers an [AnnotationWriter] to write the spec object into code.
@@ -49,7 +46,7 @@ class AnnotationSpec(
      * @return the created [AnnotationSpecBuilder] instance
      */
     fun toBuilder(): AnnotationSpecBuilder {
-        val builder = AnnotationSpecBuilder(this.name)
+        val builder = AnnotationSpecBuilder(this.typeName)
         builder.content.addAll(this.content)
         return builder
     }
@@ -61,6 +58,12 @@ class AnnotationSpec(
          * @return the created instance
          */
         @JvmStatic
-        fun builder(name: String) = AnnotationSpecBuilder(name)
+        fun builder(name: String) = AnnotationSpecBuilder(ClassName(name))
+
+        @JvmStatic
+        fun builder(type: ClassName) = AnnotationSpecBuilder(type)
+
+        @JvmStatic
+        fun builder(type: KClass<out Annotation>) = AnnotationSpecBuilder(type.asClassName())
     }
 }
