@@ -20,11 +20,15 @@
 
 package net.theevilreaper.dartpoet.code
 
+import net.theevilreaper.dartpoet.type.TypeName
+import net.theevilreaper.dartpoet.type.asTypeName
 import net.theevilreaper.dartpoet.util.escapeIfNecessary
 import net.theevilreaper.dartpoet.util.isOneOf
 import net.theevilreaper.dartpoet.util.toImmutableList
+import java.lang.reflect.Type
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
+import kotlin.reflect.KClass
 
 /**
  * A fragment of a .kt file, potentially containing declarations, statements, and documentation.
@@ -349,10 +353,18 @@ class CodeBlock private constructor(
                 'P' -> this.args += if (arg is CodeBlock) arg else argToString(arg)
                 'M' -> this.args += arg
                 'C' -> this.args += argToString(arg)
+                'T' -> this.args += argToType(arg)
                 else -> throw IllegalArgumentException(
                     String.format("invalid format string: '%s'", format),
                 )
             }
+        }
+
+        private fun argToType(o: Any?) = when (o) {
+            is TypeName -> o
+            is Type -> o.asTypeName()
+            is KClass<*> -> o.asTypeName()
+            else -> throw IllegalArgumentException("expected type but was $o")
         }
 
         private fun argToName(o: Any?) = when (o) {

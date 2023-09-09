@@ -21,6 +21,7 @@
  */
 package net.theevilreaper.dartpoet.code
 
+import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.util.NEW_LINE
 import net.theevilreaper.dartpoet.util.escapeCharacterLiterals
@@ -137,6 +138,10 @@ class CodeWriter constructor(
                         NULL_STRING
                     }
                     emit(literal.replace("\"", "'"), nonWrapping = true)
+                }
+                "%T" -> {
+                    var typeName = codeBlock.args[a++] as TypeName
+                    typeName.emit(this)
                 }
                 "%%" -> emit("%")
                 "⇥" -> indent()
