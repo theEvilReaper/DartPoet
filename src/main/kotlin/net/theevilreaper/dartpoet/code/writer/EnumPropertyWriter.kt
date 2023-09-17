@@ -26,7 +26,7 @@ class EnumPropertyWriter {
         }
         writer.emit(propertySpec.name)
         if (propertySpec.hasGeneric) {
-            writer.emitCode("<%L>", propertySpec.generic!!)
+            writer.emitCode("<%T>", propertySpec.generic!!)
         }
 
         if (propertySpec.hasParameter) {

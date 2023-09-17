@@ -28,7 +28,9 @@ class FunctionWriter {
             }
         }
 
-        if (functionSpec.returnType.orEmpty().trim().isEmpty()) {
+
+
+        if (functionSpec.returnType == null) {
             if (functionSpec.isAsync) {
                 writer.emitCode("Future<%L>", VOID.identifier)
             } else {
@@ -42,8 +44,7 @@ class FunctionWriter {
             if (functionSpec.isAsync) {
                 writer.emit("Future<")
             }
-            writer.emit(functionSpec.returnType!!)
-            writer.emit(if (functionSpec.isNullable) "?" else "")
+            writer.emitCode("%T", functionSpec.returnType)
 
             if (functionSpec.isGetter) {
                 writer.emit("·get")
