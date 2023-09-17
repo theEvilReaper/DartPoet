@@ -36,7 +36,7 @@ sealed class TypeName(val isNullable: Boolean) {
     companion object {
 
         internal fun get(type: Type): TypeName {
-            return when(type) {
+            return when (type) {
                 is Class<*> -> when {
                     type === Boolean::class.javaPrimitiveType -> BOOLEAN
                     type === Int::class.javaPrimitiveType -> INTEGER
@@ -50,6 +50,18 @@ sealed class TypeName(val isNullable: Boolean) {
 
                 else -> throw IllegalArgumentException("Received unexpected type $type")
 
+            }
+        }
+
+        internal fun parseSimpleClass(type: KClass<*>): ClassName {
+            return when (type) {
+                Boolean::class -> BOOLEAN
+                Int::class -> INTEGER
+                Long::class -> INTEGER
+                Double::class -> DOUBLE
+                Float::class -> DOUBLE
+                String::class -> STRING
+                else -> throw IllegalArgumentException("The given $type is not a primitive object")
             }
         }
     }
