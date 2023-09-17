@@ -6,6 +6,12 @@ import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.meta.SpecData
 import net.theevilreaper.dartpoet.meta.SpecMethods
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.type.ClassName
+import net.theevilreaper.dartpoet.type.TypeName
+import net.theevilreaper.dartpoet.type.asClassName
+import net.theevilreaper.dartpoet.type.asTypeName
+import java.lang.reflect.Type
+import kotlin.reflect.KClass
 
 /**
  * The builder class allows the creation of an [FunctionBuilder] without any effort.
@@ -19,9 +25,8 @@ class FunctionBuilder internal constructor(
     internal val specData: SpecData = SpecData()
     internal val parameters: MutableList<ParameterSpec> = mutableListOf()
     internal var async: Boolean = false
-    internal var returnType: String? = null
+    internal var returnType: TypeName? = null
     internal val body: CodeBlock.Builder = CodeBlock.builder()
-    internal var nullable: Boolean = false
     internal var typedef: Boolean = false
     internal var typeCast: String? = null
     internal var setter: Boolean = false
@@ -75,14 +80,6 @@ class FunctionBuilder internal constructor(
         this.typedef = typeDef
     }
 
-    /**
-     * Set if the return type of the function can be nullable.
-     * @param nullable if the function can be nullable
-     */
-    fun nullable(nullable: Boolean) = apply {
-        this.nullable = nullable
-    }
-
     fun addCode(format: String, vararg args: Any?) = apply {
         body.add(format, *args)
     }
@@ -100,8 +97,20 @@ class FunctionBuilder internal constructor(
      * If the type should be void you can set the type to void or ignore this option
      * @param returnType the given type
      */
-    fun returns(returnType: String) = apply {
+    fun returns(returnType: TypeName) = apply {
         this.returnType = returnType
+    }
+
+    fun returns(returnType: ClassName) = apply {
+        this.returnType = returnType
+    }
+
+    fun returns(returnType: Type) = apply {
+        this.returnType = returnType.asTypeName()
+    }
+
+    fun returns(returnType: KClass<*>) = apply {
+        this.returnType = returnType.asClassName()
     }
 
     fun async(async: Boolean) = apply {
@@ -153,15 +162,6 @@ class FunctionBuilder internal constructor(
      * @return the created instance
      */
     fun build(): FunctionSpec {
-        //Check if the return type contains a nullable char and remove that and change nullable to true
-        if (returnType != null && returnType!!.endsWith("?")) {
-            println("Found nullable char at the last position. Updating returnType")
-            returnType = returnType!!.dropLast(1)
-            if (!nullable) {
-                nullable = true
-            }
-        }
-
         // Remove typedef keyword from the list to prevent problems
         if (specData.modifiers.contains(DartModifier.TYPEDEF)) {
             typedef(true)
