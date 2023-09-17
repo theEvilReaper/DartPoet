@@ -2,11 +2,12 @@ package net.theevilreaper.dartpoet.type
 
 import net.theevilreaper.dartpoet.code.CodeWriter
 import java.lang.reflect.Type
+import kotlin.reflect.KClass
 
 class ParameterizedTypeName internal constructor(
     private val enclosingTypeName: TypeName?,
-    val rawType: ClassName,
-    val typeArguments: List<TypeName>,
+    private val rawType: ClassName,
+    private val typeArguments: List<TypeName>,
     nullable: Boolean = false
 ) : TypeName(nullable) {
 
@@ -49,9 +50,29 @@ class ParameterizedTypeName internal constructor(
 
         @JvmStatic
         @JvmName("get")
+        fun ClassName.parameterizedBy(
+            vararg typeArguments: KClass<*>,
+        ): ParameterizedTypeName = ParameterizedTypeName(null, this, typeArguments.map { it.asTypeName() })
+
+        @JvmStatic
+        @JvmName("get")
         fun Class<*>.parameterizedBy(
             vararg typeArguments: Type,
         ): ParameterizedTypeName =
             ParameterizedTypeName(null, asClassName(), typeArguments.map { it.asTypeName() })
+
+        @JvmStatic
+        @JvmName("get")
+        fun KClass<*>.parameterizedBy(
+            vararg typeArguments: KClass<*>
+        ): ParameterizedTypeName =
+            ParameterizedTypeName(null, asClassName(), typeArguments.map { it.asTypeName() })
+
+        @JvmStatic
+        @JvmName("get")
+        fun KClass<*>.parameterizedBy(
+            vararg typeArguments: TypeName
+        ): ParameterizedTypeName =
+            ParameterizedTypeName(null, asClassName(), typeArguments.map { it })
     }
 }
