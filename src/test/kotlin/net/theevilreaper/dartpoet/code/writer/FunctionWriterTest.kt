@@ -9,13 +9,15 @@ import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.buildCodeBlock
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.ClassName
+import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
+import net.theevilreaper.dartpoet.type.asClassName
 
 class FunctionWriterTest {
 
     @Test
     fun `write void method`() {
         val method = FunctionSpec.builder("test")
-            .returns("void")
+            .returns(Void::class)
             .build()
         assertThat(method.toString()).isEqualTo("void test();")
     }
@@ -25,7 +27,7 @@ class FunctionWriterTest {
         val writer = CodeWriter(StringBuilder())
         val method = FunctionSpec.builder("getName")
             .modifier(DartModifier.PUBLIC)
-            .returns("String")
+            .returns(String::class)
             .addCode("return %C;", "test")
             .build()
         writer.close()
@@ -43,7 +45,7 @@ class FunctionWriterTest {
     fun `test simple private method`() {
         val writer = CodeWriter(StringBuilder())
         val method = FunctionSpec.builder("name")
-            .returns("String")
+            .returns(String::class)
             .modifier(DartModifier.PRIVATE)
             .addCode("return %C;", "Tobi").build()
         writer.close()
@@ -59,8 +61,7 @@ class FunctionWriterTest {
     @Test
     fun `write simple nullable function`() {
         val method = FunctionSpec.builder("getId")
-            .returns("int")
-            .nullable(true)
+            .returns(Int::class.asClassName().copy(nullable = true))
             .addCode("return %L;", 10).build()
         assertThat(method.toString()).isEqualTo(
             """
@@ -74,7 +75,7 @@ class FunctionWriterTest {
     @Test
     fun `write another nullable method`() {
         val method = FunctionSpec.builder("getValue")
-            .returns("int?")
+            .returns(Int::class.asClassName().copy(nullable = true))
             .addCode("return 1;")
             .build()
         assertThat(method.toString()).isEqualTo(
@@ -89,7 +90,7 @@ class FunctionWriterTest {
     @Test
     fun `write simple async function`() {
         val method = FunctionSpec.builder("getNameById")
-            .returns("String")
+            .returns(String::class)
             .async(true)
             .parameter {
                 ParameterSpec.builder("id", Int::class).build()
@@ -112,7 +113,7 @@ class FunctionWriterTest {
     @Test
     fun `write method with two parameters`() {
         val method = FunctionSpec.builder("getAllById")
-            .returns("List<Model>")
+            .returns(List::class.parameterizedBy(ClassName("Model")))
             .parameters {
                 listOf(
                     ParameterSpec.builder("id", String::class).build(),
@@ -136,7 +137,7 @@ class FunctionWriterTest {
                     .nullable(true)
                     .build()
             )
-            .returns("void Function")
+            .returns(ClassName("void Function"))
             .build()
         assertThat(function.toString()).isEqualTo("typedef ValueUpdate<E> = void Function(E? value);")
     }
@@ -144,7 +145,7 @@ class FunctionWriterTest {
     @Test
     fun `test cast write`() {
         val function = FunctionSpec.builder("getId")
-            .returns("int")
+            .returns(Int::class)
             .typeCast("int")
             .build()
         assertThat(function.toString()).isEqualTo("int getId<int>();")
@@ -153,7 +154,7 @@ class FunctionWriterTest {
     @Test
     fun `test other getter variant write`() {
         val function = FunctionSpec.builder("value")
-            .returns("int")
+            .returns(Int::class)
             .getter(true)
             .addCode("%L", "_value;")
             .build()
@@ -185,7 +186,7 @@ class FunctionWriterTest {
         val function = FunctionSpec.builder("isNoble")
             .lambda(true)
             .parameter(ParameterSpec.builder("atomicNumber", Int::class).build())
-            .returns("bool")
+            .returns(Boolean::class)
             .addCode("_nobleGases[atomicNumber] != null;")
             .build()
         assertThat(function.toString()).isEqualTo("bool isNoble(int atomicNumber) => _nobleGases[atomicNumber] != null;")
@@ -194,7 +195,7 @@ class FunctionWriterTest {
     @Test
     fun `test method with documentation`() {
         val function = FunctionSpec.builder("getName")
-            .returns("String")
+            .returns(String::class)
             .addCode("return %C;", "Test")
             .doc("Returns the name from an object")
             .doc("For generation tests it returns 'Test'")

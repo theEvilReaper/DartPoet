@@ -125,7 +125,7 @@ class DartFileTest {
                     .function(
                         FunctionSpec.builder("JsonMap")
                             .typedef(true)
-                            .returns("Map<String, dynamic>")
+                            .returns(Map::class.parameterizedBy(String::class.asTypeName(), DynamicClassName()))
                             .build()
 
                     )
@@ -228,7 +228,7 @@ class DartFileTest {
             .function(
                 FunctionSpec.builder("getByID")
                     .async(true)
-                    .returns("DefectDTO")
+                    .returns(ClassName("DefectDTO"))
                     .parameter(ParameterSpec.builder("id", Int::class).build())
                     .addCode(buildCodeBlock {
                         addStatement("final queryParams = %L;", "<String, dynamic>{}")
@@ -282,12 +282,13 @@ class DartFileTest {
     @Test
     fun `test model class write`() {
         val name = "HousePart"
+        val houseClass = ClassName(name)
         val serializer = "standardSerializers"
         val modelClass = ClassSpec.abstractClass(name)
             .withImplements("Built<$name, ${name}Builder>")
             .function(
                 FunctionSpec.builder("serializer")
-                    .returns("Serializer<$name>")
+                    .returns(ClassName("Serializer<$name>"))
                     .lambda(true)
                     .getter(true)
                     .modifier(DartModifier.STATIC)
@@ -297,7 +298,7 @@ class DartFileTest {
             .function(
                 FunctionSpec.builder("fromJson")
                     .lambda(true)
-                    .returns(name)
+                    .returns(houseClass)
                     .modifier(DartModifier.STATIC)
                     .parameter(ParameterSpec.builder("json", DynamicClassName()).build())
                     .addCode(buildCodeBlock {
@@ -308,7 +309,7 @@ class DartFileTest {
             .function(
                 FunctionSpec.builder("toJson")
                     .lambda(true)
-                    .returns("dynamic")
+                    .returns(DynamicClassName())
                     .addCode(buildCodeBlock {
                         add("%L.serialize(this);", "standardSerializers")
                     })
@@ -393,7 +394,7 @@ class DartFileTest {
             .function(
                 FunctionSpec.builder("getName")
                     .doc("Returns the given name from the object")
-                    .returns("String")
+                    .returns(String::class)
                     .addCode(buildCodeBlock {
                         add("return name;")
                     })

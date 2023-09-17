@@ -5,6 +5,7 @@ import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.type.ClassName
 import org.junit.jupiter.api.Test
 
 class AbstractClassTest {
@@ -15,7 +16,7 @@ class AbstractClassTest {
             .endWithNewLine(true)
             .function(
                 FunctionSpec.builder("getByID")
-                    .returns("TestModel")
+                    .returns(ClassName("TestModel"))
                     .parameter(ParameterSpec.builder("id", Int::class).build())
                     .build()
             )

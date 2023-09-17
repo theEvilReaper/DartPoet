@@ -14,22 +14,25 @@ class EnumPropertyWriterTest {
 
         @JvmStatic
         private fun properties() = Stream.of(
-            Arguments.of(EnumPropertySpec.builder("test").generic("String").build(), "test<String>"),
-            Arguments.of(EnumPropertySpec.builder("test")
-                .parameter("%C", "/dash")
-                .build(),
+            Arguments.of(EnumPropertySpec.builder("test").generic(String::class).build(), "test<String>"),
+            Arguments.of(
+                EnumPropertySpec.builder("test")
+                    .parameter("%C", "/dash")
+                    .build(),
                 "test('/dash')"
             ),
-            Arguments.of(EnumPropertySpec.builder("test")
-                .parameter("%L", "10")
-                .build(),
+            Arguments.of(
+                EnumPropertySpec.builder("test")
+                    .parameter("%L", "10")
+                    .build(),
                 "test(10)"
             ),
-            Arguments.of(EnumPropertySpec.builder("dashboard")
-                .parameter("%C", "Dashboard")
-                .parameter("%C", "/dashboard")
-                .parameter("%L", "false")
-                .build(),
+            Arguments.of(
+                EnumPropertySpec.builder("dashboard")
+                    .parameter("%C", "Dashboard")
+                    .parameter("%C", "/dashboard")
+                    .parameter("%L", "false")
+                    .build(),
                 "dashboard('Dashboard', '/dashboard', false)"
             ),
         )

@@ -19,7 +19,7 @@ class EnumPropertySpecTest {
         @JvmStatic
         private fun values() = Stream.of(
             Arguments.of(EnumPropertySpec.builder("test").build(), "test"),
-            Arguments.of(EnumPropertySpec.builder("test").generic("String").build(), "test<String>"),
+            Arguments.of(EnumPropertySpec.builder("test").generic(String::class).build(), "test<String>"),
             Arguments.of(
                 EnumPropertySpec.builder("navigation")
                     .parameter("%C", "/dashboard")
@@ -39,7 +39,7 @@ class EnumPropertySpecTest {
     fun `test spec conversion to a builder`() {
         val propertySpec = EnumPropertySpec
             .builder("test")
-            .generic("String")
+            .generic(String::class)
             .parameter("%C", "/dashboard")
             .build()
         val specAsBuilder = propertySpec.toBuilder()
