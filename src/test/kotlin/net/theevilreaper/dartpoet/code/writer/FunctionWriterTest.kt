@@ -8,6 +8,7 @@ import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.buildCodeBlock
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.type.ClassName
 
 class FunctionWriterTest {
 
@@ -91,11 +92,12 @@ class FunctionWriterTest {
             .returns("String")
             .async(true)
             .parameter {
-                ParameterSpec.builder("id", "int").build()
+                ParameterSpec.builder("id", Int::class).build()
             }
-            .addCode(CodeBlock.builder()
-                .add("return 'Thomas';")
-                .build()
+            .addCode(
+                CodeBlock.builder()
+                    .add("return 'Thomas';")
+                    .build()
             )
             .build()
         assertThat(method.toString()).isEqualTo(
@@ -113,8 +115,8 @@ class FunctionWriterTest {
             .returns("List<Model>")
             .parameters {
                 listOf(
-                    ParameterSpec.builder("id", "String").build(),
-                    ParameterSpec.builder("amount", "int").build()
+                    ParameterSpec.builder("id", String::class).build(),
+                    ParameterSpec.builder("amount", Int::class).build()
                 )
             }
             .build()
@@ -129,8 +131,11 @@ class FunctionWriterTest {
     fun `test typedef write`() {
         val function = FunctionSpec.builder("ValueUpdate<E>")
             .typedef(true)
-            .parameter(ParameterSpec.builder("value", "E")
-                .nullable(true).build())
+            .parameter(
+                ParameterSpec.builder("value", ClassName("E"))
+                    .nullable(true)
+                    .build()
+            )
             .returns("void Function")
             .build()
         assertThat(function.toString()).isEqualTo("typedef ValueUpdate<E> = void Function(E? value);")
@@ -159,8 +164,7 @@ class FunctionWriterTest {
     fun `test other setter variant write`() {
         val function = FunctionSpec.builder("value")
             .parameter(
-                ParameterSpec.builder("value", "int")
-                    .build()
+                ParameterSpec.builder("value", Int::class).build()
             )
             .setter(true)
             .addCode(buildCodeBlock {
@@ -180,7 +184,7 @@ class FunctionWriterTest {
     fun `test lambda method write`() {
         val function = FunctionSpec.builder("isNoble")
             .lambda(true)
-            .parameter(ParameterSpec.builder("atomicNumber", "int").build())
+            .parameter(ParameterSpec.builder("atomicNumber", Int::class).build())
             .returns("bool")
             .addCode("_nobleGases[atomicNumber] != null;")
             .build()

@@ -19,7 +19,15 @@ class ParameterizedTypeNameTest {
 
         @JvmStatic
         private fun typeNameTest() = Stream.of(
-            Arguments.of("List<Int>", List::class.java.asClassName().parameterizedBy(Int::class.asTypeName()))
+            Arguments.of("List<int>", List::class.parameterizedBy(Int::class)),
+            Arguments.of(
+                "Map<String, String>",
+                Map::class.parameterizedBy(String::class, String::class)
+            ),
+            Arguments.of(
+                "Map<String, dynamic>",
+                Map::class.parameterizedBy(String::class.asTypeName(), DynamicClassName())
+            )
         )
     }
 

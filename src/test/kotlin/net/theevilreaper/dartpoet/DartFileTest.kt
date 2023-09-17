@@ -13,6 +13,10 @@ import net.theevilreaper.dartpoet.directive.LibraryDirective
 import net.theevilreaper.dartpoet.directive.PartDirective
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
+import net.theevilreaper.dartpoet.type.ClassName
+import net.theevilreaper.dartpoet.type.DynamicClassName
+import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
+import net.theevilreaper.dartpoet.type.asTypeName
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import kotlin.test.assertContentEquals
@@ -55,7 +59,7 @@ class DartFileTest {
                     .asFactory(true)
                     .modifier(DartModifier.CONST)
                     .parameter {
-                        ParameterSpec.builder("version", "String")
+                        ParameterSpec.builder("version", String::class)
                             .named(true)
                             .annotations(
                                 AnnotationSpec.builder("JsonKey")
@@ -72,7 +76,10 @@ class DartFileTest {
                     .lambda(true)
                     .asFactory(true)
                     .parameter(
-                        ParameterSpec.builder("json", "Map<String, dynamic>").build()
+                        ParameterSpec.builder(
+                            "json",
+                            Map::class.parameterizedBy(String::class.asTypeName(), DynamicClassName())
+                        ).build()
                     )
                     .addCode("%L", "_${"$"}VersionModelFromJson(json);")
                     .build()
@@ -197,6 +204,7 @@ class DartFileTest {
     @Test
     fun `test api handler write`() {
         val className = "DefectApi"
+        val apiClassName = ClassName("ApiClient")
         val apiClient = "ApiClient"
 
         val handlerApiClass = ClassSpec.builder(className)
@@ -207,7 +215,7 @@ class DartFileTest {
             .constructor(
                 ConstructorSpec.builder(className)
                     .parameter(
-                        ParameterSpec.builder(apiClient.replaceFirstChar { it.lowercase() }, apiClient).build()
+                        ParameterSpec.builder(apiClient.replaceFirstChar { it.lowercase() }, apiClassName).build()
                     )
                     .addCode(buildCodeBlock {
                         add(
@@ -221,7 +229,7 @@ class DartFileTest {
                 FunctionSpec.builder("getByID")
                     .async(true)
                     .returns("DefectDTO")
-                    .parameter(ParameterSpec.builder("id", "int").build())
+                    .parameter(ParameterSpec.builder("id", Int::class).build())
                     .addCode(buildCodeBlock {
                         addStatement("final queryParams = %L;", "<String, dynamic>{}")
                         addStatement("final baseUri = Uri.parse(apiClient.baseUrl);")
@@ -291,7 +299,7 @@ class DartFileTest {
                     .lambda(true)
                     .returns(name)
                     .modifier(DartModifier.STATIC)
-                    .parameter(ParameterSpec.builder("json", "dynamic").build())
+                    .parameter(ParameterSpec.builder("json", DynamicClassName()).build())
                     .addCode(buildCodeBlock {
                         add("%L.deserialize(json);", serializer)
                     })
