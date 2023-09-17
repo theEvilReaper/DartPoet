@@ -1,6 +1,7 @@
 package net.theevilreaper.dartpoet.type
 
 import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.util.NULLABLE_CHAR
 import kotlin.reflect.KClass
 
 open class ClassName(
@@ -12,7 +13,14 @@ open class ClassName(
         require(name.trim().isNotEmpty()) { "The name of a ClassName can't be empty (includes only spaces)" }
     }
 
-    override fun emit(out: CodeWriter): CodeWriter = out.emit(name)
+    override fun emit(out: CodeWriter): CodeWriter {
+        out.emit(name)
+
+        if (isNullable) {
+            out.emit(NULLABLE_CHAR)
+        }
+        return out
+    }
 
     override fun copy(nullable: Boolean): TypeName {
         return ClassName(name, nullable)
@@ -25,6 +33,10 @@ fun KClass<*>.asClassName(): ClassName {
     val simpleTypes = setOf("Byte", "Short", "Int", "Long", "Float", "Double", "Char", "Boolean")
     if (this.simpleName in simpleTypes) {
         return TypeName.parseSimpleClass(this)
+    }
+
+    if (this == Void::class) {
+        return ClassName(Void::class.simpleName!!.replaceFirstChar { it.lowercase() })
     }
     return ClassName(simpleName)
 
