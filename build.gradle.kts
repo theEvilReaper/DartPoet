@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     signing
     `maven-publish`
@@ -31,9 +33,8 @@ tasks {
         }
     }
     compileKotlin {
-        kotlinOptions {
-            jvmTarget = "17"
-            //languageVersion = "2.0"
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_17)
         }
     }
 }
