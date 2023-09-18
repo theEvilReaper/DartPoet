@@ -1,6 +1,7 @@
 package net.theevilreaper.dartpoet.code.writer
 
 import net.theevilreaper.dartpoet.DartModifier
+import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.property.PropertySpec
@@ -12,39 +13,34 @@ class PropertyWriter {
 
     fun write(property: PropertySpec, writer: CodeWriter) {
         if (property.hasDocs) {
+
             property.docs.forEach { writer.emitDoc(it) }
         }
         property.annotations.emitAnnotations(writer) {
             it.write(writer, inline = false)
         }
 
-        property.modifiers.forEachIndexed { index, modifier ->
-            if (index > 0) {
-                writer.emit(SPACE)
-            }
-            writer.emit(modifier.identifier)
-        }
+        val modifierString = property.modifiers.joinToString(separator = SPACE) { it.identifier }
+        writer.emit(modifierString)
 
         if (!property.isConst) {
             if (property.modifiers.isNotEmpty()) {
                 writer.emit(SPACE)
             }
-            writer.emit(property.type)
+            writer.emitCode("%T", property.type)
         }
 
-        if (property.nullable) {
-            writer.emit("? ")
-        } else {
-            writer.emit(SPACE)
-        }
+        writer.emit("·")
 
         writer.emit(if (property.isPrivate) DartModifier.PRIVATE.identifier else EMPTY_STRING)
         writer.emit(property.name)
-
-        if (property.initBlock.isNotEmpty()) {
-            writer.emit("·=·")
-            writer.emitCode(property.initBlock.build(), isConstantContext = true)
-        }
+        emitInitBlock(property.initBlock, writer)
         writer.emit(SEMICOLON)
+    }
+
+    private fun emitInitBlock(initBlock: CodeBlock.Builder, writer: CodeWriter) {
+        if (initBlock.isEmpty()) return
+        writer.emit("·=·")
+        writer.emitCode(initBlock.build(), isConstantContext = true)
     }
 }

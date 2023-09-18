@@ -151,9 +151,10 @@ class ClassWriter {
     }
 
     private fun writeInheritance(spec: ClassSpec, writer: CodeWriter) {
-        if (spec.superClass.orEmpty().trim().isNotEmpty()) {
+        if (spec.superClass != null) {
             writer.emit("${spec.inheritKeyWord!!.identifier}·")
-            writer.emit("${spec.superClass!!}·")
+            writer.emitCode("%T", spec.superClass)
+            writer.emit("·")
         }
     }
 
