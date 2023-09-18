@@ -1,6 +1,7 @@
 package net.theevilreaper.dartpoet.util
 
 import net.theevilreaper.dartpoet.DartModifier
+import net.theevilreaper.dartpoet.type.ConstClassName
 
 // The documentation from dart says that maximum length of a line is 80
 internal const val MAX_LINE_LENGTH = 80
@@ -36,6 +37,8 @@ internal val ALLOWED_CONST_MODIFIERS = setOf(DartModifier.CONST)
 private val namePattern: Regex = Regex("[a-z]+|([a-z]+)_+([a-z]+)")
 private val lowerCamelCase: Regex = Regex("[a-z]+[A-Z0-9]*[a-z0-9]*[A-Za-z0-9]*")
 private val indentPattern: Regex = Regex(" +")
+
+internal val CONST_TYPE = ConstClassName()
 
 /**
  * Checks if a given set of [DartModifier] matches with a given set which contains the allowed [DartModifier].
