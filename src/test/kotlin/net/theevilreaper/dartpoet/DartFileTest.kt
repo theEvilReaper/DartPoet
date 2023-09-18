@@ -51,8 +51,9 @@ class DartFileTest {
 
     @Test
     fun `write test model with freezed`() {
+        val freezedMixing = ClassName("_${'$'}VersionModel")
         val versionFreezedClass = ClassSpec.builder("VersionModel")
-            .withMixin("_${'$'}VersionModel")
+            .superClass(freezedMixing, InheritKeyword.MIXIN)
             .annotation { AnnotationSpec.builder("freezed").build() }
             .constructor {
                 ConstructorSpec.builder("VersionModel")
@@ -156,9 +157,9 @@ class DartFileTest {
             .type(
                 ClassSpec.enumClass("NavigationEntry")
                     .properties(
-                        PropertySpec.builder("name", "String")
+                        PropertySpec.builder("name", String::class)
                             .modifier { DartModifier.FINAL }.build(),
-                        PropertySpec.builder("route", "String")
+                        PropertySpec.builder("route", String::class)
                             .modifier { DartModifier.FINAL }.build()
 
                     )
@@ -208,7 +209,7 @@ class DartFileTest {
         val apiClient = "ApiClient"
 
         val handlerApiClass = ClassSpec.builder(className)
-            .property(PropertySpec.builder(apiClient.replaceFirstChar { it.lowercase() }, apiClient)
+            .property(PropertySpec.builder(apiClient.replaceFirstChar { it.lowercase() }, apiClassName)
                 .modifier { DartModifier.FINAL }
                 .build()
             )
@@ -284,8 +285,9 @@ class DartFileTest {
         val name = "HousePart"
         val houseClass = ClassName(name)
         val serializer = "standardSerializers"
+        val serializerClass = ClassName("Built<$name, ${name}Builder>")
         val modelClass = ClassSpec.abstractClass(name)
-            .withImplements("Built<$name, ${name}Builder>")
+            .superClass(serializerClass, InheritKeyword.IMPLEMENTS)
             .function(
                 FunctionSpec.builder("serializer")
                     .returns(ClassName("Serializer<$name>"))
@@ -381,7 +383,7 @@ class DartFileTest {
     fun `test class with a bunch of comments`() {
         val spec = ClassSpec.builder("TestModel")
             .property {
-                PropertySpec.builder("name", "String")
+                PropertySpec.builder("name", String::class)
                     .docs("Property comment")
                     .build()
             }

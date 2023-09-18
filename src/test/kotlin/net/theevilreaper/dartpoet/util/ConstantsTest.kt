@@ -31,16 +31,6 @@ class ConstantsTest {
     @ParameterizedTest
     @MethodSource("patterns")
     fun `test name pattern`(name: String, result: Boolean) {
-        if (result) {
-            assertTrue(isDartConventionFileName(name))
-        } else {
-            assertFalse(isDartConventionFileName(name))
-        }
-    }
-
-    @ParameterizedTest
-    @MethodSource("camelCaseFormatting")
-    fun `test camel case formatting`(expected: String, input: String) {
-        assertEquals(expected, input)
+        assertEquals(result, isDartConventionFileName(name))
     }
 }

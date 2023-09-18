@@ -2,6 +2,7 @@ package net.theevilreaper.dartpoet
 
 import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.property.PropertySpec
+import net.theevilreaper.dartpoet.type.asTypeName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -18,23 +19,23 @@ class PropertySpecTest {
         @JvmStatic
         fun parameters(): Stream<Arguments> = Stream.of(
             Arguments.of(
-                PropertySpec.builder("test", "String").nullable(true).build(),
+                PropertySpec.builder("test", String::class.asTypeName().copy(nullable = true)).build(),
                 "String? test;"
             ),
             Arguments.of(
-                PropertySpec.builder("value", "int").build(),
+                PropertySpec.builder("value", Int::class).build(),
                 "int value;"
             ),
             Arguments.of(
-                PropertySpec.builder("data", "int").initWith("%L", "4").build(),
+                PropertySpec.builder("data", Int::class).initWith("%L", "4").build(),
                 "int data = 4;"
             ),
             Arguments.of(
-                PropertySpec.builder("data", "int").initWith("%L", "4").modifier { DartModifier.FINAL }.build(),
+                PropertySpec.builder("data", Int::class).initWith("%L", "4").modifier { DartModifier.FINAL }.build(),
                 "final int data = 4;"
             ),
             Arguments.of(
-                PropertySpec.builder("id", "String").modifiers { listOf(DartModifier.FINAL, DartModifier.PRIVATE) }
+                PropertySpec.builder("id", String::class).modifiers { listOf(DartModifier.FINAL, DartModifier.PRIVATE) }
                     .build(),
                 "final String _id;"
             )
@@ -49,14 +50,12 @@ class PropertySpecTest {
 
     @Test
     fun `test spec to builder conversation`() {
-        val propertySpec = PropertySpec.builder("amount", "int")
-            .nullable(true)
+        val propertySpec = PropertySpec.builder("amount", Int::class.asTypeName().copy(nullable = true))
             .build()
         val specAsBuilder = propertySpec.toBuilder().modifier(DartModifier.FINAL)
         assertNotNull(specAsBuilder)
         assertEquals(propertySpec.name, specAsBuilder.name)
         assertEquals(propertySpec.type, specAsBuilder.type)
-        assertEquals(propertySpec.nullable, specAsBuilder.nullable)
         assertTrue { specAsBuilder.modifiers.isNotEmpty() }
     }
 }

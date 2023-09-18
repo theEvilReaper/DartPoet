@@ -46,11 +46,11 @@ class ClassWriterTest {
     fun `test class writing with some constants`() {
         val clazz = ClassSpec.builder("TestClass")
             .constants(
-                PropertySpec.builder("test", "String")
+                PropertySpec.builder("test", String::class)
                     .modifiers { listOf(DartModifier.STATIC, DartModifier.CONST) }
                     .initWith("%C", "Test")
                     .build(),
-                PropertySpec.builder("maxId", "int")
+                PropertySpec.builder("maxId", Int::class)
                     .modifiers { listOf(DartModifier.CONST, DartModifier.STATIC) }
                     .initWith("%L", "100")
                     .build(),
