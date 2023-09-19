@@ -1,6 +1,8 @@
 package net.theevilreaper.dartpoet.annotation
 
+import net.theevilreaper.dartpoet.type.ClassName
 import org.junit.jupiter.api.Test
+import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 
 class AnnotationSpecTest {
@@ -13,14 +15,14 @@ class AnnotationSpecTest {
         assertEquals(expectedAnnotation, annotation.toString())
     }
 
- /*   @Test
+    @Test
     fun `test toBuilder function`() {
-        val d = AnnotationSpec.builder(Override::class).content("ignore")
-        val annotationSpec = AnnotationSpec.builder("jsonIgnore")
+        val className = ClassName("ignore")
+        val annotationSpec = AnnotationSpec.builder(className)
             .content("ignore", "true")
             .build()
         val specAsBuilder = annotationSpec.toBuilder()
-        assertEquals(annotationSpec.name, specAsBuilder.name)
+        assertEquals(annotationSpec.typeName, className)
         assertContentEquals(annotationSpec.content, specAsBuilder.content)
-    }*/
+    }
 }
