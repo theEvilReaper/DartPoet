@@ -15,8 +15,8 @@ import net.theevilreaper.dartpoet.type.TypeName
  * This class is typically used in code generation tasks to construct and customize parameter specifications
  * before creating instances of [ParameterSpec].
  *
- * @param name The name of the parameter.
- * @param typeName The type of the parameter, represented as a [TypeName].
+ * @param name The name of the parameter
+ * @param typeName The type of the parameter, represented as a [TypeName]
  * @author theEvilReaper
  * @since 1.0.0
  */
@@ -79,7 +79,7 @@ class ParameterBuilder internal constructor(
      * [ParameterBuilder]. It is typically used to create a parameter specification after configuring it
      * with the desired parameter details.
      *
-     * @return A [ParameterSpec] instance representing the parameter specification.
+     * @return a [ParameterSpec] instance representing the parameter specification
      */
     fun build(): ParameterSpec {
         return ParameterSpec(this)

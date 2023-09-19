@@ -34,7 +34,7 @@ class ParameterSpec internal constructor(
 
     /**
      * This init block is responsible for performing initial checks on the name parameter.
-     * It ensures that the [name] is not empty by trimming it and checking for non-empty content.
+     * It ensures that the given name is not empty by trimming it and checking for non-empty content.
      */
     init {
         check(name.trim().isNotEmpty()) { "The name of a parameter can't be empty" }
@@ -44,7 +44,7 @@ class ParameterSpec internal constructor(
      * This method delegates the writing process to a [ParameterWriter] instance, which is responsible for
      * writing the parameter details to the specified [CodeWriter].
      *
-     * @param codeWriter The [CodeWriter] to which the parameter should be written.
+     * @param codeWriter the [CodeWriter] to which the parameter should be written
      */
     internal fun write(codeWriter: CodeWriter) {
         ParameterWriter().write(this, codeWriter)
@@ -75,9 +75,9 @@ class ParameterSpec internal constructor(
         /**
          * Creates a new instance of [ParameterBuilder] with the specified name and type.
          *
-         * @param name The name for the parameter. Should adhere to naming conventions.
-         * @param type The type for the parameter, represented as a [TypeName].
-         * @return A new [ParameterBuilder] instance initialized with the provided name and type.
+         * @param name The name for the parameter. Should adhere to naming conventions
+         * @param type The type for the parameter, represented as a [TypeName]
+         * @return A new [ParameterBuilder] instance initialized with the provided name and type
          */
         @JvmStatic
         fun builder(name: String, type: TypeName) = ParameterBuilder(name, type)
@@ -85,9 +85,9 @@ class ParameterSpec internal constructor(
         /**
          * Creates a new instance of [ParameterBuilder] with the specified name and type.
          *
-         * @param name The name for the parameter. Should adhere to naming conventions.
-         * @param type The type for the parameter, represented as a [KClass].
-         * @return A new [ParameterBuilder] instance initialized with the provided name and type.
+         * @param name The name for the parameter. Should adhere to naming conventions
+         * @param type The type for the parameter, represented as a [KClass]
+         * @return A new [ParameterBuilder] instance initialized with the provided name and type
          */
         @JvmStatic
         fun builder(name: String, type: KClass<*>) = ParameterBuilder(name, type.asClassName())
@@ -95,9 +95,9 @@ class ParameterSpec internal constructor(
         /**
          * Creates a new instance of [ParameterBuilder] with the specified name and type.
          *
-         * @param name The name for the parameter. Should adhere to naming conventions.
-         * @param type The type for the parameter, represented as a [ClassName].
-         * @return A new [ParameterBuilder] instance initialized with the provided name and type.
+         * @param name The name for the parameter. Should adhere to naming conventions
+         * @param type The type for the parameter, represented as a [ClassName]
+         * @return A new [ParameterBuilder] instance initialized with the provided name and type
          */
         @JvmStatic
         fun builder(name: String, className: ClassName) = ParameterBuilder(name, className)
@@ -105,8 +105,8 @@ class ParameterSpec internal constructor(
         /**
          * Creates a new instance of [ParameterBuilder] with the specified name and type.
          *
-         * @param name The name for the parameter. Should adhere to naming conventions.
-         * @return A new [ParameterBuilder] instance initialized with the provided name and type.
+         * @param name The name for the parameter. Should adhere to naming conventions
+         * @return A new [ParameterBuilder] instance initialized with the provided name and type
          */
         @JvmStatic
         fun builder(name: String) = ParameterBuilder(name, null)
