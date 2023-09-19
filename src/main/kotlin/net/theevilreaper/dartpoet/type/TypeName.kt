@@ -18,7 +18,6 @@ import kotlin.reflect.KClass
  * @author theEvilReaper
  * @since 1.0.0
  */
-
 sealed class TypeName(val isNullable: Boolean) {
 
     /**
