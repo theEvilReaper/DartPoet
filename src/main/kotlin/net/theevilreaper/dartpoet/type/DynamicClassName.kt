@@ -16,8 +16,8 @@ internal class DynamicClassName : ClassName(DartModifier.DYNAMIC.identifier) {
      * This method is overridden from the superclass and throws an [IllegalAccessException] with a message
      * indicating that the 'dynamic' type cannot be copied.
      *
-     * @param nullable Indicates whether the type is nullable
-     * @throws IllegalAccessException Always throws an exception indicating that the 'dynamic' type cannot be copied
+     * @param nullable indicates whether the type is nullable
+     * @throws IllegalAccessException always throws an exception indicating that the 'dynamic' type cannot be copied
      */
     @Throws(IllegalAccessException::class)
     override fun copy(nullable: Boolean): TypeName {
