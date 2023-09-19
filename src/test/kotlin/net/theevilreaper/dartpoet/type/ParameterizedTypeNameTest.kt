@@ -7,12 +7,6 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
 
-/**
- * @author theEvilReaper
- * @version 1.0.0
- * @since
- */
-
 class ParameterizedTypeNameTest {
 
     companion object {
@@ -26,7 +20,7 @@ class ParameterizedTypeNameTest {
             ),
             Arguments.of(
                 "Map<String, dynamic>",
-                Map::class.parameterizedBy(String::class.asTypeName(), DynamicClassName())
+                Map::class.parameterizedBy(String::class.asTypeName(), DYNAMIC)
             )
         )
     }

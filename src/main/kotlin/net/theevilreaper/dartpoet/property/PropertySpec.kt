@@ -5,13 +5,12 @@ import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.writer.PropertyWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
+import net.theevilreaper.dartpoet.type.CONST
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
-import net.theevilreaper.dartpoet.type.asClassName
 import net.theevilreaper.dartpoet.type.asTypeName
 import net.theevilreaper.dartpoet.util.toImmutableSet
 import net.theevilreaper.dartpoet.util.ALLOWED_PROPERTY_MODIFIERS
-import net.theevilreaper.dartpoet.util.CONST_TYPE
 import net.theevilreaper.dartpoet.util.hasAllowedModifiers
 import kotlin.reflect.KClass
 
@@ -29,7 +28,7 @@ class PropertySpec(
     internal var annotations: Set<AnnotationSpec> = builder.annotations.toImmutableSet()
     internal var initBlock = builder.initBlock
     internal var isPrivate = builder.modifiers.contains(DartModifier.PRIVATE)
-    internal val isConst = builder.type == CONST_TYPE
+    internal val isConst = builder.type == CONST
     internal val docs = builder.docs
     internal val hasDocs = builder.docs.isNotEmpty()
     internal var modifiers: Set<DartModifier> = builder.modifiers
@@ -101,11 +100,11 @@ class PropertySpec(
             name: String,
             type: KClass<*>,
             vararg modifiers: DartModifier = emptyArray()
-        ) : PropertyBuilder {
+        ): PropertyBuilder {
             return PropertyBuilder(name, type.asTypeName()).modifiers { listOf(*modifiers) }
         }
 
         @JvmStatic
-        fun constBuilder(name: String) = PropertyBuilder(name, CONST_TYPE).modifier(DartModifier.CONST)
+        fun constBuilder(name: String) = PropertyBuilder(name, CONST).modifier(DartModifier.CONST)
     }
 }

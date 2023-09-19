@@ -14,7 +14,7 @@ import net.theevilreaper.dartpoet.directive.PartDirective
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.type.ClassName
-import net.theevilreaper.dartpoet.type.DynamicClassName
+import net.theevilreaper.dartpoet.type.DYNAMIC
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
 import net.theevilreaper.dartpoet.type.asTypeName
 import org.junit.jupiter.api.Assertions.*
@@ -79,7 +79,7 @@ class DartFileTest {
                     .parameter(
                         ParameterSpec.builder(
                             "json",
-                            Map::class.parameterizedBy(String::class.asTypeName(), DynamicClassName())
+                            Map::class.parameterizedBy(String::class.asTypeName(), DYNAMIC)
                         ).build()
                     )
                     .addCode("%L", "_${"$"}VersionModelFromJson(json);")
@@ -126,7 +126,7 @@ class DartFileTest {
                     .function(
                         FunctionSpec.builder("JsonMap")
                             .typedef(true)
-                            .returns(Map::class.parameterizedBy(String::class.asTypeName(), DynamicClassName()))
+                            .returns(Map::class.parameterizedBy(String::class.asTypeName(), DYNAMIC))
                             .build()
 
                     )
@@ -302,7 +302,7 @@ class DartFileTest {
                     .lambda(true)
                     .returns(houseClass)
                     .modifier(DartModifier.STATIC)
-                    .parameter(ParameterSpec.builder("json", DynamicClassName()).build())
+                    .parameter(ParameterSpec.builder("json", DYNAMIC).build())
                     .addCode(buildCodeBlock {
                         add("%L.deserialize(json);", serializer)
                     })
@@ -311,7 +311,7 @@ class DartFileTest {
             .function(
                 FunctionSpec.builder("toJson")
                     .lambda(true)
-                    .returns(DynamicClassName())
+                    .returns(DYNAMIC)
                     .addCode(buildCodeBlock {
                         add("%L.serialize(this);", "standardSerializers")
                     })
