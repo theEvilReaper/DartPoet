@@ -79,18 +79,36 @@ class ParameterizedTypeName internal constructor(
 
     companion object {
 
+        /**
+         * Creates a parameterized type using a [ClassName] as the raw type and the provided type arguments.
+         *
+         * @param typeArguments The type arguments to parameterize this class with
+         * @return a [ParameterizedTypeName] representing the parameterized type
+         */
         @JvmStatic
         @JvmName("get")
         fun ClassName.parameterizedBy(
             vararg typeArguments: TypeName,
         ): ParameterizedTypeName = ParameterizedTypeName(null, this, typeArguments.toList())
 
+        /**
+         * Creates a parameterized type using a [ClassName] as the raw type and the provided type arguments.
+         *
+         * @param typeArguments The type arguments to parameterize this class with, provided as [KClass] instances
+         * @return a [ParameterizedTypeName] representing the parameterized type
+         */
         @JvmStatic
         @JvmName("get")
         fun ClassName.parameterizedBy(
             vararg typeArguments: KClass<*>,
         ): ParameterizedTypeName = ParameterizedTypeName(null, this, typeArguments.map { it.asTypeName() })
 
+        /**
+         * Creates a parameterized type using a generic [Class] as the raw type and the provided type arguments.
+         *
+         * @param typeArguments The type arguments to parameterize this class with, provided as [Type] instances
+         * @return a [ParameterizedTypeName] representing the parameterized type
+         */
         @JvmStatic
         @JvmName("get")
         fun Class<*>.parameterizedBy(
@@ -98,6 +116,12 @@ class ParameterizedTypeName internal constructor(
         ): ParameterizedTypeName =
             ParameterizedTypeName(null, asClassName(), typeArguments.map { it.asTypeName() })
 
+        /**
+         * Creates a parameterized type using a [KClass] as the raw type and the provided type arguments.
+         *
+         * @param typeArguments The type arguments to parameterize this class with, provided as [KClass] instances
+         * @return a [ParameterizedTypeName] representing the parameterized type
+         */
         @JvmStatic
         @JvmName("get")
         fun KClass<*>.parameterizedBy(
@@ -105,6 +129,12 @@ class ParameterizedTypeName internal constructor(
         ): ParameterizedTypeName =
             ParameterizedTypeName(null, asClassName(), typeArguments.map { it.asTypeName() })
 
+        /**
+         * Creates a parameterized type using a [KClass] as the raw type and the provided type arguments.
+         *
+         * @param typeArguments The type arguments to parameterize this class with, provided as [TypeName] instances
+         * @return a [ParameterizedTypeName] representing the parameterized type
+         */
         @JvmStatic
         @JvmName("get")
         fun KClass<*>.parameterizedBy(
