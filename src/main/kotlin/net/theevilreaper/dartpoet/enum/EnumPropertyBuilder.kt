@@ -54,8 +54,16 @@ class EnumPropertyBuilder(
      */
     fun generic(value: TypeName) = apply { this.genericValueCast = value }
 
+    /**
+     * Set the cast value for a property.
+     * @param value the value to set as [ClassName]
+     */
     fun generic(value: ClassName) = apply { this.genericValueCast = value }
 
+    /**
+     * Set the cast value for a property.
+     * @param value the value to set as [TypeName]
+     */
     fun generic(value: KClass<*>) = apply { this.genericValueCast = value.asClassName() }
 
     /**
