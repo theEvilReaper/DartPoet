@@ -151,24 +151,6 @@ sealed class TypeName(val isNullable: Boolean) {
     }
 }
 
-@JvmField
-val BOOLEAN: ClassName = ClassName("bool")
-
-@JvmField
-val INTEGER: ClassName = ClassName("int")
-
-@JvmField
-val DOUBLE: ClassName = ClassName("double")
-
-@JvmField
-val STRING: ClassName = ClassName("String")
-
-@JvmField
-val CONST: ClassName = ConstClassName()
-
-@JvmField
-val DYNAMIC: ClassName = DynamicClassName()
-
 @JvmName("get")
 fun KClass<*>.asTypeName(): TypeName = asClassName()
 
