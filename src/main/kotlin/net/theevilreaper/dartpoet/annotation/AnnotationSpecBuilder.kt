@@ -1,6 +1,7 @@
 package net.theevilreaper.dartpoet.annotation
 
 import net.theevilreaper.dartpoet.code.CodeBlock
+import net.theevilreaper.dartpoet.type.TypeName
 
 /**
  * With the AnnotationBuilder data can be set to an annotation.
@@ -10,7 +11,7 @@ import net.theevilreaper.dartpoet.code.CodeBlock
  * @since
  **/
 class AnnotationSpecBuilder(
-    val name: String
+    internal val typeName: TypeName
 ) {
 
     internal val content: MutableList<CodeBlock> = mutableListOf()

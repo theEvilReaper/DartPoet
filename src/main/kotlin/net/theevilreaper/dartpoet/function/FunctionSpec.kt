@@ -7,6 +7,7 @@ import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.writer.FunctionWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.util.toImmutableList
 import net.theevilreaper.dartpoet.util.toImmutableSet
@@ -24,7 +25,7 @@ class FunctionSpec(
 ) {
 
     internal val name = builder.name
-    internal val returnType: String? = builder.returnType
+    internal val returnType: TypeName? = builder.returnType
     internal val body: CodeBlock = builder.body.build()
     internal val parameters: List<ParameterSpec> = builder.parameters.toImmutableList()
     internal val isAsync: Boolean = builder.async
@@ -32,7 +33,6 @@ class FunctionSpec(
     internal var modifiers: Set<DartModifier> = builder.specData.modifiers.also {
         hasAllowedModifiers(it, ALLOWED_FUNCTION_MODIFIERS, "function")
     }.filter { it != DartModifier.PRIVATE && it != DartModifier.PUBLIC }.toImmutableSet()
-    internal val isNullable: Boolean = builder.nullable
     internal val isPrivate = builder.specData.modifiers.contains(DartModifier.PRIVATE)
     internal val isTypeDef = builder.typedef
     internal val typeCast = builder.typeCast
@@ -89,7 +89,6 @@ class FunctionSpec(
         builder.modifiers(*this.modifiers.toTypedArray())
         builder.parameters.addAll(this.parameters)
         builder.async = this.isAsync
-        builder.nullable = this.isNullable
         builder.typedef = this.isTypeDef
         builder.typeCast = this.typeCast
         builder.setter = this.asSetter

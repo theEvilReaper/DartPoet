@@ -9,6 +9,10 @@ import net.theevilreaper.dartpoet.meta.SpecData
 import net.theevilreaper.dartpoet.meta.SpecMethods
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
+import net.theevilreaper.dartpoet.type.TypeName
+import net.theevilreaper.dartpoet.type.asTypeName
+import java.lang.reflect.Type
+import kotlin.reflect.KClass
 
 //TODO: Add check to prevent illegal modifiers on some class combinations
 class ClassBuilder internal constructor(
@@ -27,25 +31,10 @@ class ClassBuilder internal constructor(
     internal val functionStack: MutableList<FunctionSpec> = mutableListOf()
     internal val enumPropertyStack: MutableList<EnumPropertySpec> = mutableListOf()
     internal val constantStack: MutableSet<PropertySpec> = mutableSetOf()
-    internal var superClass: String? = null
+    internal var superClass: TypeName? = null
     internal var inheritKeyWord: InheritKeyword? = null
     internal var endWithNewLine = false
 
-
-    fun withMixin(className: String) = apply {
-        superClass(className)
-        this.inheritKeyWord = InheritKeyword.MIXIN
-    }
-
-    fun withExtends(className: String) = apply {
-        superClass(className)
-        this.inheritKeyWord = InheritKeyword.EXTENDS
-    }
-
-    fun withImplements(className: String) = apply {
-        superClass(className)
-        this.inheritKeyWord = InheritKeyword.IMPLEMENTS
-    }
 
     /**
      * Add a constant [PropertySpec] to the file.
@@ -85,8 +74,19 @@ class ClassBuilder internal constructor(
      * Set the class from which the generated class should inherit.
      * @param className the name from the class
      */
-    private fun superClass(className: String) {
-        this.superClass = className
+    fun superClass(superClass: TypeName, inheritKeyword: InheritKeyword) = apply {
+        this.superClass = superClass
+        inheritKeyWord = inheritKeyword
+    }
+
+    fun superClass(superClass: Type, inheritKeyword: InheritKeyword) = apply {
+        this.superClass = superClass.asTypeName()
+        inheritKeyWord = inheritKeyword
+    }
+
+    fun superClass(superClass: KClass<*>, inheritKeyword: InheritKeyword) = apply {
+        this.superClass = superClass.asTypeName()
+        inheritKeyWord = inheritKeyword
     }
 
     /**

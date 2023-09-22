@@ -16,10 +16,8 @@ enum class DartModifier(
     LATE("late", ModifierTarget.PROPERTY),
     FINAL("final", ModifierTarget.PROPERTY),
     WITH("with", ModifierTarget.CLASS),
-
     ASYNC("async", ModifierTarget.FUNCTION),
     CONST("const", ModifierTarget.PROPERTY),
-
     EXTENSION("extension", ModifierTarget.CLASS),
     ENUM("enum", ModifierTarget.CLASS),
     MIXIN("mixin", ModifierTarget.CLASS),
@@ -29,6 +27,8 @@ enum class DartModifier(
     LIBRARY("library", ModifierTarget.CLASS),
     ON("on", ModifierTarget.CLASS),
     TYPEDEF("typedef", ModifierTarget.TYPEDEF),
+    DYNAMIC("dynamic", ModifierTarget.PARAMETER),
+    REQUIRED("required", ModifierTarget.PARAMETER),
     VOID("void", ModifierTarget.INTERFACE, ModifierTarget.FUNCTION);
 
     /**

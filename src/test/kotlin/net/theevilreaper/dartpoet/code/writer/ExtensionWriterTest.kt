@@ -63,10 +63,12 @@ class ExtensionWriterTest {
         val extension = ExtensionSpec.builder("TestExtension", "String")
             .function {
                 FunctionSpec.builder("hasSize")
-                    .returns("bool")
-                    .addCode(CodeBlock.of(
-                        "return this.length > 2;"
-                    ))
+                    .returns(Boolean::class)
+                    .addCode(
+                        CodeBlock.of(
+                            "return this.length > 2;"
+                        )
+                    )
                     .build()
             }
             .build()

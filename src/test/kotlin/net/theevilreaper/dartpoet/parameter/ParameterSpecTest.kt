@@ -9,7 +9,7 @@ class ParameterSpecTest {
 
     @Test
     fun `test spec to builder conversation`() {
-        val parameterSpec = ParameterSpec.builder("amount", "int")
+        val parameterSpec = ParameterSpec.builder("amount", Int::class)
             .nullable(true)
             .initializer("%L", "10")
             .annotation(AnnotationSpec.builder("nullable").build())
@@ -17,7 +17,7 @@ class ParameterSpecTest {
         val specAsBuilder = parameterSpec.toBuilder()
         assertNotNull(parameterSpec)
         assertEquals(parameterSpec.name, specAsBuilder.name)
-        assertEquals(parameterSpec.type, specAsBuilder.type)
+        assertEquals(parameterSpec.type, specAsBuilder.typeName)
         assertEquals(parameterSpec.isNullable, specAsBuilder.nullable)
         assertTrue { specAsBuilder.initializer!!.isNotEmpty() }
         assertContentEquals(parameterSpec.annotations, specAsBuilder.specData.annotations)

@@ -5,9 +5,14 @@ import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.writer.PropertyWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
+import net.theevilreaper.dartpoet.type.CONST
+import net.theevilreaper.dartpoet.type.ClassName
+import net.theevilreaper.dartpoet.type.TypeName
+import net.theevilreaper.dartpoet.type.asTypeName
 import net.theevilreaper.dartpoet.util.toImmutableSet
 import net.theevilreaper.dartpoet.util.ALLOWED_PROPERTY_MODIFIERS
 import net.theevilreaper.dartpoet.util.hasAllowedModifiers
+import kotlin.reflect.KClass
 
 /**
  * The property spec class contains all variables which are comes from the [PropertyBuilder].
@@ -21,10 +26,9 @@ class PropertySpec(
     internal var name = builder.name
     internal var type = builder.type
     internal var annotations: Set<AnnotationSpec> = builder.annotations.toImmutableSet()
-    internal var nullable = builder.nullable
     internal var initBlock = builder.initBlock
     internal var isPrivate = builder.modifiers.contains(DartModifier.PRIVATE)
-    internal val isConst = builder.type == "CONST"
+    internal val isConst = builder.type == CONST
     internal val docs = builder.docs
     internal val hasDocs = builder.docs.isNotEmpty()
     internal var modifiers: Set<DartModifier> = builder.modifiers
@@ -34,7 +38,6 @@ class PropertySpec(
 
     init {
         check(name.trim().isNotEmpty()) { "The name of a parameter can't be empty" }
-        check(type.trim().isNotEmpty()) { "The type can't be empty" }
        /** check(!modifiers.contains(DartModifier.CONST) && !modifiers.contains(DartModifier.STATIC)) {
             "Only"
         }**/
@@ -63,7 +66,6 @@ class PropertySpec(
         val builder = PropertyBuilder(this.name, this.type)
         builder.modifiers.addAll(this.modifiers)
         builder.annotations.addAll(this.annotations)
-        builder.nullable = this.nullable
         builder.initBlock = this.initBlock
         builder.docs.addAll(this.docs)
         builder.modifiers.addAll(this.modifiers)
@@ -79,13 +81,30 @@ class PropertySpec(
         @JvmStatic
         fun builder(
             name: String,
-            type: String,
+            type: ClassName,
             vararg modifiers: DartModifier = emptyArray()
         ): PropertyBuilder {
             return PropertyBuilder(name, type).modifiers { listOf(*modifiers) }
         }
 
         @JvmStatic
-        fun constBuilder(name: String) = PropertyBuilder(name, "CONST").modifier(DartModifier.CONST)
+        fun builder(
+            name: String,
+            type: TypeName,
+            vararg modifiers: DartModifier = emptyArray()
+        ): PropertyBuilder {
+            return PropertyBuilder(name, type).modifiers { listOf(*modifiers) }
+        }
+
+        fun builder(
+            name: String,
+            type: KClass<*>,
+            vararg modifiers: DartModifier = emptyArray()
+        ): PropertyBuilder {
+            return PropertyBuilder(name, type.asTypeName()).modifiers { listOf(*modifiers) }
+        }
+
+        @JvmStatic
+        fun constBuilder(name: String) = PropertyBuilder(name, CONST).modifier(DartModifier.CONST)
     }
 }

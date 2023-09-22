@@ -18,8 +18,7 @@
  */
 package net.theevilreaper.dartpoet.util
 
-import net.theevilreaper.dartpoet.DartModifier
-import java.util.*
+import java.util.Collections
 import kotlin.collections.ArrayList
 import kotlin.collections.LinkedHashSet
 
@@ -135,7 +134,7 @@ internal val String.allCharactersAreUnderscore get() = this.all { it == UNDERSCO
 private fun String.failIfEscapeInvalid() {
     require(!any { it in ILLEGAL_CHARACTERS_TO_ESCAPE }) {
         "Can't escape identifier $this because it contains illegal characters: " +
-                ILLEGAL_CHARACTERS_TO_ESCAPE.intersect(this.toSet()).joinToString("")
+            ILLEGAL_CHARACTERS_TO_ESCAPE.intersect(this.toSet()).joinToString("")
     }
 }
 
@@ -153,9 +152,9 @@ private fun String.escapeIfAllCharactersAreUnderscore() = if (allCharactersAreUn
 
 private fun String.escapeIfNotJavaIdentifier(): String {
     return if ((
-                !Character.isJavaIdentifierStart(first()) ||
-                        drop(1).any { !Character.isJavaIdentifierPart(it) }
-                )
+            !Character.isJavaIdentifierStart(first()) ||
+                drop(1).any { !Character.isJavaIdentifierPart(it) }
+            )
     ) {
         "`$this`".replace(' ', '·')
     } else {

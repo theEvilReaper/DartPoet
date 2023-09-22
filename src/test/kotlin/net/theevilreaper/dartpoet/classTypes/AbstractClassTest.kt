@@ -5,6 +5,7 @@ import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.type.ClassName
 import org.junit.jupiter.api.Test
 
 class AbstractClassTest {
@@ -13,10 +14,11 @@ class AbstractClassTest {
     fun `test simple abstract class`() {
         val abstractClass = ClassSpec.abstractClass("DatabaseHandler")
             .endWithNewLine(true)
-            .function(FunctionSpec.builder("getByID")
-                .returns("TestModel")
-                .parameter(ParameterSpec.builder("id", "int").build())
-                .build()
+            .function(
+                FunctionSpec.builder("getByID")
+                    .returns(ClassName("TestModel"))
+                    .parameter(ParameterSpec.builder("id", Int::class).build())
+                    .build()
             )
             .function(FunctionSpec.builder("test").build())
             .build()

@@ -2,6 +2,10 @@ package net.theevilreaper.dartpoet.enum
 
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
+import net.theevilreaper.dartpoet.type.ClassName
+import net.theevilreaper.dartpoet.type.TypeName
+import net.theevilreaper.dartpoet.type.asClassName
+import kotlin.reflect.KClass
 
 /**
  * The builder allows the creation of a [EnumPropertySpec].
@@ -14,7 +18,7 @@ import net.theevilreaper.dartpoet.code.CodeBlock
 class EnumPropertyBuilder(
     val name: String
 ) {
-    internal var genericValueCast: String? = null
+    internal var genericValueCast: TypeName? = null
     internal val parameters: MutableList<CodeBlock> = mutableListOf()
     internal val annotations: MutableList<AnnotationSpec> = mutableListOf()
 
@@ -48,9 +52,19 @@ class EnumPropertyBuilder(
      * The value can't be empty (spaces are not allowed)
      * @param value the value to set
      */
-    fun generic(value: String) = apply {
-        this.genericValueCast = value
-    }
+    fun generic(value: TypeName) = apply { this.genericValueCast = value }
+
+    /**
+     * Set the cast value for a property.
+     * @param value the value to set as [ClassName]
+     */
+    fun generic(value: ClassName) = apply { this.genericValueCast = value }
+
+    /**
+     * Set the cast value for a property.
+     * @param value the value to set as [TypeName]
+     */
+    fun generic(value: KClass<*>) = apply { this.genericValueCast = value.asClassName() }
 
     /**
      * Creates a new instance from the [EnumPropertySpec] with the builder instance as parameter.

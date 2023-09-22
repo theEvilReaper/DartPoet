@@ -12,7 +12,8 @@ import net.theevilreaper.dartpoet.util.toImmutableList
 class AnnotationWriter {
 
     fun emit(spec: AnnotationSpec, writer: CodeWriter, inline: Boolean) {
-        writer.emit("${ANNOTATION_CHAR}${spec.name}")
+        writer.emit(ANNOTATION_CHAR)
+        writer.emitCode("%T", spec.typeName)
 
         if (spec.content.isEmpty()) return
 

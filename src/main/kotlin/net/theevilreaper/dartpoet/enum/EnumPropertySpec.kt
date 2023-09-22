@@ -17,7 +17,7 @@ class EnumPropertySpec(
 
     internal val name = builder.name
     internal val generic = builder.genericValueCast
-    internal val hasGeneric = builder.genericValueCast.orEmpty().isNotEmpty()
+    internal val hasGeneric = builder.genericValueCast != null
     internal val parameters = builder.parameters.toImmutableList()
     internal val hasParameter = builder.parameters.isNotEmpty()
     internal val annotations = builder.annotations.toImmutableSet()
@@ -28,15 +28,10 @@ class EnumPropertySpec(
      */
     init {
         check(name.trim().isNotEmpty()) { "The name of a EnumProperty can't be empty" }
-        if (generic != null && hasGeneric) {
-            check(generic.trim().isNotEmpty()) { "The generic cast can't be empty" }
-        }
     }
 
 
-    internal fun write(
-        codeWriter: CodeWriter
-    ) {
+    internal fun write(codeWriter: CodeWriter) {
         EnumPropertyWriter().write(this, codeWriter)
     }
 

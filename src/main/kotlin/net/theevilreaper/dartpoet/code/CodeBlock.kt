@@ -20,11 +20,15 @@
 
 package net.theevilreaper.dartpoet.code
 
+import net.theevilreaper.dartpoet.type.TypeName
+import net.theevilreaper.dartpoet.type.asTypeName
 import net.theevilreaper.dartpoet.util.escapeIfNecessary
 import net.theevilreaper.dartpoet.util.isOneOf
 import net.theevilreaper.dartpoet.util.toImmutableList
+import java.lang.reflect.Type
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
+import kotlin.reflect.KClass
 
 /**
  * A fragment of a .kt file, potentially containing declarations, statements, and documentation.
@@ -176,13 +180,13 @@ class CodeBlock private constructor(
         return builder
     }
 
-    public class Builder {
+    class Builder {
         internal val formatParts = mutableListOf<String>()
         internal val args = mutableListOf<Any?>()
 
-        public fun isEmpty(): Boolean = formatParts.isEmpty()
+        fun isEmpty(): Boolean = formatParts.isEmpty()
 
-        public fun isNotEmpty(): Boolean = !isEmpty()
+        fun isNotEmpty(): Boolean = !isEmpty()
 
         /**
          * Adds code using named arguments.
@@ -195,7 +199,7 @@ class CodeBlock private constructor(
          * format string containing `%clazz:T` and include the key `clazz` with value
          * `java.lang.Integer.class` in the argument map.
          */
-        public fun addNamed(format: String, arguments: Map<String, *>): Builder = apply {
+        fun addNamed(format: String, arguments: Map<String, *>): Builder = apply {
             var p = 0
 
             for (argument in arguments.keys) {
@@ -256,7 +260,7 @@ class CodeBlock private constructor(
          * Mixing relative and positional arguments in a call to add is invalid and will result in an
          * error.
          */
-        public fun add(format: String, vararg args: Any?): Builder = apply {
+        fun add(format: String, vararg args: Any?): Builder = apply {
             var hasRelative = false
             var hasIndexed = false
 
@@ -312,10 +316,12 @@ class CodeBlock private constructor(
                 }
 
                 require(index >= 0 && index < args.size) {
-                    "index ${index + 1} for '${format.substring(
+                    "index ${index + 1} for '${
+                        format.substring(
                             indexStart - 1,
                             indexEnd + 1,
-                        )}' not in range (received ${args.size} arguments)"
+                        )
+                    }' not in range (received ${args.size} arguments)"
                 }
                 require(!hasIndexed || !hasRelative) { "cannot mix indexed and positional parameters" }
 
@@ -349,10 +355,18 @@ class CodeBlock private constructor(
                 'P' -> this.args += if (arg is CodeBlock) arg else argToString(arg)
                 'M' -> this.args += arg
                 'C' -> this.args += argToString(arg)
+                'T' -> this.args += argToType(arg)
                 else -> throw IllegalArgumentException(
                     String.format("invalid format string: '%s'", format),
                 )
             }
+        }
+
+        private fun argToType(o: Any?) = when (o) {
+            is TypeName -> o
+            is Type -> o.asTypeName()
+            is KClass<*> -> o.asTypeName()
+            else -> throw IllegalArgumentException("expected type but was $o")
         }
 
         private fun argToName(o: Any?) = when (o) {
@@ -362,133 +376,128 @@ class CodeBlock private constructor(
       is FunSpec -> o.name
       is TypeSpec -> o.name!!
       is MemberName -> o.simpleName*/
-      else -> throw IllegalArgumentException("expected name but was $o")
-    }
-
-    private fun argToLiteral(o: Any?) = if (o is Number) formatNumericValue(o) else o
-
-    private fun argToString(o: Any?) = o?.toString()
-
-    private fun formatNumericValue(o: Number): Any? {
-      val format = DecimalFormatSymbols().apply {
-        decimalSeparator = '.'
-        groupingSeparator = '_'
-      }
-
-      val precision = if (o is Float || o is Double) o.toString().split(".").last().length else 0
-
-      val pattern = when (o) {
-        is Float, is Double -> "###,##0.0" + "#".repeat(precision - 1)
-        else -> "###,##0"
-      }
-
-      return DecimalFormat(pattern, format).format(o)
-    }
-
-    private fun logDeprecationWarning(o: Any) {
-      println(
-        "Deprecation warning: converting $o to TypeName. Conversion of TypeMirror and" +
-          " TypeElement is deprecated in KotlinPoet, use kotlin-metadata APIs instead.",
-      )
-    }
-
-    /**
-     * @param controlFlow the control flow construct and its code, such as `if (foo == 5)`.
-     *     Shouldn't contain newline characters. Can contain opening braces, e.g.
-     *     `beginControlFlow("list.forEach { element ->")`. If there's no opening brace at the end
-     *     of the string, it will be added.
-     */
-    public fun beginControlFlow(controlFlow: String, vararg args: Any?): Builder = apply {
-      add(controlFlow.withOpeningBrace(), *args)
-      indent()
-    }
-
-    private fun String.withOpeningBrace(): String {
-      for (i in length - 1 downTo 0) {
-        if (this[i] == '{') {
-          return "$this\n"
-        } else if (this[i] == '}') {
-          break
+            else -> throw IllegalArgumentException("expected name but was $o")
         }
-      }
-      return "$this·{\n"
+
+        private fun argToLiteral(o: Any?) = if (o is Number) formatNumericValue(o) else o
+
+        private fun argToString(o: Any?) = o?.toString()
+
+        private fun formatNumericValue(o: Number): Any? {
+            val format = DecimalFormatSymbols().apply {
+                decimalSeparator = '.'
+                groupingSeparator = '_'
+            }
+
+            val precision = if (o is Float || o is Double) o.toString().split(".").last().length else 0
+
+            val pattern = when (o) {
+                is Float, is Double -> "###,##0.0" + "#".repeat(precision - 1)
+                else -> "###,##0"
+            }
+
+            return DecimalFormat(pattern, format).format(o)
+        }
+
+        /**
+         * @param controlFlow the control flow construct and its code, such as `if (foo == 5)`.
+         *     Shouldn't contain newline characters. Can contain opening braces, e.g.
+         *     `beginControlFlow("list.forEach { element ->")`. If there's no opening brace at the end
+         *     of the string, it will be added.
+         */
+        fun beginControlFlow(controlFlow: String, vararg args: Any?): Builder = apply {
+            add(controlFlow.withOpeningBrace(), *args)
+            indent()
+        }
+
+        private fun String.withOpeningBrace(): String {
+            for (i in length - 1 downTo 0) {
+                if (this[i] == '{') {
+                    return "$this\n"
+                } else if (this[i] == '}') {
+                    break
+                }
+            }
+            return "$this·{\n"
+        }
+
+        /**
+         * @param controlFlow the control flow construct and its code, such as "else if (foo == 10)".
+         *     Shouldn't contain braces or newline characters.
+         */
+        fun nextControlFlow(controlFlow: String, vararg args: Any?): Builder = apply {
+            unindent()
+            add("}·$controlFlow·{\n", *args)
+            indent()
+        }
+
+        fun endControlFlow(): Builder = apply {
+            unindent()
+            add("}\n")
+        }
+
+        fun addStatement(format: String, vararg args: Any?): Builder = apply {
+            add("«")
+            add(format, *args)
+            add("\n»")
+        }
+
+        fun add(codeBlock: CodeBlock): Builder = apply {
+            formatParts += codeBlock.formatParts
+            args.addAll(codeBlock.args)
+        }
+
+        fun indent(): Builder = apply {
+            formatParts += "⇥"
+        }
+
+        fun unindent(): Builder = apply {
+            formatParts += "⇤"
+        }
+
+        fun clear(): Builder = apply {
+            formatParts.clear()
+            args.clear()
+        }
+
+        fun build(): CodeBlock = CodeBlock(formatParts.toImmutableList(), args.toImmutableList())
     }
 
-    /**
-     * @param controlFlow the control flow construct and its code, such as "else if (foo == 10)".
-     *     Shouldn't contain braces or newline characters.
-     */
-    public fun nextControlFlow(controlFlow: String, vararg args: Any?): Builder = apply {
-      unindent()
-      add("}·$controlFlow·{\n", *args)
-      indent()
+    companion object {
+        private val NAMED_ARGUMENT = Regex("%([\\w_]+):([\\w]).*")
+        private val LOWERCASE = Regex("[a-z]+[\\w_]*")
+        private const val ARG_NAME = 1
+        private const val TYPE_NAME = 2
+        private val NO_ARG_PLACEHOLDERS = setOf("⇥", "⇤", "«", "»")
+        internal val EMPTY = CodeBlock(emptyList(), emptyList())
+
+        @JvmStatic
+        fun of(format: String, vararg args: Any?): CodeBlock =
+            Builder().add(format, *args).build()
+
+        @JvmStatic
+        fun builder(): Builder = Builder()
+
+        internal val Char.isMultiCharNoArgPlaceholder get() = this == '%'
+        internal val Char.isSingleCharNoArgPlaceholder get() = isOneOf('⇥', '⇤', '«', '»')
+        internal val String.isPlaceholder
+            get() = (length == 1 && first().isSingleCharNoArgPlaceholder) ||
+                (length == 2 && first().isMultiCharNoArgPlaceholder)
+
+        internal fun String.nextPotentialPlaceholderPosition(startIndex: Int) =
+            indexOfAny(charArrayOf('%', '«', '»', '⇥', '⇤'), startIndex)
     }
-
-    public fun endControlFlow(): Builder = apply {
-      unindent()
-      add("}\n")
-    }
-
-    public fun addStatement(format: String, vararg args: Any?): Builder = apply {
-      add("«")
-      add(format, *args)
-      add("\n»")
-    }
-
-    public fun add(codeBlock: CodeBlock): Builder = apply {
-      formatParts += codeBlock.formatParts
-      args.addAll(codeBlock.args)
-    }
-
-    public fun indent(): Builder = apply {
-      formatParts += "⇥"
-    }
-
-    public fun unindent(): Builder = apply {
-      formatParts += "⇤"
-    }
-
-    public fun clear(): Builder = apply {
-      formatParts.clear()
-      args.clear()
-    }
-
-    public fun build(): CodeBlock = CodeBlock(formatParts.toImmutableList(), args.toImmutableList())
-  }
-
-  companion object {
-    private val NAMED_ARGUMENT = Regex("%([\\w_]+):([\\w]).*")
-    private val LOWERCASE = Regex("[a-z]+[\\w_]*")
-    private const val ARG_NAME = 1
-    private const val TYPE_NAME = 2
-    private val NO_ARG_PLACEHOLDERS = setOf("⇥", "⇤", "«", "»")
-    internal val EMPTY = CodeBlock(emptyList(), emptyList())
-
-    @JvmStatic public fun of(format: String, vararg args: Any?): CodeBlock =
-      Builder().add(format, *args).build()
-
-    @JvmStatic public fun builder(): Builder = Builder()
-
-    internal val Char.isMultiCharNoArgPlaceholder get() = this == '%'
-    internal val Char.isSingleCharNoArgPlaceholder get() = isOneOf('⇥', '⇤', '«', '»')
-    internal val String.isPlaceholder
-      get() = (length == 1 && first().isSingleCharNoArgPlaceholder) ||
-        (length == 2 && first().isMultiCharNoArgPlaceholder)
-
-    internal fun String.nextPotentialPlaceholderPosition(startIndex: Int) =
-      indexOfAny(charArrayOf('%', '«', '»', '⇥', '⇤'), startIndex)
-  }
 }
 
 @JvmOverloads
 fun Collection<CodeBlock>.joinToCode(
-  separator: CharSequence = ", ",
-  prefix: CharSequence = "",
-  suffix: CharSequence = "",
+    separator: CharSequence = ", ",
+    prefix: CharSequence = "",
+    suffix: CharSequence = "",
 ): CodeBlock {
-  val blocks = toTypedArray()
-  val placeholders = Array(blocks.size) { "%L" }
-  return CodeBlock.of(placeholders.joinToString(separator, prefix, suffix), *blocks)
+    val blocks = toTypedArray()
+    val placeholders = Array(blocks.size) { "%L" }
+    return CodeBlock.of(placeholders.joinToString(separator, prefix, suffix), *blocks)
 }
 
 /**
@@ -496,7 +505,7 @@ fun Collection<CodeBlock>.joinToCode(
  * [builderAction] and then converting it to [CodeBlock].
  */
 inline fun buildCodeBlock(builderAction: CodeBlock.Builder.() -> Unit): CodeBlock {
-  return CodeBlock.builder().apply(builderAction).build()
+    return CodeBlock.builder().apply(builderAction).build()
 }
 
 /**
@@ -505,5 +514,5 @@ inline fun buildCodeBlock(builderAction: CodeBlock.Builder.() -> Unit): CodeBloc
  * original [CodeBlock.Builder].
  */
 inline fun CodeBlock.Builder.withIndent(builderAction: CodeBlock.Builder.() -> Unit): CodeBlock.Builder {
-  return indent().also(builderAction).unindent()
+    return indent().also(builderAction).unindent()
 }

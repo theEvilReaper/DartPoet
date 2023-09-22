@@ -13,6 +13,10 @@ import net.theevilreaper.dartpoet.directive.LibraryDirective
 import net.theevilreaper.dartpoet.directive.PartDirective
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
+import net.theevilreaper.dartpoet.type.ClassName
+import net.theevilreaper.dartpoet.type.DYNAMIC
+import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
+import net.theevilreaper.dartpoet.type.asTypeName
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import kotlin.test.assertContentEquals
@@ -47,15 +51,16 @@ class DartFileTest {
 
     @Test
     fun `write test model with freezed`() {
+        val freezedMixing = ClassName("_${'$'}VersionModel")
         val versionFreezedClass = ClassSpec.builder("VersionModel")
-            .withMixin("_${'$'}VersionModel")
+            .superClass(freezedMixing, InheritKeyword.MIXIN)
             .annotation { AnnotationSpec.builder("freezed").build() }
             .constructor {
                 ConstructorSpec.builder("VersionModel")
                     .asFactory(true)
                     .modifier(DartModifier.CONST)
                     .parameter {
-                        ParameterSpec.builder("version", "String")
+                        ParameterSpec.builder("version", String::class)
                             .named(true)
                             .annotations(
                                 AnnotationSpec.builder("JsonKey")
@@ -72,7 +77,10 @@ class DartFileTest {
                     .lambda(true)
                     .asFactory(true)
                     .parameter(
-                        ParameterSpec.builder("json", "Map<String, dynamic>").build()
+                        ParameterSpec.builder(
+                            "json",
+                            Map::class.parameterizedBy(String::class.asTypeName(), DYNAMIC)
+                        ).build()
                     )
                     .addCode("%L", "_${"$"}VersionModelFromJson(json);")
                     .build()
@@ -118,7 +126,7 @@ class DartFileTest {
                     .function(
                         FunctionSpec.builder("JsonMap")
                             .typedef(true)
-                            .returns("Map<String, dynamic>")
+                            .returns(Map::class.parameterizedBy(String::class.asTypeName(), DYNAMIC))
                             .build()
 
                     )
@@ -149,9 +157,9 @@ class DartFileTest {
             .type(
                 ClassSpec.enumClass("NavigationEntry")
                     .properties(
-                        PropertySpec.builder("name", "String")
+                        PropertySpec.builder("name", String::class)
                             .modifier { DartModifier.FINAL }.build(),
-                        PropertySpec.builder("route", "String")
+                        PropertySpec.builder("route", String::class)
                             .modifier { DartModifier.FINAL }.build()
 
                     )
@@ -197,17 +205,18 @@ class DartFileTest {
     @Test
     fun `test api handler write`() {
         val className = "DefectApi"
+        val apiClassName = ClassName("ApiClient")
         val apiClient = "ApiClient"
 
         val handlerApiClass = ClassSpec.builder(className)
-            .property(PropertySpec.builder(apiClient.replaceFirstChar { it.lowercase() }, apiClient)
+            .property(PropertySpec.builder(apiClient.replaceFirstChar { it.lowercase() }, apiClassName)
                 .modifier { DartModifier.FINAL }
                 .build()
             )
             .constructor(
                 ConstructorSpec.builder(className)
                     .parameter(
-                        ParameterSpec.builder(apiClient.replaceFirstChar { it.lowercase() }, apiClient).build()
+                        ParameterSpec.builder(apiClient.replaceFirstChar { it.lowercase() }, apiClassName).build()
                     )
                     .addCode(buildCodeBlock {
                         add(
@@ -220,8 +229,8 @@ class DartFileTest {
             .function(
                 FunctionSpec.builder("getByID")
                     .async(true)
-                    .returns("DefectDTO")
-                    .parameter(ParameterSpec.builder("id", "int").build())
+                    .returns(ClassName("DefectDTO"))
+                    .parameter(ParameterSpec.builder("id", Int::class).build())
                     .addCode(buildCodeBlock {
                         addStatement("final queryParams = %L;", "<String, dynamic>{}")
                         addStatement("final baseUri = Uri.parse(apiClient.baseUrl);")
@@ -274,12 +283,14 @@ class DartFileTest {
     @Test
     fun `test model class write`() {
         val name = "HousePart"
+        val houseClass = ClassName(name)
         val serializer = "standardSerializers"
+        val serializerClass = ClassName("Built<$name, ${name}Builder>")
         val modelClass = ClassSpec.abstractClass(name)
-            .withImplements("Built<$name, ${name}Builder>")
+            .superClass(serializerClass, InheritKeyword.IMPLEMENTS)
             .function(
                 FunctionSpec.builder("serializer")
-                    .returns("Serializer<$name>")
+                    .returns(ClassName("Serializer<$name>"))
                     .lambda(true)
                     .getter(true)
                     .modifier(DartModifier.STATIC)
@@ -289,9 +300,9 @@ class DartFileTest {
             .function(
                 FunctionSpec.builder("fromJson")
                     .lambda(true)
-                    .returns(name)
+                    .returns(houseClass)
                     .modifier(DartModifier.STATIC)
-                    .parameter(ParameterSpec.builder("json", "dynamic").build())
+                    .parameter(ParameterSpec.builder("json", DYNAMIC).build())
                     .addCode(buildCodeBlock {
                         add("%L.deserialize(json);", serializer)
                     })
@@ -300,7 +311,7 @@ class DartFileTest {
             .function(
                 FunctionSpec.builder("toJson")
                     .lambda(true)
-                    .returns("dynamic")
+                    .returns(DYNAMIC)
                     .addCode(buildCodeBlock {
                         add("%L.serialize(this);", "standardSerializers")
                     })
@@ -372,7 +383,7 @@ class DartFileTest {
     fun `test class with a bunch of comments`() {
         val spec = ClassSpec.builder("TestModel")
             .property {
-                PropertySpec.builder("name", "String")
+                PropertySpec.builder("name", String::class)
                     .docs("Property comment")
                     .build()
             }
@@ -385,7 +396,7 @@ class DartFileTest {
             .function(
                 FunctionSpec.builder("getName")
                     .doc("Returns the given name from the object")
-                    .returns("String")
+                    .returns(String::class)
                     .addCode(buildCodeBlock {
                         add("return name;")
                     })

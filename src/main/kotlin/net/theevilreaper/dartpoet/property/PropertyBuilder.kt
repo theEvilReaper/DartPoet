@@ -3,6 +3,7 @@ package net.theevilreaper.dartpoet.property
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
+import net.theevilreaper.dartpoet.type.TypeName
 
 /**
  * The builder is used to set all values that describe a property in Dart.
@@ -12,9 +13,8 @@ import net.theevilreaper.dartpoet.code.CodeBlock
  **/
 class PropertyBuilder internal constructor(
     var name: String,
-    var type: String,
+    var type: TypeName,
 ) {
-    internal var nullable = false
     internal val modifiers: MutableSet<DartModifier> = mutableSetOf()
     internal val annotations: MutableList<AnnotationSpec> = mutableListOf()
     internal var initBlock: CodeBlock.Builder = CodeBlock.builder()
@@ -45,15 +45,6 @@ class PropertyBuilder internal constructor(
      */
     fun initWith(codeFragment: CodeBlock.Builder): PropertyBuilder = apply {
         this.initBlock = codeFragment
-    }
-
-    /**
-     * Set if the property should be nullable or not. A property which is nullable in Dart contains a '?' after the type.
-     * @param nullable if the property should be nullable or not
-     */
-    fun nullable(nullable: Boolean): PropertyBuilder {
-        this.nullable = nullable
-        return this
     }
 
     /**

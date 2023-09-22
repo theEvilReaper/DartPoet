@@ -6,6 +6,7 @@ import net.theevilreaper.dartpoet.DartModifier
 internal const val MAX_LINE_LENGTH = 80
 internal const val EMPTY_STRING = ""
 internal const val NULL_STRING = "null"
+internal const val NULLABLE_CHAR = "?"
 
 internal const val SPACE_CHAR = ' '
 internal const val SPACE = SPACE_CHAR.toString()
@@ -26,8 +27,10 @@ internal const val CURLY_CLOSE = '}'
 internal const val ROUND_OPEN = "("
 internal const val ROUND_CLOSE = ")"
 
-internal val ALLOWED_FUNCTION_MODIFIERS = setOf(DartModifier.PUBLIC, DartModifier.PRIVATE, DartModifier.STATIC, DartModifier.TYPEDEF)
-internal val ALLOWED_PROPERTY_MODIFIERS = setOf(DartModifier.PRIVATE, DartModifier.FINAL, DartModifier.LATE, DartModifier.STATIC, DartModifier.CONST)
+internal val ALLOWED_FUNCTION_MODIFIERS =
+    setOf(DartModifier.PUBLIC, DartModifier.PRIVATE, DartModifier.STATIC, DartModifier.TYPEDEF)
+internal val ALLOWED_PROPERTY_MODIFIERS =
+    setOf(DartModifier.PRIVATE, DartModifier.FINAL, DartModifier.LATE, DartModifier.STATIC, DartModifier.CONST)
 internal val ALLOWED_CLASS_CONST_MODIFIERS = setOf(DartModifier.STATIC, DartModifier.CONST)
 internal val ALLOWED_CONST_MODIFIERS = setOf(DartModifier.CONST)
 
@@ -35,6 +38,8 @@ internal val ALLOWED_CONST_MODIFIERS = setOf(DartModifier.CONST)
 private val namePattern: Regex = Regex("[a-z]+|([a-z]+)_+([a-z]+)")
 private val lowerCamelCase: Regex = Regex("[a-z]+[A-Z0-9]*[a-z0-9]*[A-Za-z0-9]*")
 private val indentPattern: Regex = Regex(" +")
+
+internal val ALLOWED_PRIMITIVE_TYPES = setOf("Short", "Int", "Long", "Float", "Double", "Char", "Boolean")
 
 /**
  * Checks if a given set of [DartModifier] matches with a given set which contains the allowed [DartModifier].
@@ -90,4 +95,8 @@ fun isIndent(input: String): Boolean {
  */
 private fun testStringForPattern(input: String, pattern: Regex): Boolean {
     return input.isNotEmpty() && input.matches(pattern)
+}
+
+fun formatLowerCamelCase(input: String): String {
+    return input.replaceFirstChar { it.lowercase() }
 }

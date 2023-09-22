@@ -1,5 +1,6 @@
 package net.theevilreaper.dartpoet.code.writer
 
+import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.emitAnnotations
@@ -23,15 +24,15 @@ class ParameterWriter {
             it.write(codeWriter)
         }
 
-        if (spec.type.orEmpty().trim().isNotEmpty()) {
-            codeWriter.emit(spec.type!!)
+        if (spec.type != null) {
+            codeWriter.emitCode("%T", spec.type)
         } else {
             if (spec.isRequired) {
-                codeWriter.emit("required·")
+                codeWriter.emit("${DartModifier.REQUIRED.identifier}·")
             }
             codeWriter.emit("this.")
         }
-        codeWriter.emit(if (spec.isNullable) "?·" else if (spec.type.orEmpty().trim().isNotEmpty()) "·" else "")
+        codeWriter.emit(if (spec.isNullable) "?·" else if (spec.type != null) "·" else "")
         codeWriter.emit(spec.name)
         writeInitializer(spec.initializer, codeWriter)
     }
