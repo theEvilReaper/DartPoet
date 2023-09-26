@@ -57,8 +57,8 @@ class FunctionWriter {
         }
         writer.emit("${if (functionSpec.isPrivate) PRIVATE.identifier else ""}${functionSpec.name}")
 
-        if (functionSpec.typeCast.orEmpty().trim().isNotEmpty()) {
-            writer.emitCode("<%L>", functionSpec.typeCast)
+        if (functionSpec.typeCast != null) {
+            writer.emitCode("<%T>", functionSpec.typeCast)
         }
 
         if (functionSpec.isGetter) {

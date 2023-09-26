@@ -28,7 +28,7 @@ class FunctionBuilder internal constructor(
     internal var returnType: TypeName? = null
     internal val body: CodeBlock.Builder = CodeBlock.builder()
     internal var typedef: Boolean = false
-    internal var typeCast: String? = null
+    internal var typeCast: TypeName? = null
     internal var setter: Boolean = false
     internal var getter: Boolean = false
     internal var lambda: Boolean = false
@@ -68,9 +68,32 @@ class FunctionBuilder internal constructor(
         this.getter = getter
     }
 
-    fun typeCast(cast: String) = apply {
-        this.typeCast = cast
-    }
+    /**
+     * This method allows to specify a type cast using a [TypeName] object.
+     * It sets the type cast for the current instance and returns the modified instance.
+     *
+     * @param cast the [TypeName] representing the type to cast to
+     * @return the involved builder instance
+     */
+    fun typeCast(cast: TypeName) = apply { this.typeCast = cast }
+
+    /**
+     * This method allows to specify a type cast using a [ClassName] object.
+     * It sets the type cast for the current instance and returns the modified instance.
+     *
+     * @param cast the [ClassName] representing the type to cast to
+     * @return the involved builder instance
+     */
+    fun typeCast(cast: ClassName) = apply { this.typeCast = cast }
+
+    /**
+     * This method allows to specify a type cast using a [KClass] object.
+     * It sets the type cast for the current instance and returns the modified instance.
+     *
+     * @param cast the [KClass] representing the type to cast to
+     * @return the involved builder instance
+     */
+    fun typeCast(cast: KClass<*>) = apply { this.typeCast = cast.asTypeName() }
 
     /**
      * If the function should be generated as typedef definition.
