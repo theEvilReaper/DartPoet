@@ -9,10 +9,38 @@ import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.buildCodeBlock
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.ClassName
+import net.theevilreaper.dartpoet.type.DYNAMIC
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
 import net.theevilreaper.dartpoet.type.asClassName
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
+import java.util.stream.Stream
 
 class FunctionWriterTest {
+
+    private companion object {
+
+        @JvmStatic
+        private fun castFunctionWrite() = Stream.of(
+            Arguments.of(
+                "int getId<int>();",
+                FunctionSpec.builder("getId").returns(Int::class).typeCast(Int::class).build()
+            ),
+            Arguments.of(
+                "List<Model> getModels<List<dynamic>>();",
+                FunctionSpec.builder("getModels").returns(List::class.parameterizedBy(ClassName("Model")))
+                    .typeCast(List::class.parameterizedBy(DYNAMIC))
+                    .build()
+            )
+        )
+    }
+
+    @ParameterizedTest
+    @MethodSource("castFunctionWrite")
+    fun `test function write with cast typeNames`(expected: String, functionSpec:FunctionSpec) {
+        assertThat(functionSpec.toString()).isEqualTo(expected)
+    }
 
     @Test
     fun `write void method`() {
@@ -140,15 +168,6 @@ class FunctionWriterTest {
             .returns(ClassName("void Function"))
             .build()
         assertThat(function.toString()).isEqualTo("typedef ValueUpdate<E> = void Function(E? value);")
-    }
-
-    @Test
-    fun `test cast write`() {
-        val function = FunctionSpec.builder("getId")
-            .returns(Int::class)
-            .typeCast("int")
-            .build()
-        assertThat(function.toString()).isEqualTo("int getId<int>();")
     }
 
     @Test
