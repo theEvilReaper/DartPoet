@@ -13,7 +13,7 @@ val DOUBLE: ClassName = ClassName("double")
 val STRING: ClassName = ClassName("String")
 
 @JvmField
-val CONST: ClassName = ConstClassName()
+internal val CONST: ClassName = ConstClassName()
 
 @JvmField
 val DYNAMIC: ClassName = DynamicClassName()
