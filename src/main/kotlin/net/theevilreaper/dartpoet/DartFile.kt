@@ -12,7 +12,7 @@ import net.theevilreaper.dartpoet.util.ALLOWED_CONST_MODIFIERS
 import net.theevilreaper.dartpoet.directive.DartDirective
 import net.theevilreaper.dartpoet.directive.LibraryDirective
 import net.theevilreaper.dartpoet.directive.PartDirective
-import net.theevilreaper.dartpoet.property.PropertySpec
+import net.theevilreaper.dartpoet.file.FileConstantSpec
 import net.theevilreaper.dartpoet.util.DART_FILE_ENDING
 import net.theevilreaper.dartpoet.util.isDartConventionFileName
 import net.theevilreaper.dartpoet.util.toImmutableList
@@ -32,7 +32,7 @@ class DartFile internal constructor(
     internal val extensions: List<ExtensionSpec> = builder.extensionStack
     internal val docs = builder.docs
     private val directives = builder.directives.toImmutableList()
-    internal val constants: Set<PropertySpec> = builder.constants.onEach {
+    internal val constants: Set<FileConstantSpec> = builder.constants.onEach {
         // Only check modifiers when the size is not zero
         if (it.modifiers.isNotEmpty()) {
             hasAllowedModifiers(it.modifiers, ALLOWED_CONST_MODIFIERS, "file const")

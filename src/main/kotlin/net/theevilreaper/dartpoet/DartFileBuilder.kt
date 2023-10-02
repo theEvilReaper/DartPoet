@@ -6,6 +6,7 @@ import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.directive.Directive
+import net.theevilreaper.dartpoet.file.FileConstantSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.util.DEFAULT_INDENT
 import net.theevilreaper.dartpoet.util.isIndent
@@ -18,18 +19,18 @@ class DartFileBuilder(
     internal val directives: MutableList<Directive> = mutableListOf()
     internal val annotations: MutableList<AnnotationSpec> = mutableListOf()
     internal val extensionStack: MutableList<ExtensionSpec> = mutableListOf()
-    internal val constants: MutableSet<PropertySpec> = mutableSetOf()
+    internal val constants: MutableSet<FileConstantSpec> = mutableSetOf()
     internal var indent = DEFAULT_INDENT
 
     /**
      * Add a constant [PropertySpec] to the file.
      * @param constant the property to add
      */
-    fun constant(constant: PropertySpec) = apply {
+    fun constant(constant: FileConstantSpec) = apply {
         this.constants += constant
     }
 
-    fun constants(vararg constants: PropertySpec) = apply {
+    fun constants(vararg constants: FileConstantSpec) = apply {
         this.constants += constants
     }
 
