@@ -9,6 +9,7 @@ import net.theevilreaper.dartpoet.type.CONST
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asTypeName
+import net.theevilreaper.dartpoet.util.ALLOWED_CONST_MODIFIERS
 import net.theevilreaper.dartpoet.util.toImmutableSet
 import net.theevilreaper.dartpoet.util.ALLOWED_PROPERTY_MODIFIERS
 import net.theevilreaper.dartpoet.util.hasAllowedModifiers
@@ -28,19 +29,34 @@ class PropertySpec(
     internal var annotations: Set<AnnotationSpec> = builder.annotations.toImmutableSet()
     internal var initBlock = builder.initBlock
     internal var isPrivate = builder.modifiers.contains(DartModifier.PRIVATE)
-    internal val isConst = builder.type == CONST
+    internal val isConst = builder.type == CONST || DartModifier.CONST in builder.modifiers
     internal val docs = builder.docs
     internal val hasDocs = builder.docs.isNotEmpty()
     internal var modifiers: Set<DartModifier> = builder.modifiers
         .also {
-            hasAllowedModifiers(it, ALLOWED_PROPERTY_MODIFIERS, "property")
+            if (it.isNotEmpty()) {
+                hasAllowedModifiers(it, ALLOWED_PROPERTY_MODIFIERS, "property")
+                if (isConst) {
+                    hasAllowedModifiers(it, ALLOWED_CONST_MODIFIERS, "const property")
+                    it.clear()
+                    it.addAll(ALLOWED_CONST_MODIFIERS)
+                }
+
+            }
+            if (isConst && type == CONST) {
+                println("HELLO")
+                it.clear()
+                it.add(DartModifier.CONST)
+                return@also
+            }
         }.filter { it != DartModifier.PRIVATE && it != DartModifier.PUBLIC }.toImmutableSet()
 
     init {
-        check(name.trim().isNotEmpty()) { "The name of a parameter can't be empty" }
-       /** check(!modifiers.contains(DartModifier.CONST) && !modifiers.contains(DartModifier.STATIC)) {
-            "Only"
-        }**/
+        check(name.trim().isNotEmpty()) { "The name of a property can't be empty" }
+
+        if (isConst && type == CONST && this.modifiers.isNotEmpty()) {
+            throw IllegalStateException("A file const property can't have any modifiers")
+        }
     }
 
     /**
@@ -105,6 +121,7 @@ class PropertySpec(
         }
 
         @JvmStatic
-        fun constBuilder(name: String) = PropertyBuilder(name, CONST).modifier(DartModifier.CONST)
+        fun fileConstBuilder(name: String) =
+            PropertyBuilder(name, CONST)
     }
 }
