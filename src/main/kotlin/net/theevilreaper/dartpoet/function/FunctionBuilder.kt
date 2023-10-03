@@ -21,7 +21,6 @@ import kotlin.reflect.KClass
 class FunctionBuilder internal constructor(
     val name: String,
 ) : SpecMethods<FunctionBuilder> {
-
     internal val specData: SpecData = SpecData()
     internal val parameters: MutableList<ParameterSpec> = mutableListOf()
     internal var async: Boolean = false
@@ -148,12 +147,8 @@ class FunctionBuilder internal constructor(
         this.parameters += parameter()
     }
 
-    fun parameters(parameterSpec: Iterable<ParameterSpec>) = apply {
-        this.parameters += parameterSpec
-    }
-
-    fun parameters(parameterSpec: () -> Iterable<ParameterSpec>) = apply {
-        this.parameters += parameterSpec()
+    fun parameters(vararg parameters: ParameterSpec) = apply {
+        this.parameters += parameters
     }
 
     override fun annotation(annotation: () -> AnnotationSpec) = apply {
