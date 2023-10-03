@@ -5,6 +5,7 @@ import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.property.PropertySpec
+import net.theevilreaper.dartpoet.type.CONST
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.SEMICOLON
 import net.theevilreaper.dartpoet.util.SPACE
@@ -20,17 +21,15 @@ class PropertyWriter {
             it.write(writer, inline = false)
         }
 
-        val modifierString = property.modifiers.joinToString(separator = SPACE) { it.identifier }
+        val modifierString = property.modifiers.joinToString(
+            separator = SPACE,
+            postfix = if (property.modifiers.isNotEmpty()) SPACE else EMPTY_STRING
+        ) { it.identifier }
         writer.emit(modifierString)
 
-        if (!property.isConst) {
-            if (property.modifiers.isNotEmpty()) {
-                writer.emit(SPACE)
-            }
-            writer.emitCode("%T", property.type)
+        if (property.type != CONST) {
+            writer.emitCode("%T·", property.type)
         }
-
-        writer.emit("·")
 
         writer.emit(if (property.isPrivate) DartModifier.PRIVATE.identifier else EMPTY_STRING)
         writer.emit(property.name)
