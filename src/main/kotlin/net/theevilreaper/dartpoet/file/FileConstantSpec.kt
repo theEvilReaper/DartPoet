@@ -28,8 +28,8 @@ class FileConstantSpec(
     internal val modifiers = setOf(DartModifier.CONST).toImmutableSet()
 
     init {
-        check(name.trim().isNotEmpty()) { "The name of a file constant can't be empty" }
-        check(initializer.isNotEmpty()) { "The initializer can't be empty" }
+        require(name.trim().isNotEmpty()) { "The name of a file constant can't be empty" }
+        require(initializer.isNotEmpty()) { "The initializer can't be empty" }
     }
 
     /**
