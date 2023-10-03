@@ -35,7 +35,7 @@ class PropertySpecTest {
                 "final int data = 4;"
             ),
             Arguments.of(
-                PropertySpec.builder("id", String::class).modifiers { listOf(DartModifier.FINAL, DartModifier.PRIVATE) }
+                PropertySpec.builder("id", String::class).modifiers(DartModifier.FINAL, DartModifier.PRIVATE)
                     .build(),
                 "final String _id;"
             )
