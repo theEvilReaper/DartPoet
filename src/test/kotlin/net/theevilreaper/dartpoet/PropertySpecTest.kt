@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.type.asTypeName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
@@ -40,12 +41,31 @@ class PropertySpecTest {
                 "final String _id;"
             )
         )
+
+        @JvmStatic
+        private fun testInvalidPropertyCreation() = Stream.of(
+            Arguments.of(
+                { PropertySpec.fileConstBuilder("test").modifier { DartModifier.CONST }.build() },
+                "A file const property can't have any modifiers"
+            ),
+            Arguments.of(
+                { PropertySpec.builder("", String::class).build() },
+                "The name of a property can't be empty"
+            )
+        )
     }
 
     @ParameterizedTest
     @MethodSource("parameters")
     fun `test properties`(propertySpec: PropertySpec, expected: String) {
         assertThat(propertySpec.toString()).isEqualTo(expected)
+    }
+
+    @ParameterizedTest
+    @MethodSource("testInvalidPropertyCreation")
+    fun `test property creation with invalid values`(block: () -> Unit, exceptionMessage: String) {
+        val exception = assertThrows<IllegalStateException> { block() }
+        assertEquals(exceptionMessage, exception.message)
     }
 
     @Test

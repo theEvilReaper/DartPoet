@@ -102,4 +102,10 @@ class PropertyWriterTest {
             """.trimIndent()
         )
     }
+
+    @Test
+    fun `test property write with only const as modifier`() {
+        val property = PropertySpec.builder("test", String::class).modifier { DartModifier.CONST }.build()
+        assertThat(property.toString()).isEqualTo("static const String test;")
+    }
 }
