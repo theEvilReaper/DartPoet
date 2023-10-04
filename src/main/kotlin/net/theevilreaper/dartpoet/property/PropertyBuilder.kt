@@ -48,22 +48,6 @@ class PropertyBuilder internal constructor(
     }
 
     /**
-     * Add a [Iterable] of [AnnotationSpec] to the property.
-     * @param annotations the annotations to add
-     */
-    fun annotations(annotations: Iterable<AnnotationSpec>): PropertyBuilder = apply {
-        this.annotations += annotations
-    }
-
-    /**
-     * Add a [Iterable] of [AnnotationSpec] to the property.
-     * @param annotations the annotations to add
-     */
-    fun annotations(annotations: () -> Iterable<AnnotationSpec>): PropertyBuilder = apply {
-        this.annotations += annotations()
-    }
-
-    /**
      * Add a single [AnnotationSpec] to the property.
      * @param annotation the annotation to add
      */
@@ -96,19 +80,11 @@ class PropertyBuilder internal constructor(
     }
 
     /**
-     * Add a [Iterable] of [DartModifier] to the property.
-     * @param modifiers the modifiers to add
+     * Add an [Array] of [DartModifier]'s to the property.
+     * @param modifiers the modifier values to add
      */
-    fun modifiers(modifiers: Iterable<DartModifier>): PropertyBuilder = apply {
+    fun modifiers(vararg modifiers: DartModifier) = apply {
         this.modifiers += modifiers
-    }
-
-    /**
-     * Add a [Iterable] of [DartModifier] to the property.
-     * @param modifiers the modifiers to add
-     */
-    fun modifiers(modifiers: () -> Iterable<DartModifier>): PropertyBuilder = apply {
-        this.modifiers += modifiers()
     }
 
     /**

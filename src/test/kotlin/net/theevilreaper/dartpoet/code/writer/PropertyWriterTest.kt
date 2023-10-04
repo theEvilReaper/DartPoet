@@ -53,7 +53,7 @@ class PropertyWriterTest {
     @Test
     fun `write const property`() {
         val property = PropertySpec.builder("maxID", Int::class)
-            .modifiers { listOf(DartModifier.STATIC, DartModifier.CONST) }
+            .modifiers(DartModifier.STATIC, DartModifier.CONST)
             .initWith("%L", "1000")
             .build()
         assertEquals("static const int maxID = 1000;", property.toString())

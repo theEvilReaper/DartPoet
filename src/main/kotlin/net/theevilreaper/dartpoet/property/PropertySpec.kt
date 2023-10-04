@@ -100,16 +100,16 @@ class PropertySpec(
             type: ClassName,
             vararg modifiers: DartModifier = emptyArray()
         ): PropertyBuilder {
-            return PropertyBuilder(name, type).modifiers { listOf(*modifiers) }
+            return PropertyBuilder(name, type).modifiers(*modifiers)
         }
 
         @JvmStatic
         fun builder(
             name: String,
             type: TypeName,
-            vararg modifiers: DartModifier = emptyArray()
+            vararg modifiers: DartModifier
         ): PropertyBuilder {
-            return PropertyBuilder(name, type).modifiers { listOf(*modifiers) }
+            return PropertyBuilder(name, type).modifiers(*modifiers)
         }
 
         fun builder(
@@ -117,7 +117,7 @@ class PropertySpec(
             type: KClass<*>,
             vararg modifiers: DartModifier = emptyArray()
         ): PropertyBuilder {
-            return PropertyBuilder(name, type.asTypeName()).modifiers { listOf(*modifiers) }
+            return PropertyBuilder(name, type.asTypeName()).modifiers(*modifiers)
         }
 
         @JvmStatic

@@ -1,17 +1,17 @@
 package net.theevilreaper.dartpoet.code.writer
 
-import net.theevilreaper.dartpoet.DartModifier
-import net.theevilreaper.dartpoet.function.FunctionSpec
-import org.junit.jupiter.api.Test
 import com.google.common.truth.Truth.assertThat
+import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.buildCodeBlock
+import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.DYNAMIC
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
 import net.theevilreaper.dartpoet.type.asClassName
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
@@ -38,7 +38,7 @@ class FunctionWriterTest {
 
     @ParameterizedTest
     @MethodSource("castFunctionWrite")
-    fun `test function write with cast typeNames`(expected: String, functionSpec:FunctionSpec) {
+    fun `test function write with cast typeNames`(expected: String, functionSpec: FunctionSpec) {
         assertThat(functionSpec.toString()).isEqualTo(expected)
     }
 
@@ -142,12 +142,10 @@ class FunctionWriterTest {
     fun `write method with two parameters`() {
         val method = FunctionSpec.builder("getAllById")
             .returns(List::class.parameterizedBy(ClassName("Model")))
-            .parameters {
-                listOf(
-                    ParameterSpec.builder("id", String::class).build(),
-                    ParameterSpec.builder("amount", Int::class).build()
-                )
-            }
+            .parameters(
+                ParameterSpec.builder("id", String::class).build(),
+                ParameterSpec.builder("amount", Int::class).build()
+            )
             .build()
         assertThat(method.toString()).isEqualTo(
             """
