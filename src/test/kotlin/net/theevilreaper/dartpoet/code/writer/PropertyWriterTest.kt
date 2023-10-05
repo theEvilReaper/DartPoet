@@ -19,8 +19,9 @@ class PropertyWriterTest {
         @JvmStatic
         private fun simpleProperties(): Stream<Arguments> = Stream.of(
             Arguments.of(PropertySpec.builder("id", Int::class).build(), "int id;"),
-            Arguments.of(PropertySpec.builder("id", String::class.asTypeName().copy(true))
-                .build(),
+            Arguments.of(
+                PropertySpec.builder("id", String::class.asTypeName().copy(true))
+                    .build(),
                 "String? id;"
             ),
             Arguments.of(
@@ -42,6 +43,18 @@ class PropertyWriterTest {
                 "int age = 12;"
             )
         )
+
+        @JvmStatic
+        private fun constPropertyWrite() = Stream.of(
+            Arguments.of(
+                PropertySpec.constBuilder("value").initWith("%L", "12").build(),
+                "static const value = 12;"
+            ),
+            Arguments.of(
+                PropertySpec.constBuilder("test", String::class).initWith("%C", "Test").build(),
+                "static const String test = 'Test';"
+            )
+        )
     }
 
     @ParameterizedTest
@@ -50,13 +63,10 @@ class PropertyWriterTest {
         assertEquals(expected, propertySpec.toString())
     }
 
-    @Test
-    fun `write const property`() {
-        val property = PropertySpec.builder("maxID", Int::class)
-            .modifiers(DartModifier.STATIC, DartModifier.CONST)
-            .initWith("%L", "1000")
-            .build()
-        assertEquals("static const int maxID = 1000;", property.toString())
+    @ParameterizedTest
+    @MethodSource("constPropertyWrite")
+    fun `test const property writing`(propertySpec: PropertySpec, expected: String) {
+        assertEquals(expected, propertySpec.toString())
     }
 
     @Test
@@ -101,11 +111,5 @@ class PropertyWriterTest {
             String? name;
             """.trimIndent()
         )
-    }
-
-    @Test
-    fun `test property write with only const as modifier`() {
-        val property = PropertySpec.builder("test", String::class).modifier { DartModifier.CONST }.build()
-        assertThat(property.toString()).isEqualTo("static const String test;")
     }
 }
