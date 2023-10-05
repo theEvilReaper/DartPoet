@@ -5,7 +5,6 @@ import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.writer.PropertyWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
-import net.theevilreaper.dartpoet.type.CONST
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asTypeName
@@ -29,33 +28,30 @@ class PropertySpec(
     internal var annotations: Set<AnnotationSpec> = builder.annotations.toImmutableSet()
     internal var initBlock = builder.initBlock
     internal var isPrivate = builder.modifiers.contains(DartModifier.PRIVATE)
-    internal val isConst = builder.type == CONST || DartModifier.CONST in builder.modifiers
+    internal var isConst = builder.modifiers.contains(DartModifier.CONST)
     internal val docs = builder.docs
     internal val hasDocs = builder.docs.isNotEmpty()
     internal var modifiers: Set<DartModifier> = builder.modifiers
         .also {
             if (it.isNotEmpty()) {
                 hasAllowedModifiers(it, ALLOWED_PROPERTY_MODIFIERS, "property")
-                if (isConst) {
+                if (type == null) {
                     hasAllowedModifiers(it, ALLOWED_CONST_MODIFIERS, "const property")
                     it.clear()
                     it.addAll(ALLOWED_CONST_MODIFIERS)
                 }
-
-            }
-            if (isConst && type == CONST) {
-                println("HELLO")
-                it.clear()
-                it.add(DartModifier.CONST)
-                return@also
             }
         }.filter { it != DartModifier.PRIVATE && it != DartModifier.PUBLIC }.toImmutableSet()
 
     init {
-        check(name.trim().isNotEmpty()) { "The name of a property can't be empty" }
+        require(name.trim().isNotEmpty()) { "The name of a property can't be empty" }
 
-        if (isConst && type == CONST && this.modifiers.isNotEmpty()) {
-            throw IllegalStateException("A file const property can't have any modifiers")
+        if (builder.type == null && !isConst) {
+            throw IllegalArgumentException("Only a const property can have no type")
+        }
+
+        if (isConst && this.initBlock.isEmpty()) {
+            throw IllegalArgumentException("A const variable needs an init block")
         }
     }
 
@@ -91,8 +87,12 @@ class PropertySpec(
     companion object {
 
         /**
-         * Creates a new instance from the [PropertyBuilder].
-         * The modifier parameter is optional
+         * Create a [PropertyBuilder] with the specified property name, [ClassName] type, and optional modifiers.
+         *
+         * @param name the name of the property
+         * @param type the [ClassName] representing the type of the property
+         * @param modifiers an array of modifiers to apply to the property. Defaults to an empty array if not provided
+         * @return a [PropertyBuilder] instance configured with the specified parameters
          */
         @JvmStatic
         fun builder(
@@ -103,15 +103,32 @@ class PropertySpec(
             return PropertyBuilder(name, type).modifiers(*modifiers)
         }
 
+        /**
+         * Create a [PropertyBuilder] with the specified property name, [TypeName] type, and optional modifiers.
+         *
+         * @param name the name of the property
+         * @param type the [TypeName] representing the type of the property
+         * @param modifiers an array of modifiers to apply to the property. Defaults to an empty array if not provided
+         * @return a [PropertyBuilder] instance configured with the specified parameters
+         */
         @JvmStatic
         fun builder(
             name: String,
             type: TypeName,
-            vararg modifiers: DartModifier
+            vararg modifiers: DartModifier = emptyArray()
         ): PropertyBuilder {
             return PropertyBuilder(name, type).modifiers(*modifiers)
         }
 
+        /**
+         * Create a [PropertyBuilder] with the specified property name, [KClass] type, and optional modifiers.
+         *
+         * @param name the name of the property
+         * @param type the [KClass] representing the type of the property
+         * @param modifiers an array of modifiers to apply to the property. Defaults to an empty array if not provided
+         * @return a [PropertyBuilder] instance configured with the specified parameters
+         */
+        @JvmStatic
         fun builder(
             name: String,
             type: KClass<*>,
@@ -120,8 +137,36 @@ class PropertySpec(
             return PropertyBuilder(name, type.asTypeName()).modifiers(*modifiers)
         }
 
+        /**
+         * Create a [PropertyBuilder] with only the property name.
+         *
+         * @param name the name of the property
+         * @return a [PropertyBuilder] instance configured with the specified parameters
+         */
         @JvmStatic
-        fun fileConstBuilder(name: String) =
-            PropertyBuilder(name, CONST)
+        fun constBuilder(name: String): PropertyBuilder =
+            PropertyBuilder(name).modifiers(*ALLOWED_CONST_MODIFIERS.toTypedArray())
+
+        /**
+         * Create a [PropertyBuilder] with only the property name and a given type.
+         *
+         * @param name the name of the property
+         * @param type the [TypeName] representing the type of the property
+         * @return a [PropertyBuilder] instance
+         */
+        @JvmStatic
+        fun constBuilder(name: String, type: TypeName): PropertyBuilder =
+            PropertyBuilder(name, type).modifiers(*ALLOWED_CONST_MODIFIERS.toTypedArray())
+
+        /**
+         * Create a [PropertyBuilder] with only the property name and a given type.
+         *
+         * @param name the name of the property
+         * @param type the [KClass] representing the type of the property
+         * @return a [PropertyBuilder] instance
+         */
+        @JvmStatic
+        fun constBuilder(name: String, type: KClass<*>): PropertyBuilder =
+            PropertyBuilder(name, type.asTypeName()).modifiers(*ALLOWED_CONST_MODIFIERS.toTypedArray())
     }
 }
