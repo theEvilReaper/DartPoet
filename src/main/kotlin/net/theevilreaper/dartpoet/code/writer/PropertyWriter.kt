@@ -5,16 +5,14 @@ import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.property.PropertySpec
-import net.theevilreaper.dartpoet.type.CONST
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.SEMICOLON
 import net.theevilreaper.dartpoet.util.SPACE
 
-class PropertyWriter {
+internal class PropertyWriter {
 
     fun write(property: PropertySpec, writer: CodeWriter) {
         if (property.hasDocs) {
-
             property.docs.forEach { writer.emitDoc(it) }
         }
         property.annotations.emitAnnotations(writer) {
@@ -27,7 +25,7 @@ class PropertyWriter {
         ) { it.identifier }
         writer.emit(modifierString)
 
-        if (property.type != CONST) {
+        if (property.type != null) {
             writer.emitCode("%T·", property.type)
         }
 
