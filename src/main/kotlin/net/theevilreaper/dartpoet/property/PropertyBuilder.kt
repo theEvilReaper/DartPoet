@@ -13,7 +13,7 @@ import net.theevilreaper.dartpoet.type.TypeName
  **/
 class PropertyBuilder internal constructor(
     var name: String,
-    var type: TypeName,
+    var type: TypeName? = null,
 ) {
     internal val modifiers: MutableSet<DartModifier> = mutableSetOf()
     internal val annotations: MutableList<AnnotationSpec> = mutableListOf()
