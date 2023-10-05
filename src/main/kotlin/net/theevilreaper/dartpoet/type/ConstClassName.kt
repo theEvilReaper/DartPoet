@@ -10,6 +10,7 @@ import net.theevilreaper.dartpoet.DartModifier
  * @author theEvilReaper
  * @since 1.0.0
  */
+@Deprecated("The usage of the const class name is unclear. For now its deprecated")
 internal class ConstClassName : ClassName(DartModifier.CONST.identifier) {
 
     /**
