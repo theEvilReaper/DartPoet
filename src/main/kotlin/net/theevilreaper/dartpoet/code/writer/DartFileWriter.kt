@@ -3,7 +3,7 @@ package net.theevilreaper.dartpoet.code.writer
 import net.theevilreaper.dartpoet.DartFile
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.emitExtensions
-import net.theevilreaper.dartpoet.code.emitFileConst
+import net.theevilreaper.dartpoet.code.emitConstants
 import net.theevilreaper.dartpoet.code.writeImports
 import net.theevilreaper.dartpoet.util.NEW_LINE
 
@@ -40,7 +40,7 @@ class DartFileWriter {
             writer.emit(NEW_LINE)
         }
 
-        dartFile.constants.emitFileConst(writer) {
+        dartFile.constants.emitConstants(writer) {
             it.write(writer)
         }
 

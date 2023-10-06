@@ -5,7 +5,7 @@ import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.directive.Directive
-import net.theevilreaper.dartpoet.file.FileConstantSpec
+import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.util.CURLY_CLOSE
@@ -181,9 +181,9 @@ internal fun <T: Directive> List<T>.writeImports(
     }
 }
 
-fun Set<FileConstantSpec>.emitFileConst(
+fun Set<ConstantPropertySpec>.emitConstants(
     codeWriter: CodeWriter,
-    emitBlock: (FileConstantSpec) -> Unit = { it.write(codeWriter) }
+    emitBlock: (ConstantPropertySpec) -> Unit = { it.write(codeWriter) }
 ) = with(codeWriter) {
     if (isNotEmpty()) {
         val emitNewLines = size > 1

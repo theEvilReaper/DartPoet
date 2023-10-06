@@ -72,7 +72,7 @@ class ClassWriter {
             codeWriter.emit(NEW_LINE)
         }
 
-        spec.constantStack.emitProperties(codeWriter)
+        spec.constantStack.emitConstants(codeWriter)
 
         if (spec.constantStack.isNotEmpty()) {
             codeWriter.emit(NEW_LINE)
@@ -137,11 +137,13 @@ class ClassWriter {
                     writer.emit(spec.name!!)
                 }
             }
+
             ClassType.ABSTRACT -> {
                 writer.emit("${type.keyword}·${ClassType.CLASS.keyword}·")
                 writer.emit(if (spec.modifiers.contains(PRIVATE)) PRIVATE.identifier else EMPTY_STRING)
                 writer.emit(spec.name!!)
             }
+
             else -> {
                 //TODO: Check if a library class needs a header
                 // A library class doesn't have any class header
@@ -160,7 +162,7 @@ class ClassWriter {
 
     private fun List<EnumPropertySpec>.emit(
         codeWriter: CodeWriter,
-        emitBlock: (EnumPropertySpec) -> Unit  = { it.write(codeWriter) }
+        emitBlock: (EnumPropertySpec) -> Unit = { it.write(codeWriter) }
     ) = with(codeWriter) {
         if (isNotEmpty()) {
             forEachIndexed { index, enumPropertySpec ->
