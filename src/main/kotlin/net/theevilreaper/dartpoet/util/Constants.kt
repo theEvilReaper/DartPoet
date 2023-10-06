@@ -31,7 +31,7 @@ internal val ALLOWED_FUNCTION_MODIFIERS =
     setOf(DartModifier.PUBLIC, DartModifier.PRIVATE, DartModifier.STATIC, DartModifier.TYPEDEF)
 internal val ALLOWED_PROPERTY_MODIFIERS =
     setOf(DartModifier.PRIVATE, DartModifier.FINAL, DartModifier.LATE, DartModifier.STATIC, DartModifier.CONST)
-internal val ALLOWED_CLASS_CONST_MODIFIERS = setOf(DartModifier.STATIC, DartModifier.CONST)
+internal val ALLOWED_CLASS_CONST_MODIFIERS = setOf(DartModifier.CONST)
 internal val ALLOWED_CONST_MODIFIERS = setOf(DartModifier.STATIC, DartModifier.CONST)
 
 //RegEx
