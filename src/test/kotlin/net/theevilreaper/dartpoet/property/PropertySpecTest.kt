@@ -1,7 +1,7 @@
-package net.theevilreaper.dartpoet
+package net.theevilreaper.dartpoet.property
 
 import com.google.common.truth.Truth.assertThat
-import net.theevilreaper.dartpoet.property.PropertySpec
+import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.type.asTypeName
 import net.theevilreaper.dartpoet.util.ALLOWED_CONST_MODIFIERS
 import net.theevilreaper.dartpoet.util.ALLOWED_PROPERTY_MODIFIERS

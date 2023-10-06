@@ -11,7 +11,7 @@ import net.theevilreaper.dartpoet.directive.DartDirective
 import net.theevilreaper.dartpoet.directive.CastType
 import net.theevilreaper.dartpoet.directive.LibraryDirective
 import net.theevilreaper.dartpoet.directive.PartDirective
-import net.theevilreaper.dartpoet.file.FileConstantSpec
+import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.type.ClassName
@@ -339,9 +339,9 @@ class DartFileTest {
         val classFile = DartFile.builder(name)
             .directive(DartDirective("dart:html"))
             .constants(
-                FileConstantSpec.builder("typeLive").initWith("1").build(),
-                FileConstantSpec.builder("typeTest").initWith("10").build(),
-                FileConstantSpec.builder("typeDev").initWith("100").build(),
+                ConstantPropertySpec.fileConst("typeLive").initWith("1").build(),
+                ConstantPropertySpec.fileConst("typeTest").initWith("10").build(),
+                ConstantPropertySpec.fileConst("typeDev").initWith("100").build(),
             )
             .type(
                 ClassSpec.builder(name.replaceFirstChar { it.uppercase() })

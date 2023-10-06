@@ -1,9 +1,8 @@
 package net.theevilreaper.dartpoet.code.writer
 
 import com.google.common.truth.Truth.assertThat
-import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.clazz.ClassSpec
-import net.theevilreaper.dartpoet.property.PropertySpec
+import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -46,12 +45,10 @@ class ClassWriterTest {
     fun `test class writing with some constants`() {
         val clazz = ClassSpec.builder("TestClass")
             .constants(
-                PropertySpec.builder("test", String::class)
-                    .modifiers(DartModifier.STATIC, DartModifier.CONST)
+                ConstantPropertySpec.classConst("test", String::class)
                     .initWith("%C", "Test")
                     .build(),
-                PropertySpec.builder("maxId", Int::class)
-                    .modifiers(DartModifier.CONST, DartModifier.STATIC)
+                ConstantPropertySpec.classConst("maxId", Int::class)
                     .initWith("%L", "100")
                     .build(),
             )
@@ -60,8 +57,8 @@ class ClassWriterTest {
             """
             class TestClass {
             
-              static const String test = 'Test';
-              static const int maxId = 100;
+              const String test = 'Test';
+              const int maxId = 100;
             
             }
             """.trimIndent()
