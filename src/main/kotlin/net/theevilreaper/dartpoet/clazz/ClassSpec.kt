@@ -1,11 +1,9 @@
 package net.theevilreaper.dartpoet.clazz
 
-import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.DartModifier.*
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.ClassWriter
-import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.util.toImmutableList
 import net.theevilreaper.dartpoet.util.toImmutableSet
 
@@ -38,10 +36,7 @@ class ClassSpec internal constructor(
     internal val constructors = builder.constructorStack.toImmutableSet()
     internal val typeDefStack = builder.functionStack.filter { it.isTypeDef }.toImmutableSet()
     internal val enumPropertyStack = builder.enumPropertyStack.toImmutableList()
-    internal val constantStack = builder.constantStack.onEach {
-        hasAllowedModifiers(it.modifiers, ALLOWED_CLASS_CONST_MODIFIERS, "class constants")
-        it.modifiers = it.modifiers.sorted().toSet()
-    }.toImmutableSet()
+    internal var constantStack = builder.constantStack.toImmutableSet()
 
     /**
      * Returns true when the class has no content to generate.
@@ -67,7 +62,9 @@ class ClassSpec internal constructor(
      * Calls the [ClassWriter] to write the data from the spec into code for dart
      * @param codeWriter the [CodeWriter] instance to apply the data
      */
-    internal fun write(codeWriter: CodeWriter) { ClassWriter().write(this, codeWriter) }
+    internal fun write(codeWriter: CodeWriter) {
+        ClassWriter().write(this, codeWriter)
+    }
 
     /**
      * Returns a [String] representation from the class spec.
@@ -85,7 +82,7 @@ class ClassSpec internal constructor(
          * @return the created instance
          */
         @JvmStatic
-        fun builder(name: String) = ClassBuilder(name, ClassType.CLASS, DartModifier.CLASS)
+        fun builder(name: String) = ClassBuilder(name, ClassType.CLASS, CLASS)
 
         /**
          * Create a new [ClassBuilder] instance for an anonymous dart class.

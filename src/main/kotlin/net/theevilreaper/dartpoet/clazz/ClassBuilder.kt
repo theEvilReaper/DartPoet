@@ -9,6 +9,7 @@ import net.theevilreaper.dartpoet.meta.SpecData
 import net.theevilreaper.dartpoet.meta.SpecMethods
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
+import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asTypeName
 import java.lang.reflect.Type
@@ -30,7 +31,7 @@ class ClassBuilder internal constructor(
     internal val propertyStack: MutableList<PropertySpec> = mutableListOf()
     internal val functionStack: MutableList<FunctionSpec> = mutableListOf()
     internal val enumPropertyStack: MutableList<EnumPropertySpec> = mutableListOf()
-    internal val constantStack: MutableSet<PropertySpec> = mutableSetOf()
+    internal val constantStack: MutableSet<ConstantPropertySpec> = mutableSetOf()
     internal var superClass: TypeName? = null
     internal var inheritKeyWord: InheritKeyword? = null
     internal var endWithNewLine = false
@@ -40,7 +41,7 @@ class ClassBuilder internal constructor(
      * Add a constant [PropertySpec] to the file.
      * @param constant the property to add
      */
-    fun constant(constant: PropertySpec) = apply {
+    fun constant(constant: ConstantPropertySpec) = apply {
         this.constantStack += constant
     }
 
@@ -48,7 +49,7 @@ class ClassBuilder internal constructor(
      * Add an array of constant [PropertySpec] to the file.
      * @param constants the array to add
      */
-    fun constants(vararg constants: PropertySpec) = apply {
+    fun constants(vararg constants: ConstantPropertySpec) = apply {
         this.constantStack += constants
     }
 
