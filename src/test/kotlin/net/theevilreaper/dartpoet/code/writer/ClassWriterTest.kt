@@ -57,8 +57,8 @@ class ClassWriterTest {
             """
             class TestClass {
             
-              const String test = 'Test';
-              const int maxId = 100;
+              static const String test = 'Test';
+              static const int maxId = 100;
             
             }
             """.trimIndent()

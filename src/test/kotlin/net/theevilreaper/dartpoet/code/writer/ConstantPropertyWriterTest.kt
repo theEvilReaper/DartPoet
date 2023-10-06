@@ -36,7 +36,10 @@ class ConstantPropertyWriterTest {
             ),
             Arguments.of(
                 "const TestModel model = TestModel();",
-                { ConstantPropertySpec.fileConst("model", ClassName("TestModel")).initWith("%L", "TestModel();").build() }
+                {
+                    ConstantPropertySpec.fileConst("model", ClassName("TestModel")).initWith("%L", "TestModel()")
+                        .build()
+                }
             )
         )
 
@@ -61,7 +64,10 @@ class ConstantPropertyWriterTest {
             ),
             Arguments.of(
                 "static const TestModel model = TestModel();",
-                { ConstantPropertySpec.classConst("model", ClassName("TestModel")).initWith("%L", "TestModel()").build() }
+                {
+                    ConstantPropertySpec.classConst("model", ClassName("TestModel")).initWith("%L", "TestModel()")
+                        .build()
+                }
             ),
             Arguments.of(
                 "static const int _test = 1;",
