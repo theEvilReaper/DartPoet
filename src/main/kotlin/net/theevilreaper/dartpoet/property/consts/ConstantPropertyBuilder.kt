@@ -1,21 +1,24 @@
-package net.theevilreaper.dartpoet.file
+package net.theevilreaper.dartpoet.property.consts
 
 import net.theevilreaper.dartpoet.DartFileBuilder
+import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.type.TypeName
 
 /**
- * The [FileConstantBuilder] can be used to construct new [FileConstantSpec] object reference which can be set
+ * The [ConstantPropertyBuilder] can be used to construct new [ConstantPropertySpec] object reference which can be set
  * into a [DartFileBuilder].
  * @author theEvilReaper
  * @since 1.0.0
  */
-class FileConstantBuilder internal constructor(
+class ConstantPropertyBuilder internal constructor(
     val name: String,
-    val typeName: TypeName? = null
+    val typeName: TypeName? = null,
+    val modifiers: Set<DartModifier>
 ) {
     internal var initializer: CodeBlock.Builder = CodeBlock.Builder()
+    internal var isPrivat: Boolean = false
 
     /**
      * Apply a given format which contains the parts for the init block of the [PropertySpec].
@@ -34,11 +37,15 @@ class FileConstantBuilder internal constructor(
         this.initializer = codeFragment
     }
 
+    fun asPrivat(boolean: Boolean) = apply {
+        this.isPrivat = boolean
+    }
+
     /**
-     * Constructs a [FileConstantSpec] reference from the current builder instance
-     * @return the created [FileConstantSpec] instance
+     * Constructs a [ConstantPropertySpec] reference from the current builder instance
+     * @return the created [ConstantPropertySpec] instance
      */
-    fun build(): FileConstantSpec {
-        return FileConstantSpec(this)
+    fun build(): ConstantPropertySpec {
+        return ConstantPropertySpec(this)
     }
 }
