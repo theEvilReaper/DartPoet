@@ -1,32 +1,62 @@
 package net.theevilreaper.dartpoet.function
 
+import com.sun.jdi.connect.Connector.Argument
 import net.theevilreaper.dartpoet.DartModifier
+import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.asTypeName
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
+import java.lang.Exception
+import java.util.stream.Stream
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class FunctionSpecTest {
 
-    @Test
-    fun `create function with empty name`() {
-        assertThrows(
-            IllegalArgumentException::class.java,
-            { FunctionSpec.builder(" ").build() },
-            "The name of a function can't be empty"
+    companion object {
+
+        @JvmStatic
+        private fun invalidFunctions() = Stream.of(
+            Arguments.of(
+                "The name of a function can't be empty",
+                { FunctionSpec.builder(" ").build() }
+            ),
+            Arguments.of(
+                "An abstract method can't have a body",
+                { FunctionSpec.builder("getName").modifier(DartModifier.ABSTRACT).addCode("%L", "value").build() }
+            ),
+            Arguments.of(
+                "The function can't be a setter and a getter twice",
+                { FunctionSpec.builder("getName").setter(true).getter(true).build() }
+            ),
+            Arguments.of(
+                "Lambda can only be used with a body",
+                { FunctionSpec.builder("getName").lambda(true).build() }
+            ),
+            Arguments.of(
+                "A function only can have named or required parameters and not both of them",
+                { FunctionSpec.builder("getName")
+                    .parameters(
+                        ParameterSpec.builder("test").named(true).build(),
+                        ParameterSpec.builder("value").required(true).build()
+                    )
+                    .build()
+                }
+            )
         )
     }
 
-    @Test
-    fun `create invalid abstract method`() {
-        assertThrows(
-            IllegalArgumentException::class.java,
-            { FunctionSpec.builder("getName").modifier(DartModifier.ABSTRACT).addCode("%L", "value").build() },
-            "An abstract method can't have a body"
-        )
+    @ParameterizedTest
+    @MethodSource("invalidFunctions")
+    fun `test invalid function creation`(message: String, function: () -> FunctionSpec) {
+        val exception = assertThrows<IllegalArgumentException> { function() }
+        assertEquals(message, exception.message)
     }
 
     @Test

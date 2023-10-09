@@ -34,12 +34,46 @@ class FunctionWriterTest {
                     .build()
             )
         )
+
+        @JvmStatic
+        private fun functionsWithSpecialParameters() = Stream.of(
+            Arguments.of(
+                "abstract int getIdRange(int maxValue, [int minValue = 0]);",
+                { FunctionSpec.builder("getIdRange")
+                    .returns(Int::class)
+                    .modifier { DartModifier.ABSTRACT }
+                    .parameters(
+                        ParameterSpec.builder("maxValue", Int::class).build(),
+                        ParameterSpec.builder("minValue", Int::class).initializer("%L", "0").named(true).build()
+                    )
+                    .build()
+                }
+            ),
+            Arguments.of(
+                "abstract int getIdRange(int maxValue, {required int minValue = 0});",
+                { FunctionSpec.builder("getIdRange")
+                    .returns(Int::class)
+                    .modifier { DartModifier.ABSTRACT }
+                    .parameters(
+                        ParameterSpec.builder("maxValue", Int::class).build(),
+                        ParameterSpec.builder("minValue", Int::class).initializer("%L", "0").required(true).build()
+                    )
+                    .build()
+                }
+            )
+        )
     }
 
     @ParameterizedTest
     @MethodSource("castFunctionWrite")
     fun `test function write with cast typeNames`(expected: String, functionSpec: FunctionSpec) {
         assertThat(functionSpec.toString()).isEqualTo(expected)
+    }
+
+    @ParameterizedTest
+    @MethodSource("functionsWithSpecialParameters")
+    fun `test function generation with special parameters`(expected: String, functionSpec: () -> FunctionSpec) {
+        assertThat(functionSpec().toString()).isEqualTo(expected)
     }
 
     @Test
