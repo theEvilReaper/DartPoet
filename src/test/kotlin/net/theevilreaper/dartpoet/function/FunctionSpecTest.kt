@@ -32,7 +32,7 @@ class FunctionSpecTest {
                 { FunctionSpec.builder("getName").modifier(DartModifier.ABSTRACT).addCode("%L", "value").build() }
             ),
             Arguments.of(
-                "The function can't be a setter and a getter twice",
+                "The function can't be a setter and a getter at the same time",
                 { FunctionSpec.builder("getName").setter(true).getter(true).build() }
             ),
             Arguments.of(

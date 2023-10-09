@@ -57,7 +57,7 @@ class FunctionSpec(
         }
 
         if (isGetter && asSetter) {
-            throw IllegalArgumentException("The function can't be a setter and a getter twice")
+            throw IllegalArgumentException("The function can't be a setter and a getter at the same time")
         }
 
         if (isLambda && body.isEmpty()) {
