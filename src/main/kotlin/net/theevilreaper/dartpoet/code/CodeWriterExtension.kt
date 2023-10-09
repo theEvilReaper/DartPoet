@@ -107,6 +107,30 @@ internal fun Set<ConstructorSpec>.emitConstructors(
     }
 }
 
+internal fun Set<ParameterSpec>.emitSpecialParameters(
+    codeWriter: CodeWriter,
+    emitSpace: Boolean = true,
+    emitAsRequired: Boolean,
+    emitBlock: (ParameterSpec) -> Unit = { it.write(codeWriter) }
+) = with(codeWriter) {
+    if (isNotEmpty()) {
+        emit(if (emitAsRequired) "$CURLY_OPEN" else "[")
+        val comma = size > 1
+        forEachIndexed { index, parameterSpec ->
+            emitBlock(parameterSpec)
+            if (comma) {
+                if (index < size - 1) {
+                    emit(",")
+                }
+                if (emitSpace && index < size - 1) {
+                    emit(SPACE)
+                }
+            }
+        }
+        emit(if (emitAsRequired) "$CURLY_CLOSE" else "]")
+    }
+}
+
 internal fun List<ParameterSpec>.emitParameters(
     codeWriter: CodeWriter,
     forceNewLines: Boolean = false,
