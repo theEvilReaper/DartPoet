@@ -24,12 +24,13 @@ class ParameterWriter {
             it.write(codeWriter)
         }
 
+        if (spec.isRequired) {
+            codeWriter.emit("${DartModifier.REQUIRED.identifier}·")
+        }
+
         if (spec.type != null) {
             codeWriter.emitCode("%T", spec.type)
         } else {
-            if (spec.isRequired) {
-                codeWriter.emit("${DartModifier.REQUIRED.identifier}·")
-            }
             codeWriter.emit("this.")
         }
         codeWriter.emit(if (spec.isNullable) "?·" else if (spec.type != null) "·" else "")

@@ -4,8 +4,11 @@ import net.theevilreaper.dartpoet.DartModifier.*
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.emitParameters
+import net.theevilreaper.dartpoet.code.emitSpecialParameters
 import net.theevilreaper.dartpoet.function.FunctionSpec
+import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.SEMICOLON
+import net.theevilreaper.dartpoet.util.SPACE
 import net.theevilreaper.dartpoet.util.toImmutableSet
 
 class FunctionWriter {
@@ -20,15 +23,13 @@ class FunctionWriter {
         }
 
         val writeableModifiers = functionSpec.modifiers.filter { it != PRIVATE && it != PUBLIC }.toImmutableSet()
-
-        if (writeableModifiers.isNotEmpty()) {
-            for (modifier in writeableModifiers) {
-                writer.emit(modifier.identifier)
-                writer.emit("·")
-            }
+        val modifiersAsString = if (writeableModifiers.isEmpty()) {
+            EMPTY_STRING
+        } else {
+            writeableModifiers.joinToString(separator = SPACE, postfix = SPACE) { it.identifier }
         }
 
-
+        writer.emit(modifiersAsString)
 
         if (functionSpec.returnType == null) {
             if (functionSpec.isAsync) {
@@ -65,10 +66,22 @@ class FunctionWriter {
             writer.emit("·=>·")
             writer.emitCode(functionSpec.body.returnsWithoutLinebreak(), ensureTrailingNewline = false)
         } else {
-            functionSpec.parameters.emitParameters(writer) {
-                it.write(writer)
+            writer.emit("(")
+            functionSpec.parameters.emitParameters(writer, emitBrackets = false)
+
+            if (functionSpec.parameters.isNotEmpty() && functionSpec.withTrailingSpaceComma) {
+                writer.emit(",$SPACE")
             }
 
+            if (functionSpec.requiredParameters.isNotEmpty()) {
+                functionSpec.requiredParameters.emitSpecialParameters(writer, emitAsRequired = true)
+            }
+
+            if (functionSpec.namedParameters.isNotEmpty()) {
+                functionSpec.namedParameters.emitSpecialParameters(writer, emitAsRequired = false)
+            }
+
+            writer.emit(")")
             writeBody(functionSpec, writer)
         }
     }
