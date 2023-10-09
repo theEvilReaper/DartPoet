@@ -44,19 +44,21 @@ class FunctionWriterTest {
                     .modifier { DartModifier.ABSTRACT }
                     .parameters(
                         ParameterSpec.builder("maxValue", Int::class).build(),
-                        ParameterSpec.builder("minValue", Int::class).initializer("%L", "0").named(true).build()
+                        ParameterSpec.builder("minValue", Int::class)
+                            .initializer("%L", "0")
+                            .build()
                     )
                     .build()
                 }
             ),
             Arguments.of(
-                "abstract int getIdRange(int maxValue, {required int minValue = 0});",
+                "abstract int getIdRange(int maxValue, {required int minValue});",
                 { FunctionSpec.builder("getIdRange")
                     .returns(Int::class)
                     .modifier { DartModifier.ABSTRACT }
                     .parameters(
                         ParameterSpec.builder("maxValue", Int::class).build(),
-                        ParameterSpec.builder("minValue", Int::class).initializer("%L", "0").required(true).build()
+                        ParameterSpec.builder("minValue", Int::class).required(true).build()
                     )
                     .build()
                 }
