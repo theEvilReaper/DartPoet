@@ -73,12 +73,12 @@ class FunctionWriter {
                 writer.emit(",$SPACE")
             }
 
-            if (functionSpec.requiredParameters.isNotEmpty()) {
-                functionSpec.requiredParameters.emitSpecialParameters(writer, emitAsRequired = true)
+            if (functionSpec.specialParameters.isNotEmpty()) {
+                functionSpec.specialParameters.emitSpecialParameters(writer, emitAsRequired = true)
             }
 
-            if (functionSpec.namedParameters.isNotEmpty()) {
-                functionSpec.namedParameters.emitSpecialParameters(writer, emitAsRequired = false)
+            if (functionSpec.defaultParameters.isNotEmpty()) {
+                functionSpec.defaultParameters.emitSpecialParameters(writer, emitAsRequired = false)
             }
 
             writer.emit(")")

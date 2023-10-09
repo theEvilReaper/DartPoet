@@ -38,10 +38,6 @@ class ParameterSpec internal constructor(
      */
     init {
         require(name.trim().isNotEmpty()) { "The name of a parameter can't be empty" }
-
-        if (isNamed && !isRequired && !isNullable && (this.initializer == null || this.initializer.isEmpty())) {
-            throw IllegalArgumentException("A named parameter needs an initializer when it's not nullable")
-        }
     }
 
     /**

@@ -40,11 +40,11 @@ class FunctionSpecTest {
                 { FunctionSpec.builder("getName").lambda(true).build() }
             ),
             Arguments.of(
-                "A function only can have named or required parameters and not both of them",
+                "A function can only have required with named parameters but not with parameters that have a default value",
                 { FunctionSpec.builder("getName")
                     .parameters(
                         ParameterSpec.builder("test").named(true).build(),
-                        ParameterSpec.builder("value").required(true).build()
+                        ParameterSpec.builder("value").initializer("%C", "String").build()
                     )
                     .build()
                 }

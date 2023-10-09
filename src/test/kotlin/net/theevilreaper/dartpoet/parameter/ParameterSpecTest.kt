@@ -20,10 +20,6 @@ class ParameterSpecTest {
                 "The name of a parameter can't be empty",
                 { ParameterSpec.builder("").build() }
             ),
-            Arguments.of(
-                "A named parameter needs an initializer when it's not nullable",
-                { ParameterSpec.builder("test", String::class).named(true).build() }
-            )
         )
     }
 
