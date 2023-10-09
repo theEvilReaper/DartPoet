@@ -1,9 +1,12 @@
-package net.theevilreaper.dartpoet
+package net.theevilreaper.dartpoet.property
 
 import com.google.common.truth.Truth.assertThat
-import net.theevilreaper.dartpoet.property.PropertySpec
+import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.type.asTypeName
+import net.theevilreaper.dartpoet.util.ALLOWED_CONST_MODIFIERS
+import net.theevilreaper.dartpoet.util.ALLOWED_PROPERTY_MODIFIERS
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
@@ -40,12 +43,47 @@ class PropertySpecTest {
                 "final String _id;"
             )
         )
+
+        @JvmStatic
+        private fun testInvalidPropertyCreation() = Stream.of(
+            Arguments.of(
+                {
+                    PropertySpec.builder("test", String::class)
+                        .modifier(DartModifier.REQUIRED)
+                        .build()
+                },
+                "These modifiers [REQUIRED] are not allowed in a property context. Allowed modifiers: $ALLOWED_PROPERTY_MODIFIERS"
+            ),
+            Arguments.of(
+                { PropertySpec.builder("", String::class).build() },
+                "The name of a property can't be empty"
+            ),
+            Arguments.of(
+                { PropertySpec.constBuilder("test", String::class).build() },
+                "A const variable needs an init block"
+            ),
+            Arguments.of(
+                {
+                    PropertySpec.constBuilder("test")
+                        .modifier(DartModifier.FINAL)
+                        .build()
+                },
+                "These modifiers [FINAL] are not allowed in a const property context. Allowed modifiers: $ALLOWED_CONST_MODIFIERS"
+            )
+        )
     }
 
     @ParameterizedTest
     @MethodSource("parameters")
     fun `test properties`(propertySpec: PropertySpec, expected: String) {
         assertThat(propertySpec.toString()).isEqualTo(expected)
+    }
+
+    @ParameterizedTest
+    @MethodSource("testInvalidPropertyCreation")
+    fun `test property creation with invalid values`(block: () -> Unit, exceptionMessage: String) {
+        val exception = assertThrows<IllegalArgumentException> { block() }
+        assertEquals(exceptionMessage, exception.message)
     }
 
     @Test

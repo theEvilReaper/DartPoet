@@ -9,28 +9,25 @@ import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.SEMICOLON
 import net.theevilreaper.dartpoet.util.SPACE
 
-class PropertyWriter {
+internal class PropertyWriter {
 
     fun write(property: PropertySpec, writer: CodeWriter) {
         if (property.hasDocs) {
-
             property.docs.forEach { writer.emitDoc(it) }
         }
         property.annotations.emitAnnotations(writer) {
             it.write(writer, inline = false)
         }
 
-        val modifierString = property.modifiers.joinToString(separator = SPACE) { it.identifier }
+        val modifierString = property.modifiers.joinToString(
+            separator = SPACE,
+            postfix = if (property.modifiers.isNotEmpty()) SPACE else EMPTY_STRING
+        ) { it.identifier }
         writer.emit(modifierString)
 
-        if (!property.isConst) {
-            if (property.modifiers.isNotEmpty()) {
-                writer.emit(SPACE)
-            }
-            writer.emitCode("%T", property.type)
+        if (property.type != null) {
+            writer.emitCode("%T·", property.type)
         }
-
-        writer.emit("·")
 
         writer.emit(if (property.isPrivate) DartModifier.PRIVATE.identifier else EMPTY_STRING)
         writer.emit(property.name)

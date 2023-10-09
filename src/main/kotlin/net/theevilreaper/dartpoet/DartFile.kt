@@ -8,11 +8,10 @@ import net.theevilreaper.dartpoet.code.writer.DartFileWriter
 import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.util.*
-import net.theevilreaper.dartpoet.util.ALLOWED_CONST_MODIFIERS
 import net.theevilreaper.dartpoet.directive.DartDirective
 import net.theevilreaper.dartpoet.directive.LibraryDirective
 import net.theevilreaper.dartpoet.directive.PartDirective
-import net.theevilreaper.dartpoet.property.PropertySpec
+import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.util.DART_FILE_ENDING
 import net.theevilreaper.dartpoet.util.isDartConventionFileName
 import net.theevilreaper.dartpoet.util.toImmutableList
@@ -32,12 +31,7 @@ class DartFile internal constructor(
     internal val extensions: List<ExtensionSpec> = builder.extensionStack
     internal val docs = builder.docs
     private val directives = builder.directives.toImmutableList()
-    internal val constants: Set<PropertySpec> = builder.constants.onEach {
-        // Only check modifiers when the size is not zero
-        if (it.modifiers.isNotEmpty()) {
-            hasAllowedModifiers(it.modifiers, ALLOWED_CONST_MODIFIERS, "file const")
-        }
-    }.toImmutableSet()
+    internal val constants: Set<ConstantPropertySpec> = builder.constants.toImmutableSet()
 
     internal val imports: List<DartDirective> = if (directives.isEmpty()) {
         emptyList()
