@@ -27,7 +27,7 @@ class FunctionSpec(
     internal val name = builder.name
     internal val returnType: TypeName? = builder.returnType
     internal val body: CodeBlock = builder.body.build()
-    internal val parameters: List<ParameterSpec> = builder.parameters.toImmutableList()
+    internal val parameters: List<ParameterSpec> = builder.parameters.filter { !it.isNamed && !it.isRequired }.toImmutableList()
     internal val isAsync: Boolean = builder.async
     internal val annotation: Set<AnnotationSpec> = builder.specData.annotations.toImmutableSet()
     internal var modifiers: Set<DartModifier> = builder.specData.modifiers.also {
@@ -42,16 +42,19 @@ class FunctionSpec(
     internal val docs = builder.docs
     internal val hasDocs = builder.docs.isNotEmpty()
 
-    private val namedParameters: Set<ParameterSpec> = if (parameters.isEmpty()) {
-        setOf()
-    } else {
-        parameters.filter { it.isNamed }.toSet()
-    }
+    internal val requiredParameters = builder.parameters.filter { it.isRequired }.toImmutableSet()
+    internal val namedParameters = builder.parameters.filter { it.isNamed }.toImmutableSet()
+
+    internal val withTrailingSpaceComma = requiredParameters.isNotEmpty() || namedParameters.isNotEmpty()
 
     init {
         //check(!isTypeDef && annotation.isNotEmpty()) { "A typedef can't have annotations" }
         require(name.trim().isNotEmpty()) { "The name of a function can't be empty" }
         require(body.isEmpty() || !modifiers.contains(DartModifier.ABSTRACT)) { "An abstract method can't have a body" }
+
+        if (namedParameters.isNotEmpty() && requiredParameters.isNotEmpty()) {
+            throw IllegalArgumentException("A function only can have named or required parameters and not both of them")
+        }
 
         if (isGetter && asSetter) {
             throw IllegalArgumentException("The function can't be a setter and a getter twice")
