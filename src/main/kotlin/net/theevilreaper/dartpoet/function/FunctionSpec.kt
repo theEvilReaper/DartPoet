@@ -27,7 +27,7 @@ class FunctionSpec(
     internal val name = builder.name
     internal val returnType: TypeName? = builder.returnType
     internal val body: CodeBlock = builder.body.build()
-    internal val parameters: List<ParameterSpec> = builder.parameters.filter { !it.isNamed && !it.isRequired }.toImmutableList()
+    internal val parameters: List<ParameterSpec> = builder.parameters.filter { !it.isNamed && !it.isRequired && it.initializer == null }.toImmutableList()
     internal val isAsync: Boolean = builder.async
     internal val annotation: Set<AnnotationSpec> = builder.specData.annotations.toImmutableSet()
     internal var modifiers: Set<DartModifier> = builder.specData.modifiers.also {
@@ -42,18 +42,18 @@ class FunctionSpec(
     internal val docs = builder.docs
     internal val hasDocs = builder.docs.isNotEmpty()
 
-    internal val requiredParameters = builder.parameters.filter { it.isRequired }.toImmutableSet()
-    internal val namedParameters = builder.parameters.filter { it.isNamed }.toImmutableSet()
+    internal val specialParameters = builder.parameters.filter { it.isRequired || it.isNamed }.toImmutableSet()
+    internal val defaultParameters = builder.parameters.filter { it.initializer != null && it.initializer.isNotEmpty() }.toImmutableSet()
 
-    internal val withTrailingSpaceComma = requiredParameters.isNotEmpty() || namedParameters.isNotEmpty()
+    internal val withTrailingSpaceComma = specialParameters.isNotEmpty() || defaultParameters.isNotEmpty()
 
     init {
         //check(!isTypeDef && annotation.isNotEmpty()) { "A typedef can't have annotations" }
         require(name.trim().isNotEmpty()) { "The name of a function can't be empty" }
         require(body.isEmpty() || !modifiers.contains(DartModifier.ABSTRACT)) { "An abstract method can't have a body" }
 
-        if (namedParameters.isNotEmpty() && requiredParameters.isNotEmpty()) {
-            throw IllegalArgumentException("A function only can have named or required parameters and not both of them")
+        if (defaultParameters.isNotEmpty() && specialParameters.isNotEmpty()) {
+            throw IllegalArgumentException("A function can only have required with named parameters but not with parameters that have a default value")
         }
 
         if (isGetter && asSetter) {
