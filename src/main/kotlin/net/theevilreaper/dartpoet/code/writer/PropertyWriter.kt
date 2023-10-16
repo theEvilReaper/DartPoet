@@ -1,6 +1,5 @@
 package net.theevilreaper.dartpoet.code.writer
 
-import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.*
 import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.property.PropertySpec
