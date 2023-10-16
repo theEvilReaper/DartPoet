@@ -1,65 +1,58 @@
 package net.theevilreaper.dartpoet.code.writer
 
 import net.theevilreaper.dartpoet.DartFile
-import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.*
 import net.theevilreaper.dartpoet.code.emitExtensions
-import net.theevilreaper.dartpoet.code.emitConstants
 import net.theevilreaper.dartpoet.code.writeImports
 import net.theevilreaper.dartpoet.util.NEW_LINE
 
-class DartFileWriter {
+internal class DartFileWriter : Writeable<DartFile>, DocumentationAppender {
 
     private val classWriter = ClassWriter()
 
-    fun emit(dartFile: DartFile, writer: CodeWriter) {
-        if (dartFile.docs.isNotEmpty()) {
-            dartFile.docs.forEach { writer.emitDoc(it) }
-        }
-        if (dartFile.libImport != null) {
-            writer.emit(dartFile.libImport.toString())
+    override fun write(spec: DartFile, writer: CodeWriter) {
+        emitDocumentation(spec.docs, writer)
+        if (spec.libImport != null) {
+            writer.emit(spec.libImport.toString())
             writer.emit(NEW_LINE)
 
-            if (dartFile.imports.isEmpty()) {
+            if (spec.imports.isEmpty()) {
                 writer.emit(NEW_LINE)
             }
         }
 
-        dartFile.imports.writeImports(writer, newLineAtBegin = dartFile.libImport != null) {
+        spec.imports.writeImports(writer, newLineAtBegin = spec.libImport != null) {
             it.toString()
         }
 
-        if (dartFile.imports.isNotEmpty() && dartFile.partImports.isEmpty()) {
+        if (spec.imports.isNotEmpty() && spec.partImports.isEmpty()) {
             writer.emit(NEW_LINE)
         }
 
-        dartFile.partImports.writeImports(writer, newLineAtBegin = dartFile.imports.isNotEmpty()) {
+        spec.partImports.writeImports(writer, newLineAtBegin = spec.imports.isNotEmpty()) {
             it.toString()
         }
 
-        if (dartFile.partImports.isNotEmpty()) {
+        if (spec.partImports.isNotEmpty()) {
             writer.emit(NEW_LINE)
         }
 
-        dartFile.constants.emitConstants(writer) {
-            it.write(writer)
-        }
+        spec.constants.emitConstants(writer)
 
-        if (dartFile.constants.isNotEmpty()) {
+        if (spec.constants.isNotEmpty()) {
             writer.emit(NEW_LINE)
         }
 
-        if (dartFile.types.isNotEmpty()) {
-            dartFile.types.forEach {
+        if (spec.types.isNotEmpty()) {
+            spec.types.forEach {
                 classWriter.write(it, writer)
-                if (dartFile.types.size > 1) {
+                if (spec.types.size > 1) {
                     writer.emit(NEW_LINE)
                 }
 
             }
         }
 
-        dartFile.extensions.emitExtensions(writer) {
-            it.write(writer)
-        }
+        spec.extensions.emitExtensions(writer)
     }
 }

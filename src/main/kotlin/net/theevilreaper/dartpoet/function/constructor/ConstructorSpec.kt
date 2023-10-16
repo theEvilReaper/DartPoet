@@ -28,7 +28,7 @@ class ConstructorSpec(
     internal fun write(
         codeWriter: CodeWriter
     ) {
-        ConstructorWriter().emit(this, codeWriter)
+        ConstructorWriter().write(this, codeWriter)
     }
 
     override fun toString() = buildCodeString { write(this,) }

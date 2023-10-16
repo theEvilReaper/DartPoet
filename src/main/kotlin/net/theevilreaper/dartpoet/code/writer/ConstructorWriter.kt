@@ -2,6 +2,8 @@ package net.theevilreaper.dartpoet.code.writer
 
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.DocumentationAppender
+import net.theevilreaper.dartpoet.code.Writeable
 import net.theevilreaper.dartpoet.code.emitParameters
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.util.CURLY_CLOSE
@@ -9,12 +11,10 @@ import net.theevilreaper.dartpoet.util.CURLY_OPEN
 import net.theevilreaper.dartpoet.util.NEW_LINE
 import net.theevilreaper.dartpoet.util.SEMICOLON
 
-class ConstructorWriter {
+internal class ConstructorWriter : Writeable<ConstructorSpec>, DocumentationAppender {
 
-    fun emit(spec: ConstructorSpec, writer: CodeWriter) {
-        if (spec.docs.isNotEmpty()) {
-            spec.docs.forEach { writer.emitDoc(it) }
-        }
+    override fun write(spec: ConstructorSpec, writer: CodeWriter) {
+        emitDocumentation(spec.docs, writer)
         if (spec.modifiers.contains(DartModifier.CONST)) {
             writer.emit("${DartModifier.CONST.identifier}·")
         }
@@ -36,9 +36,7 @@ class ConstructorWriter {
 
         writer.emit("(")
 
-        spec.parameters.emitParameters(writer, emitBrackets = false) {
-            it.write(writer)
-        }
+        spec.parameters.emitParameters(writer, emitBrackets = false)
 
         if (spec.hasNamedParameters) {
             if (spec.parameters.isNotEmpty()) {

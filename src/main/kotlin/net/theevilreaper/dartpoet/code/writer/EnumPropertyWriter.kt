@@ -1,6 +1,7 @@
 package net.theevilreaper.dartpoet.code.writer
 
 import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.Writeable
 import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.enum.EnumPropertySpec
 import net.theevilreaper.dartpoet.util.ROUND_CLOSE
@@ -13,25 +14,23 @@ import net.theevilreaper.dartpoet.util.ROUND_OPEN
  * @version 1.0.0
  * @author theEvilReaper
  */
-class EnumPropertyWriter {
+internal class EnumPropertyWriter : Writeable<EnumPropertySpec> {
 
     /**
      * Writes the given data from a [EnumPropertySpec] to a [CodeWriter] instance.
-     * @param propertySpec the [EnumPropertySpec] to get the data to write
+     * @param spec the [EnumPropertySpec] to get the data to write
      * @param writer the [CodeWriter] instance to apply the code
      */
-    fun write(propertySpec: EnumPropertySpec, writer: CodeWriter) {
-        propertySpec.annotations.emitAnnotations(codeWriter = writer, inLineAnnotations = false) {
-            it.write(writer)
-        }
-        writer.emit(propertySpec.name)
-        if (propertySpec.hasGeneric) {
-            writer.emitCode("<%T>", propertySpec.generic!!)
+    override fun write(spec: EnumPropertySpec, writer: CodeWriter) {
+        spec.annotations.emitAnnotations(codeWriter = writer, inLineAnnotations = false)
+        writer.emit(spec.name)
+        if (spec.hasGeneric) {
+            writer.emitCode("<%T>", spec.generic!!)
         }
 
-        if (propertySpec.hasParameter) {
+        if (spec.hasParameter) {
             writer.emit(ROUND_OPEN)
-            propertySpec.parameters.forEachIndexed { index, codeBlock ->
+            spec.parameters.forEachIndexed { index, codeBlock ->
                 if (index > 0) {
                     writer.emit(", ")
                 }
