@@ -69,7 +69,7 @@ class FunctionSpec(
      * @param codeWriter the writer instance
      */
     internal fun write(codeWriter: CodeWriter) {
-        FunctionWriter().emit(this, codeWriter)
+        FunctionWriter().write(this, codeWriter)
     }
 
     /**

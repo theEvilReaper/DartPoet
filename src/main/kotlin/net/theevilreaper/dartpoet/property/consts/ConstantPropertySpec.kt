@@ -44,7 +44,7 @@ class ConstantPropertySpec(
      * @param codeWriter the [CodeWriter] to apply the content from the spec
      */
     internal fun write(codeWriter: CodeWriter) {
-        ConstantPropertyWriter().emit(this, codeWriter)
+        ConstantPropertyWriter().write(this, codeWriter)
     }
 
     /**

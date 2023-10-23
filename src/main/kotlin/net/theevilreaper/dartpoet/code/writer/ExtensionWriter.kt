@@ -2,6 +2,7 @@ package net.theevilreaper.dartpoet.code.writer
 
 import net.theevilreaper.dartpoet.DartModifier.*
 import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.Writeable
 import net.theevilreaper.dartpoet.code.emitFunctions
 import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.util.CURLY_CLOSE
@@ -15,14 +16,14 @@ import net.theevilreaper.dartpoet.util.NEW_LINE
  * @author theEvilReaper
  * @since 1.0.0
  */
-class ExtensionWriter {
+internal class ExtensionWriter : Writeable<ExtensionSpec> {
 
     /**
      * The method handles the complete generation for an extension class with its methods.
      * @param spec the [ExtensionSpec] which contains all relevant data for the generation
      * @param writer the [CodeWriter] instance to append the generated code into a [Appendable]
      */
-    fun write(spec: ExtensionSpec, writer: CodeWriter) {
+    override fun write(spec: ExtensionSpec, writer: CodeWriter) {
         if (spec.hasDocs) {
             spec.docs.forEach { writer.emitDoc(it) }
         }

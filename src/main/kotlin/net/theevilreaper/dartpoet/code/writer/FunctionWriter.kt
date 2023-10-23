@@ -3,74 +3,80 @@ package net.theevilreaper.dartpoet.code.writer
 import net.theevilreaper.dartpoet.DartModifier.*
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.Writeable
 import net.theevilreaper.dartpoet.code.emitParameters
 import net.theevilreaper.dartpoet.function.FunctionSpec
+import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.SEMICOLON
+import net.theevilreaper.dartpoet.util.SPACE
 import net.theevilreaper.dartpoet.util.toImmutableSet
 
-class FunctionWriter {
+internal class FunctionWriter : Writeable<FunctionSpec> {
 
-    fun emit(functionSpec: FunctionSpec, writer: CodeWriter) {
-        if (functionSpec.hasDocs) {
-            functionSpec.docs.forEach { writer.emitDoc(it) }
+    override fun write(spec: FunctionSpec, writer: CodeWriter) {
+        if (spec.hasDocs) {
+            spec.docs.forEach { writer.emitDoc(it) }
         }
-        if (functionSpec.isTypeDef) {
-            writeTypeDef(functionSpec, writer)
+        if (spec.isTypeDef) {
+            writeTypeDef(spec, writer)
             return
         }
 
-        val writeableModifiers = functionSpec.modifiers.filter { it != PRIVATE && it != PUBLIC }.toImmutableSet()
+        val writeableModifiers = spec.modifiers.filter { it != PRIVATE && it != PUBLIC }.toImmutableSet()
+        val modifierString = writeableModifiers.joinToString(
+            separator = SPACE,
+            postfix = if (writeableModifiers.isNotEmpty()) SPACE else EMPTY_STRING
+        ) { it.identifier }
 
-        if (writeableModifiers.isNotEmpty()) {
-            for (modifier in writeableModifiers) {
-                writer.emit(modifier.identifier)
-                writer.emit("·")
-            }
-        }
+        writer.emit(modifierString)
 
-
-
-        if (functionSpec.returnType == null) {
-            if (functionSpec.isAsync) {
+        if (spec.returnType == null) {
+            if (spec.isAsync) {
                 writer.emitCode("Future<%L>", VOID.identifier)
             } else {
-                if (functionSpec.asSetter) {
+                if (spec.asSetter) {
                     writer.emitCode("set·")
                 } else {
                     writer.emit("${VOID.identifier}·")
                 }
             }
         } else {
-            if (functionSpec.isAsync) {
+
+            if (spec.isAsync) {
                 writer.emit("Future<")
             }
-            writer.emitCode("%T", functionSpec.returnType)
+            writer.emitCode("%T", spec.returnType)
 
-            if (functionSpec.isGetter) {
+            if (spec.isGetter) {
                 writer.emit("·get")
             }
 
-            if (functionSpec.isAsync) {
+            if (spec.isAsync) {
                 writer.emit(">")
             }
             writer.emit("·")
         }
-        writer.emit("${if (functionSpec.isPrivate) PRIVATE.identifier else ""}${functionSpec.name}")
+        writer.emit("${if (spec.isPrivate) PRIVATE.identifier else ""}${spec.name}")
 
-        if (functionSpec.typeCast != null) {
-            writer.emitCode("<%T>", functionSpec.typeCast)
+        if (spec.typeCast != null) {
+            writer.emitCode("<%T>", spec.typeCast)
         }
 
-        if (functionSpec.isGetter) {
+        if (spec.isGetter) {
             writer.emit("·=>·")
-            writer.emitCode(functionSpec.body.returnsWithoutLinebreak(), ensureTrailingNewline = false)
+            writer.emitCode(spec.body.returnsWithoutLinebreak(), ensureTrailingNewline = false)
         } else {
-            functionSpec.parameters.emitParameters(writer) {
-                it.write(writer)
-            }
-
-            writeBody(functionSpec, writer)
+            spec.parameters.emitParameters(writer)
+            writeBody(spec, writer)
         }
+    }
+
+    private fun writeAsyncDeclaration(writer: CodeWriter) {
+        writer.emitCode("Future<%L>", VOID.identifier)
+    }
+
+    private fun writeAsyncTypeDeclaration(spec: FunctionSpec, writer: CodeWriter) {
+        writer.emitCode("Future<%T>·", spec.returnType)
     }
 
     private fun writeBody(spec: FunctionSpec, writer: CodeWriter) {

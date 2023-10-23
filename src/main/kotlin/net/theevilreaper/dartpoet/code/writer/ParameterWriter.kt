@@ -1,8 +1,7 @@
 package net.theevilreaper.dartpoet.code.writer
 
 import net.theevilreaper.dartpoet.DartModifier
-import net.theevilreaper.dartpoet.code.CodeBlock
-import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.*
 import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 
@@ -12,41 +11,26 @@ import net.theevilreaper.dartpoet.parameter.ParameterSpec
  * @version 1.0.0
  * @since 1.0.0
  */
-class ParameterWriter {
+internal class ParameterWriter : Writeable<ParameterSpec>, InitializerAppender {
 
     /**
      * The method contains the main logic to write a [ParameterSpec] to code.
      * It should be noted that the writer doesn't check whether the spec contains errors.
      * This would be done when the spec is being created
      */
-    fun write(spec: ParameterSpec, codeWriter: CodeWriter) {
-        spec.annotations.emitAnnotations(codeWriter, endWithNewLine = false) {
-            it.write(codeWriter)
-        }
+    override fun write(spec: ParameterSpec, writer: CodeWriter) {
+        spec.annotations.emitAnnotations(writer, endWithNewLine = false)
 
         if (spec.type != null) {
-            codeWriter.emitCode("%T", spec.type)
+            writer.emitCode("%T", spec.type)
         } else {
             if (spec.isRequired) {
-                codeWriter.emit("${DartModifier.REQUIRED.identifier}·")
+                writer.emit("${DartModifier.REQUIRED.identifier}·")
             }
-            codeWriter.emit("this.")
+            writer.emit("this.")
         }
-        codeWriter.emit(if (spec.isNullable) "?·" else if (spec.type != null) "·" else "")
-        codeWriter.emit(spec.name)
-        writeInitializer(spec.initializer, codeWriter)
-    }
-
-    /**
-     * Writes the given initializer [CodeBlock] from an [ParameterSpec].
-     * The methods do nothing when the block is null
-     * @param codeBlock the given [CodeBlock] from the spec
-     * @param codeWriter the [CodeWriter] instance to write the code
-     */
-    private fun writeInitializer(codeBlock: CodeBlock?, codeWriter: CodeWriter) {
-        if (codeBlock != null) {
-            codeWriter.emit("·=·")
-            codeWriter.emitCode(if (codeBlock.hasStatements()) "%L" else "«%L»", codeBlock)
-        }
+        writer.emit(if (spec.isNullable) "?·" else if (spec.type != null) "·" else "")
+        writer.emit(spec.name)
+        writeInitBlock(spec.initializer ?: CodeBlock.EMPTY, writer)
     }
 }

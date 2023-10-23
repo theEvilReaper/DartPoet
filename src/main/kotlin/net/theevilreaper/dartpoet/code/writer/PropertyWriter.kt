@@ -1,43 +1,43 @@
 package net.theevilreaper.dartpoet.code.writer
 
-import net.theevilreaper.dartpoet.DartModifier
-import net.theevilreaper.dartpoet.code.CodeBlock
-import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.*
 import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.SEMICOLON
 import net.theevilreaper.dartpoet.util.SPACE
 
-internal class PropertyWriter {
+/**
+ * The [PropertyWriter] contains the main logic to write a valid structure of a property for the programming language Dart.
+ * It contains only the logic of the write process. Each validation is done by the [PropertySpec] itself on the creation of it.
+ * @author theEvilReaper
+ * @since 1.0.0
+ */
+internal class PropertyWriter : Writeable<PropertySpec>, VariableAppender, DocumentationAppender, InitializerAppender {
 
-    fun write(property: PropertySpec, writer: CodeWriter) {
-        if (property.hasDocs) {
-            property.docs.forEach { writer.emitDoc(it) }
-        }
-        property.annotations.emitAnnotations(writer) {
+    /**
+     * Writes the given [PropertySpec] into the [CodeWriter].
+     * @param spec the [PropertySpec] which is involved
+     * @param writer the [CodeWriter] instance to write the code
+     */
+    override fun write(spec: PropertySpec, writer: CodeWriter) {
+        emitDocumentation(spec.docs, writer)
+        spec.annotations.emitAnnotations(writer) {
             it.write(writer, inline = false)
         }
 
-        val modifierString = property.modifiers.joinToString(
+        val modifierString = spec.modifiers.joinToString(
             separator = SPACE,
-            postfix = if (property.modifiers.isNotEmpty()) SPACE else EMPTY_STRING
+            postfix = if (spec.modifiers.isNotEmpty()) SPACE else EMPTY_STRING
         ) { it.identifier }
         writer.emit(modifierString)
 
-        if (property.type != null) {
-            writer.emitCode("%T·", property.type)
+        if (spec.type != null) {
+            writer.emitCode("%T·", spec.type)
         }
 
-        writer.emit(if (property.isPrivate) DartModifier.PRIVATE.identifier else EMPTY_STRING)
-        writer.emit(property.name)
-        emitInitBlock(property.initBlock, writer)
+        writer.emit(ensureVariableNameWithPrivateModifier(spec.isPrivate, spec.name))
+        writeInitBlock(spec.initBlock.build(), writer)
         writer.emit(SEMICOLON)
-    }
-
-    private fun emitInitBlock(initBlock: CodeBlock.Builder, writer: CodeWriter) {
-        if (initBlock.isEmpty()) return
-        writer.emit("·=·")
-        writer.emitCode(initBlock.build(), isConstantContext = true)
     }
 }

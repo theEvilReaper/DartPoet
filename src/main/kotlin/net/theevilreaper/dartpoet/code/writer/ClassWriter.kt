@@ -19,91 +19,83 @@ import net.theevilreaper.dartpoet.util.SEMICOLON
  * @since 1.0.0
  * @author theEvilReaper
  */
-class ClassWriter {
+internal class ClassWriter : Writeable<ClassSpec> {
 
     //TODO: Improve new lines after each generated code part block
-    fun write(spec: ClassSpec, codeWriter: CodeWriter) {
+    override fun write(spec: ClassSpec, writer: CodeWriter) {
         if (spec.isAnonymous) {
-            writeAnonymousClass(spec, codeWriter)
+            writeAnonymousClass(spec, writer)
             return
         }
-        spec.typeDefStack.emitFunctions(codeWriter) {
-            it.write(codeWriter)
-        }
+        spec.typeDefStack.emitFunctions(writer)
 
         if (spec.typeDefStack.isNotEmpty()) {
-            codeWriter.emit(NEW_LINE)
+            writer.emit(NEW_LINE)
         }
 
-        spec.annotations.emitAnnotations(codeWriter, inLineAnnotations = false) {
-            it.write(codeWriter)
-        }
-        writeClassHeader(spec, codeWriter)
+        spec.annotations.emitAnnotations(writer, inLineAnnotations = false)
+        writeClassHeader(spec, writer)
 
         //Only write {} when the class contains now content
         if (spec.hasNoContent) {
-            codeWriter.emit("$CURLY_OPEN$CURLY_CLOSE")
+            writer.emit("$CURLY_OPEN$CURLY_CLOSE")
 
             if (spec.endsWithNewLine) {
-                codeWriter.emit(NEW_LINE)
+                writer.emit(NEW_LINE)
             }
 
             return
         }
 
-        writeInheritance(spec, codeWriter)
+        writeInheritance(spec, writer)
 
-        codeWriter.emit("{$NEW_LINE")
-        codeWriter.emit(NEW_LINE)
-        codeWriter.indent()
+        writer.emit("{$NEW_LINE")
+        writer.emit(NEW_LINE)
+        writer.indent()
 
         if (spec.isEnum) {
-            spec.enumPropertyStack.emit(codeWriter) {
-                it.write(codeWriter)
+            spec.enumPropertyStack.emit(writer) {
+                it.write(writer)
             }
 
             if (!spec.hasNoContent) {
-                codeWriter.emit(SEMICOLON)
-                codeWriter.emit(NEW_LINE)
+                writer.emit(SEMICOLON)
+                writer.emit(NEW_LINE)
             }
         }
 
         if (spec.isEnum && spec.enumPropertyStack.isNotEmpty()) {
-            codeWriter.emit(NEW_LINE)
+            writer.emit(NEW_LINE)
         }
 
-        spec.constantStack.emitConstants(codeWriter)
+        spec.constantStack.emitConstants(writer)
 
         if (spec.constantStack.isNotEmpty()) {
-            codeWriter.emit(NEW_LINE)
+            writer.emit(NEW_LINE)
         }
 
-        spec.properties.emitProperties(codeWriter)
+        spec.properties.emitProperties(writer)
 
         if (spec.properties.isNotEmpty()) {
-            codeWriter.emit(NEW_LINE)
+            writer.emit(NEW_LINE)
         }
 
-        spec.constructors.emitConstructors(codeWriter) {
-            it.write(codeWriter)
-        }
+        spec.constructors.emitConstructors(writer)
 
         if (spec.constructors.isNotEmpty() && spec.constructors.size <= 1) {
-            codeWriter.emit(NEW_LINE)
+            writer.emit(NEW_LINE)
         }
 
-        spec.functions.emitFunctions(codeWriter) {
-            it.write(codeWriter)
-        }
+        spec.functions.emitFunctions(writer)
 
-        codeWriter.unindent()
+        writer.unindent()
         if (spec.functions.isNotEmpty()) {
-            codeWriter.emit(NEW_LINE)
+            writer.emit(NEW_LINE)
         }
-        codeWriter.emit("}")
+        writer.emit("}")
 
         if (spec.endsWithNewLine) {
-            codeWriter.emit(NEW_LINE)
+            writer.emit(NEW_LINE)
         }
     }
 
