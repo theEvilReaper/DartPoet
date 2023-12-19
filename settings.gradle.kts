@@ -4,7 +4,7 @@ dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
             version("junit", "5.10.1")
-            library("google.truth", "com.google.truth", "truth").version("1.1.5")
+            library("google.truth", "com.google.truth", "truth").version("1.2.0")
             library("junit.api", "org.junit.jupiter", "junit-jupiter-api").versionRef("junit")
             library("junit.engine", "org.junit.jupiter", "junit-jupiter-engine").versionRef("junit")
             library("junit.params", "org.junit.jupiter", "junit-jupiter-params").versionRef("junit")
