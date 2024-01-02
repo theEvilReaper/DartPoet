@@ -1,5 +1,5 @@
 name: Behavior Bug
-description: Report issues with plugin incompatibility or other behavior related issues.
+description: Report issues with invalid code generation or other behavior bugs
 title: "[Bug]: "
 labels: [ "status: needs triage", "type: bug" ]
 body:
@@ -12,7 +12,7 @@ body:
     attributes:
       value: |
         Before filling the form fields, please consider the following:
-        - Search the [issue tracker](https://github.com/theEvilReaper/DartPoet/issues)
+        - Search for existing issues in the [issue tracker](https://github.com/theEvilReaper/DartPoet/issues)
   - type: input
     attributes:
       label: DartPoet version
