@@ -1,6 +1,6 @@
 # DartPoet
 
-[![license](https://img.shields.io/github/license/hollow-cube/minestom-ce?style=for-the-badge&color=b2204c)](../LICENSE)
+[![license](https://img.shields.io/github/license/theEvilReaper/DartPoet?style=for-the-badge&color=b2234c)](../LICENSE)
 
 # **DartPoet is still in development and not ready for production use.**
 
