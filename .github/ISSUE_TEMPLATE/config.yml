@@ -1,0 +1,6 @@
+blank_issues_enabled: false
+contact_links:
+  - name: DartPoet discussions
+    url: https://github.com/theEvilReaper/DartPoet/discussions
+    about: If you have any questions or problems, please use the discussions section
+    emoji: ❓
