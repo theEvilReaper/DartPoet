@@ -1,5 +1,7 @@
 # DartPoet
 
+[![license](https://img.shields.io/github/license/hollow-cube/minestom-ce?style=for-the-badge&color=b2204c)](../LICENSE)
+
 # **DartPoet is still in development and not ready for production use.**
 
 ## Description
