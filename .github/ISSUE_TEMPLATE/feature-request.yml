@@ -1,5 +1,6 @@
 name: Feature Request
 description: Suggest an idea for DartPoet
+title: "[Feature Request]: "
 labels: [ "status: needs triage", "type: feature" ]
 body:
   - type: markdown

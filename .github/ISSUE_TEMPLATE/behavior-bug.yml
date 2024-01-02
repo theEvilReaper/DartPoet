@@ -1,5 +1,6 @@
 name: Behavior Bug
 description: Report issues with plugin incompatibility or other behavior related issues.
+title: "[Bug]: "
 labels: [ "status: needs triage", "type: bug" ]
 body:
   - type: markdown
