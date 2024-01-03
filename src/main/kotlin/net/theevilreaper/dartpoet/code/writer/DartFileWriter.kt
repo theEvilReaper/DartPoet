@@ -12,8 +12,8 @@ internal class DartFileWriter : Writeable<DartFile>, DocumentationAppender {
 
     override fun write(spec: DartFile, writer: CodeWriter) {
         emitDocumentation(spec.docs, writer)
-        if (spec.libImport != null) {
-            writer.emit(spec.libImport.toString())
+        if (spec.libImport.isNotEmpty()) {
+            writer.emit(spec.libImport.first().asString())
             writer.emit(NEW_LINE)
 
             if (spec.imports.isEmpty()) {
@@ -21,17 +21,13 @@ internal class DartFileWriter : Writeable<DartFile>, DocumentationAppender {
             }
         }
 
-        spec.imports.writeImports(writer, newLineAtBegin = spec.libImport != null) {
-            it.toString()
-        }
+        spec.imports.writeImports(writer, newLineAtBegin = spec.libImport.isNotEmpty())
 
         if (spec.imports.isNotEmpty() && spec.partImports.isEmpty()) {
             writer.emit(NEW_LINE)
         }
 
-        spec.partImports.writeImports(writer, newLineAtBegin = spec.imports.isNotEmpty()) {
-            it.toString()
-        }
+        spec.partImports.writeImports(writer, newLineAtBegin = spec.imports.isNotEmpty())
 
         if (spec.partImports.isNotEmpty()) {
             writer.emit(NEW_LINE)

@@ -164,7 +164,7 @@ internal fun List<ExtensionSpec>.emitExtensions(
 internal fun <T: Directive> List<T>.writeImports(
     writer: CodeWriter,
     newLineAtBegin: Boolean = true,
-    emitBlock: (T) -> String = { it.toString() }
+    emitBlock: (T) -> String = { it.asString() }
 ) {
     if (isNotEmpty()) {
         if (newLineAtBegin) {
@@ -174,6 +174,8 @@ internal fun <T: Directive> List<T>.writeImports(
             if (index > 0) {
                 writer.emit(NEW_LINE)
             }
+
+            println(emitBlock(import))
             writer.emit(emitBlock(import))
         }
 
