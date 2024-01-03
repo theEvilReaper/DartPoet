@@ -14,7 +14,6 @@ import kotlin.reflect.KClass
  * @since 1.0.0
  * @version 1.0.0
  * @author theEvilReaper
- *
  */
 internal object DirectiveOrdering {
 
@@ -50,6 +49,18 @@ internal object DirectiveOrdering {
         return directives.filter { it::class == directiveInstance }.sortedBy { it.getRawPath() }.toImmutableList()
     }
 
+    /**
+     * Sorts a list of directives based on a specified subtype of [Directive] and a predicate.
+     *
+     * This function filters the given list of directives to include only instances of the specified
+     * subtype [T], compares them based on their raw paths, and returns a new list sorted in ascending order.
+     * The predicate is used to filter the directives based on their raw paths.
+     *
+     * @param directiveInstance the class type representing the specific subtype [T] to filter the directives
+     * @param directives the list of directives to be sorted
+     * @param predicate the predicate used to filter the directives
+     * @return a new list containing the sorted directives of the specified subtype [T]
+     */
     internal inline fun <reified T : Directive> sortDirectives(
         directiveInstance: KClass<T>,
         directives: List<Directive>,
