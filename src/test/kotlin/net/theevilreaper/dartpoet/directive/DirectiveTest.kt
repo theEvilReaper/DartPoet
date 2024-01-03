@@ -1,6 +1,5 @@
-package net.theevilreaper.dartpoet
+package net.theevilreaper.dartpoet.directive
 
-import net.theevilreaper.dartpoet.directive.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -13,8 +12,8 @@ class DirectiveTest {
     private val packageImport = "import 'package:flutter/material.dart';"
 
     companion object {
-        private const val castValue = "item"
-        private const val testImport = "../../model/item_model.dart"
+        private const val CAST_VALUE = "item"
+        private const val TEST_IMPORT = "../../model/item_model.dart"
 
         @JvmStatic
         private fun libDirectives() = Stream.of(
@@ -30,11 +29,11 @@ class DirectiveTest {
 
         @JvmStatic
         private fun relativeDirectives() = Stream.of(
-            Arguments.of(RelativeDirective(testImport), "import '../../model/item_model.dart';"),
-            Arguments.of(RelativeDirective(testImport, CastType.AS, castValue), "import '../../model/item_model.dart' as item;"),
-            Arguments.of(RelativeDirective(testImport, CastType.DEFERRED, castValue), "import '../../model/item_model.dart' deferred as item;"),
-            Arguments.of(RelativeDirective(testImport, CastType.HIDE, castValue), "import '../../model/item_model.dart' hide item;"),
-            Arguments.of(RelativeDirective(testImport, CastType.SHOW, castValue), "import '../../model/item_model.dart' show item;")
+            Arguments.of(RelativeDirective(TEST_IMPORT), "import '../../model/item_model.dart';"),
+            Arguments.of(RelativeDirective(TEST_IMPORT, CastType.AS, CAST_VALUE), "import '../../model/item_model.dart' as item;"),
+            Arguments.of(RelativeDirective(TEST_IMPORT, CastType.DEFERRED, CAST_VALUE), "import '../../model/item_model.dart' deferred as item;"),
+            Arguments.of(RelativeDirective(TEST_IMPORT, CastType.HIDE, CAST_VALUE), "import '../../model/item_model.dart' hide item;"),
+            Arguments.of(RelativeDirective(TEST_IMPORT, CastType.SHOW, CAST_VALUE), "import '../../model/item_model.dart' show item;")
         )
 
         @JvmStatic
@@ -47,25 +46,25 @@ class DirectiveTest {
     @ParameterizedTest
     @MethodSource("libDirectives")
     fun `test library imports`(current: Directive, expected: String) {
-        assertEquals(expected, current.toString())
+        assertEquals(expected, current.asString())
     }
 
     @ParameterizedTest
     @MethodSource("dartDirectives")
     fun `test dart imports`(current: Directive, expected: String) {
-        assertEquals(expected, current.toString())
+        assertEquals(expected, current.asString())
     }
 
     @ParameterizedTest
     @MethodSource("relativeDirectives")
     fun `test relative dart imports`(current: Directive, expected: String) {
-        assertEquals(expected, current.toString())
+        assertEquals(expected, current.asString())
     }
 
     @ParameterizedTest
     @MethodSource("exportDirectives")
     fun `test export directive`(current: Directive, expected: String) {
-        assertEquals(expected, current.toString())
+        assertEquals(expected, current.asString())
     }
 
     @Test
@@ -100,6 +99,6 @@ class DirectiveTest {
     @Test
     fun `test package import`() {
         val import = DartDirective("flutter/material.dart")
-        assertEquals(packageImport, import.toString())
+        assertEquals(packageImport, import.asString())
     }
 }

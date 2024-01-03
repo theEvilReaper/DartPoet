@@ -1,6 +1,5 @@
-package net.theevilreaper.dartpoet
+package net.theevilreaper.dartpoet.directive
 
-import net.theevilreaper.dartpoet.directive.PartDirective
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -26,6 +25,6 @@ class PartDirectiveTest {
     @Test
     fun `create part import`() {
         val partImport = PartDirective("item_model.freezed.dart")
-        assertEquals(expectedImport, partImport.toString())
+        assertEquals(expectedImport, partImport.asString())
     }
 }
