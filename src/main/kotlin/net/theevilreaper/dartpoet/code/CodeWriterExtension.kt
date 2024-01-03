@@ -175,7 +175,6 @@ internal fun <T: Directive> List<T>.writeImports(
                 writer.emit(NEW_LINE)
             }
 
-            println(emitBlock(import))
             writer.emit(emitBlock(import))
         }
 
