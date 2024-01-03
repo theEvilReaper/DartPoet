@@ -54,5 +54,9 @@ abstract class BaseDirective(
         return path.startsWith("dart")
     }
 
+    /**
+     * Returns the raw data string from the directive.
+     * @return the raw data string
+     */
     override fun getRawPath(): String = this.path
 }
