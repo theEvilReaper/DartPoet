@@ -7,6 +7,7 @@ import net.theevilreaper.dartpoet.code.Writeable
 import net.theevilreaper.dartpoet.code.emitParameters
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
+import net.theevilreaper.dartpoet.util.NEW_LINE
 import net.theevilreaper.dartpoet.util.SEMICOLON
 import net.theevilreaper.dartpoet.util.SPACE
 import net.theevilreaper.dartpoet.util.toImmutableSet
@@ -20,6 +21,11 @@ internal class FunctionWriter : Writeable<FunctionSpec> {
         if (spec.isTypeDef) {
             writeTypeDef(spec, writer)
             return
+        }
+
+        if (!spec.isTypeDef && spec.annotation.isNotEmpty()) {
+            spec.annotation.forEach { it.write(writer) }
+            writer.emit(NEW_LINE)
         }
 
         val writeableModifiers = spec.modifiers.filter { it != PRIVATE && it != PUBLIC }.toImmutableSet()
