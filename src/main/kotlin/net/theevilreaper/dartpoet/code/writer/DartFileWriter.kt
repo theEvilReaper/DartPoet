@@ -16,6 +16,7 @@ internal class DartFileWriter : Writeable<DartFile>, DocumentationAppender {
         emitDirectives(writer, spec.dartImports)
         emitDirectives(writer, spec.packageImports)
         emitDirectives(writer, spec.partImports)
+        emitDirectives(writer, spec.relativeImports)
 
         spec.constants.emitConstants(writer)
 

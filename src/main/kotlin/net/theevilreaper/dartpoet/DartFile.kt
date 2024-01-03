@@ -11,6 +11,7 @@ import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.directive.DartDirective
 import net.theevilreaper.dartpoet.directive.LibraryDirective
 import net.theevilreaper.dartpoet.directive.PartDirective
+import net.theevilreaper.dartpoet.directive.RelativeDirective
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.util.DART_FILE_ENDING
 import net.theevilreaper.dartpoet.util.isDartConventionFileName
@@ -38,6 +39,7 @@ class DartFile internal constructor(
     internal val packageImports = DirectiveOrdering.sortDirectives<DartDirective>(DartDirective::class, directives) { it.contains("package:")}
     internal val partImports = DirectiveOrdering.sortDirectives<PartDirective>(PartDirective::class, directives)
     internal val libImport = DirectiveOrdering.sortDirectives<LibraryDirective>(LibraryDirective::class, directives)
+    internal val relativeImports = DirectiveOrdering.sortDirectives<RelativeDirective>(RelativeDirective::class, directives)
     init {
         check(name.trim().isNotEmpty()) { "The name of a class can't be empty (ONLY SPACES ARE NOT ALLOWED" }
         if (libImport.isNotEmpty()) {
