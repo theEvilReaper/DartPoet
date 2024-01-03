@@ -49,4 +49,17 @@ internal object DirectiveOrdering {
         if (directives.isEmpty()) return emptyList()
         return directives.filter { it::class == directiveInstance }.sortedBy { it.getRawPath() }.toImmutableList()
     }
+
+    internal inline fun <reified T : Directive> sortDirectives(
+        directiveInstance: KClass<T>,
+        directives: List<Directive>,
+        crossinline predicate: (String) -> Boolean
+    ): List<Directive> {
+        if (directives.isEmpty()) return emptyList()
+        return directives
+            .filter { it::class == directiveInstance }
+            .sortedBy { it.getRawPath() }
+            .filter { predicate(it.asString()) }
+            .toImmutableList()
+    }
 }

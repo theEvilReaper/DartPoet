@@ -34,7 +34,8 @@ class DartFile internal constructor(
 
     private val directives = builder.directives.toImmutableList()
 
-    internal val imports = DirectiveOrdering.sortDirectives<DartDirective>(DartDirective::class, directives)
+    internal val dartImports = DirectiveOrdering.sortDirectives<DartDirective>(DartDirective::class, directives) { it.contains("dart:") }
+    internal val packageImports = DirectiveOrdering.sortDirectives<DartDirective>(DartDirective::class, directives) { it.contains("package:")}
     internal val partImports = DirectiveOrdering.sortDirectives<PartDirective>(PartDirective::class, directives)
     internal val libImport = DirectiveOrdering.sortDirectives<LibraryDirective>(LibraryDirective::class, directives)
     init {

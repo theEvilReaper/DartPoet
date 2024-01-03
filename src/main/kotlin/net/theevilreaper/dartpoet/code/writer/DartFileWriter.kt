@@ -3,7 +3,7 @@ package net.theevilreaper.dartpoet.code.writer
 import net.theevilreaper.dartpoet.DartFile
 import net.theevilreaper.dartpoet.code.*
 import net.theevilreaper.dartpoet.code.emitExtensions
-import net.theevilreaper.dartpoet.code.writeImports
+import net.theevilreaper.dartpoet.directive.Directive
 import net.theevilreaper.dartpoet.util.NEW_LINE
 
 internal class DartFileWriter : Writeable<DartFile>, DocumentationAppender {
@@ -12,26 +12,10 @@ internal class DartFileWriter : Writeable<DartFile>, DocumentationAppender {
 
     override fun write(spec: DartFile, writer: CodeWriter) {
         emitDocumentation(spec.docs, writer)
-        if (spec.libImport.isNotEmpty()) {
-            writer.emit(spec.libImport.first().asString())
-            writer.emit(NEW_LINE)
-
-            if (spec.imports.isEmpty()) {
-                writer.emit(NEW_LINE)
-            }
-        }
-
-        spec.imports.writeImports(writer, newLineAtBegin = spec.libImport.isNotEmpty())
-
-        if (spec.imports.isNotEmpty() && spec.partImports.isEmpty()) {
-            writer.emit(NEW_LINE)
-        }
-
-        spec.partImports.writeImports(writer, newLineAtBegin = spec.imports.isNotEmpty())
-
-        if (spec.partImports.isNotEmpty()) {
-            writer.emit(NEW_LINE)
-        }
+        emitDirectives(writer, spec.libImport)
+        emitDirectives(writer, spec.dartImports)
+        emitDirectives(writer, spec.packageImports)
+        emitDirectives(writer, spec.partImports)
 
         spec.constants.emitConstants(writer)
 
@@ -48,7 +32,17 @@ internal class DartFileWriter : Writeable<DartFile>, DocumentationAppender {
 
             }
         }
-
         spec.extensions.emitExtensions(writer)
+    }
+
+    /**
+     * Emit a given [List] of [Directive] implementations to a [CodeWriter].
+     * @param codeWriter the [CodeWriter] instance to append the directives
+     * @param directives the [List] of [Directive] implementations
+     */
+    private fun emitDirectives(codeWriter: CodeWriter, directives: List<Directive>) {
+        if (directives.isEmpty()) return
+        directives.writeImports(codeWriter, newLineAtBegin = false)
+        codeWriter.emit(NEW_LINE)
     }
 }
