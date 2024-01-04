@@ -2,7 +2,7 @@
 
 `DartPoet` is a library written in kotlin which provides the ability to generate `.dart` files for the programming language Dart.
 
-The generation of source files can be useful in different situation.
+The generation of source files can be useful in different situations.
 Also code generation can eliminate to write boilerplate code.
 
 Example:
@@ -56,5 +56,5 @@ expression class, statement class or a syntax tree node. Instead, DartPoet uses 
 Where do you want to go?
 
 - To the `SpecObjects`? (Click here)
-- To the `Placeholders`? (Click here)
+- To the [`Placeholders`?](placeholders.md)
 

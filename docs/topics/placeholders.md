@@ -1,7 +1,6 @@
 # Placeholders
-
-Most of API from DartPoet uses immutable objects from Kotlin. 
-There are also builder, method chaining and other parts to make the API friendly as possible.
+Most of the API from DartPoet uses immutable objects from Kotlin. 
+There are also builder, method chaining and other parts to make the API as friendly as possible.
 
 DartPoet contains 
 
@@ -43,7 +42,7 @@ When you want to use a type for the generation, you can use **`%T`**.
 
 ```kotlin
 val dateClass = ClassName("DateTime")
-val dateFunction = FunctionSpec.builder("today");
+val dateFunction = FunctionSpec.builder("today")
     .returns(dateClass)
     .lambda(true)
     .addCode("%T.now();", dateClass)
@@ -57,7 +56,7 @@ DateTime today() => DateTime.now();
 
 ### Nullable Types
 
-The written code for Dart should ideally be Null-Safety.
+The written code for Dart should ideally be [Null-Safe](https://dart.dev/null-safety).
 Specifically, this means avoiding values that can be null.
 However, it is still possible to define variables as nullable. 
 When creating parameters or variables, one must explicitly state that the value can be nullable.
@@ -82,7 +81,7 @@ String? name;
 ### %L for Literals
 
 ```kotlin
-PropertySpec.builder("counter", Integer::class).initializer("%L", "10").build();
+PropertySpec.builder("counter", Integer::class).initializer("%L", "10").build()
 ```
 
 Results in the following generation:
