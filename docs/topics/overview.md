@@ -9,7 +9,7 @@ Example:
 
 Okay lets define a small example task that we want to generate.
 We want a class called `Greetings` which contains a function `greet` which takes a `string` parameter.
-The body of the function should print the content from the string parameter.
+The body of the function should print the content from the parameter.
 
 ```kotlin
 val greetings = DartFile.builder("greetings")
@@ -40,15 +40,21 @@ class Greetings {
 }
 ```
 
-### What does the documentation contains?
+**Note:** The team from Google is very active to enhance the programming language Dart which is a hard to stand update with the specification from it.
 
+## API Specifications
 
-### Glossary
+Most of API from DartPoet uses immutable objects from Kotlin.
+There are also builder, method chaining and other parts to make the API friendly as possible.
 
-A definition list or a glossary:
+DartPoet contains different `SpecObjects` which allows the creation from classes, interface and more (ClassSpec),
+properties (PropertySpec), parameters(Parameters), annotations (Annotations), extensions(Extensions) and more.
 
-First Term
-: This is the definition of the first term.
+Beth the body of a function, constructors is not modeled by any kind of object structure. There is also no
+expression class, statement class or a syntax tree node. Instead, DartPoet uses placeholders to format the code blocks like `KotlinPoet`
 
-Second Term
-: This is the definition of the second term.
+Where do you want to go?
+
+- To the `SpecObjects`? (Click here)
+- To the `Placeholders`? (Click here)
+

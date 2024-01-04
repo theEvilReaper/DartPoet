@@ -6,6 +6,7 @@
                  name="DartPoet Docs"
                  start-page="starter-topic.md">
     <toc-element topic="overview.md"/>
+    <toc-element topic="variables.md"/>
     <toc-element topic="placeholders.md"/>
     <toc-element topic="classes.md">
         <toc-element topic="class.md"/>

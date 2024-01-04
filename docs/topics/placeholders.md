@@ -1,6 +1,9 @@
 # Placeholders
 
-Sometimes the code which
+Most of API from DartPoet uses immutable objects from Kotlin. 
+There are also builder, method chaining and other parts to make the API friendly as possible.
+
+DartPoet contains 
 
 ### %S or %C for Strings
 
@@ -51,3 +54,41 @@ Results in this generated function:
 ```text
 DateTime today() => DateTime.now();
 ```
+
+### Nullable Types
+
+The written code for Dart should ideally be Null-Safety.
+Specifically, this means avoiding values that can be null.
+However, it is still possible to define variables as nullable. 
+When creating parameters or variables, one must explicitly state that the value can be nullable.
+
+To create a nullable value, we need to make a difference between type which are parameterized or not:
+
+Parameterized values:
+```Kotlin                    
+val property = List::class.parameterizedBy(Int::class).copy(nullable: true)
+```
+
+
+```kotlin
+val property = PropertySpec.builder("name", String::class).nullable(true).build()
+```
+
+Which returns the following generated variable:
+```text
+String? name;
+```
+
+### %L for Literals
+
+```kotlin
+PropertySpec.builder("counter", Integer::class).initializer("%L", "10").build();
+```
+
+Results in the following generation:
+```text
+int counter = 10;
+```
+
+Literals are emitted directly to the output code with no escaping.
+Arguments for literals may be strings, primitives, and a few KotlinPoet types described below.

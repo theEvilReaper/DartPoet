@@ -5,8 +5,7 @@ Contributions are welcome, and they are greatly appreciated!
 ## How to contribute
 
 ### Code contributions
-If you would like to contribute code you can do so through GitHub by forking. 
-the repository and sending a pull request.
+If you would like to contribute code you can do so through GitHub by forking the repository and sending a pull request.
 
 ### Reporting bugs
 If you encounter any bugs, please report them on the [issue tracker](https://github.com/theEvilReaper/DartPoet/issues).
