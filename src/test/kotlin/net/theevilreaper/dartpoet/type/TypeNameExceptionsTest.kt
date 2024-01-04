@@ -14,7 +14,6 @@ class TypeNameExceptionsTest {
         @JvmStatic
         private fun copyWithException() = Stream.of(
             Arguments.of("The dynamic type can't be copied", { DYNAMIC.copy() }),
-            Arguments.of("The const type can't be copied", { CONST.copy() })
         )
 
         @JvmStatic
