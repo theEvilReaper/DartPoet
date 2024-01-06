@@ -16,4 +16,17 @@ package net.theevilreaper.dartpoet.directive
  * @since 1.0.0
  * @author theEvilReaper
  */
-sealed interface Directive : Comparable<Directive>
+sealed interface Directive : Comparable<Directive> {
+
+    /**
+     * Returns a string representation of the directive.
+     * @return the string representation
+     */
+    fun asString(): String
+
+    /**
+     * Returns the raw path of the directive.
+     * @return the raw path
+     */
+    fun getRawPath(): String
+}

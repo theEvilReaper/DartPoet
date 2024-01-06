@@ -27,12 +27,12 @@ abstract class BaseDirective(
      * Creates a string representation from a [BaseDirective] implementation.
      * @return the created string
      */
-    override fun toString() = buildCodeString { write(this) }
+    override fun asString() = buildCodeString { write(this) }
 
     /**
      * Makes a comparison with two [Directive] implementation over a [Comparable]
      */
-    override fun compareTo(other: Directive): Int = toString().compareTo(other.toString())
+    override fun compareTo(other: Directive): Int = asString().compareTo(other.toString())
 
     /**
      * Ensures that the directive path ends with .dart.
@@ -53,4 +53,10 @@ abstract class BaseDirective(
     protected fun isDartImport(): Boolean {
         return path.startsWith("dart")
     }
+
+    /**
+     * Returns the raw data string from the directive.
+     * @return the raw data string
+     */
+    override fun getRawPath(): String = this.path
 }
