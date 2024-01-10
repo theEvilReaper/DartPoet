@@ -5,7 +5,6 @@ import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.writer.PropertyWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
-import net.theevilreaper.dartpoet.property.consts.ConstantPropertyBuilder
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asTypeName
