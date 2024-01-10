@@ -211,6 +211,7 @@ fun List<TypeDefSpec>.emitTypeDefs(
         }
         emitBlock(typeDefSpec)
     }
+    emit(NEW_LINE)
 }
 
 fun Set<PropertySpec>.emitProperties(

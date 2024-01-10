@@ -124,7 +124,6 @@ class DartFileTest {
         val libClass = DartFile.builder("testLib")
             .type(
                 ClassSpec.anonymousClassBuilder()
-                    .endWithNewLine(true)
                     .typedef(
                         TypeDefSpec.builder("JsonMap")
                             .returns(Map::class.parameterizedBy(String::class.asTypeName(), DYNAMIC))
