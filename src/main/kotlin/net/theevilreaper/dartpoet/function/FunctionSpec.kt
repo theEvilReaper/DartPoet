@@ -47,7 +47,6 @@ class FunctionSpec(
     }
 
     init {
-        //check(!isTypeDef && annotation.isNotEmpty()) { "A typedef can't have annotations" }
         require(name.trim().isNotEmpty()) { "The name of a function can't be empty" }
         require(body.isEmpty() || !modifiers.contains(DartModifier.ABSTRACT)) { "An abstract method can't have a body" }
 
