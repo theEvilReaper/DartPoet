@@ -23,7 +23,6 @@ import net.theevilreaper.dartpoet.util.toImmutableSet
 class FunctionSpec(
     builder: FunctionBuilder
 ) {
-
     internal val name = builder.name
     internal val returnType: TypeName? = builder.returnType
     internal val body: CodeBlock = builder.body.build()
@@ -33,7 +32,7 @@ class FunctionSpec(
     internal var modifiers: Set<DartModifier> = builder.specData.modifiers.also {
         hasAllowedModifiers(it, ALLOWED_FUNCTION_MODIFIERS, "function")
     }.filter { it != DartModifier.PRIVATE && it != DartModifier.PUBLIC }.toImmutableSet()
-    internal val isPrivate = builder.specData.modifiers.contains(DartModifier.PRIVATE)
+    internal val isPrivate = builder.specData.modifiers.remove(DartModifier.PRIVATE)
     internal val typeCast = builder.typeCast
     internal val asSetter = builder.setter
     internal val isGetter = builder.getter
