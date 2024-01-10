@@ -36,7 +36,7 @@ internal class ConstructorWriter : Writeable<ConstructorSpec>, DocumentationAppe
 
         writer.emit("(")
 
-        spec.parameters.emitParameters(writer, emitBrackets = false)
+        spec.parameters.emitParameters(writer)
 
         if (spec.hasNamedParameters) {
             if (spec.parameters.isNotEmpty()) {
@@ -46,7 +46,7 @@ internal class ConstructorWriter : Writeable<ConstructorSpec>, DocumentationAppe
             writer.emit(NEW_LINE)
             writer.indent()
 
-            spec.requiredAndNamedParameters.emitParameters(writer, emitBrackets = false, emitSpace = false, forceNewLines = true) {
+            spec.requiredAndNamedParameters.emitParameters(writer, emitSpace = false, forceNewLines = true) {
                 it.write(writer)
             }
 

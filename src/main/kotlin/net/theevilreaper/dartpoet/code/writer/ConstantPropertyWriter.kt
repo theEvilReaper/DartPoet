@@ -8,7 +8,7 @@ import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.util.SEMICOLON
 import net.theevilreaper.dartpoet.util.SPACE
 
-internal class ConstantPropertyWriter : Writeable<ConstantPropertySpec>, InitializerAppender, VariableAppender {
+internal class ConstantPropertyWriter : Writeable<ConstantPropertySpec>, InitializerAppender<PropertyWriter>, VariableAppender {
 
     override fun write(spec: ConstantPropertySpec, writer: CodeWriter) {
         val modifiersAsString = spec.modifiers.joinToString(separator = SPACE, postfix = SPACE) { it.identifier }
