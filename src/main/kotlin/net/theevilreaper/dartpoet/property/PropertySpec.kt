@@ -5,6 +5,7 @@ import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.writer.PropertyWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
+import net.theevilreaper.dartpoet.property.consts.ConstantPropertyBuilder
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asTypeName
@@ -84,6 +85,9 @@ class PropertySpec(
         return builder
     }
 
+    /**
+     * The companion object contains some helper methods to create a new instance from the [PropertyBuilder].
+     */
     companion object {
 
         /**

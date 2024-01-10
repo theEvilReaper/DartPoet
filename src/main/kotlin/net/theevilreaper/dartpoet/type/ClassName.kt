@@ -7,6 +7,7 @@ import kotlin.reflect.KClass
 
 /**
  * A class representing a custom type named [ClassName].
+ * It can be used to model class names, interface names, typedef names, and enum names which are not built-in types.
  *
  * @param name the name of the [ClassName]
  * @param isNullable a flag indicating whether the [ClassName] can be null (default is false).

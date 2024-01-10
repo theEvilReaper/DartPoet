@@ -77,6 +77,9 @@ class ParameterizedTypeName internal constructor(
         return out
     }
 
+    /**
+     * Returns a copy of this [ParameterizedTypeName] with the provided type arguments.
+     */
     companion object {
 
         /**
