@@ -110,13 +110,9 @@ internal fun Set<ConstructorSpec>.emitConstructors(
 internal fun List<ParameterSpec>.emitParameters(
     codeWriter: CodeWriter,
     forceNewLines: Boolean = false,
-    emitBrackets: Boolean = true,
     emitSpace: Boolean = true,
     emitBlock: (ParameterSpec) -> Unit = { it.write(codeWriter) }
 ) = with(codeWriter) {
-    if (emitBrackets) {
-        emit("(")
-    }
     if (isNotEmpty()) {
         val emitComma = size > 1
         forEachIndexed { index, parameter ->
@@ -134,9 +130,6 @@ internal fun List<ParameterSpec>.emitParameters(
                 }
             }
         }
-    }
-    if (emitBrackets) {
-        emit(")")
     }
 }
 
