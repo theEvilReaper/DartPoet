@@ -11,7 +11,7 @@ import net.theevilreaper.dartpoet.parameter.ParameterSpec
  * @version 1.0.0
  * @since 1.0.0
  */
-internal class ParameterWriter : Writeable<ParameterSpec>, InitializerAppender {
+internal class ParameterWriter : Writeable<ParameterSpec>, InitializerAppender<ParameterSpec> {
 
     /**
      * The method contains the main logic to write a [ParameterSpec] to code.
@@ -21,16 +21,24 @@ internal class ParameterWriter : Writeable<ParameterSpec>, InitializerAppender {
     override fun write(spec: ParameterSpec, writer: CodeWriter) {
         spec.annotations.emitAnnotations(writer, endWithNewLine = false)
 
+        if (spec.isRequired) {
+            writer.emit("${DartModifier.REQUIRED.identifier}·")
+        }
+
         if (spec.type != null) {
             writer.emitCode("%T", spec.type)
-        } else {
-            if (spec.isRequired) {
-                writer.emit("${DartModifier.REQUIRED.identifier}·")
-            }
-            writer.emit("this.")
         }
-        writer.emit(if (spec.isNullable) "?·" else if (spec.type != null) "·" else "")
+        val emitNullable = if (spec.isNullable) "?·" else if (spec.type != null) "·" else ""
+        writer.emit(emitNullable)
         writer.emit(spec.name)
-        writeInitBlock(spec.initializer ?: CodeBlock.EMPTY, writer)
+        writeInitBlock(spec, writer)
+    }
+
+    override fun writeInitBlock(spec: ParameterSpec, writer: CodeWriter, isConstantContext: Boolean) {
+        val initBlock = spec.initializer ?: CodeBlock.EMPTY
+        if (initBlock.isEmpty()) return
+        if (spec.isNamed && !spec.hasInitializer) return
+        writer.emit("·=·")
+        writer.emitCode(initBlock, isConstantContext)
     }
 }
