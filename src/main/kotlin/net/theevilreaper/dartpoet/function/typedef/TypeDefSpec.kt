@@ -97,7 +97,8 @@ class TypeDefSpec(
          * @return the created instance
          */
         @JvmStatic
-        fun builder(typeDefName: String, typeCast: Class<*>): TypeDefBuilder = TypeDefBuilder(typeDefName, typeCast.asTypeName())
+        fun builder(typeDefName: String, typeCast: Class<*>): TypeDefBuilder =
+            TypeDefBuilder(typeDefName, typeCast.asTypeName())
 
         /**
          * Static method to create a new instance from the [TypeDefBuilder].
@@ -106,6 +107,7 @@ class TypeDefSpec(
          * @return the created instance
          */
         @JvmStatic
-        fun builder(typeDefName: String, typeCast: KClass<*>): TypeDefBuilder = TypeDefBuilder(typeDefName, typeCast.asTypeName())
+        fun builder(typeDefName: String, typeCast: KClass<*>): TypeDefBuilder =
+            TypeDefBuilder(typeDefName, typeCast.asTypeName())
     }
 }
