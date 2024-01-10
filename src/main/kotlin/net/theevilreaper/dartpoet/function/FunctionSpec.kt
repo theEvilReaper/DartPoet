@@ -34,7 +34,6 @@ class FunctionSpec(
         hasAllowedModifiers(it, ALLOWED_FUNCTION_MODIFIERS, "function")
     }.filter { it != DartModifier.PRIVATE && it != DartModifier.PUBLIC }.toImmutableSet()
     internal val isPrivate = builder.specData.modifiers.contains(DartModifier.PRIVATE)
-    internal val isTypeDef = builder.typedef
     internal val typeCast = builder.typeCast
     internal val asSetter = builder.setter
     internal val isGetter = builder.getter
@@ -89,7 +88,6 @@ class FunctionSpec(
         builder.modifiers(*this.modifiers.toTypedArray())
         builder.parameters.addAll(this.parameters)
         builder.async = this.isAsync
-        builder.typedef = this.isTypeDef
         builder.typeCast = this.typeCast
         builder.setter = this.asSetter
         builder.getter = this.isGetter

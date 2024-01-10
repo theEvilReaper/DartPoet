@@ -18,12 +18,8 @@ internal class FunctionWriter : Writeable<FunctionSpec> {
         if (spec.hasDocs) {
             spec.docs.forEach { writer.emitDoc(it) }
         }
-        if (spec.isTypeDef) {
-            writeTypeDef(spec, writer)
-            return
-        }
 
-        if (!spec.isTypeDef && spec.annotation.isNotEmpty()) {
+        if (spec.annotation.isNotEmpty()) {
             spec.annotation.forEach { it.write(writer) }
             writer.emit(NEW_LINE)
         }
