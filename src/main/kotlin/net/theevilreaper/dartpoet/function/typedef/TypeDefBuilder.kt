@@ -4,7 +4,6 @@ import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asTypeName
-import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import kotlin.reflect.KClass
 
 /**
@@ -12,11 +11,11 @@ import kotlin.reflect.KClass
  * After the construction the builder maps the data into a [TypeDefSpec] object.
  *
  * @property typeDefName the name of the type definition.
- * @property typeCast optional type cast for the type definition.
+ * @property typeCasts optional array of type-cast for the type definition.
  */
 class TypeDefBuilder internal constructor(
     val typeDefName: String,
-    val typeCast: TypeName? = null
+    vararg val typeCasts: TypeName? = emptyArray()
 ) {
     /**
      * The name of the type definition.

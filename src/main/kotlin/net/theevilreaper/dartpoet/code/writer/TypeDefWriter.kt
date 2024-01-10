@@ -10,8 +10,9 @@ import net.theevilreaper.dartpoet.util.SEMICOLON
 class TypeDefWriter : Writeable<TypeDefSpec> {
     override fun write(spec: TypeDefSpec, writer: CodeWriter) {
         writer.emit("${DartModifier.TYPEDEF.identifier}·${spec.typeDefName}")
-        if (spec.typeCast != null) {
-            writer.emitCode("<%T>", spec.typeCast)
+        if (spec.typeCasts.isNotEmpty()) {
+            val typesAsString = spec.typeCasts.joinToString(separator = ",·") { it.toString() }
+            writer.emitCode("<%L>", typesAsString)
         }
         writer.emit("·=·")
         writer.emitCode("%T", spec.returnType)

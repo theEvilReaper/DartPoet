@@ -20,7 +20,7 @@ class TypeDefSpec(
 ) {
     internal val typeDefName = builder.typeDefName
     internal val name = builder.name
-    internal val typeCast = builder.typeCast
+    internal val typeCasts = builder.typeCasts
     internal val returnType = builder.returnType ?: Void::class.asTypeName()
     internal val parameters = builder.parameters.toImmutableList()
     internal val hasParameters = parameters.isNotEmpty()
@@ -75,11 +75,12 @@ class TypeDefSpec(
         /**
          * Static method to create a new instance from the [TypeDefBuilder].
          * @param typeDefName the name of the typedef
-         * @param typeCast the type cast for the typedef as [TypeName]
+         * @param typeCasts the type cast for the typedef as [TypeName]
          * @return the created instance
          */
         @JvmStatic
-        fun builder(typeDefName: String, typeCast: TypeName): TypeDefBuilder = TypeDefBuilder(typeDefName, typeCast)
+        fun builder(typeDefName: String, vararg typeCasts: TypeName): TypeDefBuilder =
+            TypeDefBuilder(typeDefName, *typeCasts)
 
         /**
          * Static method to create a new instance from the [TypeDefBuilder].
@@ -88,26 +89,27 @@ class TypeDefSpec(
          * @return the created instance
          */
         @JvmStatic
-        fun builder(typeDefName: String, typeCast: ClassName): TypeDefBuilder = TypeDefBuilder(typeDefName, typeCast)
+        fun builder(typeDefName: String, vararg typeCasts: ClassName): TypeDefBuilder =
+            TypeDefBuilder(typeDefName, *typeCasts)
 
         /**
          * Static method to create a new instance from the [TypeDefBuilder].
          * @param typeDefName the name of the typedef
-         * @param typeCast the type cast for the typedef as [Class]
+         * @param typeCasts the type cast for the typedef as [Class]
          * @return the created instance
          */
         @JvmStatic
-        fun builder(typeDefName: String, typeCast: Class<*>): TypeDefBuilder =
-            TypeDefBuilder(typeDefName, typeCast.asTypeName())
+        fun builder(typeDefName: String, vararg typeCasts: Class<*>): TypeDefBuilder =
+            TypeDefBuilder(typeDefName, *typeCasts.map { it.asTypeName() }.toTypedArray())
 
         /**
          * Static method to create a new instance from the [TypeDefBuilder].
          * @param typeDefName the name of the typedef
-         * @param typeCast the type cast for the typedef as [KClass]
+         * @param typeCasts the type cast for the typedef as [KClass]
          * @return the created instance
          */
         @JvmStatic
-        fun builder(typeDefName: String, typeCast: KClass<*>): TypeDefBuilder =
-            TypeDefBuilder(typeDefName, typeCast.asTypeName())
+        fun builder(typeDefName: String, vararg typeCasts: KClass<*>): TypeDefBuilder =
+            TypeDefBuilder(typeDefName, *typeCasts.map { it.asTypeName() }.toTypedArray())
     }
 }
