@@ -227,4 +227,29 @@ class FunctionWriterTest {
             """.trimIndent()
         )
     }
+
+    @Test
+    fun `test function write with named and required parameters`() {
+        val functionSpec = FunctionSpec.builder("testMethod")
+            .modifiers(DartModifier.ABSTRACT)
+            .parameter {
+                ParameterSpec.builder("a", String::class).named(true).nullable(true).build()
+            }
+            .parameter {
+                ParameterSpec.builder("b", String::class).named(true).required().build()
+            }
+            .parameter(
+                ParameterSpec.builder("c", Int::class)
+                    .named(true)
+                    .required()
+                    .initializer("%L", "10")
+                    .build()
+            )
+            .build()
+        assertThat(functionSpec.toString()).isEqualTo(
+            """
+           abstract void testMethod({required String b, String? a, int c = 10});
+            """.trimIndent()
+        )
+    }
 }

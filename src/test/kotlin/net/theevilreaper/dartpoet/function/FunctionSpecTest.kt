@@ -108,7 +108,8 @@ class FunctionSpecTest {
     @ParameterizedTest
     @MethodSource("testParameterGeneration")
     fun `test different parameter variants in combination`(specBuilder: () -> FunctionSpec, expected: String) {
-        assertEquals(expected, specBuilder.invoke().toString())
+        val spec = specBuilder.invoke()
+        assertEquals(expected, spec.toString())
     }
 
     @Test
