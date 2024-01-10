@@ -8,6 +8,7 @@ import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.meta.SpecData
 import net.theevilreaper.dartpoet.meta.SpecMethods
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
+import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.type.TypeName
@@ -32,6 +33,7 @@ class ClassBuilder internal constructor(
     internal val functionStack: MutableList<FunctionSpec> = mutableListOf()
     internal val enumPropertyStack: MutableList<EnumPropertySpec> = mutableListOf()
     internal val constantStack: MutableSet<ConstantPropertySpec> = mutableSetOf()
+    internal val typedefs: MutableList<TypeDefSpec> = mutableListOf()
     internal var superClass: TypeName? = null
     internal var inheritKeyWord: InheritKeyword? = null
     internal var endWithNewLine = false
@@ -51,6 +53,14 @@ class ClassBuilder internal constructor(
      */
     fun constants(vararg constants: ConstantPropertySpec) = apply {
         this.constantStack += constants
+    }
+
+    fun typedef(typeDefSpec: TypeDefSpec) = apply {
+        this.typedefs += typeDefSpec
+    }
+
+    fun typedef(vararg typeDefSpec: TypeDefSpec) = apply {
+        this.typedefs += typeDefSpec
     }
 
     /**

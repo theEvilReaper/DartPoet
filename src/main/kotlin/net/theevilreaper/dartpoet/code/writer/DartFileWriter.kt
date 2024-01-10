@@ -25,6 +25,10 @@ internal class DartFileWriter : Writeable<DartFile>, DocumentationAppender {
             writer.emit(NEW_LINE)
         }
 
+        if (spec.hasTypeDefs) {
+            spec.typeDefs.emitTypeDefs(writer)
+        }
+
         if (spec.types.isNotEmpty()) {
             spec.types.forEach {
                 classWriter.write(it, writer)
