@@ -72,17 +72,9 @@ internal class FunctionWriter : Writeable<FunctionSpec> {
             writer.emit("·=>·")
             writer.emitCode(spec.body.returnsWithoutLinebreak(), ensureTrailingNewline = false)
         } else {
-            spec.parameters.emitParameters(writer)
+            writeParameters(spec, writer)
             writeBody(spec, writer)
         }
-    }
-
-    private fun writeAsyncDeclaration(writer: CodeWriter) {
-        writer.emitCode("Future<%L>", VOID.identifier)
-    }
-
-    private fun writeAsyncTypeDeclaration(spec: FunctionSpec, writer: CodeWriter) {
-        writer.emitCode("Future<%T>·", spec.returnType)
     }
 
     private fun writeBody(spec: FunctionSpec, writer: CodeWriter) {
@@ -106,18 +98,38 @@ internal class FunctionWriter : Writeable<FunctionSpec> {
         }
     }
 
+    private fun writeParameters(spec: FunctionSpec, codeWriter: CodeWriter) {
+        if (!spec.hasParameters && spec.isTypeDef) {
+            return
+        }
+        codeWriter.emit("(")
+        spec.normalParameter.emitParameters(codeWriter, forceNewLines = false)
+
+        if (spec.normalParameter.isNotEmpty() && spec.hasSpecialParameters) {
+            codeWriter.emit(", ")
+        }
+
+        if (spec.requiredParameter.isNotEmpty()) {
+            codeWriter.emit("{")
+            spec.requiredParameter.emitParameters(codeWriter, forceNewLines = false)
+            codeWriter.emit("}")
+        }
+
+        if (spec.parametersWithDefaults.isNotEmpty()) {
+            codeWriter.emit("[")
+            spec.parametersWithDefaults.emitParameters(codeWriter, forceNewLines = false)
+            codeWriter.emit("]")
+        }
+
+        codeWriter.emit(")")
+    }
+
     private fun writeTypeDef(spec: FunctionSpec, codeWriter: CodeWriter) {
         codeWriter.emit("${TYPEDEF.identifier}·")
         codeWriter.emit("${spec.name}·")
         codeWriter.emit("=·")
         codeWriter.emit("${spec.returnType}")
-        spec.parameters.emitParameters(
-            codeWriter,
-            emitBrackets = spec.parameters.isNotEmpty(),
-            forceNewLines = false
-        ) {
-            it.write(codeWriter)
-        }
+        writeParameters(spec, codeWriter)
         codeWriter.emit(SEMICOLON)
     }
 
