@@ -1,31 +1,114 @@
 package net.theevilreaper.dartpoet.function
 
 import net.theevilreaper.dartpoet.DartModifier
+import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.type.INTEGER
 import net.theevilreaper.dartpoet.type.asTypeName
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
+import org.junit.jupiter.params.shadow.com.univocity.parsers.common.ArgumentUtils
+import java.util.stream.Stream
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class FunctionSpecTest {
 
-    @Test
-    fun `create function with empty name`() {
-        assertThrows(
-            IllegalArgumentException::class.java,
-            { FunctionSpec.builder(" ").build() },
-            "The name of a function can't be empty"
+    companion object {
+
+        @JvmStatic
+        private fun invalidFunctionTests(): Stream<Arguments> = Stream.of(
+            Arguments.of(
+                { FunctionSpec.builder(" ").build() },
+                IllegalArgumentException::class.java,
+                "The name of a function can't be empty"
+            ),
+            Arguments.of(
+                { FunctionSpec.builder("getName").modifier(DartModifier.ABSTRACT).addCode("%L", "value").build() },
+                IllegalArgumentException::class.java,
+                "An abstract method can't have a body"
+            ),
+            Arguments.of(
+                {
+                    FunctionSpec.builder("print")
+                        .modifiers(DartModifier.ABSTRACT)
+                        .parameters(
+                            ParameterSpec.builder("name", String::class).initializer("%C", "theEvilReaper").build(),
+                            ParameterSpec.builder("value", Int::class).modifiers(DartModifier.REQUIRED).build()
+                        )
+                        .build()
+                },
+                IllegalArgumentException::class.java,
+                "A function can't have required and optional parameters"
+            )
+        )
+
+        @JvmStatic
+        private fun testParameterGeneration(): Stream<Arguments> = Stream.of(
+            Arguments.of(
+                {
+                    FunctionSpec.builder("print")
+                        .modifiers(DartModifier.ABSTRACT)
+                        .parameters(
+                            ParameterSpec.builder("text", String::class).initializer("%C", "Hello World").build()
+                        )
+                        .build()
+                },
+                "abstract void print([String text = 'Hello World']);"
+            ),
+            Arguments.of(
+                {
+                    FunctionSpec.builder("print")
+                        .modifiers(DartModifier.ABSTRACT)
+                        .parameters(
+                            ParameterSpec.builder("text", String::class).required().build(),
+                            ParameterSpec.builder("name", String::class).required().build()
+                        )
+                        .build()
+                },
+                "abstract void print({required String text, required String name});"
+            ),
+            Arguments.of(
+                {
+                    FunctionSpec.builder("print")
+                        .modifiers(DartModifier.ABSTRACT)
+                        .parameters(
+                            ParameterSpec.builder("text", String::class).required().build(),
+                            ParameterSpec.builder("count", Int::class).build(),
+                            ParameterSpec.builder("name", String::class).required().build(),
+                        )
+                        .build()
+                },
+                "abstract void print(int count, {required String text, required String name});"
+            ),
+            Arguments.of(
+                {
+                    FunctionSpec.builder("print")
+                        .modifiers(DartModifier.ABSTRACT)
+                        .parameters(
+                            ParameterSpec.builder("text", String::class).build(),
+                            ParameterSpec.builder("additional", String::class).initializer("%C", "Hello World!").build(),
+                        )
+                        .build()
+                },
+                "abstract void print(String text, [String additional = 'Hello World!']);"
+            ),
         )
     }
 
-    @Test
-    fun `create invalid abstract method`() {
-        assertThrows(
-            IllegalArgumentException::class.java,
-            { FunctionSpec.builder("getName").modifier(DartModifier.ABSTRACT).addCode("%L", "value").build() },
-            "An abstract method can't have a body"
-        )
+    @ParameterizedTest
+    @MethodSource("invalidFunctionTests")
+    fun `test invalid function`(specBuilder: () -> Unit, expected: Class<Exception>, message: String) {
+        assertThrows(expected, specBuilder, message)
+    }
+
+    @ParameterizedTest
+    @MethodSource("testParameterGeneration")
+    fun `test different parameter variants in combination`(specBuilder: () -> FunctionSpec, expected: String) {
+        assertEquals(expected, specBuilder.invoke().toString())
     }
 
     @Test

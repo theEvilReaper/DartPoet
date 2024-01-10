@@ -84,9 +84,9 @@ class ConstructorWriterTest {
     fun `test constructor with required and named parameters`() {
         val constructor = ConstructorSpec.builder("Car")
             .parameters(
-                ParameterSpec.builder("maker").required(true).build(),
+                ParameterSpec.builder("maker").required().build(),
                 ParameterSpec.builder("model").named(true).build(),
-                ParameterSpec.builder("yearMade").required(true).build(),
+                ParameterSpec.builder("yearMade").required().build(),
             )
             .build()
         assertThat(constructor.toString()).isEqualTo(
@@ -104,9 +104,9 @@ class ConstructorWriterTest {
     fun `test constructor with named and variable with initializer`() {
         val constructor = ConstructorSpec.builder("Item")
             .parameters(
-                ParameterSpec.builder("name").required(true).build(),
+                ParameterSpec.builder("name").required().build(),
                 ParameterSpec.builder("id").initializer("%L", 10L).build(),
-                ParameterSpec.builder("amount").required(true).build()
+                ParameterSpec.builder("amount").required().build()
             )
             .build()
         assertThat(constructor.toString()).isEqualTo(
