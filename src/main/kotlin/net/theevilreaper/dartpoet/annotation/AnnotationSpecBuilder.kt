@@ -13,17 +13,35 @@ import net.theevilreaper.dartpoet.type.TypeName
 class AnnotationSpecBuilder(
     internal val typeName: TypeName
 ) {
-
+    /**
+     * Stores the content parts from the annotation.
+     */
     internal val content: MutableList<CodeBlock> = mutableListOf()
 
+    /**
+     * Add a content part to the annotation.
+     * @param format the format string
+     * @param args the arguments for the format string
+     * @return the given instance of an [AnnotationSpecBuilder]
+     */
     fun content(format: String, vararg args: Any) = apply {
         content(CodeBlock.of(format, *args))
     }
 
+    /**
+     * Add a content part to the annotation.
+     * @param codeFragment the code fragment to add provided as [CodeBlock]
+     * @return the given instance of an [AnnotationSpecBuilder]
+     */
     fun content(codeFragment: CodeBlock) = apply {
         this.content += codeFragment
     }
 
+    /**
+     * Add a content part to the annotation.
+     * @param codeFragment the code fragment to add provided as lambda block
+     * @return the given instance of an [AnnotationSpecBuilder]
+     */
     fun content(codeFragment: () -> CodeBlock) = apply {
         this.content += codeFragment()
     }

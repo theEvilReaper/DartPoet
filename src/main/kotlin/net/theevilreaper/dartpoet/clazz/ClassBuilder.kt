@@ -16,6 +16,11 @@ import java.lang.reflect.Type
 import kotlin.reflect.KClass
 
 //TODO: Add check to prevent illegal modifiers on some class combinations
+/**
+ * The [ClassBuilder] is the entry point to describe all relevant object structures which are needed to generate a class.
+ *
+ * @since 1.0.0
+ */
 class ClassBuilder internal constructor(
     internal val name: String?,
     internal val classType: ClassType,
@@ -35,7 +40,6 @@ class ClassBuilder internal constructor(
     internal var superClass: TypeName? = null
     internal var inheritKeyWord: InheritKeyword? = null
     internal var endWithNewLine = false
-
 
     /**
      * Add a constant [PropertySpec] to the file.
@@ -73,18 +77,32 @@ class ClassBuilder internal constructor(
 
     /**
      * Set the class from which the generated class should inherit.
-     * @param className the name from the class
+     * @param superClass the name from the super class as [TypeName]
+     * @param inheritKeyword the keyword to use for the inheritance
+     * @return the given instance of an [ClassBuilder]
      */
     fun superClass(superClass: TypeName, inheritKeyword: InheritKeyword) = apply {
         this.superClass = superClass
         inheritKeyWord = inheritKeyword
     }
 
+    /**
+     * Set the class from which the generated class should inherit.
+     * @param superClass the name from the super class as [Type]
+     * @param inheritKeyword the keyword to use for the inheritance
+     * @return the given instance of an [ClassBuilder]
+     */
     fun superClass(superClass: Type, inheritKeyword: InheritKeyword) = apply {
         this.superClass = superClass.asTypeName()
         inheritKeyWord = inheritKeyword
     }
 
+    /**
+     * Set the class from which the generated class should inherit.
+     * @param superClass the name from the super class as [KClass]
+     * @param inheritKeyword the keyword to use for the inheritance
+     * @return the given instance of an [ClassBuilder]
+     */
     fun superClass(superClass: KClass<*>, inheritKeyword: InheritKeyword) = apply {
         this.superClass = superClass.asTypeName()
         inheritKeyWord = inheritKeyword
@@ -98,54 +116,119 @@ class ClassBuilder internal constructor(
         this.endWithNewLine = endWithNewLine
     }
 
+    /**
+     * Add a [PropertySpec] to the class builder.
+     * @param propertySpec the property to add
+     * @return the given instance of an [ClassBuilder]
+     */
     fun property(propertySpec: PropertySpec) = apply {
         this.propertyStack += propertySpec
     }
 
+    /**
+     * Add a [PropertySpec] to the class builder over a lambda reference.
+     * @param propertySpec the property to add
+     * @return the given instance of an [ClassBuilder]
+     */
     fun property(propertySpec: () -> PropertySpec) = apply {
         this.propertyStack += propertySpec()
     }
 
+    /**
+     * Add an array of [PropertySpec] to the class builder.
+     * @param properties the properties to add
+     * @return the given instance of an [ClassBuilder]
+     */
     fun properties(vararg properties: PropertySpec) = apply {
         this.propertyStack += properties
     }
 
+    /**
+     * Add a [FunctionSpec] to the class builder.
+     * @param function the function to add
+     * @return the given instance of an [ClassBuilder]
+     */
     fun function(function: FunctionSpec) = apply {
         this.functionStack += function
     }
 
+    /**
+     * Add a [FunctionSpec] to the class builder over a lambda reference.
+     * @param function the function to add
+     * @return the given instance of an [ClassBuilder]
+     */
     fun function(function: () -> FunctionSpec) = apply {
         this.functionStack += function()
     }
 
+    /**
+     * Add a [ConstructorSpec] to the class builder.
+     * @param constructor the constructor to add
+     * @return the given instance of an [ClassBuilder]
+     */
     fun constructor(constructor: ConstructorSpec) = apply {
         this.constructorStack += constructor
     }
 
+    /**
+     * Add a [ConstructorSpec] to the class builder over a lambda reference.
+     * @param constructor the constructor to add
+     * @return the given instance of an [ClassBuilder]
+     */
     fun constructor(constructor: () -> ConstructorSpec) = apply {
         this.constructorStack += constructor()
     }
 
-    override fun annotation(annotation: () -> AnnotationSpec) = apply {
-        this.classMetaData.annotation(annotation)
-    }
-
+    /**
+     * Add a [AnnotationSpec] to the class builder.
+     * @param annotation the annotation to add
+     * @return the given instance of an [ClassBuilder]
+     */
     override fun annotation(annotation: AnnotationSpec) = apply {
         this.classMetaData.annotation(annotation)
     }
 
+    /**
+     * Add a [AnnotationSpec] to the class builder over a lambda reference.
+     * @param annotation the annotation to add
+     * @return the given instance of an [ClassBuilder]
+     */
+    override fun annotation(annotation: () -> AnnotationSpec) = apply {
+        this.classMetaData.annotation(annotation)
+    }
+
+    /**
+     * Add an array of [AnnotationSpec] to the class builder.
+     * @param annotations the annotations to add
+     * @return the given instance of an [ClassBuilder]
+     */
     override fun annotations(vararg annotations: AnnotationSpec) = apply {
         this.classMetaData.annotations(*annotations)
     }
 
+    /**
+     * Add a [DartModifier] value to the class builder.
+     * @param modifier the modifier to add
+     * @return the given instance of an [ClassBuilder]
+     */
     override fun modifier(modifier: DartModifier) = apply {
         this.classMetaData.modifier(modifier)
     }
 
+    /**
+     * Add a [DartModifier] value to the class builder over a lambda reference.
+     * @param modifier the modifier to add
+     * @return the given instance of an [ClassBuilder]
+     */
     override fun modifier(modifier: () -> DartModifier) = apply {
         this.classMetaData.modifier(modifier)
     }
 
+    /**
+     * Add an array of [DartModifier] values to the class builder.
+     * @param modifiers the modifiers to add
+     * @return the given instance of an [ClassBuilder]
+     */
     override fun modifiers(vararg modifiers: DartModifier) = apply {
         this.classMetaData.modifiers(*modifiers)
     }

@@ -10,8 +10,16 @@ import net.theevilreaper.dartpoet.util.toImmutableSet
 import kotlin.reflect.KClass
 
 /**
- * The [AnnotationSpec] contain all relevant data about a annotation.
+ * The [AnnotationSpec] contains all relevant data which describes a specific annotation.
+ * In the programming language Dart annotations are used to add additional information to your code.
+ * A metadata annotation begins with the character @, followed by either a reference to a compile-time constant (such as deprecated) or a call to a constant constructor.
  *
+ * Four annotations are available to all Dart code:
+ * - @deprecated,
+ * - @override
+ * - @pragma
+ *
+ * Please note you can use the predefined annotations from the JDK or Kotlin but doesn't except that they work in Dart.
  * @author theEvilReaper
  * @version 1.0.0
  * @since
@@ -19,7 +27,6 @@ import kotlin.reflect.KClass
 class AnnotationSpec(
     builder: AnnotationSpecBuilder
 ) {
-
     internal val typeName: TypeName = builder.typeName
     internal val content: Set<CodeBlock> = builder.content.toImmutableSet()
     internal val hasMultipleContentParts = content.size > 1
@@ -51,18 +58,48 @@ class AnnotationSpec(
         return builder
     }
 
+    /**
+     * The companion object contains some helper methods to create a new instance from the [AnnotationSpecBuilder].
+     */
     companion object {
 
         /**
          * Creates a new instance from the [AnnotationSpecBuilder].
-         * @return the created instance
+         * @param name the name for the annotation provided as [String]
+         * @return the created instance from the [AnnotationSpecBuilder]
          */
         @JvmStatic
         fun builder(name: String) = AnnotationSpecBuilder(ClassName(name))
 
+        /**
+         * Creates a new instance from the [AnnotationSpecBuilder].
+         * @param type the type for the annotation provided as [ClassName]
+         * @return the created instance from the [AnnotationSpecBuilder]
+         */
         @JvmStatic
         fun builder(type: ClassName) = AnnotationSpecBuilder(type)
 
+        /**
+         * Creates a new instance from the [AnnotationSpecBuilder].
+         * @param type the type for the annotation provided as [TypeName]
+         * @return the created instance from the [AnnotationSpecBuilder]
+         */
+        @JvmStatic
+        fun builder(type: TypeName) = AnnotationSpecBuilder(type)
+
+        /**
+         * Creates a new instance from the [AnnotationSpecBuilder].
+         * @param type the type for the annotation provided as [Class]
+         * @return the created instance from the [AnnotationSpecBuilder]
+         */
+        @JvmStatic
+        fun builder(type: Class<*>) = AnnotationSpecBuilder(type.asClassName())
+
+        /**
+         * Creates a new instance from the [AnnotationSpecBuilder].
+         * @param type the type for the annotation provided as [KClass]
+         * @return the created instance from the [AnnotationSpecBuilder]
+         */
         @JvmStatic
         fun builder(type: KClass<out Annotation>) = AnnotationSpecBuilder(type.asClassName())
     }
