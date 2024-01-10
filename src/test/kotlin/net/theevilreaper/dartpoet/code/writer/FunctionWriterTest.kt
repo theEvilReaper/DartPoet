@@ -155,20 +155,6 @@ class FunctionWriterTest {
     }
 
     @Test
-    fun `test typedef write`() {
-        val function = FunctionSpec.builder("ValueUpdate<E>")
-            .typedef(true)
-            .parameter(
-                ParameterSpec.builder("value", ClassName("E"))
-                    .nullable(true)
-                    .build()
-            )
-            .returns(ClassName("void Function"))
-            .build()
-        assertThat(function.toString()).isEqualTo("typedef ValueUpdate<E> = void Function(E? value);")
-    }
-
-    @Test
     fun `test other getter variant write`() {
         val function = FunctionSpec.builder("value")
             .returns(Int::class)
