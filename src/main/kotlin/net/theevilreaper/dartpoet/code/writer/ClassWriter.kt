@@ -23,9 +23,6 @@ internal class ClassWriter : Writeable<ClassSpec> {
 
     //TODO: Improve new lines after each generated code part block
     override fun write(spec: ClassSpec, writer: CodeWriter) {
-        if (spec.typeDefs.isNotEmpty()) {
-            spec.typeDefs.emitTypeDefs(writer)
-        }
         if (spec.isAnonymous) {
             writeAnonymousClass(spec, writer)
             return
@@ -98,10 +95,7 @@ internal class ClassWriter : Writeable<ClassSpec> {
     }
 
     private fun writeAnonymousClass(spec: ClassSpec, writer: CodeWriter) {
-        /*spec.typeDefStack.emitFunctions(writer) {
-            it.write(writer)
-        }*/
-
+        spec.typeDefs.emitTypeDefs(writer)
         spec.functions.emitFunctions(writer)
 
         if (spec.endsWithNewLine) {
