@@ -21,7 +21,7 @@ internal class ParameterWriter : Writeable<ParameterSpec>, InitializerAppender<P
     override fun write(spec: ParameterSpec, writer: CodeWriter) {
         spec.annotations.emitAnnotations(writer, endWithNewLine = false)
 
-        if (spec.isRequired) {
+        if (spec.isRequired && (!spec.isNamed || !spec.hasInitializer)) {
             writer.emit("${DartModifier.REQUIRED.identifier}·")
         }
 

@@ -23,7 +23,6 @@ import net.theevilreaper.dartpoet.util.toImmutableSet
 class FunctionSpec(
     builder: FunctionBuilder
 ) {
-
     internal val name = builder.name
     internal val returnType: TypeName? = builder.returnType
     internal val body: CodeBlock = builder.body.build()
@@ -34,10 +33,11 @@ class FunctionSpec(
         hasAllowedModifiers(it, ALLOWED_FUNCTION_MODIFIERS, "function")
     }.filter { it != DartModifier.PRIVATE && it != DartModifier.PUBLIC }.toImmutableSet()
     internal val parametersWithDefaults = ParameterFilter.filterParameter(parameters) { !it.isRequired && it.hasInitializer }
-    internal val requiredParameter = ParameterFilter.filterParameter(parameters) { it.isRequired }
-    internal val normalParameter = parameters.minus(parametersWithDefaults).minus(requiredParameter).toImmutableList()
-    internal val hasSpecialParameters = requiredParameter.isNotEmpty() || parametersWithDefaults.isNotEmpty()
+    internal val requiredParameter = ParameterFilter.filterParameter(parameters) { it.isRequired && !it.isNamed && !it.hasInitializer }
+    internal val namedParameter = ParameterFilter.filterParameter(parameters) { it.isNamed }
+    internal val normalParameter = parameters.minus(parametersWithDefaults).minus(requiredParameter).minus(namedParameter).toImmutableList()
     internal val hasParameters = normalParameter.isNotEmpty()
+    internal val hasAdditionalParameters = requiredParameter.isNotEmpty() || namedParameter.isNotEmpty()
 
     internal val isPrivate = builder.specData.modifiers.contains(DartModifier.PRIVATE)
     internal val isTypeDef = builder.typedef
@@ -48,7 +48,6 @@ class FunctionSpec(
     internal val docs = builder.docs
     internal val hasDocs = builder.docs.isNotEmpty()
     init {
-        //check(!isTypeDef && annotation.isNotEmpty()) { "A typedef can't have annotations" }
         require(name.trim().isNotEmpty()) { "The name of a function can't be empty" }
         require(body.isEmpty() || !modifiers.contains(DartModifier.ABSTRACT)) { "An abstract method can't have a body" }
 
