@@ -5,6 +5,7 @@ import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.directive.Directive
+import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
@@ -196,6 +197,19 @@ fun Set<ConstantPropertySpec>.emitConstants(
             emitBlock(property)
         }
         emit(NEW_LINE)
+    }
+}
+
+fun List<TypeDefSpec>.emitTypeDefs(
+    codeWriter: CodeWriter,
+    emitBlock: (TypeDefSpec) -> Unit = { it.write(codeWriter) }
+) = with(codeWriter) {
+    val emitNewLines = size > 1
+    forEachIndexed { index, typeDefSpec ->
+        if (index > 0 && emitNewLines) {
+            emit(NEW_LINE)
+        }
+        emitBlock(typeDefSpec)
     }
 }
 
