@@ -27,7 +27,7 @@ class ConstantPropertySpecTest {
             ),
             Arguments.of(
                 "A file constant can't be private",
-                { ConstantPropertySpec.fileConst("test").initWith("%S", "test").asPrivat(true).build() }
+                { ConstantPropertySpec.fileConst("test").initWith("%S", "test").private(true).build() }
             )
         )
     }
@@ -48,6 +48,6 @@ class ConstantPropertySpecTest {
         assertEquals(builder.name, newBuilder.name)
         assertEquals(builder.typeName, newBuilder.typeName)
         assertEquals(builder.initializer, newBuilder.initializer)
-        assertFalse { newBuilder.isPrivat }
+        assertFalse { newBuilder.isPrivate }
     }
 }

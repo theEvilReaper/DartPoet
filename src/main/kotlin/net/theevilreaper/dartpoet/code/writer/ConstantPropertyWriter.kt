@@ -19,7 +19,7 @@ internal class ConstantPropertyWriter : Writeable<ConstantPropertySpec>, Initial
             writer.emitCode("%T·", spec.typeName)
         }
 
-        writer.emitCode("%L", ensureVariableNameWithPrivateModifier(spec.isPrivat, spec.name))
+        writer.emitCode("%L", ensureVariableNameWithPrivateModifier(spec.isPrivate, spec.name))
         writeInitBlock(spec.initializer.build(), writer)
         writer.emit(SEMICOLON)
     }
