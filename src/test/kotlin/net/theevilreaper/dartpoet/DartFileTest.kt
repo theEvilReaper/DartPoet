@@ -196,7 +196,7 @@ class DartFileTest {
               final String name;
               final String route;
             
-              const NavigationEntry(this.name, this.route);
+              const NavigationEntry(name, route);
             
             }
             """.trimIndent()
@@ -419,7 +419,7 @@ class DartFileTest {
               String name;
             
               /// Good comment
-              TestModel(this.name);
+              TestModel(name);
             
               /// Returns the given name from the object
               String getName() {
