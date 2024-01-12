@@ -9,6 +9,11 @@ import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.NEW_LINE
 import net.theevilreaper.dartpoet.util.toImmutableList
 
+/**
+ * The [AnnotationWriter] is responsible for writing the data from an [AnnotationSpec] into valid code for dart code.
+ * @since 1.0.0
+ * @author theEvilReaper
+ */
 class AnnotationWriter {
 
     fun emit(spec: AnnotationSpec, writer: CodeWriter, inline: Boolean) {

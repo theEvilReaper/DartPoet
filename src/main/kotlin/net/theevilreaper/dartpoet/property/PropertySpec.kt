@@ -84,6 +84,9 @@ class PropertySpec(
         return builder
     }
 
+    /**
+     * The companion object contains some helper methods to create a new instance from the [PropertyBuilder].
+     */
     companion object {
 
         /**

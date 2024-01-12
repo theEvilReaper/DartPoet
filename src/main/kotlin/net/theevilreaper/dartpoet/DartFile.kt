@@ -38,6 +38,10 @@ class DartFile internal constructor(
     internal val libImport = DirectiveOrdering.sortDirectives<LibraryDirective>(LibraryDirective::class, directives)
     internal val exportDirectives = DirectiveOrdering.sortDirectives<ExportDirective>(ExportDirective::class, directives)
     internal val relativeImports = DirectiveOrdering.sortDirectives<RelativeDirective>(RelativeDirective::class, directives)
+
+    internal val typeDefs = builder.typeDefs.toImmutableList()
+    internal val hasTypeDefs = typeDefs.isNotEmpty()
+
     init {
         check(name.trim().isNotEmpty()) { "The name of a class can't be empty (ONLY SPACES ARE NOT ALLOWED" }
         if (libImport.isNotEmpty()) {
@@ -63,7 +67,11 @@ class DartFile internal constructor(
         }
     }
 
-
+    /**
+     * Writes the content from a [DartFile] to the given [Appendable].
+     * @param out the [Appendable] where the content should be written
+     * @throws IOException if the content can't be written
+     */
     @Throws(IOException::class)
     fun write(out: Appendable) {
         val codeWriter = CodeWriter(
@@ -74,6 +82,11 @@ class DartFile internal constructor(
         codeWriter.close()
     }
 
+    /**
+     * Writes the content from a [DartFile] to the given [Path].
+     * @param path the path where the file should be written
+     * @throws IOException if the file can't be written
+     */
     @Throws(IOException::class)
     fun write(path: Path) {
         require(Files.notExists(path) || Files.isDirectory(path)) {
@@ -114,6 +127,9 @@ class DartFile internal constructor(
         return builder
     }
 
+    /**
+     * Creates a new instance of [DartFileBuilder] with the specified name.
+     */
     companion object {
 
         /**

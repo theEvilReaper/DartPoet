@@ -11,6 +11,7 @@ import net.theevilreaper.dartpoet.directive.DartDirective
 import net.theevilreaper.dartpoet.directive.CastType
 import net.theevilreaper.dartpoet.directive.LibraryDirective
 import net.theevilreaper.dartpoet.directive.PartDirective
+import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
@@ -123,10 +124,8 @@ class DartFileTest {
         val libClass = DartFile.builder("testLib")
             .type(
                 ClassSpec.anonymousClassBuilder()
-                    .endWithNewLine(true)
-                    .function(
-                        FunctionSpec.builder("JsonMap")
-                            .typedef(true)
+                    .typedef(
+                        TypeDefSpec.builder("JsonMap")
                             .returns(Map::class.parameterizedBy(String::class.asTypeName(), DYNAMIC))
                             .build()
 

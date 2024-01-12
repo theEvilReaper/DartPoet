@@ -39,8 +39,8 @@ class FunctionSpec(
     internal val hasParameters = normalParameter.isNotEmpty()
     internal val hasAdditionalParameters = requiredParameter.isNotEmpty() || namedParameter.isNotEmpty()
 
-    internal val isPrivate = builder.specData.modifiers.contains(DartModifier.PRIVATE)
     internal val isTypeDef = builder.typedef
+    internal val isPrivate = builder.specData.modifiers.remove(DartModifier.PRIVATE)
     internal val typeCast = builder.typeCast
     internal val asSetter = builder.setter
     internal val isGetter = builder.getter
@@ -91,7 +91,6 @@ class FunctionSpec(
         builder.modifiers(*this.modifiers.toTypedArray())
         builder.parameters.addAll(this.parameters)
         builder.async = this.isAsync
-        builder.typedef = this.isTypeDef
         builder.typeCast = this.typeCast
         builder.setter = this.asSetter
         builder.getter = this.isGetter

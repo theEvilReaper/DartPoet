@@ -26,7 +26,6 @@ class FunctionBuilder internal constructor(
     internal var async: Boolean = false
     internal var returnType: TypeName? = null
     internal val body: CodeBlock.Builder = CodeBlock.builder()
-    internal var typedef: Boolean = false
     internal var typeCast: TypeName? = null
     internal var setter: Boolean = false
     internal var getter: Boolean = false
@@ -93,14 +92,6 @@ class FunctionBuilder internal constructor(
      * @return the involved builder instance
      */
     fun typeCast(cast: KClass<*>) = apply { this.typeCast = cast.asTypeName() }
-
-    /**
-     * If the function should be generated as typedef definition.
-     * @param typeDef true for a typedef
-     */
-    fun typedef(typeDef: Boolean) = apply {
-        this.typedef = typeDef
-    }
 
     fun addCode(format: String, vararg args: Any?) = apply {
         body.add(format, *args)
@@ -180,12 +171,6 @@ class FunctionBuilder internal constructor(
      * @return the created instance
      */
     fun build(): FunctionSpec {
-        // Remove typedef keyword from the list to prevent problems
-        if (specData.modifiers.contains(DartModifier.TYPEDEF)) {
-            typedef(true)
-            specData.modifiers.remove(DartModifier.TYPEDEF)
-        }
-
         return FunctionSpec(this)
     }
 }
