@@ -127,39 +127,21 @@ internal class FunctionWriter : Writeable<FunctionSpec> {
         val namedRequired = spec.namedParameter.filter { it.isRequired && !it.hasInitializer }.toImmutableList()
 
         writeParameters(namedRequired, spec.normalParameter.isNotEmpty(), codeWriter)
-        /*if (namedRequired.isNotEmpty()) {
-            namedRequired.emitParameters(codeWriter, forceNewLines = false)
-
-            if (spec.requiredParameter.isNotEmpty()) {
-                codeWriter.emit(", ")
-            }
-        }*/
-
         writeParameters(spec.requiredParameter, namedRequired.isNotEmpty(), codeWriter)
-       // spec.requiredParameter.emitParameters(codeWriter, forceNewLines = false)
 
         val test =
             spec.namedParameter.minus(namedRequired).filter { it.isNullable || it.hasInitializer }.toImmutableList()
 
         writeParameters(test, spec.requiredParameter.isNotEmpty() || namedRequired.isNotEmpty(), codeWriter)
-        /*if (test.isNotEmpty()) {
-            codeWriter.emit(", ")
-            test.emitParameters(codeWriter, forceNewLines = false)
-        }*/
 
         codeWriter.emit("$CURLY_CLOSE")
     }
 
-    private fun writeTypeDef(spec: FunctionSpec, codeWriter: CodeWriter) {
-        codeWriter.emit("${TYPEDEF.identifier}·")
-        codeWriter.emit("${spec.name}·")
-        codeWriter.emit("=·")
-        codeWriter.emit("${spec.returnType}")
-        writeParameters(spec, codeWriter)
-        codeWriter.emit(SEMICOLON)
-    }
-
-    private fun writeParameters(parameters: List<ParameterSpec>, emitSpaceComma: Boolean = false, codeWriter: CodeWriter) {
+    private fun writeParameters(
+        parameters: List<ParameterSpec>,
+        emitSpaceComma: Boolean = false,
+        codeWriter: CodeWriter
+    ) {
         if (parameters.isEmpty()) return
         if (emitSpaceComma) {
             codeWriter.emit(", ")
