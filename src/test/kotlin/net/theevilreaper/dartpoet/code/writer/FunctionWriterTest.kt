@@ -24,30 +24,58 @@ class FunctionWriterTest {
         @JvmStatic
         private fun castFunctionWrite() = Stream.of(
             Arguments.of(
-                "int getId<int>();",
-                FunctionSpec.builder("getId").returns(Int::class).typeCast(Int::class).build()
+                FunctionSpec.builder("getId").returns(Int::class).typeCast(Int::class).build(),
+                "int getId<int>();"
             ),
             Arguments.of(
-                "List<Model> getModels<List<dynamic>>();",
                 FunctionSpec.builder("getModels").returns(List::class.parameterizedBy(ClassName("Model")))
                     .typeCast(List::class.parameterizedBy(DYNAMIC))
-                    .build()
+                    .build(),
+                "List<Model> getModels<List<dynamic>>();",
             )
+        )
+
+        @JvmStatic
+        private fun basicFunctionWrites(): Stream<Arguments> = Stream.of(
+            Arguments.of(
+                FunctionSpec.builder("test")
+                    .returns(Void::class)
+                    .build(),
+                "void test();"
+            ),
+            Arguments.of(
+                FunctionSpec.builder("getAllById")
+                    .returns(List::class.parameterizedBy(ClassName("Model")))
+                    .parameters(
+                        ParameterSpec.builder("id", String::class).build(),
+                        ParameterSpec.builder("amount", Int::class).build()
+                    )
+                    .build(),
+                "List<Model> getAllById(String id, int amount);"
+            ),
+            Arguments.of(
+                FunctionSpec.builder("test")
+                    .returns(Void::class)
+                    .parameters(
+                        ParameterSpec.builder("id", String::class).nullable(true).build(),
+                        ParameterSpec.builder("amount", Int::class).build()
+                    )
+                    .build(),
+                "void test(String? id, int amount);"
+            ),
         )
     }
 
     @ParameterizedTest
     @MethodSource("castFunctionWrite")
-    fun `test function write with cast typeNames`(expected: String, functionSpec: FunctionSpec) {
+    fun `test function write with cast typeNames`(functionSpec: FunctionSpec, expected: String) {
         assertThat(functionSpec.toString()).isEqualTo(expected)
     }
 
-    @Test
-    fun `write void method`() {
-        val method = FunctionSpec.builder("test")
-            .returns(Void::class)
-            .build()
-        assertThat(method.toString()).isEqualTo("void test();")
+    @ParameterizedTest
+    @MethodSource("basicFunctionWrites")
+    fun `test basic function write`(functionSpec: FunctionSpec, expected: String) {
+        assertThat(functionSpec.toString()).isEqualTo(expected)
     }
 
     @Test
@@ -139,22 +167,6 @@ class FunctionWriterTest {
     }
 
     @Test
-    fun `write method with two parameters`() {
-        val method = FunctionSpec.builder("getAllById")
-            .returns(List::class.parameterizedBy(ClassName("Model")))
-            .parameters(
-                ParameterSpec.builder("id", String::class).build(),
-                ParameterSpec.builder("amount", Int::class).build()
-            )
-            .build()
-        assertThat(method.toString()).isEqualTo(
-            """
-            List<Model> getAllById(String id, int amount);
-            """.trimIndent()
-        )
-    }
-
-    @Test
     fun `test other getter variant write`() {
         val function = FunctionSpec.builder("value")
             .returns(Int::class)
@@ -218,13 +230,9 @@ class FunctionWriterTest {
     fun `test function write with named and required parameters`() {
         val functionSpec = FunctionSpec.builder("testMethod")
             .modifiers(DartModifier.ABSTRACT)
-            .parameter {
-                ParameterSpec.builder("a", String::class).named(true).nullable(true).build()
-            }
-            .parameter {
-                ParameterSpec.builder("b", String::class).named(true).required().build()
-            }
-            .parameter(
+            .parameters(
+                ParameterSpec.builder("a", String::class).named(true).nullable(true).build(),
+                ParameterSpec.builder("b", String::class).named(true).required().build(),
                 ParameterSpec.builder("c", Int::class)
                     .named(true)
                     .required()
