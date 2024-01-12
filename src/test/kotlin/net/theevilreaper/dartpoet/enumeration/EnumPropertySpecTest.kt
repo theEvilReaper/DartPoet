@@ -2,6 +2,7 @@ package net.theevilreaper.dartpoet.enumeration
 
 import com.google.common.truth.Truth
 import net.theevilreaper.dartpoet.enum.EnumPropertySpec
+import net.theevilreaper.dartpoet.type.ClassName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -27,11 +28,23 @@ class EnumPropertySpecTest {
                 "navigation('/dashboard')"
             )
         )
+
+        @JvmStatic
+        private fun genericEnumProperties(): Stream<Arguments> = Stream.of(
+            Arguments.of(EnumPropertySpec.builder("test").generic(String::class).build(), "test<String>"),
+            Arguments.of(EnumPropertySpec.builder("test").generic(ClassName("E")).build(), "test<E>"),
+        )
     }
 
     @ParameterizedTest
     @MethodSource("values")
     fun `test enum property generation`(spec: EnumPropertySpec, excepted: String) {
+        Truth.assertThat(spec.toString()).isEqualTo(excepted)
+    }
+
+    @ParameterizedTest
+    @MethodSource("genericEnumProperties")
+    fun `test generic enum property generation`(spec: EnumPropertySpec, excepted: String) {
         Truth.assertThat(spec.toString()).isEqualTo(excepted)
     }
 
