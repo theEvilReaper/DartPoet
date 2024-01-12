@@ -23,7 +23,7 @@ class TypeDefWriter : Writeable<TypeDefSpec> {
 
         if (spec.hasParameters) {
             writer.emit("(")
-            spec.parameters.emitParameters(writer, forceNewLines = false, emitBrackets = false, emitSpace = spec.parameters.size > 1)
+            spec.parameters.emitParameters(writer, forceNewLines = false,emitSpace = spec.parameters.size > 1)
             writer.emit(")")
         }
         writer.emit(SEMICOLON)

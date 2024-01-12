@@ -97,7 +97,8 @@ internal class FunctionWriter : Writeable<FunctionSpec> {
     }
 
     private fun writeParameters(spec: FunctionSpec, codeWriter: CodeWriter) {
-        if (!spec.hasParameters && spec.isTypeDef) {
+        if (!spec.hasParameters) {
+            codeWriter.emit("()")
             return
         }
         codeWriter.emit("(")

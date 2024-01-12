@@ -32,14 +32,16 @@ class FunctionSpec(
     internal val modifiers: Set<DartModifier> = builder.specData.modifiers.also {
         hasAllowedModifiers(it, ALLOWED_FUNCTION_MODIFIERS, "function")
     }.filter { it != DartModifier.PRIVATE && it != DartModifier.PUBLIC }.toImmutableSet()
-    internal val parametersWithDefaults = ParameterFilter.filterParameter(parameters) { !it.isRequired && it.hasInitializer }
-    internal val requiredParameter = ParameterFilter.filterParameter(parameters) { it.isRequired && !it.isNamed && !it.hasInitializer }
+    internal val parametersWithDefaults =
+        ParameterFilter.filterParameter(parameters) { !it.isRequired && it.hasInitializer }
+    internal val requiredParameter =
+        ParameterFilter.filterParameter(parameters) { it.isRequired && !it.isNamed && !it.hasInitializer }
     internal val namedParameter = ParameterFilter.filterParameter(parameters) { it.isNamed }
-    internal val normalParameter = parameters.minus(parametersWithDefaults).minus(requiredParameter).minus(namedParameter).toImmutableList()
-    internal val hasParameters = normalParameter.isNotEmpty()
+    internal val normalParameter =
+        parameters.minus(parametersWithDefaults).minus(requiredParameter).minus(namedParameter).toImmutableList()
+    internal val hasParameters = parameters.isNotEmpty()
     internal val hasAdditionalParameters = requiredParameter.isNotEmpty() || namedParameter.isNotEmpty()
 
-    internal val isTypeDef = builder.typedef
     internal val isPrivate = builder.specData.modifiers.remove(DartModifier.PRIVATE)
     internal val typeCast = builder.typeCast
     internal val asSetter = builder.setter
@@ -47,6 +49,7 @@ class FunctionSpec(
     internal val isLambda = builder.lambda
     internal val docs = builder.docs
     internal val hasDocs = builder.docs.isNotEmpty()
+
     init {
         require(name.trim().isNotEmpty()) { "The name of a function can't be empty" }
         require(body.isEmpty() || !modifiers.contains(DartModifier.ABSTRACT)) { "An abstract method can't have a body" }
