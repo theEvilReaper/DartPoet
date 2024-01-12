@@ -213,7 +213,7 @@ class CodeWriter constructor(
         for (line in s.split('\n')) {
             // Emit a newline character. Make sure blank lines in KDoc & comments look good.
             if (!first) {
-                if ( comment && trailingNewline) {
+                if (comment && trailingNewline) {
                     emitIndentation()
                     out.appendNonWrapping(DOCUMENTATION_CHAR)
                 }
