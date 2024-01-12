@@ -23,7 +23,6 @@ import net.theevilreaper.dartpoet.util.toImmutableSet
 class FunctionSpec(
     builder: FunctionBuilder
 ) {
-
     internal val name = builder.name
     internal val returnType: TypeName? = builder.returnType
     internal val body: CodeBlock = builder.body.build()
@@ -33,8 +32,7 @@ class FunctionSpec(
     internal var modifiers: Set<DartModifier> = builder.specData.modifiers.also {
         hasAllowedModifiers(it, ALLOWED_FUNCTION_MODIFIERS, "function")
     }.filter { it != DartModifier.PRIVATE && it != DartModifier.PUBLIC }.toImmutableSet()
-    internal val isPrivate = builder.specData.modifiers.contains(DartModifier.PRIVATE)
-    internal val isTypeDef = builder.typedef
+    internal val isPrivate = builder.specData.modifiers.remove(DartModifier.PRIVATE)
     internal val typeCast = builder.typeCast
     internal val asSetter = builder.setter
     internal val isGetter = builder.getter
@@ -49,7 +47,6 @@ class FunctionSpec(
     }
 
     init {
-        //check(!isTypeDef && annotation.isNotEmpty()) { "A typedef can't have annotations" }
         require(name.trim().isNotEmpty()) { "The name of a function can't be empty" }
         require(body.isEmpty() || !modifiers.contains(DartModifier.ABSTRACT)) { "An abstract method can't have a body" }
 
@@ -89,7 +86,6 @@ class FunctionSpec(
         builder.modifiers(*this.modifiers.toTypedArray())
         builder.parameters.addAll(this.parameters)
         builder.async = this.isAsync
-        builder.typedef = this.isTypeDef
         builder.typeCast = this.typeCast
         builder.setter = this.asSetter
         builder.getter = this.isGetter

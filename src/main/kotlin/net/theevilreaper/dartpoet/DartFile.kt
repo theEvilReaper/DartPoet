@@ -38,6 +38,10 @@ class DartFile internal constructor(
     internal val libImport = DirectiveOrdering.sortDirectives<LibraryDirective>(LibraryDirective::class, directives)
     internal val exportDirectives = DirectiveOrdering.sortDirectives<ExportDirective>(ExportDirective::class, directives)
     internal val relativeImports = DirectiveOrdering.sortDirectives<RelativeDirective>(RelativeDirective::class, directives)
+
+    internal val typeDefs = builder.typeDefs.toImmutableList()
+    internal val hasTypeDefs = typeDefs.isNotEmpty()
+
     init {
         check(name.trim().isNotEmpty()) { "The name of a class can't be empty (ONLY SPACES ARE NOT ALLOWED" }
         if (libImport.isNotEmpty()) {
