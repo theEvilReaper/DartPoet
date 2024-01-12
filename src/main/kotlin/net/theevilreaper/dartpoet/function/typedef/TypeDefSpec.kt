@@ -59,8 +59,7 @@ class TypeDefSpec(
     }
 
     /**
-     * The companion object contains some static methods to create a new instance of a [TypeDefSpec].
-     *
+     * The companion object contains some helper methods to create a new instance of a [TypeDefSpec].
      */
     companion object {
 

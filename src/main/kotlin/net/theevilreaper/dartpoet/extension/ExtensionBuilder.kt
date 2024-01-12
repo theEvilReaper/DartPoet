@@ -4,12 +4,15 @@ import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.function.FunctionSpec
 
 /**
+ * The builder implementation for a [ExtensionSpec] allows to set specific attributes to set relevant data about the extension which should be generated.
+ * @param name the name of the extension
+ * @param extClass the class to extend
  * @since 1.0.0
  * @author theEvilReaper
  */
 class ExtensionBuilder(
     val name: String,
-    val extClass: String
+    val extClass: String,
 ) {
     internal var endWithNewLine: Boolean = false
     internal val functionStack: MutableList<FunctionSpec> = mutableListOf()
@@ -26,7 +29,7 @@ class ExtensionBuilder(
     }
 
     /**
-     * Add a new [FunctionSpec] to the extension.
+     * Adds a new [FunctionSpec] to the extension.
      * @param function the function to add
      */
     fun function(function: FunctionSpec) = apply {
@@ -34,24 +37,24 @@ class ExtensionBuilder(
     }
 
     /**
-     * Add a new [FunctionSpec] to the extension.
-     * @param function the function to add
+     * Adds a new [FunctionSpec] to the extension using a lambda expression.
+     * @param function a lambda expression that creates the function to add
      */
     fun function(function: () -> FunctionSpec) = apply {
         this.functionStack += function()
     }
 
     /**
-     * Add a multiple [FunctionSpec] to the extension.
-     * @param functions the functions to add
+     * Adds multiple [FunctionSpec] instances to the extension.
+     * @param functions zhe functions to add
      */
     fun functions(vararg functions: FunctionSpec) = apply {
         this.functionStack += functions
     }
 
     /**
-     * Indicates if the class should end with an empty line.
-     * @param withEmptyLine True for an empty line
+     * Specifies whether the generated extension structure should end with an empty line.
+     * @param withEmptyLine true to include an empty line at the end
      */
     fun endsWithNewLine(withEmptyLine: Boolean) = apply {
         this.endWithNewLine = withEmptyLine
