@@ -13,7 +13,17 @@ class RelativeDirective(
     private val path: String,
     private val castType: CastType? = null,
     private val importCast: String? = null,
-): BaseDirective(path) {
+) : BaseDirective(path) {
+
+    init {
+        if (importCast != null) {
+            check(importCast.trim().isNotEmpty()) { "The importCast can't be empty" }
+        }
+
+        if ((castType != null && importCast == null) || (castType == null && importCast != null)) {
+            throw IllegalStateException("The castType and importCast must be set together or must be null. A mixed state is not allowed")
+        }
+    }
 
     /**
      * Writes the content for a relative directive to an instance of an [CodeWriter].
@@ -28,7 +38,6 @@ class RelativeDirective(
         if (castType != null && importCast != null) {
             writer.emit(" ${castType.identifier} $importCast")
         }
-
         writer.emit(SEMICOLON)
     }
 }

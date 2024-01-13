@@ -5,17 +5,15 @@ import net.theevilreaper.dartpoet.util.IMPORT
 import net.theevilreaper.dartpoet.util.SEMICOLON
 
 /**
- * The class represents a normal import from dart.
- * An import statement can look like this in dart:
- * <ol>
- *  <li>'package:flutter/material.dart'</li>
- *  <li>'../../model/item_model.dart'<li>
- * </ol>
- * Dart also allows to add a prefix to an import which means that an import can look like that:
- * -> import ../../model/item_model.dart as itemModel;
+ * Represents an import directive from dart which usual starts with `dart` or `package`.
  *
- * @author theEvilReaper
- * @since 1.0.0
+ * @param path the path to the Dart file or package being imported.
+ * @param castType the optional cast type for the imported directive, used when casting the directive
+ * @param importCast the optional import cast, specifying a cast expression for the imported directive.
+ *
+ * @throws IllegalArgumentException if [importCast] is provided and is empty or consists only of whitespace.
+ *
+ * @constructor Creates a Dart import directive with the specified path as [String], a cast type as [CastType], and a importCast a [String].
  */
 class DartDirective(
     private val path: String,
@@ -27,32 +25,29 @@ class DartDirective(
      * Check if some conditions are false and throw an exception.
      */
     init {
-        if (castType != null && importCast != null) {
+        if (importCast != null) {
             check(importCast.trim().isNotEmpty()) { "The importCast can't be empty" }
+        }
+
+        if ((castType != null && importCast == null) || (castType == null && importCast != null)) {
+            throw IllegalStateException("The castType and importCast must be set together or must be null. A mixed state is not allowed")
         }
     }
 
+    /**
+     * Writes the given data from the directive to the provided [CodeWriter].
+     *
+     * @param writer the writer instance to append the directive
+     */
     override fun write(writer: CodeWriter) {
         writer.emit("$IMPORT ")
-        if (importCast == null && castType == null) {
-            if (isDartImport()) {
-                writer.emit("'${path.ensureDartFileEnding()}'")
-            } else {
-                writer.emit("'")
-                writer.emit("package:")
-                writer.emit(path.ensureDartFileEnding())
-                writer.emit("'")
-            }
-            writer.emit(SEMICOLON)
-        } else if (importCast != null && castType != null) {
-            writer.emit("'")
-            if (!isDartImport()) {
-             writer.emit("package:")
-            }
-            writer.emit("${path.ensureDartFileEnding()}' ${castType.identifier} $importCast")
-            writer.emit(SEMICOLON)
-        } else {
-            throw Error("Something went wrong during the DartDirective write prozess")
+        val ensuredPath = path.ensureDartFileEnding()
+        val pathToWrite = if (isDartImport()) ensuredPath else "package:$ensuredPath"
+        writer.emit("'$pathToWrite'")
+
+        if (importCast != null && castType != null) {
+            writer.emit(" ${castType.identifier} $importCast")
         }
+        writer.emit(SEMICOLON)
     }
 }
