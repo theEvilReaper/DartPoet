@@ -13,6 +13,7 @@ import kotlin.reflect.KClass
 /**
  * The class models a typedef from dart into a structure which can be used to generate and organize such methods.
  * For more details visit the documentation from dart
+ * @param builder the builder instance to retrieve the data from
  * @see <a href="https://dart.dev/language/typedefs">Dart Typedefs</a>.
  */
 class TypeDefSpec(

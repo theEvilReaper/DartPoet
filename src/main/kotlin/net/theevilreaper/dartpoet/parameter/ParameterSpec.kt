@@ -18,6 +18,7 @@ import kotlin.reflect.KClass
  *
  * This class is typically used in code generation tasks to define and manipulate parameter specifications
  * for generating source code.
+ * @param builder the builder instance to retrieve the data from
  * @author theEvilReaper
  * @since 1.0.0
  */

@@ -20,6 +20,7 @@ import kotlin.reflect.KClass
  * - @pragma
  *
  * Please note you can use the predefined annotations from the JDK or Kotlin but doesn't except that they work in Dart.
+ * @param builder the builder instance to retrieve the data from
  * @author theEvilReaper
  * @version 1.0.0
  * @since

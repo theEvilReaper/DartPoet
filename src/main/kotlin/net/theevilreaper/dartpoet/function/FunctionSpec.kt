@@ -15,7 +15,7 @@ import net.theevilreaper.dartpoet.util.toImmutableSet
 /**
  * The spec class contains all relevant information about a function in dart.
  * A [FunctionWriter] instance read the data from it to write the data into the function structure from dart.
- *
+ * @param builder the builder instance to retrieve the data from
  * @author theEvilReaper
  * @since 1.0.0
  * @version 1.0.0

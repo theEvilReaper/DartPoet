@@ -17,6 +17,7 @@ import kotlin.reflect.KClass
 /**
  * The property spec class contains all variables which are comes from the [PropertyBuilder].
  * Some values are checked for certain conditions to avoid errors during the generation.
+ * @param builder the builder instance to retrieve the data from
  * @author theEvilReaper
  * @since 1.0.0
  */

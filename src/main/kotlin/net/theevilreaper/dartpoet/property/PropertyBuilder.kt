@@ -7,6 +7,8 @@ import net.theevilreaper.dartpoet.type.TypeName
 
 /**
  * The builder is used to set all values that describe a property in Dart.
+ * @param name the name of the property
+ * @param type the type as [TypeName] of the property (can be nullable)
  * @author theEvilReaper
  * @version 1.0.0
  * @since 1.0.0

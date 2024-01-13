@@ -10,8 +10,8 @@ import kotlin.reflect.KClass
  * The builder is used to create a type definition with a specific name and optional type cast.
  * After the construction the builder maps the data into a [TypeDefSpec] object.
  *
- * @property typeDefName the name of the type definition.
- * @property typeCasts optional array of type-cast for the type definition.
+ * @param typeDefName the name of the type definition.
+ * @param typeCasts optional array of type-cast for the type definition.
  */
 class TypeDefBuilder internal constructor(
     val typeDefName: String,

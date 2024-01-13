@@ -7,6 +7,7 @@ import net.theevilreaper.dartpoet.type.TypeName
  * With the AnnotationBuilder data can be set to an annotation.
  * These are later read out during generation and converted into code accordingly.
  * @author theEvilReaper
+ * @param typeName the name of the annotation
  * @version 1.0.0
  * @since
  **/

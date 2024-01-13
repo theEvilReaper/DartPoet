@@ -15,6 +15,7 @@ import kotlin.reflect.KClass
 
 /**
  * The builder class allows the creation of an [FunctionBuilder] without any effort.
+ * @param name the name of the function
  * @author 1.0.0
  * @since 1.0.0
  */
