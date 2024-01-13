@@ -19,7 +19,7 @@ class LibraryDirective(
      * @param writer the [CodeWriter] instance to append the directive
      */
     override fun write(writer: CodeWriter) {
-        val baseString = if (asPartOf) "part of" else "library"
+        val baseString = if (asPartOf) "part of" else LIBRARY.identifier
         writer.emit("$baseString·")
         writer.emit(path)
         writer.emit(SEMICOLON)
