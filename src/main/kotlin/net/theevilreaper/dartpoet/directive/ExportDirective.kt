@@ -16,20 +16,22 @@ class ExportDirective(
     private val path: String,
     private val castType: CastType? = null,
     private val importCast: String? = null,
-): BaseDirective(path) {
+) : BaseDirective(path) {
 
     private val export = "export"
     private val invalidCastType = arrayOf(CastType.DEFERRED, CastType.AS)
 
     init {
-        if (castType != null) {
-            if (castType in invalidCastType) {
-                throw IllegalStateException("The following cast types are not allowed for an export directive: [${invalidCastType.joinToString()}]")
-            }
+        if (castType != null && castType in invalidCastType) {
+            throw IllegalStateException("The following cast types are not allowed for an export directive: [${invalidCastType.joinToString()}]")
         }
 
         if (importCast != null) {
             check(importCast.trim().isNotEmpty()) { "The importCast can't be empty" }
+        }
+
+        if ((castType != null && importCast == null) || (castType == null && importCast != null)) {
+            throw IllegalStateException("The castType and importCast must be set together or must be null. A mixed state is not allowed")
         }
     }
 
@@ -38,16 +40,14 @@ class ExportDirective(
      * @param writer the [CodeWriter] instance to append the directive
      */
     override fun write(writer: CodeWriter) {
+        val ensuredPath = path.ensureDartFileEnding()
         writer.emit("$export·'")
-        if (importCast == null && castType == null) {
-            writer.emit(path.ensureDartFileEnding())
-            writer.emit("'$SEMICOLON")
-        } else if (importCast != null && castType != null) {
-            writer.emit(path.ensureDartFileEnding())
-            writer.emit("' ${castType.identifier} $importCast")
-            writer.emit(SEMICOLON)
-        } else {
-            throw Error("Something went wrong during the ExportDirective write process")
+        writer.emit(ensuredPath)
+        writer.emit("'")
+
+        if (importCast != null && castType != null) {
+            writer.emit("·${castType.identifier} $importCast")
         }
+        writer.emit(SEMICOLON)
     }
 }

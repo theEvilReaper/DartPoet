@@ -5,21 +5,22 @@ import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.util.SEMICOLON
 
 /**
- *
+ * The [LibraryDirective] represents the library directive from dart.
  * @since 1.0.0
  * @author theEvilReaper
  */
 class LibraryDirective(
     private val path: String,
     private val asPartOf: Boolean = false
-): BaseDirective(path) {
+) : BaseDirective(path) {
 
+    /**
+     * Writes the data from the [LibraryDirective] to a given instance from a [CodeWriter].
+     * @param writer the [CodeWriter] instance to append the directive
+     */
     override fun write(writer: CodeWriter) {
-        if (asPartOf) {
-            writer.emit("part of ")
-        } else {
-            writer.emit("${LIBRARY.identifier} ")
-        }
+        val baseString = if (asPartOf) "part of" else LIBRARY.identifier
+        writer.emit("$baseString·")
         writer.emit(path)
         writer.emit(SEMICOLON)
     }
