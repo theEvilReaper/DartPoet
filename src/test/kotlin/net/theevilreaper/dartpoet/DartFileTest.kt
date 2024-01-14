@@ -1,25 +1,25 @@
 package net.theevilreaper.dartpoet
 
-import com.google.common.truth.Truth.*
+import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.code.buildCodeBlock
+import net.theevilreaper.dartpoet.directive.CastType
+import net.theevilreaper.dartpoet.directive.DirectiveFactory
+import net.theevilreaper.dartpoet.directive.DirectiveType
 import net.theevilreaper.dartpoet.enum.EnumPropertySpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
-import net.theevilreaper.dartpoet.directive.DartDirective
-import net.theevilreaper.dartpoet.directive.CastType
-import net.theevilreaper.dartpoet.directive.LibraryDirective
-import net.theevilreaper.dartpoet.directive.PartDirective
 import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
-import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
+import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.DYNAMIC
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
 import net.theevilreaper.dartpoet.type.asTypeName
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import kotlin.test.assertContentEquals
 
@@ -89,9 +89,9 @@ class DartFileTest {
             }
         val versionFile = DartFile.builder("version.dart")
             .directives(
-                DartDirective("freezed_annotation/freezed_annotation.dart"),
-                PartDirective("version.freezed.dart"),
-                PartDirective("version.g.dart")
+                DirectiveFactory.create(DirectiveType.IMPORT, "freezed_annotation/freezed_annotation.dart"),
+                DirectiveFactory.create(DirectiveType.PART, "version.freezed.dart"),
+                DirectiveFactory.create(DirectiveType.PART, "version.g.dart")
             )
             .type(
                 versionFreezedClass
@@ -133,9 +133,9 @@ class DartFileTest {
                     .build()
             )
             .directives(
-                DartDirective("dart:html"),
-                LibraryDirective("testLib"),
-                DartDirective("dart:math", CastType.AS, "math"),
+                DirectiveFactory.create(DirectiveType.IMPORT, "dart:html"),
+                DirectiveFactory.createLib("testLib"),
+                DirectiveFactory.create(DirectiveType.IMPORT, "dart:math", CastType.AS, "math"),
             )
             .build()
         assertThat(libClass.toString()).isEqualTo(
@@ -251,7 +251,7 @@ class DartFileTest {
             .build()
 
         val file = DartFile.builder("${className}Handler")
-            .directive(LibraryDirective("testLibrary", true))
+            .directive(DirectiveFactory.createLib("testLibrary", true))
             .type(handlerApiClass)
             .build()
         assertThat(file.toString()).isEqualTo(
@@ -336,7 +336,7 @@ class DartFileTest {
     fun `test class write with constant values`() {
         val name = "environment"
         val classFile = DartFile.builder(name)
-            .directive(DartDirective("dart:html"))
+            .directive(DirectiveFactory.create(DirectiveType.IMPORT, "dart:html"))
             .constants(
                 ConstantPropertySpec.fileConst("typeLive").initWith("1").build(),
                 ConstantPropertySpec.fileConst("typeTest").initWith("10").build(),

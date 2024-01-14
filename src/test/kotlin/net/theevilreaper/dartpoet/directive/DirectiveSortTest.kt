@@ -17,9 +17,9 @@ class DirectiveSortTest {
         private fun dartDirectiveArguments(): Stream<Arguments> = Stream.of(
             Arguments.of(
                 listOf(
-                    DartDirective("dart:io"),
-                    DartDirective("dart:math"),
-                    PartDirective("test.dart"),
+                    DirectiveFactory.create(DirectiveType.IMPORT, "dart:io"),
+                    DirectiveFactory.create(DirectiveType.IMPORT, "dart:math"),
+                    DirectiveFactory.create(DirectiveType.PART, "test.dart"),
                 ),
                 listOf(
                     "dart:io",
@@ -32,10 +32,10 @@ class DirectiveSortTest {
         private fun directiveSortArguments(): Stream<Arguments> = Stream.of(
             Arguments.of(
                 listOf(
-                    DartDirective("testD.dart"),
-                    DartDirective("testA.dart"),
-                    DartDirective("testB.dart"),
-                    DartDirective("testC.dart"),
+                    DirectiveFactory.create(DirectiveType.IMPORT, "testD.dart"),
+                    DirectiveFactory.create(DirectiveType.IMPORT, "testA.dart"),
+                    DirectiveFactory.create(DirectiveType.IMPORT, "testB.dart"),
+                    DirectiveFactory.create(DirectiveType.IMPORT, "testC.dart"),
                 ),
                 listOf(
                     "testA.dart",
@@ -73,7 +73,10 @@ class DirectiveSortTest {
         assertEquals(emptyList(), DirectiveOrdering.sortDirectives(DartDirective::class, listOf()))
     }
 
-    private inline fun <reified T: Directive> formatImports(directives: List<T>, vararg placeholders: String): List<String> {
+    private inline fun <reified T : Directive> formatImports(
+        directives: List<T>,
+        vararg placeholders: String,
+    ): List<String> {
         return directives.map {
             var directive: String = it.asString()
             for (placeholder in placeholders) {
