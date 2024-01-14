@@ -1,6 +1,7 @@
 package net.theevilreaper.dartpoet.directive
 
 import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.directive.BaseDirective
 import net.theevilreaper.dartpoet.util.SEMICOLON
 
 /**
@@ -9,7 +10,7 @@ import net.theevilreaper.dartpoet.util.SEMICOLON
  * @since 1.0.0
  * @author theEvilReaper
  */
-class PartDirective(
+class PartDirective internal constructor(
     private val path: String
 ) : BaseDirective(path) {
 
