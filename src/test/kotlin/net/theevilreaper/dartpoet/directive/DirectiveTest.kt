@@ -1,10 +1,7 @@
 package net.theevilreaper.dartpoet.directive
 
 import org.junit.jupiter.api.Assertions.assertEquals
-<<<<<<< HEAD
-=======
 import org.junit.jupiter.api.Assertions.assertThrows
->>>>>>> 2f50597 (Update directive usage)
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
@@ -61,7 +58,6 @@ class DirectiveTest {
 
         @JvmStatic
         private fun relativeDirectives() = Stream.of(
-<<<<<<< HEAD
             Arguments.of(RelativeDirective(TEST_IMPORT), "import '../../model/item_model.dart';"),
             Arguments.of(
                 RelativeDirective(TEST_IMPORT, CastType.AS, CAST_VALUE),
@@ -75,9 +71,6 @@ class DirectiveTest {
                 RelativeDirective(TEST_IMPORT, CastType.HIDE, CAST_VALUE),
                 "import '../../model/item_model.dart' hide item;"
             ),
-            Arguments.of(
-                RelativeDirective(TEST_IMPORT, CastType.SHOW, CAST_VALUE),
-=======
             Arguments.of(
                 DirectiveFactory.create(DirectiveType.RELATIVE, TEST_IMPORT),
                 "import '../../model/item_model.dart';"
@@ -96,7 +89,6 @@ class DirectiveTest {
             ),
             Arguments.of(
                 DirectiveFactory.create(DirectiveType.RELATIVE, TEST_IMPORT, CastType.SHOW, CAST_VALUE),
->>>>>>> 2f50597 (Update directive usage)
                 "import '../../model/item_model.dart' show item;"
             )
         )
@@ -141,22 +133,6 @@ class DirectiveTest {
     }
 
     @Test
-<<<<<<< HEAD
-=======
-    fun `test import with empty path`() {
-        assertThrows(
-            IllegalStateException::class.java,
-            { DirectiveFactory.create(DirectiveType.IMPORT, " ") },
-            "The path of an Import can't be empty"
-        )
-        assertThrows(
-            IllegalStateException::class.java,
-            { DirectiveFactory.create(DirectiveType.IMPORT, "") },
-            "The path of an Import can't be empty"
-        )
-    }
-
-    @Test
     fun `test cast import with empty cast`() {
         assertThrows(
             IllegalStateException::class.java,
@@ -172,7 +148,6 @@ class DirectiveTest {
 
 
     @Test
->>>>>>> 2f50597 (Update directive usage)
     fun `test package import`() {
         val import = DirectiveFactory.create(DirectiveType.IMPORT, "flutter/material.dart")
         assertEquals(packageImport, import.asString())
