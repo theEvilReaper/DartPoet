@@ -2,6 +2,7 @@ package net.theevilreaper.dartpoet.code.writer
 
 import net.theevilreaper.dartpoet.DartModifier.*
 import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.DocumentationAppender
 import net.theevilreaper.dartpoet.code.Writeable
 import net.theevilreaper.dartpoet.code.emitFunctions
 import net.theevilreaper.dartpoet.extension.ExtensionSpec
@@ -16,7 +17,7 @@ import net.theevilreaper.dartpoet.util.NEW_LINE
  * @author theEvilReaper
  * @since 1.0.0
  */
-internal class ExtensionWriter : Writeable<ExtensionSpec> {
+internal class ExtensionWriter : Writeable<ExtensionSpec>, DocumentationAppender {
 
     /**
      * The method handles the complete generation for an extension class with its methods.
@@ -24,9 +25,7 @@ internal class ExtensionWriter : Writeable<ExtensionSpec> {
      * @param writer the [CodeWriter] instance to append the generated code into a [Appendable]
      */
     override fun write(spec: ExtensionSpec, writer: CodeWriter) {
-        if (spec.hasDocs) {
-            spec.docs.forEach { writer.emitDoc(it) }
-        }
+        emitDocumentation(spec.docs, writer)
         writer.emitCode("%L", EXTENSION.identifier)
 
         if (spec.name != null) {
