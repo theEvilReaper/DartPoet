@@ -27,23 +27,29 @@ internal class ExtensionWriter : Writeable<ExtensionSpec> {
         if (spec.hasDocs) {
             spec.docs.forEach { writer.emitDoc(it) }
         }
-        writer.emit("${EXTENSION.identifier}·")
-        writer.emit("${spec.name}·")
-        writer.emit("${ON.identifier}·")
-        writer.emit("${spec.extClass}·")
+        writer.emitCode("%L", EXTENSION.identifier)
+
+        if (spec.name != null) {
+            writer.emitCode("·%L", spec.name)
+        }
+
+        if (spec.hasGenericCast) {
+            writer.emitCode("<%T>", spec.genericType)
+        }
+
+        writer.emitCode("·%L·%T·", ON.identifier, spec.extClass)
 
         // Handles the case when an extension class has no content.
         if (spec.hasNoContent) {
-            writer.emit("{ }")
+            writer.emit("{}")
             return;
         }
 
         writer.emit("{\n")
         writer.indent()
 
-        spec.functions.emitFunctions(writer) {
-            it.write(writer)
-        }
+        spec.functions.emitFunctions(writer)
+
         writer.emit(NEW_LINE)
 
         writer.unindent()
