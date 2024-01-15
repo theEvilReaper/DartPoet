@@ -1,9 +1,8 @@
 package net.theevilreaper.dartpoet.code.writer
 
 import net.theevilreaper.dartpoet.DartModifier.*
-import net.theevilreaper.dartpoet.code.CodeBlock
-import net.theevilreaper.dartpoet.code.CodeWriter
-import net.theevilreaper.dartpoet.code.Writeable
+import net.theevilreaper.dartpoet.code.*
+import net.theevilreaper.dartpoet.code.DocumentationAppender
 import net.theevilreaper.dartpoet.code.emitParameters
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
@@ -14,12 +13,10 @@ import net.theevilreaper.dartpoet.util.SEMICOLON
 import net.theevilreaper.dartpoet.util.SPACE
 import net.theevilreaper.dartpoet.util.toImmutableSet
 
-internal class FunctionWriter : Writeable<FunctionSpec> {
+internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
 
     override fun write(spec: FunctionSpec, writer: CodeWriter) {
-        if (spec.hasDocs) {
-            spec.docs.forEach { writer.emitDoc(it) }
-        }
+        emitDocumentation(spec.docs, writer)
 
         if (spec.annotation.isNotEmpty()) {
             spec.annotation.forEach { it.write(writer) }
