@@ -26,7 +26,6 @@ class ParameterBuilder internal constructor(
 ) : SpecMethods<ParameterBuilder> {
     internal val specData: SpecData = SpecData()
     internal var named: Boolean = false
-    internal var required: Boolean = false
     internal var nullable: Boolean = false
     internal var initializer: CodeBlock? = null
 
@@ -42,12 +41,21 @@ class ParameterBuilder internal constructor(
         this.named = named
     }
 
+    /**
+     * Indicates whether the parameter is nullable or not.
+     * @param nullable true if the parameter is nullable, false otherwise
+     * @return the current [ParameterBuilder] instance
+     */
     fun nullable(nullable: Boolean) = apply {
         this.nullable = nullable
     }
 
-    fun required(required: Boolean) = apply {
-        this.required = required
+    /**
+     * Indicates that the parameter is required.
+     * @return the current [ParameterBuilder] instance
+     */
+    fun required() = apply {
+        this.modifiers(DartModifier.REQUIRED)
     }
 
     override fun annotation(annotation: () -> AnnotationSpec) = apply {
@@ -71,7 +79,7 @@ class ParameterBuilder internal constructor(
     }
 
     override fun modifiers(vararg modifiers: DartModifier) = apply {
-        TODO("Not yet implemented")
+        this.specData.modifiers += modifiers
     }
 
     /**

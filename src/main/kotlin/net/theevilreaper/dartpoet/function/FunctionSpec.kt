@@ -26,12 +26,22 @@ class FunctionSpec(
     internal val name = builder.name
     internal val returnType: TypeName? = builder.returnType
     internal val body: CodeBlock = builder.body.build()
-    internal val parameters: List<ParameterSpec> = builder.parameters.toImmutableList()
+    private val parameters: List<ParameterSpec> = builder.parameters.toImmutableList()
     internal val isAsync: Boolean = builder.async
     internal val annotation: Set<AnnotationSpec> = builder.specData.annotations.toImmutableSet()
-    internal var modifiers: Set<DartModifier> = builder.specData.modifiers.also {
+    internal val modifiers: Set<DartModifier> = builder.specData.modifiers.also {
         hasAllowedModifiers(it, ALLOWED_FUNCTION_MODIFIERS, "function")
     }.filter { it != DartModifier.PRIVATE && it != DartModifier.PUBLIC }.toImmutableSet()
+    internal val parametersWithDefaults =
+        ParameterFilter.filterParameter(parameters) { !it.isRequired && it.hasInitializer }
+    internal val requiredParameter =
+        ParameterFilter.filterParameter(parameters) { it.isRequired && !it.isNamed && !it.hasInitializer }
+    internal val namedParameter = ParameterFilter.filterParameter(parameters) { it.isNamed }
+    internal val normalParameter =
+        parameters.minus(parametersWithDefaults).minus(requiredParameter).minus(namedParameter).toImmutableList()
+    internal val hasParameters = parameters.isNotEmpty()
+    internal val hasAdditionalParameters = requiredParameter.isNotEmpty() || namedParameter.isNotEmpty()
+
     internal val isPrivate = builder.specData.modifiers.remove(DartModifier.PRIVATE)
     internal val typeCast = builder.typeCast
     internal val asSetter = builder.setter
@@ -39,12 +49,6 @@ class FunctionSpec(
     internal val isLambda = builder.lambda
     internal val docs = builder.docs
     internal val hasDocs = builder.docs.isNotEmpty()
-
-    private val namedParameters: Set<ParameterSpec> = if (parameters.isEmpty()) {
-        setOf()
-    } else {
-        parameters.filter { it.isNamed }.toSet()
-    }
 
     init {
         require(name.trim().isNotEmpty()) { "The name of a function can't be empty" }
@@ -56,6 +60,10 @@ class FunctionSpec(
 
         if (isLambda && body.isEmpty()) {
             throw IllegalArgumentException("Lambda can only be used with a body")
+        }
+
+        if (requiredParameter.isNotEmpty() && parametersWithDefaults.isNotEmpty()) {
+            throw IllegalArgumentException("A function can't have required and optional parameters")
         }
 
         //require (isFactory && returnType == null && !isNullable) { "A void function can't be nullable" }

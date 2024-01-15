@@ -5,9 +5,12 @@ import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.Writeable
 import net.theevilreaper.dartpoet.code.emitParameters
 import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
+import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.util.SEMICOLON
+import net.theevilreaper.dartpoet.util.toImmutableList
 
 class TypeDefWriter : Writeable<TypeDefSpec> {
+
     override fun write(spec: TypeDefSpec, writer: CodeWriter) {
         writer.emit("${DartModifier.TYPEDEF.identifier}·${spec.typeDefName}")
         if (spec.typeCasts.isNotEmpty()) {
@@ -21,11 +24,53 @@ class TypeDefWriter : Writeable<TypeDefSpec> {
             writer.emitCode("·%L", spec.name)
         }
 
-        if (spec.hasParameters) {
-            writer.emit("(")
-            spec.parameters.emitParameters(writer, forceNewLines = false, emitBrackets = false, emitSpace = spec.parameters.size > 1)
-            writer.emit(")")
-        }
+        emitParameters(spec, writer)
         writer.emit(SEMICOLON)
+    }
+
+    private fun emitParameters(spec: TypeDefSpec, codeWriter: CodeWriter) {
+        if (spec.hasParameters) {
+            codeWriter.emit("(")
+            callParameterWrite(codeWriter, spec.normalParameter) { it.isNotEmpty() }
+            if (spec.hasAdditionalParameters) {
+                if (spec.hasParameters) {
+                    codeWriter.emit(",")
+                }
+                codeWriter.emit("·{")
+                val namedRequired = spec.namedParameter.filter { it.isRequired && !it.hasInitializer }.toImmutableList()
+
+                callParameterWrite(codeWriter, namedRequired) { it.isNotEmpty() }
+                callParameterWrite(codeWriter, spec.requiredParameter) { it.isNotEmpty() }
+
+                if (namedRequired.isNotEmpty()) {
+                    codeWriter.emitCode(",·")
+                }
+
+                val test =
+                    spec.namedParameter.minus(namedRequired).filter { it.isNullable || it.hasInitializer }.toImmutableList()
+                callParameterWrite(codeWriter, test) { it.isNotEmpty() }
+                codeWriter.emit("}")
+            }
+
+            if (spec.parametersWithDefaults.isNotEmpty()) {
+                if (spec.hasParameters) {
+                    codeWriter.emit(", ")
+                }
+                codeWriter.emit("[")
+                callParameterWrite(codeWriter, spec.parametersWithDefaults) { it.isNotEmpty() }
+                codeWriter.emit("]")
+            }
+
+            codeWriter.emit(")")
+        }
+    }
+
+    private inline fun callParameterWrite(
+        writer: CodeWriter,
+        parameters: List<ParameterSpec>,
+        crossinline predicate: (List<ParameterSpec>) -> Boolean,
+    ) {
+        if (!predicate.invoke(parameters)) return
+        parameters.emitParameters(writer, forceNewLines = false, emitSpace = parameters.size > 1)
     }
 }
