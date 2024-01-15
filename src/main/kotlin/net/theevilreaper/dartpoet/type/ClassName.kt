@@ -45,6 +45,8 @@ open class ClassName(
     override fun copy(nullable: Boolean): TypeName {
         return ClassName(name, nullable)
     }
+
+    override fun getRawData(): String = name
 }
 
 /**

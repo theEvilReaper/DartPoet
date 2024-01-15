@@ -1,6 +1,7 @@
 package net.theevilreaper.dartpoet.type
 
 import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import java.lang.reflect.Type
 import kotlin.reflect.KClass
 
@@ -78,6 +79,17 @@ class ParameterizedTypeName internal constructor(
             out.emit(">")
         }
         return out
+    }
+
+    /**
+     * Returns the raw data from a [ParameterizedTypeName] instance.
+     * It contains the type arguments joined as a [String].
+     * This method is only used internally in the project to check if the generic type is the same as the enclosing type.
+     * @return the raw data from a [ParameterizedTypeName] instance as [String]
+     */
+    override fun getRawData(): String {
+        if (typeArguments.isEmpty()) return EMPTY_STRING
+        return typeArguments.joinToString(separator = ", ")
     }
 
     /**
