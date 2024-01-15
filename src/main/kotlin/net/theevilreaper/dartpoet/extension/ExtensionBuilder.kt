@@ -2,15 +2,14 @@ package net.theevilreaper.dartpoet.extension
 
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.function.FunctionSpec
-import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asTypeName
 import kotlin.reflect.KClass
 
 /**
  * The builder implementation for a [ExtensionSpec] allows to set specific attributes to set relevant data about the extension which should be generated.
- * @param name the name of the extension
- * @param extClass the class to extend
+ * @param name the name of the extension provided as [String]
+ * @param extClass the class to extend as [TypeName]
  * @since 1.0.0
  * @author theEvilReaper
  */
@@ -18,7 +17,7 @@ class ExtensionBuilder(
     val name: String? = null,
     val extClass: TypeName,
 ) {
-    internal var genericType: TypeName? = null;
+    internal var genericTypes: MutableList<TypeName> = mutableListOf()
     internal var endWithNewLine: Boolean = false
     internal val functionStack: MutableList<FunctionSpec> = mutableListOf()
     internal val docs: MutableList<CodeBlock> = mutableListOf()
@@ -71,41 +70,40 @@ class ExtensionBuilder(
     }
 
     /**
-     * Sets the generic type for the extension.
-     * @param genericType the generic type to set as [TypeName]
+     * Add a given array of [TypeName] to the extension builder.
+     * @param types the types to add
      * @return the current builder instance
      */
-    fun genericType(genericType: TypeName) = apply {
-        this.genericType = genericType
+    fun <T: TypeName> genericTypes(vararg types: T) = apply {
+        this.genericTypes += types
     }
 
     /**
-     * Sets the generic type for the extension.
-     * @param genericType the generic type to set as [ClassName]
+     * Add a generic type for the extension.
+     * @param genericType the generic type to add as implementation from [TypeName]
      * @return the current builder instance
      */
-    fun genericType(genericType: ClassName) = apply {
-        this.genericType = genericType
+    fun <T: TypeName> genericType(genericType: T) = apply {
+        this.genericTypes += genericType
     }
 
     /**
-     * Sets the generic type for the extension.
+     * Add a generic type for the extension
      * @param genericType the generic type to set as [Class]
      * @return the current builder instance
      */
     fun genericType(genericType: Class<*>) = apply {
-        this.genericType = genericType.asTypeName()
+        this.genericTypes += genericType.asTypeName()
     }
 
     /**
-     * Sets the generic type for the extension.
+     * Add a generic type for the extension
      * @param genericType the generic type to set as [KClass]
      * @return the current builder instance
      */
     fun genericType(genericType: KClass<*>) = apply {
-        this.genericType = genericType.asTypeName()
+        this.genericTypes += genericType.asTypeName()
     }
-
 
     /**
      * Creates a new instance from the [ExtensionSpec] class.

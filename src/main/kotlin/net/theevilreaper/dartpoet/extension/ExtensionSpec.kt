@@ -7,9 +7,9 @@ import net.theevilreaper.dartpoet.code.writer.ExtensionWriter
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.parameter.ParameterBuilder
 import net.theevilreaper.dartpoet.type.ClassName
-import net.theevilreaper.dartpoet.type.ParameterizedTypeName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asTypeName
+import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.toImmutableList
 import net.theevilreaper.dartpoet.util.toImmutableSet
 import kotlin.reflect.KClass
@@ -28,25 +28,35 @@ class ExtensionSpec(
     internal val name: String? = builder.name
     internal val extClass: TypeName = builder.extClass
     internal val endWithNewLine: Boolean = builder.endWithNewLine
-    internal val genericType: TypeName? = builder.genericType
+    internal val genericType: List<TypeName> = builder.genericTypes.toImmutableList()
     internal val functions: Set<FunctionSpec> = builder.functionStack.toImmutableSet()
     internal val docs: List<CodeBlock> = builder.docs.toImmutableList()
-    internal val hasGenericCast: Boolean = builder.genericType != null
+    internal val hasGenericCast: Boolean = builder.genericTypes.isNotEmpty()
     internal val hasNoContent: Boolean = builder.functionStack.isEmpty()
-    internal val hasDocs: Boolean = builder.docs.isNotEmpty()
+
+    internal val joinedRawTypes by lazy {
+        if (genericType.isEmpty()) return@lazy EMPTY_STRING
+        val withComma = genericType.size > 1
+        genericType.joinToString(if (withComma) ", " else EMPTY_STRING) { it.getRawData() }
+    }
 
     /**
      * Performs checks on variables to avoid unwanted or incorrect data.
      */
     init {
         if (name != null) {
-            check(name.isNotEmpty()) { "The name can't be empty" }
-        }
-        require(extClass.toString().trim().isNotEmpty()) { "The class to extend can't be empty" }
-
-        if (genericType != null) {
+            check(name.isNotEmpty()) { "The name of a extension can't be empty" }
         }
 
+        if (genericType.isNotEmpty()) {
+            val rawExtClass = extClass.getRawData()
+            check(joinedRawTypes == rawExtClass) {
+                """
+                The generic usage from the genericCast and extensionClass is not the same.
+                Expected '$joinedRawTypes' but got in the extension class: '$rawExtClass'
+                """.trimIndent()
+            }
+        }
     }
 
     /**
@@ -70,6 +80,7 @@ class ExtensionSpec(
      */
     fun toBuilder(): ExtensionBuilder {
         val builder = ExtensionBuilder(this.name, this.extClass)
+        builder.genericTypes += this.genericType
         builder.endWithNewLine = this.endWithNewLine
         builder.docs.addAll(this.docs)
         builder.functionStack.addAll(this.functions)
