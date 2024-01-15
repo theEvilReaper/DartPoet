@@ -62,7 +62,7 @@ class ExtensionWriterTest {
             ),
             Arguments.of(
                 ExtensionSpec.builder("MapExt", Map::class.parameterizedBy(ClassName("T"), ClassName("E")))
-                    .genericType(ClassName("T, E"))
+                    .genericTypes(ClassName("T"), ClassName("E"))
                     .build(),
                 "extension MapExt<T, E> on Map<T, E> {}"
             ),
