@@ -2,8 +2,10 @@ package net.theevilreaper.dartpoet.extension
 
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.function.FunctionSpec
+import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asTypeName
+import org.jetbrains.annotations.ApiStatus
 import kotlin.reflect.KClass
 
 /**
@@ -74,6 +76,7 @@ class ExtensionBuilder(
      * @param types the types to add
      * @return the current builder instance
      */
+    @ApiStatus.Experimental
     fun <T: TypeName> genericTypes(vararg types: T) = apply {
         this.genericTypes += types
     }
@@ -83,17 +86,38 @@ class ExtensionBuilder(
      * @param genericType the generic type to add as implementation from [TypeName]
      * @return the current builder instance
      */
+    @ApiStatus.Experimental
     fun <T: TypeName> genericType(genericType: T) = apply {
         this.genericTypes += genericType
     }
 
     /**
      * Add a generic type for the extension
+     * @param genericType the generic type to set as [ClassName]
+     * @return the current builder instance
+     */
+    fun genericTypes(vararg genericType: ClassName) = apply {
+        this.genericTypes += genericType
+    }
+
+
+    /**
+     * Add a generic type for the extension
+     * @param genericType the generic type to set as [TypeName]
+     * @return the current builder instance
+     */
+    fun genericTypes(vararg genericType: TypeName) = apply {
+        this.genericTypes += genericType
+    }
+
+
+    /**
+     * Add a generic type for the extension
      * @param genericType the generic type to set as [Class]
      * @return the current builder instance
      */
-    fun genericType(genericType: Class<*>) = apply {
-        this.genericTypes += genericType.asTypeName()
+    fun genericTypes(vararg genericType: Class<*>) = apply {
+        this.genericTypes += genericType.map { it.asTypeName() }
     }
 
     /**
@@ -101,8 +125,8 @@ class ExtensionBuilder(
      * @param genericType the generic type to set as [KClass]
      * @return the current builder instance
      */
-    fun genericType(genericType: KClass<*>) = apply {
-        this.genericTypes += genericType.asTypeName()
+    fun genericTypes(vararg genericType: KClass<*>) = apply {
+        this.genericTypes += genericType.map { it.asTypeName() }
     }
 
     /**
