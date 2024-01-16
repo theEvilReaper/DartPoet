@@ -56,7 +56,7 @@ class ExtensionWriterTest {
         private fun basicGenericExtension() = Stream.of(
             Arguments.of(
                 ExtensionSpec.builder("ListExt", List::class.parameterizedBy(ClassName("T")))
-                    .genericType(ClassName("T"))
+                    .genericTypes(ClassName("T"))
                     .build(),
                 "extension ListExt<T> on List<T> {}"
             ),

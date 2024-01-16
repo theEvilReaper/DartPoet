@@ -72,26 +72,6 @@ class ExtensionBuilder(
     }
 
     /**
-     * Add a given array of [TypeName] to the extension builder.
-     * @param types the types to add
-     * @return the current builder instance
-     */
-    @ApiStatus.Experimental
-    fun <T: TypeName> genericTypes(vararg types: T) = apply {
-        this.genericTypes += types
-    }
-
-    /**
-     * Add a generic type for the extension.
-     * @param genericType the generic type to add as implementation from [TypeName]
-     * @return the current builder instance
-     */
-    @ApiStatus.Experimental
-    fun <T: TypeName> genericType(genericType: T) = apply {
-        this.genericTypes += genericType
-    }
-
-    /**
      * Add a generic type for the extension
      * @param genericType the generic type to set as [ClassName]
      * @return the current builder instance
@@ -99,7 +79,6 @@ class ExtensionBuilder(
     fun genericTypes(vararg genericType: ClassName) = apply {
         this.genericTypes += genericType
     }
-
 
     /**
      * Add a generic type for the extension
@@ -109,7 +88,6 @@ class ExtensionBuilder(
     fun genericTypes(vararg genericType: TypeName) = apply {
         this.genericTypes += genericType
     }
-
 
     /**
      * Add a generic type for the extension

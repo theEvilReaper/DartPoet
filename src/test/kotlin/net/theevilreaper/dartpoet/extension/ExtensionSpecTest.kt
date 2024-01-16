@@ -28,13 +28,13 @@ class ExtensionSpecTest {
             Arguments.of(
                 IllegalStateException::class.java,
                 {
-                    ExtensionSpec.builder("ListExt", List::class.parameterizedBy(ClassName("E")))
-                        .genericType(ClassName("D"))
+                    ExtensionSpec.builder("ListExt", List::class.parameterizedBy(String::class))
+                        .genericTypes(Int::class)
                         .build()
                 },
                 """
                 The generic usage from the genericCast and extensionClass is not the same.
-                Expected 'D' but got in the extension class: 'E'
+                Expected 'int' but got in the extension class: 'String'
                 """.trimIndent()
             ),
             Arguments.of(
