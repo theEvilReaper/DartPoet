@@ -59,10 +59,18 @@ class ClassBuilder internal constructor(
         this.constantStack += constants
     }
 
+    /**
+     * Add a [TypeDefSpec] to the spec.
+     * @param typeDefSpec the typedef to add
+     */
     fun typedef(typeDefSpec: TypeDefSpec) = apply {
         this.typedefs += typeDefSpec
     }
 
+    /**
+     * Add an array of [TypeDefSpec] to the spec.
+     * @param typeDefSpec the typedefs to add
+     */
     fun typedef(vararg typeDefSpec: TypeDefSpec) = apply {
         this.typedefs += typeDefSpec
     }

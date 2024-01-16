@@ -8,8 +8,20 @@ import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.util.SEMICOLON
 import net.theevilreaper.dartpoet.util.SPACE
 
-internal class ConstantPropertyWriter : Writeable<ConstantPropertySpec>, InitializerAppender<PropertyWriter>, VariableAppender {
+/**
+ * The [ConstantPropertyWriter] is responsible for writing the data of the [ConstantPropertySpec] to a [CodeWriter].
+ * @since 1.0.0
+ * @author theEvilReaper
+ */
+internal class ConstantPropertyWriter : Writeable<ConstantPropertySpec>, InitializerAppender<PropertyWriter>,
+    VariableAppender {
 
+    /**
+     * Writes the data from a provided [ConstantPropertySpec] to the given [CodeWriter] instance.
+     *
+     * @param spec the ConstantPropertySpec which should be written
+     * @param writer the instance from the [CodeWriter] to append the data
+     **/
     override fun write(spec: ConstantPropertySpec, writer: CodeWriter) {
         val modifiersAsString = spec.modifiers.joinToString(separator = SPACE, postfix = SPACE) { it.identifier }
 

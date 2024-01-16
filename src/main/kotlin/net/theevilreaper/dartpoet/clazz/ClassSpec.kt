@@ -11,6 +11,7 @@ import net.theevilreaper.dartpoet.util.toImmutableSet
  * A [ClassBuilder] describes the actual content of the class.
  * The content includes functions, typedefs, const values etc.
  * Partly some things are also only allowed to be set on certain classes.
+ * @param builder the [ClassBuilder] instance to retrieve data from it
  * @since 1.0.0
  * @author theEvilReaper
  */

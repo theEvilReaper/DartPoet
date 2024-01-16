@@ -13,7 +13,8 @@ import net.theevilreaper.dartpoet.util.SPACE
  * @author theEvilReaper
  * @since 1.0.0
  */
-internal class PropertyWriter : Writeable<PropertySpec>, VariableAppender, DocumentationAppender, InitializerAppender<PropertySpec> {
+internal class PropertyWriter : Writeable<PropertySpec>, VariableAppender, DocumentationAppender,
+    InitializerAppender<PropertySpec> {
 
     /**
      * Writes the given [PropertySpec] into the [CodeWriter].
