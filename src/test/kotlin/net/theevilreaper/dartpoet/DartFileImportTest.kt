@@ -1,13 +1,12 @@
 package net.theevilreaper.dartpoet
 
-import com.google.common.truth.Truth.*
+import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.code.buildCodeBlock
 import net.theevilreaper.dartpoet.directive.CastType
-import net.theevilreaper.dartpoet.directive.DartDirective
-import net.theevilreaper.dartpoet.directive.ExportDirective
-import net.theevilreaper.dartpoet.directive.PartDirective
+import net.theevilreaper.dartpoet.directive.DirectiveFactory
+import net.theevilreaper.dartpoet.directive.DirectiveType
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
@@ -22,10 +21,10 @@ class DartFileImportTest {
         val reduxAction = ClassName("ReduxAction").parameterizedBy(appState)
         val dartFile = DartFile.builder("Test")
             .directives(
-                DartDirective("dart:io"),
-                DartDirective("dart:math"),
-                DartDirective("async_redux/async_redux.dart"),
-                DartDirective("model/${model.name}.dart"),
+                DirectiveFactory.create(DirectiveType.IMPORT, "dart:io"),
+                DirectiveFactory.create(DirectiveType.IMPORT, "dart:math"),
+                DirectiveFactory.create(DirectiveType.IMPORT, "async_redux/async_redux.dart"),
+                DirectiveFactory.create(DirectiveType.IMPORT, "model/${model.name}.dart"),
             )
             .type(
                 ClassSpec.builder("TestAction")
@@ -74,10 +73,10 @@ class DartFileImportTest {
     fun `test directives with an export directive`() {
         val classFile = DartFile.builder("House")
             .directives(
-                DartDirective("dart:io"),
-                DartDirective("door"),
-                PartDirective("house_part.dart"),
-                ExportDirective("garden.dart", CastType.SHOW, "garden"),
+                DirectiveFactory.create(DirectiveType.IMPORT, "dart:io"),
+                DirectiveFactory.create(DirectiveType.IMPORT, "door"),
+                DirectiveFactory.create(DirectiveType.PART, "house_part.dart"),
+                DirectiveFactory.create(DirectiveType.EXPORT, "garden.dart", CastType.SHOW, "garden"),
             )
             .type(
                 ClassSpec.builder("House")
@@ -102,6 +101,7 @@ class DartFileImportTest {
             @immutable
             class House {}
             
-            """.trimIndent())
+            """.trimIndent()
+        )
     }
 }

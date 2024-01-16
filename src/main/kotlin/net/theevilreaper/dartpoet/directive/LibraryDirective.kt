@@ -9,7 +9,7 @@ import net.theevilreaper.dartpoet.util.SEMICOLON
  * @since 1.0.0
  * @author theEvilReaper
  */
-class LibraryDirective(
+class LibraryDirective internal constructor(
     private val path: String,
     private val asPartOf: Boolean = false
 ) : BaseDirective(path) {

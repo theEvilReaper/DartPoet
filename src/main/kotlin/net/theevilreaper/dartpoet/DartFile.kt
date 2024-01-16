@@ -5,7 +5,11 @@ import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.DartFileWriter
-import net.theevilreaper.dartpoet.directive.*
+import net.theevilreaper.dartpoet.directive.DartDirective
+import net.theevilreaper.dartpoet.directive.ExportDirective
+import net.theevilreaper.dartpoet.directive.LibraryDirective
+import net.theevilreaper.dartpoet.directive.PartDirective
+import net.theevilreaper.dartpoet.directive.RelativeDirective
 import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.util.*
@@ -32,12 +36,16 @@ class DartFile internal constructor(
 
     private val directives = builder.directives.toImmutableList()
 
-    internal val dartImports = DirectiveOrdering.sortDirectives<DartDirective>(DartDirective::class, directives) { it.contains("dart:") }
-    internal val packageImports = DirectiveOrdering.sortDirectives<DartDirective>(DartDirective::class, directives) { it.contains("package:")}
+    internal val dartImports =
+        DirectiveOrdering.sortDirectives<DartDirective>(DartDirective::class, directives) { it.contains("dart:") }
+    internal val packageImports =
+        DirectiveOrdering.sortDirectives<DartDirective>(DartDirective::class, directives) { it.contains("package:") }
     internal val partImports = DirectiveOrdering.sortDirectives<PartDirective>(PartDirective::class, directives)
     internal val libImport = DirectiveOrdering.sortDirectives<LibraryDirective>(LibraryDirective::class, directives)
-    internal val exportDirectives = DirectiveOrdering.sortDirectives<ExportDirective>(ExportDirective::class, directives)
-    internal val relativeImports = DirectiveOrdering.sortDirectives<RelativeDirective>(RelativeDirective::class, directives)
+    internal val exportDirectives =
+        DirectiveOrdering.sortDirectives<ExportDirective>(ExportDirective::class, directives)
+    internal val relativeImports =
+        DirectiveOrdering.sortDirectives<RelativeDirective>(RelativeDirective::class, directives)
 
     internal val typeDefs = builder.typeDefs.toImmutableList()
     internal val hasTypeDefs = typeDefs.isNotEmpty()

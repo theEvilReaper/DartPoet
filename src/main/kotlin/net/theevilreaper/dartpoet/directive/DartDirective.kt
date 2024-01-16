@@ -15,7 +15,7 @@ import net.theevilreaper.dartpoet.util.SEMICOLON
  *
  * @constructor Creates a Dart import directive with the specified path as [String], a cast type as [CastType], and a importCast a [String].
  */
-class DartDirective(
+class DartDirective internal constructor(
     private val path: String,
     private val castType: CastType? = null,
     private val importCast: String? = null,

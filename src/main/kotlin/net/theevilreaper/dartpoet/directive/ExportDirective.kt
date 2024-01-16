@@ -12,7 +12,7 @@ import net.theevilreaper.dartpoet.util.SEMICOLON
  * @since 1.0.0
  * @author theEvilReaper
  */
-class ExportDirective(
+class ExportDirective internal constructor(
     private val path: String,
     private val castType: CastType? = null,
     private val importCast: String? = null,
