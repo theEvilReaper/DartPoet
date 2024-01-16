@@ -21,7 +21,6 @@
  */
 package net.theevilreaper.dartpoet.code
 
-import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.NEW_LINE
 import net.theevilreaper.dartpoet.util.NEW_LINE_CHAR
