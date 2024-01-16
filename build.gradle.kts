@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.ir.backend.js.compile
 
 plugins {
     signing
@@ -17,6 +18,7 @@ repositories {
 }
 
 dependencies {
+    compileOnly(libs.jetbrains.annotations)
     testImplementation(kotlin("test"))
     testImplementation(libs.google.truth)
     testImplementation(libs.junit.api)
