@@ -3,7 +3,6 @@ package net.theevilreaper.dartpoet.enum
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.EnumPropertyWriter
-import net.theevilreaper.dartpoet.extension.ExtensionBuilder
 import net.theevilreaper.dartpoet.util.toImmutableList
 import net.theevilreaper.dartpoet.util.toImmutableSet
 
@@ -15,7 +14,6 @@ import net.theevilreaper.dartpoet.util.toImmutableSet
 class EnumPropertySpec(
     val builder: EnumPropertyBuilder
 ) {
-
     internal val name = builder.name
     internal val generic = builder.genericValueCast
     internal val hasGeneric = builder.genericValueCast != null
