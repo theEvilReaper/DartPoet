@@ -273,7 +273,6 @@ class DartFileTest {
                 ).then((response) {
                   return DefectDTO.from(response.data!);
                 });
-  
               }
             }
             """.trimIndent()
@@ -327,6 +326,7 @@ class DartFileTest {
               static $name fromJson(dynamic json) => $serializer.deserialize(json);
             
               dynamic toJson() => $serializer.serialize(this);
+              
             }
             """.trimIndent()
         )

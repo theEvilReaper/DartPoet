@@ -1,8 +1,13 @@
 package net.theevilreaper.dartpoet.code.writer
 
 import net.theevilreaper.dartpoet.DartFile
-import net.theevilreaper.dartpoet.code.*
+import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.DocumentationAppender
+import net.theevilreaper.dartpoet.code.Writeable
+import net.theevilreaper.dartpoet.code.emitConstants
 import net.theevilreaper.dartpoet.code.emitExtensions
+import net.theevilreaper.dartpoet.code.emitTypeDefs
+import net.theevilreaper.dartpoet.code.writeImports
 import net.theevilreaper.dartpoet.directive.Directive
 import net.theevilreaper.dartpoet.util.NEW_LINE
 
@@ -32,10 +37,6 @@ internal class DartFileWriter : Writeable<DartFile>, DocumentationAppender {
         if (spec.types.isNotEmpty()) {
             spec.types.forEach {
                 classWriter.write(it, writer)
-                if (spec.types.size > 1) {
-                    writer.emit(NEW_LINE)
-                }
-
             }
         }
         spec.extensions.emitExtensions(writer)

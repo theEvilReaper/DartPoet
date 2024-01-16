@@ -1,16 +1,23 @@
 package net.theevilreaper.dartpoet.code.writer
 
-import net.theevilreaper.dartpoet.DartModifier.*
-import net.theevilreaper.dartpoet.code.*
+import net.theevilreaper.dartpoet.DartModifier.ASYNC
+import net.theevilreaper.dartpoet.DartModifier.PRIVATE
+import net.theevilreaper.dartpoet.DartModifier.PUBLIC
+import net.theevilreaper.dartpoet.DartModifier.VOID
+import net.theevilreaper.dartpoet.code.CodeBlock
+import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.DocumentationAppender
+import net.theevilreaper.dartpoet.code.Writeable
 import net.theevilreaper.dartpoet.code.emitParameters
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
-import net.theevilreaper.dartpoet.util.*
+import net.theevilreaper.dartpoet.util.CURLY_CLOSE
+import net.theevilreaper.dartpoet.util.CURLY_OPEN
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.NEW_LINE
 import net.theevilreaper.dartpoet.util.SEMICOLON
 import net.theevilreaper.dartpoet.util.SPACE
+import net.theevilreaper.dartpoet.util.toImmutableList
 import net.theevilreaper.dartpoet.util.toImmutableSet
 
 internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
@@ -80,16 +87,22 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
         if (spec.isAsync) {
             writer.emit("·${ASYNC.identifier}")
         }
+
+        val asExpressionBody = spec.body.asExpressionBody()
         if (spec.isLambda) {
             writer.emit("·=>·")
         } else {
             writer.emit("·{\n")
             writer.indent()
         }
-        writer.emitCode(spec.body.returnsWithoutLinebreak(), ensureTrailingNewline = false)
+        if (asExpressionBody != null) {
+            writer.emitCode(CodeBlock.of(" = %L", asExpressionBody), ensureTrailingNewline = true)
+        } else {
+            writer.emitCode(spec.body.returnsWithoutLinebreak(), ensureTrailingNewline = true)
+        }
         if (!spec.isLambda) {
             writer.unindent()
-            writer.emit("\n}")
+            writer.emit("}")
         }
     }
 
@@ -137,7 +150,7 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
     private fun writeParameters(
         parameters: List<ParameterSpec>,
         emitSpaceComma: Boolean = false,
-        codeWriter: CodeWriter
+        codeWriter: CodeWriter,
     ) {
         if (parameters.isEmpty()) return
         if (emitSpaceComma) {
