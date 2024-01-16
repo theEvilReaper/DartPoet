@@ -2,6 +2,7 @@ package net.theevilreaper.dartpoet.type
 
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
+import org.jetbrains.annotations.ApiStatus
 import java.lang.reflect.Type
 import kotlin.reflect.KClass
 
@@ -17,6 +18,7 @@ import kotlin.reflect.KClass
  * @author theEvilReaper
  * @since 1.0.0
  */
+@ApiStatus.Internal
 class ParameterizedTypeName internal constructor(
     private val enclosingTypeName: TypeName?,
     private val rawType: ClassName,

@@ -2,6 +2,7 @@ package net.theevilreaper.dartpoet.util
 
 import net.theevilreaper.dartpoet.directive.BaseDirective
 import net.theevilreaper.dartpoet.directive.Directive
+import org.jetbrains.annotations.ApiStatus
 import kotlin.reflect.KClass
 
 /**
@@ -15,6 +16,7 @@ import kotlin.reflect.KClass
  * @version 1.0.0
  * @author theEvilReaper
  */
+@ApiStatus.Internal
 internal object DirectiveOrdering {
 
     /**
