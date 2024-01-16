@@ -23,6 +23,9 @@ class ParameterizedTypeName internal constructor(
     nullable: Boolean = false
 ) : TypeName(nullable) {
 
+    /**
+     * Performs some check to the given values from the constructor.
+     */
     init {
         require(typeArguments.isNotEmpty() || enclosingTypeName != null) {
             "no type arguments: $rawType"
