@@ -31,7 +31,6 @@ class PropertySpec(
     internal var isPrivate = builder.modifiers.contains(DartModifier.PRIVATE)
     internal var isConst = builder.modifiers.contains(DartModifier.CONST)
     internal val docs = builder.docs
-    internal val hasDocs = builder.docs.isNotEmpty()
     internal var modifiers: Set<DartModifier> = builder.modifiers
         .also {
             if (it.isNotEmpty()) {

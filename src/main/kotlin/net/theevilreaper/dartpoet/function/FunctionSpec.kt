@@ -48,7 +48,6 @@ class FunctionSpec(
     internal val isGetter = builder.getter
     internal val isLambda = builder.lambda
     internal val docs = builder.docs
-    internal val hasDocs = builder.docs.isNotEmpty()
 
     init {
         require(name.trim().isNotEmpty()) { "The name of a function can't be empty" }
