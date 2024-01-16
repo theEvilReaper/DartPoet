@@ -8,7 +8,7 @@ import net.theevilreaper.dartpoet.parameter.ParameterSpec
  *  @version 1.0.0
  *  @author theEvilReaper
  */
-object ParameterFilter {
+internal object ParameterFilter {
 
     /**
      * Filters the given [ParameterSpec] list by the given predicate.
