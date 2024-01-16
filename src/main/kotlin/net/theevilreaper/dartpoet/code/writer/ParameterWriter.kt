@@ -4,6 +4,7 @@ import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.*
 import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.util.EMPTY_STRING
 
 /**
  * The ParameterWriter is used to write each parameter.
@@ -28,7 +29,7 @@ internal class ParameterWriter : Writeable<ParameterSpec>, InitializerAppender<P
         if (spec.type != null) {
             writer.emitCode("%T", spec.type)
         }
-        val emitNullable = if (spec.isNullable) "?·" else if (spec.type != null) "·" else ""
+        val emitNullable = if (spec.isNullable) "?·" else if (spec.type != null) "·" else EMPTY_STRING
         writer.emit(emitNullable)
         writer.emit(spec.name)
         writeInitBlock(spec, writer)

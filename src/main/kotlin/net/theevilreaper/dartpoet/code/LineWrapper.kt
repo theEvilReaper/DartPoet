@@ -43,19 +43,19 @@ class LineWrapper(
      * Segments of the current line to be joined by spaces or wraps. Never empty, but contains a lone
      * empty string if no data has been emitted since the last newline.
      */
-    private val segments = mutableListOf("")
+    private val segments = mutableListOf(EMPTY_STRING)
 
     /** Number of indents in wraps. -1 if the current line has no wraps. */
     private var indentLevel = -1
 
     /** Optional prefix that will be prepended to wrapped lines. */
-    private var linePrefix = ""
+    private var linePrefix = EMPTY_STRING
 
     /** @return whether there are pending segments for the current line. */
     val hasPendingSegments get() = segments.size != 1 || segments[0].isNotEmpty()
 
     /** Emit `s` replacing its spaces with line wraps as necessary. */
-    fun append(string: String, indentLevel: Int = -1, linePrefix: String = "") {
+    fun append(string: String, indentLevel: Int = -1, linePrefix: String = EMPTY_STRING) {
         check(!closed) { "closed" }
 
         var pos = 0
