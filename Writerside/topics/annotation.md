@@ -27,7 +27,7 @@ Which generates the following annotation:
 @Deprecated
 ```
 
-If you wish to add additional meta information to a annotation, you have the ability to add them over the `content`
+If you wish to add additional meta information to an annotation, you have the ability to add them over the `content`
 methods.
 
 ```Kotlin
