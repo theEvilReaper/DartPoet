@@ -47,6 +47,10 @@ open class ClassName(
     }
 }
 
+/**
+ * Converts a generic [KClass] instance to a [ClassName] instance.
+ * @return the created [ClassName] instance
+ */
 @JvmName("get")
 fun KClass<*>.asClassName(): ClassName {
     val simpleName = this.simpleName!!
@@ -58,9 +62,13 @@ fun KClass<*>.asClassName(): ClassName {
         return ClassName(Void::class.simpleName!!.replaceFirstChar { it.lowercase() })
     }
     return ClassName(simpleName)
-
 }
 
+/**
+ * Converts a generic [Class] instance to a [ClassName] instance.
+ * @return the created [ClassName] instance
+ * @throws IllegalArgumentException if the class is a primitive type, a void type or an array
+ */
 @JvmName("get")
 fun Class<*>.asClassName(): ClassName {
     require(!isPrimitive) { "A primitive type can't be represented over a ClassName!" }
@@ -68,5 +76,3 @@ fun Class<*>.asClassName(): ClassName {
     require(!isArray) { "An array can't be represented over a ClassName!" }
     return ClassName(this.simpleName)
 }
-
-

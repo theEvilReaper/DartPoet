@@ -78,6 +78,11 @@ class ParameterBuilder internal constructor(
         this.specData.modifiers += modifier()
     }
 
+    /**
+     * Add a given array of [DartModifier] to the builder instance.
+     * @param modifiers the array to add
+     * @return the given instance from the builder
+     */
     override fun modifiers(vararg modifiers: DartModifier) = apply {
         this.specData.modifiers += modifiers
     }
