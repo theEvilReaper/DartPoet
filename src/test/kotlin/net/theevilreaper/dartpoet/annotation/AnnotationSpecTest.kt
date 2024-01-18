@@ -1,18 +1,34 @@
 package net.theevilreaper.dartpoet.annotation
 
 import net.theevilreaper.dartpoet.type.ClassName
+import net.theevilreaper.dartpoet.type.DEPRECATED
+import net.theevilreaper.dartpoet.type.OVERRIDE
+import net.theevilreaper.dartpoet.type.PRAGMA
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
+import java.util.stream.Stream
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 
 class AnnotationSpecTest {
 
-    private val expectedAnnotation = "@Override"
+    companion object {
 
-    @Test
-    fun `test simple annotation without content`() {
-        val annotation = AnnotationSpec.builder(Override::class).build()
-        assertEquals(expectedAnnotation, annotation.toString())
+        @JvmStatic
+        private fun testSimpleAnnotations() = Stream.of(
+            Arguments.of(OVERRIDE, "@Override"),
+            Arguments.of(DEPRECATED, "@deprecated"),
+            Arguments.of(PRAGMA, "@pragma"),
+            Arguments.of(AnnotationSpec.builder(Override::class).build(), "@Override")
+        )
+    }
+
+    @ParameterizedTest
+    @MethodSource("testSimpleAnnotations")
+    fun `test simple annotations`(annotation: AnnotationSpec, expected: String) {
+        assertEquals(expected, annotation.toString())
     }
 
     @Test
