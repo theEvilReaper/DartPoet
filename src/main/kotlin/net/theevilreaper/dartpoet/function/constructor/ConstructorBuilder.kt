@@ -12,7 +12,6 @@ class ConstructorBuilder(
     internal val parameters: MutableList<ParameterSpec> = mutableListOf()
     internal var lambda: Boolean = false
     internal val initializer: CodeBlock.Builder = CodeBlock.builder()
-    internal var factory: Boolean = false
     internal val modifiers: MutableList<DartModifier> = mutableListOf(*modifiers)
     internal val docs: MutableList<CodeBlock> = mutableListOf()
 
@@ -40,14 +39,6 @@ class ConstructorBuilder(
      */
     fun modifiers(vararg modifiers: DartModifier) = apply {
         this.modifiers += modifiers
-    }
-
-    /**
-     * Indicates if the constructor should be generated as factory.
-     * @param factory True for a factory generation otherwise false
-     */
-    fun asFactory(factory: Boolean) = apply {
-        this.factory = factory
     }
 
     /**

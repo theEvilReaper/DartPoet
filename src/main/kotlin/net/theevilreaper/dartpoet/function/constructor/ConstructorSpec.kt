@@ -3,18 +3,18 @@ package net.theevilreaper.dartpoet.function.constructor
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.ConstructorWriter
+import net.theevilreaper.dartpoet.function.ConstructorBase
 import net.theevilreaper.dartpoet.util.toImmutableList
 import net.theevilreaper.dartpoet.util.toImmutableSet
 
 class ConstructorSpec(
     builder: ConstructorBuilder
-) {
+): ConstructorBase {
 
     internal val name = builder.name
     internal val named = builder.named
     internal val isNamed = named.orEmpty().trim().isNotEmpty()
     internal val isLambda = builder.lambda
-    internal val isFactory = builder.factory
     internal val initializer = builder.initializer
     internal val modifiers = builder.modifiers.toImmutableSet()
     private val modelParameters = builder.parameters.toImmutableSet()
@@ -40,7 +40,6 @@ class ConstructorSpec(
     fun toBuilder(): ConstructorBuilder {
         val builder = ConstructorBuilder(this.name, this.named)
         builder.lambda = this.isLambda
-        builder.factory = this.isFactory
         builder.modifiers.addAll(this.modifiers)
         builder.parameters.addAll(this.modelParameters)
 

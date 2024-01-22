@@ -5,6 +5,8 @@ import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.directive.Directive
+import net.theevilreaper.dartpoet.function.ConstructorBase
+import net.theevilreaper.dartpoet.function.factory.FactorySpec
 import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
@@ -82,18 +84,24 @@ internal fun Set<AnnotationSpec>.emitAnnotations(
     }
 }
 
-internal fun Set<ConstructorSpec>.emitConstructors(
+internal fun Set<ConstructorBase>.emitConstructors(
     codeWriter: CodeWriter,
     forceNewLines: Boolean = false,
     leadingNewLine: Boolean = false,
-    emitBlock: (ConstructorSpec) -> Unit = { it.write(codeWriter) }
+    emitBlock: (ConstructorBase) -> Unit = {
+        if (it is ConstructorSpec) {
+            (it.write(codeWriter))
+        } else if (it is FactorySpec) {
+            (it.write(codeWriter))
+        }
+    }
 ) = with(codeWriter) {
     if (isNotEmpty()) {
         if (leadingNewLine) {
             codeWriter.emit(NEW_LINE)
         }
         forEachIndexed { index, constructorSpec ->
-            val emitNewLines = size >= 1 || forceNewLines
+            val emitNewLines = size > 1 || forceNewLines
 
             if (index > 0 && emitNewLines) {
                 codeWriter.emit(NEW_LINE)

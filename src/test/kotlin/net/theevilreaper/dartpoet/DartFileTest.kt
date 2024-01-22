@@ -9,6 +9,7 @@ import net.theevilreaper.dartpoet.directive.DirectiveFactory
 import net.theevilreaper.dartpoet.directive.DirectiveType
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
+import net.theevilreaper.dartpoet.function.factory.FactorySpec
 import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
@@ -57,10 +58,8 @@ class DartFileTest {
             .superClass(freezedMixing, InheritKeyword.MIXIN)
             .annotation { AnnotationSpec.builder("freezed").build() }
             .constructor {
-                ConstructorSpec.builder("VersionModel")
-                    .asFactory(true)
-                    .modifier(DartModifier.CONST)
-                    .parameter {
+                FactorySpec.builder(ClassName("VersionModel"))
+                    .parameter(
                         ParameterSpec.builder("version", String::class)
                             .named(true)
                             .annotations(
@@ -70,13 +69,14 @@ class DartFileTest {
                                     .content("%C", "1.0.0").build()
                             )
                             .build()
-                    }
+                    )
+                    .addCode("%L", "_VersionModel();")
                     .build()
             }
             .constructor {
-                ConstructorSpec.named("VersionModel", "fromJson")
+                FactorySpec.builder(ClassName("VersionModel"))
                     .lambda(true)
-                    .asFactory(true)
+                    .named("fromJson")
                     .parameter(
                         ParameterSpec.builder(
                             "json",
@@ -110,9 +110,7 @@ class DartFileTest {
                 @JsonKey(name: 'version')@Default('1.0.0') String version
               }) = _VersionModel;
             
-              factory VersionModel.fromJson(Map<String, dynamic> json) =>
-                  _${'$'}VersionModelFromJson(json);
-            
+              factory VersionModel.fromJson(Map<String, dynamic> json) => _${'$'}VersionModelFromJson(json);
             }
             """.trimIndent()
         )
