@@ -96,6 +96,9 @@ sealed class TypeName(val isNullable: Boolean) {
      */
     override fun hashCode(): Int = cachedString.hashCode()
 
+    /**
+     * The companion object contains some helper methods to create a new instance from the [TypeName].
+     */
     companion object {
 
         /**
