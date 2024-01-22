@@ -6,6 +6,7 @@ import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.SEMICOLON
 import net.theevilreaper.dartpoet.util.SPACE
+import net.theevilreaper.dartpoet.util.StringHelper
 
 /**
  * The [PropertyWriter] contains the main logic to write a valid structure of a property for the programming language Dart.
@@ -13,7 +14,7 @@ import net.theevilreaper.dartpoet.util.SPACE
  * @author theEvilReaper
  * @since 1.0.0
  */
-internal class PropertyWriter : Writeable<PropertySpec>, VariableAppender, DocumentationAppender,
+internal class PropertyWriter : Writeable<PropertySpec>, DocumentationAppender,
     InitializerAppender<PropertySpec> {
 
     /**
@@ -27,17 +28,18 @@ internal class PropertyWriter : Writeable<PropertySpec>, VariableAppender, Docum
             it.write(writer, inline = false)
         }
 
-        val modifierString = spec.modifiers.joinToString(
+        val modifierString = StringHelper.joinModifiers(
+            spec.modifiers,
             separator = SPACE,
-            postfix = if (spec.modifiers.isNotEmpty()) SPACE else EMPTY_STRING
-        ) { it.identifier }
+            postfix = if (spec.hasModifiers) SPACE else EMPTY_STRING
+        )
         writer.emit(modifierString)
 
         if (spec.type != null) {
             writer.emitCode("%T·", spec.type)
         }
 
-        writer.emit(ensureVariableNameWithPrivateModifier(spec.isPrivate, spec.name))
+        writer.emit(StringHelper.ensureVariableNameWithPrivateModifier(spec.name, spec.isPrivate))
         writeInitBlock(spec.initBlock.build(), writer)
         writer.emit(SEMICOLON)
     }

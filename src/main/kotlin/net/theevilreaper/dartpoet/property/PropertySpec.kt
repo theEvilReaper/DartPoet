@@ -42,7 +42,7 @@ class PropertySpec(
                 }
             }
         }.filter { it != DartModifier.PRIVATE && it != DartModifier.PUBLIC }.toImmutableSet()
-
+    internal val hasModifiers: Boolean = modifiers.isNotEmpty()
     init {
         require(name.trim().isNotEmpty()) { "The name of a property can't be empty" }
 
