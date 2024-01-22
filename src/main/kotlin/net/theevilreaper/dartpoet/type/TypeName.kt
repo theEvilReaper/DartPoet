@@ -58,6 +58,13 @@ sealed class TypeName(val isNullable: Boolean) {
     internal abstract fun emit(out: CodeWriter): CodeWriter
 
     /**
+     * Returns the raw data from a [TypeName] instance.
+     * This method is only used internally in the project to check if the generic type is the same as the enclosing type.
+     * @return the raw data from a [TypeName] instance as [String]
+     */
+    internal abstract fun getRawData(): String
+
+    /**
      * Creates a copy of this [TypeName] with an optional nullable flag.
      *
      * This method generates a new instance of a [TypeName] based on the current instance, optionally allowing the
