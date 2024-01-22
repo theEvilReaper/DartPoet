@@ -16,4 +16,9 @@ internal interface DocumentationAppender {
         if (docs.isEmpty()) return
         docs.forEach { writer.emitDoc(it) }
     }
+
+    fun emitDocumentation(doc: CodeBlock, writer: CodeWriter) {
+        if (doc.isEmpty()) return
+        writer.emitDoc(doc)
+    }
 }

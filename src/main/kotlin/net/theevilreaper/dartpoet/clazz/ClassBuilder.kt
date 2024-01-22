@@ -4,6 +4,7 @@ import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.InheritKeyword
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.enum.EnumPropertySpec
+import net.theevilreaper.dartpoet.function.ConstructorBase
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.meta.SpecData
 import net.theevilreaper.dartpoet.meta.SpecMethods
@@ -33,7 +34,7 @@ class ClassBuilder internal constructor(
     internal val isMixinClass get() = classType == ClassType.MIXIN
     internal val isAbstract get() = classType == ClassType.ABSTRACT
     internal val isLibrary get() = classType == ClassType.CLASS
-    internal val constructorStack: MutableList<ConstructorSpec> = mutableListOf()
+    internal val constructorStack: MutableList<ConstructorBase> = mutableListOf()
     internal val propertyStack: MutableList<PropertySpec> = mutableListOf()
     internal val functionStack: MutableList<FunctionSpec> = mutableListOf()
     internal val enumPropertyStack: MutableList<EnumPropertySpec> = mutableListOf()
@@ -184,7 +185,7 @@ class ClassBuilder internal constructor(
      * @param constructor the constructor to add
      * @return the given instance of an [ClassBuilder]
      */
-    fun constructor(constructor: ConstructorSpec) = apply {
+    fun constructor(constructor: ConstructorBase) = apply {
         this.constructorStack += constructor
     }
 
@@ -193,7 +194,7 @@ class ClassBuilder internal constructor(
      * @param constructor the constructor to add
      * @return the given instance of an [ClassBuilder]
      */
-    fun constructor(constructor: () -> ConstructorSpec) = apply {
+    fun constructor(constructor: () -> ConstructorBase) = apply {
         this.constructorStack += constructor()
     }
 
