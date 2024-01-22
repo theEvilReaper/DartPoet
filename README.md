@@ -1,6 +1,7 @@
 # DartPoet
 
 [![license](https://img.shields.io/github/license/theEvilReaper/DartPoet?style=for-the-badge&color=b2234c)](../LICENSE)
+[![wiki](https://img.shields.io/badge/documentation-wiki-74aad6?style=for-the-badge)](https://theevilreaper.github.io/DartPoet/overview.html)
 
 # **DartPoet is still in development and not ready for production use.**
 
