@@ -1,9 +1,20 @@
 # DartPoet
 
-`DartPoet` is a library written in kotlin which provides the ability to generate `.dart` files for the programming language Dart.
+`DartPoet` is a library written in kotlin which provides the ability to generate `.dart` files for the programming
+language Dart.
 
-The generation of source files can be useful in different situations.
-Also code generation can eliminate to write boilerplate code.
+The process of generating source files can prove advantageous in various scenarios. It effectively reduces the need for
+boilerplate code and establishes a consistent standard within the codebase. However, achieving a reduction in
+boilerplate code requires the support of frameworks designed for code generation.
+
+When exploring projects that facilitate code generation for Dart and comparing them to other languages, there seems to
+be a limited presence in this domain. Enter DartPoet, a valuable tool that simplifies code generation for Dart using
+Kotlin. It's important to note that Kotlin and Dart lack interoperability, which adds a layer of complexity to using
+this library. The challenge arises from the fact that predefined objects and classes from the Kotlin/Java language
+cannot be directly employed in this context.
+
+**Note:** DartPoet is not free from errors and may lack certain features of the Dart language. Furthermore, the format
+of the generated code may at times be inconsistent with the Dart style guide.
 
 Example:
 
@@ -31,6 +42,7 @@ greetings.writeTo(System.out)
 ```
 
 And this is the generated code from DartPoet:
+
 ```text
 class Greetings {
 
@@ -40,21 +52,5 @@ class Greetings {
 }
 ```
 
-**Note:** The team from Google is very active to enhance the programming language Dart which is a hard to stand update with the specification from it.
-
-## API Specifications
-
-Most of API from DartPoet uses immutable objects from Kotlin.
-There are also builder, method chaining and other parts to make the API friendly as possible.
-
-DartPoet contains different `SpecObjects` which allows the creation from classes, interface and more (ClassSpec),
-properties (PropertySpec), parameters(Parameters), annotations (Annotations), extensions(Extensions) and more.
-
-Beth the body of a function, constructors is not modeled by any kind of object structure. There is also no
-expression class, statement class or a syntax tree node. Instead, DartPoet uses placeholders to format the code blocks like `KotlinPoet`
-
-Where do you want to go?
-
-- To the `SpecObjects`? (Click here)
-- To the [`Placeholders`?](placeholders.md)
-
+**Note:** The team from Google is very active to enhance the programming language Dart which is a hard to stand update
+with the specification from it.
