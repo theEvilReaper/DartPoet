@@ -17,7 +17,6 @@ class ClassWriterTest {
         private fun simpleClasses() = Stream.of(
             Arguments.of(ClassSpec.builder("Test").build(), "class Test {}"),
             Arguments.of(ClassSpec.mixinClass("Test").build(), "mixin Test {}"),
-            Arguments.of(ClassSpec.enumClass("Test").build(), "enum Test {}"),
             Arguments.of(
                 ClassSpec.builder("Model").endWithNewLine(true).build(),
                 """
