@@ -12,10 +12,10 @@
     <toc-element topic="variables.md"/>
     <toc-element topic="placeholders.md"/>
     <toc-element topic="classes.md">
+        <toc-element topic="class.md"/>
         <toc-element topic="Methods.md"/>
         <toc-element topic="Mixin.md"/>
         <toc-element topic="Extension.md"/>
-        <toc-element topic="class.md"/>
         <toc-element topic="enum.md"/>
     </toc-element>
     <toc-element topic="contributing.md"/>

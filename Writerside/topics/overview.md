@@ -52,5 +52,9 @@ class Greetings {
 }
 ```
 
+> When you are new to the programming language Dart or have question. Take a look at
+> their [documentation](https://dart.dev/guides)
+> {style=note}
+
 **Note:** The team from Google is very active to enhance the programming language Dart which is a hard to stand update
 with the specification from it.
