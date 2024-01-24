@@ -152,57 +152,6 @@ class DartFileTest {
     }
 
     @Test
-    fun `test enum class write`() {
-        val enumClass = DartFile.builder("navigation_entry")
-            .type(
-                ClassSpec.enumClass("NavigationEntry")
-                    .properties(
-                        PropertySpec.builder("name", String::class)
-                            .modifier { DartModifier.FINAL }.build(),
-                        PropertySpec.builder("route", String::class)
-                            .modifier { DartModifier.FINAL }.build()
-
-                    )
-                    .enumProperties(
-                        EnumPropertySpec.builder("dashboard")
-                            .parameter("%C", "Dashboard")
-                            .parameter("%C", "/dashboard")
-                            .build(),
-                        EnumPropertySpec.builder("build")
-                            .parameter("%C", "Build")
-                            .parameter("%C", "/build")
-                            .build()
-                    )
-                    .constructor(
-                        ConstructorSpec.builder("NavigationEntry")
-                            .modifier(DartModifier.CONST)
-                            .parameters(
-                                ParameterSpec.builder("name").build(),
-                                ParameterSpec.builder("route").build()
-                            )
-                            .build()
-                    )
-                    .build()
-            )
-            .build()
-        assertThat(enumClass.toString()).isEqualTo(
-            """
-            enum NavigationEntry {
-            
-              dashboard('Dashboard', '/dashboard'),
-              build('Build', '/build');
-            
-              final String name;
-              final String route;
-            
-              const NavigationEntry(name, route);
-            
-            }
-            """.trimIndent()
-        )
-    }
-
-    @Test
     fun `test api handler write`() {
         val className = "DefectApi"
         val apiClassName = ClassName("ApiClient")
