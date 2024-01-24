@@ -4,6 +4,21 @@ The project is available over the Maven Central Repository and doesn't require t
 
 To use it, you need to add the following dependency to your used build system:
 
+### Maven: {collapsible="true"}
+
+```xml 
+<dependency>
+    <groupId>dev.themeinerlp</groupId>
+    <artifactId>dartpoet</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+</dependency>
+```
+
+### Gradle: {collapsible="true"}
+```kotlin
+implementation("dev.themeinerlp:dartpoet:0.0.1-SNAPSHOT")
+```
+
 ## API Specifications
 
 Most of API from DartPoet uses immutable objects from Kotlin.
