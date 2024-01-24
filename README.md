@@ -29,6 +29,4 @@ We are happy to see that you are interested in contributing to our project. Plea
 implementation("dev.themeinerlp:dartpoet:0.0.1-SNAPSHOT")
 ```
 
-## Usage
-```kotlin
-``
+You can find the documentation [here](https://theevilreaper.github.io/DartPoet/overview.html).
