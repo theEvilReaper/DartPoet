@@ -7,7 +7,6 @@ import net.theevilreaper.dartpoet.code.buildCodeBlock
 import net.theevilreaper.dartpoet.directive.CastType
 import net.theevilreaper.dartpoet.directive.DirectiveFactory
 import net.theevilreaper.dartpoet.directive.DirectiveType
-import net.theevilreaper.dartpoet.enum.EnumPropertySpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
