@@ -28,7 +28,7 @@ internal class AnnotationWriter {
         writer.emit(ANNOTATION_CHAR)
         writer.emitCode("%T", spec.typeName)
 
-        if (spec.content.isEmpty()) return
+        if (!spec.hasContent) return
 
         val whitespace = if (inline) EMPTY_STRING else NEW_LINE
         val memberSeparator = if (inline) ", " else ",\n"
@@ -56,7 +56,7 @@ internal class AnnotationWriter {
         spec: AnnotationSpec,
         inline: Boolean,
         memberSeparator: String,
-        memberSuffix: String
+        memberSuffix: String,
     ): CodeBlock {
         return spec.content.toImmutableList()
             .map { if (inline) it.replaceAll("[⇥|⇤]", EMPTY_STRING) else it }

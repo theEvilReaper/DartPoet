@@ -1,7 +1,6 @@
 package net.theevilreaper.dartpoet.annotation
 
 import net.theevilreaper.dartpoet.code.*
-import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.AnnotationWriter
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
@@ -10,34 +9,37 @@ import net.theevilreaper.dartpoet.util.toImmutableSet
 import kotlin.reflect.KClass
 
 /**
- * The [AnnotationSpec] contains all relevant data which describes a specific annotation.
- * In the programming language Dart annotations are used to add additional information to your code.
- * A metadata annotation begins with the character @, followed by either a reference to a compile-time constant (such as deprecated) or a call to a constant constructor.
+ * The [AnnotationSpec] class encapsulates essential data that defines a metadata / annotation structure.
+ * Annotations can be used in Dart to add additional information to the code base.
+ * Typically, an annotation starts with the character @, followed by an identifier,
+ * and optionally with meta information which are encapsulated in round brackets.
+ * It's important to note that you can't really use the predefined annotations from the JDK or Kotlin because the languages are not interoperable to Dart,
  *
- * Four annotations are available to all Dart code:
+ * Common annotations from Dart:
  * - @deprecated,
  * - @override
  * - @pragma
- *
- * Please note you can use the predefined annotations from the JDK or Kotlin but doesn't except that they work in Dart.
  * @param builder the builder instance to retrieve the data from
  * @author theEvilReaper
  * @version 1.0.0
- * @since
- **/
+ * @since 1.0.0
+ */
 class AnnotationSpec(
-    builder: AnnotationSpecBuilder
+    builder: AnnotationSpecBuilder,
 ) {
     internal val typeName: TypeName = builder.typeName
     internal val content: Set<CodeBlock> = builder.content.toImmutableSet()
-    internal val hasMultipleContentParts = content.size > 1
+    internal val hasContent: Boolean = content.isNotEmpty()
+    internal val hasMultipleContentParts: Boolean = content.size > 1
 
     /**
-     * Triggers an [AnnotationWriter] to write the spec object into code.
+     * Triggers the write process for an [AnnotationSpec] object.
+     * @param codeWriter the [CodeWriter] instance to write the spec to
+     * @param inline if the spec should be written inline
      */
     internal fun write(
         codeWriter: CodeWriter,
-        inline: Boolean = true
+        inline: Boolean = true,
     ) {
         AnnotationWriter().emit(this, codeWriter, inline = inline)
     }
