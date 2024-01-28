@@ -18,7 +18,7 @@ class AnnotationSpecTest {
 
         @JvmStatic
         private fun testSimpleAnnotations() = Stream.of(
-            Arguments.of(OVERRIDE, "@Override"),
+            Arguments.of(OVERRIDE, "@override"),
             Arguments.of(DEPRECATED, "@deprecated"),
             Arguments.of(PRAGMA, "@pragma"),
             Arguments.of(AnnotationSpec.builder(Override::class).build(), "@Override")

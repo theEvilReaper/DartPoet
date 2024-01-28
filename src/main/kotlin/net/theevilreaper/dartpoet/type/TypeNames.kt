@@ -39,4 +39,3 @@ val OVERRIDE: AnnotationSpec = AnnotationSpec.builder("override").build()
 // Represents the deprecated metadata annotation from Dart
 @JvmField
 val DEPRECATED: AnnotationSpec = AnnotationSpec.builder("deprecated").build()
-
