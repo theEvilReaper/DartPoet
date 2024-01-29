@@ -21,6 +21,8 @@ class ConstantsTest {
             Arguments.of("boss_bar_colour_meep", true),
             Arguments.of("hello__world.dart", false),
             Arguments.of("_hello__world_.dart", false),
+            Arguments.of("test", true),
+            Arguments.of("_test", false)
         )
     }
 
