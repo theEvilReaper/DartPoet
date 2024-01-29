@@ -132,14 +132,20 @@ class FunctionBuilder internal constructor(
     }
 
     fun parameter(parameter: ParameterSpec) = apply {
+        check(!parameter.hasNoTypeName) { "Parameter must have a type" }
         this.parameters += parameter
     }
 
     fun parameter(parameter: () -> ParameterSpec) = apply {
+        check(!parameter().hasNoTypeName) { "Parameter must have a type" }
         this.parameters += parameter()
     }
 
     fun parameters(vararg parameters: ParameterSpec) = apply {
+        if (parameters.isEmpty()) return@apply
+        parameters.forEach {
+            check(!it.hasNoTypeName) { "Parameter must have a type" }
+        }
         this.parameters += parameters
     }
 
