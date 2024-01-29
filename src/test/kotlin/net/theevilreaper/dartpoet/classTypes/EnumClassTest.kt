@@ -120,10 +120,35 @@ class EnumClassTest {
               final String name;
               final String route;
             
-              const NavigationEntry(name, route);
+              const NavigationEntry(this.name, this.route);
             
             }
             """.trimIndent()
         )
     }
+
+    @Test
+    fun d() {
+        val enumClass = ClassSpec.enumClass("TestEnum")
+            .enumProperties(
+                EnumPropertySpec.builder("test")
+                    .parameter("%C", "Test")
+                    .build()
+            )
+            .properties(
+                PropertySpec.builder("name", String::class).build()
+            )
+            .constructor(
+                ConstructorSpec.builder("TestEnum")
+                    .parameter(ParameterSpec.builder("name").build())
+                    .build()
+            )
+            .build()
+        val file = DartFile.builder("test")
+            .type(enumClass)
+            .build()
+        file.write(System.out)
+    }
 }
+
+
