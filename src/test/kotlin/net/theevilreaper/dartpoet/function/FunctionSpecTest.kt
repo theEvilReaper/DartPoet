@@ -2,8 +2,8 @@ package net.theevilreaper.dartpoet.function
 
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
-import net.theevilreaper.dartpoet.type.INTEGER
 import net.theevilreaper.dartpoet.type.asTypeName
+import net.theevilreaper.dartpoet.util.NO_PARAMETER_TYPE
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
@@ -90,12 +90,41 @@ class FunctionSpecTest {
                         .modifiers(DartModifier.ABSTRACT)
                         .parameters(
                             ParameterSpec.builder("text", String::class).build(),
-                            ParameterSpec.builder("additional", String::class).initializer("%C", "Hello World!").build(),
+                            ParameterSpec.builder("additional", String::class).initializer("%C", "Hello World!")
+                                .build(),
                         )
                         .build()
                 },
                 "abstract void print(String text, [String additional = 'Hello World!']);"
             ),
+        )
+
+        @JvmStatic
+        private fun invalidFunctionParameters() = Stream.of(
+            Arguments.of(
+                {
+                    FunctionSpec.builder("Test")
+                        .parameter(ParameterSpec.builder("name").build())
+                },
+                NO_PARAMETER_TYPE
+            ),
+            Arguments.of(
+                {
+                    FunctionSpec.builder("Test")
+                        .parameter { ParameterSpec.builder("name").build() }
+                },
+                NO_PARAMETER_TYPE
+            ),
+            Arguments.of(
+                {
+                    FunctionSpec.builder("Test")
+                        .parameters(
+                            ParameterSpec.builder("test", String::class).build(),
+                            ParameterSpec.builder("name").build()
+                        )
+                },
+                NO_PARAMETER_TYPE
+            )
         )
     }
 
@@ -110,6 +139,12 @@ class FunctionSpecTest {
     fun `test different parameter variants in combination`(specBuilder: () -> FunctionSpec, expected: String) {
         val spec = specBuilder.invoke()
         assertEquals(expected, spec.toString())
+    }
+
+    @ParameterizedTest
+    @MethodSource("invalidFunctionParameters")
+    fun `test invalid parameters on functions`(specBuilder: () -> Unit, expected: String) {
+        assertThrows(IllegalStateException::class.java, specBuilder, expected)
     }
 
     @Test

@@ -366,7 +366,7 @@ class DartFileTest {
               String name;
             
               /// Good comment
-              TestModel(name);
+              TestModel(this.name);
             
               /// Returns the given name from the object
               String getName() {
