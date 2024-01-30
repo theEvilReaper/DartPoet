@@ -39,6 +39,9 @@ private val indentPattern: Regex = Regex(" +")
 
 internal val ALLOWED_PRIMITIVE_TYPES = setOf("Short", "Int", "Long", "Float", "Double", "Char", "Boolean")
 
+//Error message
+internal const val NO_PARAMETER_TYPE = "Parameter must have a type"
+
 /**
  * Checks if a given set of [DartModifier] matches with a given set which contains the allowed [DartModifier].
  * @param rawModifiers contains all modifiers from the context
