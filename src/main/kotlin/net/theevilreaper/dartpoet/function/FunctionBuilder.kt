@@ -10,6 +10,7 @@ import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asClassName
 import net.theevilreaper.dartpoet.type.asTypeName
+import net.theevilreaper.dartpoet.util.NO_PARAMETER_TYPE
 import java.lang.reflect.Type
 import kotlin.reflect.KClass
 
@@ -132,19 +133,19 @@ class FunctionBuilder internal constructor(
     }
 
     fun parameter(parameter: ParameterSpec) = apply {
-        check(!parameter.hasNoTypeName) { "Parameter must have a type" }
+        check(!parameter.hasNoTypeName) { NO_PARAMETER_TYPE }
         this.parameters += parameter
     }
 
     fun parameter(parameter: () -> ParameterSpec) = apply {
-        check(!parameter().hasNoTypeName) { "Parameter must have a type" }
+        check(!parameter().hasNoTypeName) { NO_PARAMETER_TYPE }
         this.parameters += parameter()
     }
 
     fun parameters(vararg parameters: ParameterSpec) = apply {
         if (parameters.isEmpty()) return@apply
         parameters.forEach {
-            check(!it.hasNoTypeName) { "Parameter must have a type" }
+            check(!it.hasNoTypeName) { NO_PARAMETER_TYPE }
         }
         this.parameters += parameters
     }
