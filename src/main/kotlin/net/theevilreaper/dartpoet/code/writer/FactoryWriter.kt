@@ -5,10 +5,8 @@ import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.DocumentationAppender
 import net.theevilreaper.dartpoet.code.InitializerAppender
 import net.theevilreaper.dartpoet.code.emitParameters
-import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.factory.FactorySpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
-import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.util.CURLY_CLOSE
 import net.theevilreaper.dartpoet.util.CURLY_OPEN
 import net.theevilreaper.dartpoet.util.ROUND_CLOSE
@@ -28,28 +26,43 @@ internal class FactoryWriter : InitializerAppender<FactorySpec>, DocumentationAp
             codeWriter.emitCode(".%L", spec.named!!)
         }
 
-        if (spec.named.orEmpty().trim().isNotEmpty()) {
-            codeWriter.emit(ROUND_OPEN)
-            spec.parameters.emitParameters(codeWriter)
-            codeWriter.emitCode(ROUND_CLOSE)
-        } else {
-            writeParameters(spec, codeWriter)
+        if (!spec.hasParameters) {
+            writeSimpleConstructor(spec, codeWriter)
+            return
         }
 
-        val emitLambda = if (spec.withLambda) "·=>·" else "·{\n"
-        codeWriter.emit(emitLambda)
+        codeWriter.emitCode(ROUND_OPEN)
+        writeParameters(spec, codeWriter)
+        codeWriter.emitCode(ROUND_CLOSE)
 
-        if (spec.initializerBlock.isNotEmpty()) {
+        if (spec.withLambda) {
+            codeWriter.emitCode("·=>·")
             codeWriter.emitCode(spec.initializerBlock)
+            return
         }
+
+        codeWriter.emitCode("·$CURLY_OPEN\n")
+        codeWriter.indent()
+        codeWriter.emitCode(spec.initializerBlock)
+        codeWriter.unindent()
+        codeWriter.emit("\n$CURLY_CLOSE")
+    }
+
+    private fun writeSimpleConstructor(spec: FactorySpec, codeWriter: CodeWriter) {
+        if (spec.withLambda) {
+            codeWriter.emitCode("·=>·")
+            codeWriter.emitCode(spec.initializerBlock)
+            return
+        }
+        codeWriter.emitCode("·$CURLY_OPEN\n")
+
+        codeWriter.indent()
+        codeWriter.emitCode(spec.initializerBlock)
+        codeWriter.unindent()
+        codeWriter.emit("\n$CURLY_CLOSE")
     }
 
     private fun writeParameters(spec: FactorySpec, codeWriter: CodeWriter) {
-        if (!spec.hasParameters) {
-            codeWriter.emit("()")
-            return
-        }
-        codeWriter.emit("(")
         spec.normalParameter.emitParameters(codeWriter, forceNewLines = false)
 
         if (spec.normalParameter.isNotEmpty() && (spec.hasAdditionalParameters || spec.parametersWithDefaults.isNotEmpty())) {
@@ -65,8 +78,6 @@ internal class FactoryWriter : InitializerAppender<FactorySpec>, DocumentationAp
             spec.parametersWithDefaults.emitParameters(codeWriter, forceNewLines = false)
             codeWriter.emit("]")
         }
-
-        codeWriter.emit(")")
     }
 
     private fun emitRequiredAndNamedParameter(spec: FactorySpec, codeWriter: CodeWriter) {
@@ -88,7 +99,7 @@ internal class FactoryWriter : InitializerAppender<FactorySpec>, DocumentationAp
     private fun writeParameters(
         parameters: List<ParameterSpec>,
         emitSpaceComma: Boolean = false,
-        codeWriter: CodeWriter
+        codeWriter: CodeWriter,
     ) {
         if (parameters.isEmpty()) return
         if (emitSpaceComma) {
