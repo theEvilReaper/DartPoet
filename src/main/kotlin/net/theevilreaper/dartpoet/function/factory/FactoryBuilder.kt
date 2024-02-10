@@ -13,7 +13,7 @@ import net.theevilreaper.dartpoet.type.TypeName
  */
 class FactoryBuilder(
     val typeName: TypeName,
-    val const: Boolean = false
+    val const: Boolean = false,
 ) {
     internal val documentation: CodeBlock.Builder = CodeBlock.builder()
     internal val annotations: MutableSet<AnnotationSpec> = mutableSetOf()
@@ -21,6 +21,7 @@ class FactoryBuilder(
     internal val initializerBlock: CodeBlock.Builder = CodeBlock.builder()
     internal var namedString: String? = null
     internal var lambda: Boolean = false
+    internal var private: Boolean = false
 
     /**
      * Add a new content for the documentation.
@@ -75,6 +76,10 @@ class FactoryBuilder(
      */
     fun lambda(lambda: Boolean) = apply {
         this.lambda = lambda
+    }
+
+    fun private(private: Boolean) = apply {
+        this.private = private
     }
 
     /**
