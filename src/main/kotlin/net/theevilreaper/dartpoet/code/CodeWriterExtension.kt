@@ -41,6 +41,7 @@ val Char.isMultiCharNoArgPlaceholder get() = this == '%'
 internal val String.isPlaceholder
     get() = (length == 1 && first().isSingleCharNoArgPlaceholder) ||
             (length == 2 && first().isMultiCharNoArgPlaceholder)
+
 fun String.nextPotentialPlaceholderPosition(startIndex: Int) =
     indexOfAny(NO_ARG_PLACEHOLDERS, startIndex)
 
@@ -86,7 +87,6 @@ internal fun Set<AnnotationSpec>.emitAnnotations(
 
 internal fun Set<ConstructorBase>.emitConstructors(
     codeWriter: CodeWriter,
-    forceNewLines: Boolean = false,
     leadingNewLine: Boolean = false,
     emitBlock: (ConstructorBase) -> Unit = {
         if (it is ConstructorSpec) {
@@ -100,18 +100,9 @@ internal fun Set<ConstructorBase>.emitConstructors(
         if (leadingNewLine) {
             codeWriter.emit(NEW_LINE)
         }
-        forEachIndexed { index, constructorSpec ->
-            val emitNewLines = size > 1 || forceNewLines
-
-            if (index > 0 && emitNewLines) {
-                codeWriter.emit(NEW_LINE)
-            }
-
-            emitBlock(constructorSpec)
-
-            if (emitNewLines) {
-                codeWriter.emit(NEW_LINE)
-            }
+        forEach { constructorBase ->
+            emitBlock(constructorBase)
+            codeWriter.emit(NEW_LINE)
         }
     }
 }
@@ -125,7 +116,7 @@ internal fun List<ParameterSpec>.emitParameters(
     if (isNotEmpty()) {
         val emitComma = size > 1
         forEachIndexed { index, parameter ->
-            if (index > 0 && forceNewLines)  {
+            if (index > 0 && forceNewLines) {
                 emit(NEW_LINE)
             }
 
@@ -151,7 +142,7 @@ internal fun List<ExtensionSpec>.emitExtensions(
         val emitNewLines = size > 1 || forceNewLines
 
         forEachIndexed { index, parameter ->
-            if (index > 0 && emitNewLines)  {
+            if (index > 0 && emitNewLines) {
                 emit(NEW_LINE)
             }
             emitBlock(parameter)
@@ -163,7 +154,7 @@ internal fun List<ExtensionSpec>.emitExtensions(
     }
 }
 
-internal fun <T: Directive> List<T>.writeImports(
+internal fun <T : Directive> List<T>.writeImports(
     writer: CodeWriter,
     newLineAtBegin: Boolean = true,
     emitBlock: (T) -> String = { it.asString() }

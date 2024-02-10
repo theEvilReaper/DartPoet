@@ -58,7 +58,7 @@ class DartFileTest {
             .superClass(freezedMixing, InheritKeyword.MIXIN)
             .annotation { AnnotationSpec.builder("freezed").build() }
             .constructor {
-                FactorySpec.builder(ClassName("VersionModel"))
+                FactorySpec.constBuilder(ClassName("VersionModel"))
                     .parameter(
                         ParameterSpec.builder("version", String::class)
                             .named(true)
