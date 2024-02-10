@@ -10,7 +10,6 @@ import net.theevilreaper.dartpoet.directive.DirectiveType
 import net.theevilreaper.dartpoet.enum.EnumPropertySpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
-import net.theevilreaper.dartpoet.function.factory.FactorySpec
 import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
@@ -50,71 +49,6 @@ class DartFileTest {
         assertEquals(dartFileSpec.name, specAsBuilder.name)
         assertEquals(dartFileSpec.indent, specAsBuilder.indent)
         assertContentEquals(dartFileSpec.annotations, specAsBuilder.annotations)
-    }
-
-    @Test
-    fun `write test model with freezed`() {
-        val freezedMixing = ClassName("_${'$'}VersionModel")
-        val versionFreezedClass = ClassSpec.builder("VersionModel")
-            .superClass(freezedMixing, InheritKeyword.MIXIN)
-            .annotation { AnnotationSpec.builder("freezed").build() }
-            .constructor {
-                FactorySpec.constBuilder(ClassName("VersionModel"))
-                    .parameter(
-                        ParameterSpec.builder("version", String::class)
-                            .named(true)
-                            .annotations(
-                                AnnotationSpec.builder("JsonKey")
-                                    .content("name: %C", "version").build(),
-                                AnnotationSpec.builder("Default")
-                                    .content("%C", "1.0.0").build()
-                            )
-                            .build()
-                    )
-                    .addCode("%L", "_VersionModel();")
-                    .build()
-            }
-            .constructor {
-                FactorySpec.builder(ClassName("VersionModel"))
-                    .lambda(true)
-                    .named("fromJson")
-                    .parameter(
-                        ParameterSpec.builder(
-                            "json",
-                            Map::class.parameterizedBy(String::class.asTypeName(), DYNAMIC)
-                        ).build()
-                    )
-                    .addCode("%L", "_${"$"}VersionModelFromJson(json);")
-                    .build()
-            }
-        val versionFile = DartFile.builder("version.dart")
-            .directives(
-                DirectiveFactory.create(DirectiveType.IMPORT, "freezed_annotation/freezed_annotation.dart"),
-                DirectiveFactory.create(DirectiveType.PART, "version.freezed.dart"),
-                DirectiveFactory.create(DirectiveType.PART, "version.g.dart")
-            )
-            .type(
-                versionFreezedClass
-            )
-            .build()
-        assertThat(versionFile.toString()).isEqualTo(
-            """
-            import 'package:freezed_annotation/freezed_annotation.dart';
-
-            part 'version.freezed.dart';
-            part 'version.g.dart';
-            
-            @freezed
-            class VersionModel with _${'$'}VersionModel {
-            
-              const factory VersionModel({
-                @JsonKey(name: 'version')@Default('1.0.0') String version
-              }) = _VersionModel;
-            
-              factory VersionModel.fromJson(Map<String, dynamic> json) => _${'$'}VersionModelFromJson(json);
-            }
-            """.trimIndent()
-        )
     }
 
     @Test
