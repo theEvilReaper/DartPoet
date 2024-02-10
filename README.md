@@ -1,5 +1,7 @@
 # DartPoet
 
+[![license](https://img.shields.io/github/license/theEvilReaper/DartPoet?style=for-the-badge&color=b2234c)](../LICENSE)
+
 # **DartPoet is still in development and not ready for production use.**
 
 ## Description

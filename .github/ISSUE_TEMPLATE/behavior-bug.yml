@@ -1,42 +1,58 @@
 name: Behavior Bug
-description: Report issues with plugin incompatibility or other behavior related issues.
+description: Report issues with invalid code generation or other behavior bugs
+title: "[Bug]: "
 labels: [ "status: needs triage", "type: bug" ]
 body:
-  - type: textarea
-    attributes:
-      label: Expected behavior
-      description: What you expected to see.
-    validations:
-      required: true
-
-  - type: textarea
-    attributes:
-      label: Actual behavior
-      description: What you actually saw.
-    validations:
-      required: true
-
-  - type: textarea
-    attributes:
-      label: Steps to reproduce
-      description: This may include a video, or detailed instructions to help reconstruct the issue.
-    validations:
-      required: true
-
-  - type: textarea
-    attributes:
-      label: Other
-      description: |
-        Please include other helpful information below.
-        The more information we receive, the quicker and more effective we can be at finding the solution to the issue.
-    validations:
-      required: false
-
   - type: markdown
     attributes:
       value: |
-        Before submitting this issue, please ensure the following:
-
-        1. You searched for and ensured there isn't already an open issue regarding this.
-        2. Your version of kotlin/java is supported by DartPoet.
-        3. You are running the latest version of DartPoet from [our github page](https://github.com/theEvilReaper/DartPoet).
+        Thank you for reporting a bug to DartPoet!
+        Please fill out the information below to help us understand the issue.
+  - type: markdown
+    attributes:
+      value: |
+        Before filling the form fields, please consider the following:
+        - Search for existing issues in the [issue tracker](https://github.com/theEvilReaper/DartPoet/issues)
+  - type: input
+    attributes:
+      label: DartPoet version
+      description: Please enter the version of DartPoet you are using.
+      placeholder: 1.0.0
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Describe the bug
+      description: |
+        A clear and concise description of what the bug is.
+        If you have a screenshot of the bug, please attach it below.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Steps to reproduce the bug
+      description: Tell us exactly how to reproduce the bug you are experiencing
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Code sample
+      description: |
+        Please create a reproducible sample to show us the bug in action and attach it below between the lines with the backticks.
+        This helps us to verify that the bug is valid and prevents us from having to ask you for a sample later.
+        
+        Without this we will unlikely be able to progress on the issue, and because of that
+        we regretfully will have to close it.
+        
+        **Note**: Please do not upload screenshots of text. Instead, use code blocks
+        or the above mentioned ways to upload your code sample.
+      value: |
+        ```kotlin
+        [Paste your code here]
+        ```
+    validations:
+      required: true
