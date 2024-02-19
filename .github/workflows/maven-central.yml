@@ -10,6 +10,11 @@
 
 name: Publish package to the Maven Central Repository
 on:
+  workflow_run:
+    workflows:
+      - "Test PR"
+    types:
+        - completed
   push:
     branches:
       - main
