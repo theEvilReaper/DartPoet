@@ -14,6 +14,11 @@ on:
     branches:
       - main
       - develop
+  workflow_run:
+    workflows:
+      - "Test PR"
+    types:
+      - completed
   release:
     types: [created]
 jobs:
@@ -30,7 +35,7 @@ jobs:
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v2
       - name: Publish package
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/actions/setup-gradle@v3
         with:
           arguments: publishMavenJavaPublicationToMavenRepository
         env:
