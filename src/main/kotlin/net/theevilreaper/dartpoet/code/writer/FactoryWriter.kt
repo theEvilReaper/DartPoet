@@ -5,6 +5,7 @@ import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.DocumentationAppender
 import net.theevilreaper.dartpoet.code.InitializerAppender
 import net.theevilreaper.dartpoet.code.emitParameters
+import net.theevilreaper.dartpoet.function.ConstructorDelegation
 import net.theevilreaper.dartpoet.function.factory.FactorySpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.util.CURLY_CLOSE
@@ -35,31 +36,12 @@ internal class FactoryWriter : InitializerAppender<FactorySpec>, DocumentationAp
         writeParameters(spec, codeWriter)
         codeWriter.emitCode(ROUND_CLOSE)
 
-        if (spec.withLambda) {
-            codeWriter.emitCode("·=>·")
-            codeWriter.emitCode(spec.initializerBlock)
-            return
-        }
-
-        codeWriter.emitCode("·$CURLY_OPEN\n")
-        codeWriter.indent()
-        codeWriter.emitCode(spec.initializerBlock)
-        codeWriter.unindent()
-        codeWriter.emit("\n$CURLY_CLOSE")
+        ConstructorDelegation.appendDelegation(spec.constructorDelegation, spec.initializerBlock, codeWriter)
     }
 
     private fun writeSimpleConstructor(spec: FactorySpec, codeWriter: CodeWriter) {
-        if (spec.withLambda) {
-            codeWriter.emitCode("·=>·")
-            codeWriter.emitCode(spec.initializerBlock)
-            return
-        }
-        codeWriter.emitCode("·$CURLY_OPEN\n")
-
-        codeWriter.indent()
-        codeWriter.emitCode(spec.initializerBlock)
-        codeWriter.unindent()
-        codeWriter.emit("\n$CURLY_CLOSE")
+        codeWriter.emit("()")
+        ConstructorDelegation.appendDelegation(spec.constructorDelegation, spec.initializerBlock, codeWriter)
     }
 
     private fun writeParameters(spec: FactorySpec, codeWriter: CodeWriter) {
@@ -81,19 +63,20 @@ internal class FactoryWriter : InitializerAppender<FactorySpec>, DocumentationAp
     }
 
     private fun emitRequiredAndNamedParameter(spec: FactorySpec, codeWriter: CodeWriter) {
-        codeWriter.emit("$CURLY_OPEN")
-
+        codeWriter.emit("$CURLY_OPEN\n")
+        codeWriter.indent()
         val namedRequired = spec.namedParameter.filter { it.isRequired && !it.hasInitializer }.toImmutableList()
 
         writeParameters(namedRequired, spec.normalParameter.isNotEmpty(), codeWriter)
         writeParameters(spec.requiredParameter, namedRequired.isNotEmpty(), codeWriter)
 
         val test =
-            spec.namedParameter.minus(namedRequired).filter { it.isNullable || it.hasInitializer }.toImmutableList()
+            spec.namedParameter.minus(namedRequired).toImmutableList()
 
         writeParameters(test, spec.requiredParameter.isNotEmpty() || namedRequired.isNotEmpty(), codeWriter)
 
-        codeWriter.emit("$CURLY_CLOSE")
+        codeWriter.unindent()
+        codeWriter.emit("\n$CURLY_CLOSE")
     }
 
     private fun writeParameters(
