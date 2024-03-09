@@ -20,7 +20,7 @@ import net.theevilreaper.dartpoet.util.toImmutableSet
  * different syntax.
  */
 class FactorySpec(
-    builder: FactoryBuilder
+    builder: FactoryBuilder,
 ) : ConstructorBase {
     val typeName: TypeName = builder.typeName
     val isConst: Boolean = builder.const
@@ -41,13 +41,19 @@ class FactorySpec(
     internal val hasParameters = parameters.isNotEmpty()
     internal val hasAdditionalParameters = requiredParameter.isNotEmpty() || namedParameter.isNotEmpty()
 
+    /**
+     * Performs some checks on the spec object.
+     */
     init {
         check(initializerBlock.isNotEmpty()) { "The initializer block must not be empty" }
     }
 
-    internal fun write(
-        codeWriter: CodeWriter
-    ) {
+    /**
+     * Writes the factory constructor to the given [CodeWriter].
+     * @param codeWriter the writer to write the factory constructor
+     * @see FactoryWriter
+     */
+    internal fun write(codeWriter: CodeWriter) {
         FactoryWriter().write(this, codeWriter)
     }
 
