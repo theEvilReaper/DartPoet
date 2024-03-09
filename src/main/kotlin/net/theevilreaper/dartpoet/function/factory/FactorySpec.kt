@@ -12,6 +12,7 @@ import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.util.ParameterFilter
 import net.theevilreaper.dartpoet.util.toImmutableList
+import net.theevilreaper.dartpoet.util.toImmutableSet
 
 /**
  * The [FactorySpec] represents the factory construct from the language Dart.
@@ -23,7 +24,7 @@ class FactorySpec(
 ) : ConstructorBase {
     val typeName: TypeName = builder.typeName
     val isConst: Boolean = builder.const
-    val annotations: List<AnnotationSpec> = builder.annotations.toImmutableList()
+    val annotations: Set<AnnotationSpec> = builder.annotations.toImmutableSet()
     val documentation: CodeBlock = builder.documentation.build()
     val parameters: List<ParameterSpec> = builder.parameters.toImmutableList()
     val initializerBlock: CodeBlock = builder.initializerBlock.build()

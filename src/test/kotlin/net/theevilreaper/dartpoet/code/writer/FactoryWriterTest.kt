@@ -1,6 +1,7 @@
 package net.theevilreaper.dartpoet.code.writer
 
 import com.google.common.truth.Truth
+import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.function.factory.FactorySpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.ClassName
@@ -18,6 +19,27 @@ class FactoryWriterTest {
             .build()
         Truth.assertThat(privateFactoryConstructor.toString()).isEqualTo(
             """
+            factory $constructorName() {
+              return _instance;
+            }
+            """.trimIndent()
+        )
+    }
+
+    @Test
+    fun `test private factory constructor with annotations`() {
+        val constructorName = "Singleton"
+        val privateFactoryConstructor = FactorySpec.builder(ClassName(constructorName))
+            .annotation(
+                AnnotationSpec.builder("Deprecated")
+                    .content("%C", "Use the instance instead")
+                    .build()
+            )
+            .addCode("return _instance;")
+            .build()
+        Truth.assertThat(privateFactoryConstructor.toString()).isEqualTo(
+            """
+            @Deprecated('Use the instance instead')
             factory $constructorName() {
               return _instance;
             }

@@ -4,6 +4,7 @@ import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.DocumentationAppender
 import net.theevilreaper.dartpoet.code.InitializerAppender
+import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.code.emitParameters
 import net.theevilreaper.dartpoet.function.ConstructorDelegation
 import net.theevilreaper.dartpoet.function.factory.FactorySpec
@@ -18,6 +19,7 @@ internal class FactoryWriter : InitializerAppender<FactorySpec>, DocumentationAp
 
     fun write(spec: FactorySpec, codeWriter: CodeWriter) {
         emitDocumentation(spec.documentation, codeWriter)
+        emitAnnotations(spec, codeWriter)
         if (spec.isConst) {
             codeWriter.emitCode("%L·", DartModifier.CONST.identifier)
         }
@@ -37,6 +39,11 @@ internal class FactoryWriter : InitializerAppender<FactorySpec>, DocumentationAp
         codeWriter.emitCode(ROUND_CLOSE)
 
         ConstructorDelegation.appendDelegation(spec.constructorDelegation, spec.initializerBlock, codeWriter)
+    }
+
+    private fun emitAnnotations(spec: FactorySpec, codeWriter: CodeWriter) {
+        if (spec.annotations.isEmpty()) return
+        spec.annotations.emitAnnotations(codeWriter)
     }
 
     private fun writeSimpleConstructor(spec: FactorySpec, codeWriter: CodeWriter) {
