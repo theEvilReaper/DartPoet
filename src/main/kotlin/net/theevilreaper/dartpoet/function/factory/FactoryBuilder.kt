@@ -22,7 +22,6 @@ class FactoryBuilder(
     internal val initializerBlock: CodeBlock.Builder = CodeBlock.builder()
     internal var invokeType: ConstructorDelegation = ConstructorDelegation.NONE
     internal var namedString: String? = null
-    internal var private: Boolean = false
 
     /**
      * Add a new content for the documentation.
@@ -68,15 +67,6 @@ class FactoryBuilder(
      */
     fun parameter(vararg parameters: ParameterSpec) = apply {
         this.parameters.addAll(parameters)
-    }
-
-    /**
-     * Set the indicator if the factory constructor should be private.
-     * @param private true if the factory constructor should be private, false otherwise
-     * @return the current [FactoryBuilder] instance
-     */
-    fun private(private: Boolean) = apply {
-        this.private = private
     }
 
     /**

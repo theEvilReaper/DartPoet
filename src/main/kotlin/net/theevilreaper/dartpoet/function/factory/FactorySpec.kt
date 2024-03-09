@@ -22,7 +22,6 @@ class FactorySpec(
 ) : ConstructorBase {
     val typeName: TypeName = builder.typeName
     val isConst: Boolean = builder.const
-    val isPrivate: Boolean = builder.private
     val documentation: CodeBlock = builder.documentation.build()
     val parameters: List<ParameterSpec> = builder.parameters.toImmutableList()
     val initializerBlock: CodeBlock = builder.initializerBlock.build()
