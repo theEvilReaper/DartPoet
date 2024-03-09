@@ -1,5 +1,6 @@
 package net.theevilreaper.dartpoet.function.factory
 
+import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
@@ -22,12 +23,13 @@ class FactorySpec(
 ) : ConstructorBase {
     val typeName: TypeName = builder.typeName
     val isConst: Boolean = builder.const
+    val annotations: List<AnnotationSpec> = builder.annotations.toImmutableList()
     val documentation: CodeBlock = builder.documentation.build()
     val parameters: List<ParameterSpec> = builder.parameters.toImmutableList()
     val initializerBlock: CodeBlock = builder.initializerBlock.build()
     val named: String? = builder.namedString
     val hasNamedData = named.orEmpty().trim().isNotEmpty()
-    val constructorDelegation: ConstructorDelegation = builder.invokeType
+    val constructorDelegation: ConstructorDelegation = builder.delegation
     internal val parametersWithDefaults =
         ParameterFilter.filterParameter(parameters) { !it.isRequired && it.hasInitializer }
     internal val requiredParameter =
@@ -53,6 +55,21 @@ class FactorySpec(
      * @return the spec object as string
      */
     override fun toString() = buildCodeString { write(this) }
+
+    /**
+     * Creates a new [FactoryBuilder] instance to build a new [FactorySpec] object.
+     * @return the builder instance
+     */
+    fun toBuilder(): FactoryBuilder {
+        val builder = FactoryBuilder(typeName, isConst)
+        builder.documentation.add(documentation)
+        builder.annotations.addAll(annotations)
+        builder.parameters.addAll(parameters)
+        builder.initializerBlock.add(initializerBlock)
+        builder.delegation = constructorDelegation
+        builder.namedString = named
+        return builder
+    }
 
     /**
      * Creates a new [FactoryBuilder] instance to build a new [FactorySpec] object.
