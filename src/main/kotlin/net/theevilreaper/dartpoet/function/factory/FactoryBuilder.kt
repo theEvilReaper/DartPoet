@@ -20,7 +20,7 @@ class FactoryBuilder(
     internal val annotations: MutableSet<AnnotationSpec> = mutableSetOf()
     internal val parameters: MutableSet<ParameterSpec> = mutableSetOf()
     internal val initializerBlock: CodeBlock.Builder = CodeBlock.builder()
-    internal var invokeType: ConstructorDelegation = ConstructorDelegation.NONE
+    internal var delegation: ConstructorDelegation = ConstructorDelegation.NONE
     internal var namedString: String? = null
 
     /**
@@ -75,8 +75,8 @@ class FactoryBuilder(
      * @return the current [FactoryBuilder] instance
      */
     fun delegation(type: ConstructorDelegation) = apply {
-        if (this.invokeType == type) return@apply
-        this.invokeType = type
+        if (this.delegation == type) return@apply
+        this.delegation = type
     }
 
     /**
