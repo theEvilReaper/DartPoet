@@ -2,6 +2,7 @@ package net.theevilreaper.dartpoet.function.factory
 
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
+import net.theevilreaper.dartpoet.function.ConstructorDelegation
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.TypeName
 
@@ -19,8 +20,8 @@ class FactoryBuilder(
     internal val annotations: MutableSet<AnnotationSpec> = mutableSetOf()
     internal val parameters: MutableSet<ParameterSpec> = mutableSetOf()
     internal val initializerBlock: CodeBlock.Builder = CodeBlock.builder()
+    internal var invokeType: ConstructorDelegation = ConstructorDelegation.NONE
     internal var namedString: String? = null
-    internal var lambda: Boolean = false
     internal var private: Boolean = false
 
     /**
@@ -70,16 +71,22 @@ class FactoryBuilder(
     }
 
     /**
-     * Set the indicator if the factory constructor should be generated with a lambda.
-     * @param lambda true if the factory constructor should be generated with a lambda, false otherwise
+     * Set the indicator if the factory constructor should be private.
+     * @param private true if the factory constructor should be private, false otherwise
      * @return the current [FactoryBuilder] instance
      */
-    fun lambda(lambda: Boolean) = apply {
-        this.lambda = lambda
-    }
-
     fun private(private: Boolean) = apply {
         this.private = private
+    }
+
+    /**
+     * Set the delegation type for the factory constructor.
+     * @param type the type of the delegation
+     * @return the current [FactoryBuilder] instance
+     */
+    fun delegation(type: ConstructorDelegation) = apply {
+        if (this.invokeType == type) return@apply
+        this.invokeType = type
     }
 
     /**
@@ -100,6 +107,11 @@ class FactoryBuilder(
         initializerBlock.addNamed(format, args)
     }
 
+    /**
+     * Set's the named part of a factory constructor.
+     * @param named the name for the factory constructor
+     * @return the current [FactoryBuilder] instance
+     */
     fun named(named: String) = apply {
         this.namedString = named
     }
