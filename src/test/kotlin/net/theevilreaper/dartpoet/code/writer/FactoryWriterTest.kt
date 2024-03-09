@@ -18,7 +18,7 @@ class FactoryWriterTest {
             .build()
         Truth.assertThat(privateFactoryConstructor.toString()).isEqualTo(
             """
-            factory $constructorName {
+            factory $constructorName() {
               return _instance;
             }
             """.trimIndent()

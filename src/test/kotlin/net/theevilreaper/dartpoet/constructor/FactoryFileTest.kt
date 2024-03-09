@@ -7,6 +7,7 @@ import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.directive.DirectiveFactory
 import net.theevilreaper.dartpoet.directive.DirectiveType
+import net.theevilreaper.dartpoet.function.ConstructorDelegation
 import net.theevilreaper.dartpoet.function.factory.FactorySpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.ClassName
@@ -23,17 +24,18 @@ import org.junit.jupiter.api.Test
  **/
 class FactoryFileTest {
 
-    private val VERSION_MODEL = "VersionModel"
+    private val versionModel = "VersionModel"
 
     @Test
     fun `write test class with factory constructors`() {
-        val versionModelClass = ClassName(VERSION_MODEL)
-        val freezedMixing = ClassName("_${'$'}$VERSION_MODEL")
-        val versionFreezedClass = ClassSpec.builder(VERSION_MODEL)
+        val versionModelClass = ClassName(versionModel)
+        val freezedMixing = ClassName("_${'$'}$versionModel")
+        val versionFreezedClass = ClassSpec.builder(versionModel)
             .superClass(freezedMixing, InheritKeyword.MIXIN)
             .annotation { AnnotationSpec.builder("freezed").build() }
             .constructor {
                 FactorySpec.constBuilder(versionModelClass)
+                    .delegation(ConstructorDelegation.REDIRECT)
                     .parameter(
                         ParameterSpec.builder("version", String::class)
                             .named(true)
@@ -45,12 +47,12 @@ class FactoryFileTest {
                             )
                             .build()
                     )
-                    .addCode("%L", "_$VERSION_MODEL();")
+                    .addCode("%L", "_$versionModel;")
                     .build()
             }
             .constructor {
                 FactorySpec.builder(versionModelClass)
-                    .lambda(true)
+                    .delegation(ConstructorDelegation.LAMBDA)
                     .named("fromJson")
                     .parameter(
                         ParameterSpec.builder(
@@ -86,6 +88,7 @@ class FactoryFileTest {
               }) = _VersionModel;
             
               factory VersionModel.fromJson(Map<String, dynamic> json) => _${'$'}VersionModelFromJson(json);
+
             }
             """.trimIndent()
         )
