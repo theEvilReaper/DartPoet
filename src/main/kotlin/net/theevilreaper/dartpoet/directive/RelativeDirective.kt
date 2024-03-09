@@ -1,8 +1,6 @@
 package net.theevilreaper.dartpoet.directive
 
 import net.theevilreaper.dartpoet.code.CodeWriter
-import net.theevilreaper.dartpoet.directive.BaseDirective
-import net.theevilreaper.dartpoet.directive.CastType
 import net.theevilreaper.dartpoet.util.SEMICOLON
 
 /**

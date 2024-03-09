@@ -21,7 +21,7 @@ class ConstructorWriterTest {
             .build()
         assertThat(constructor.toString()).isEqualTo(
             """
-            Car(maker, model, yearMade, hasABS);
+            Car(this.maker, this.model, this.yearMade, this.hasABS);
             """.trimIndent()
         )
     }
@@ -37,7 +37,7 @@ class ConstructorWriterTest {
             .build()
         assertThat(constructor.toString()).isEqualTo(
             """
-            Car.withoutABS(maker, model, yearMade);
+            Car.withoutABS(this.maker, this.model, this.yearMade);
             """.trimIndent()
         )
     }
@@ -58,7 +58,7 @@ class ConstructorWriterTest {
             .build()
         assertThat(constructor.toString()).isEqualTo(
             """
-            Car.withoutABS(maker, model, yearMade): hasABS = false;
+            Car.withoutABS(this.maker, this.model, this.yearMade): hasABS = false;
             """.trimIndent()
         )
     }
@@ -75,7 +75,7 @@ class ConstructorWriterTest {
             .build()
         assertThat(constructor.toString()).isEqualTo(
             """
-            const Car(maker, model, yearMade);
+            const Car(this.maker, this.model, this.yearMade);
             """.trimIndent()
         )
     }
@@ -92,9 +92,9 @@ class ConstructorWriterTest {
         assertThat(constructor.toString()).isEqualTo(
             """
             Car({
-              required maker,
-              model,
-              required yearMade
+              required this.maker,
+              this.model,
+              required this.yearMade
             });
             """.trimIndent()
         )
@@ -111,10 +111,10 @@ class ConstructorWriterTest {
             .build()
         assertThat(constructor.toString()).isEqualTo(
             """
-            Item(id = 10,
+            Item(this.id = 10,
             {
-              required name,
-              required amount
+              required this.name,
+              required this.amount
             });
             """.trimIndent()
         )
@@ -130,7 +130,7 @@ class ConstructorWriterTest {
         assertThat(constructor.toString()).isEqualTo(
             """
             /// Creates a new item object
-            Item(name);
+            Item(this.name);
             """.trimIndent()
         )
     }

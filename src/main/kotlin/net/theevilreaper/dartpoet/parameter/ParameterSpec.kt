@@ -34,6 +34,7 @@ class ParameterSpec internal constructor(
     internal val initializer = builder.initializer
     internal val annotations = builder.specData.annotations.toImmutableSet()
     internal val hasInitializer = initializer != null && initializer.isNotEmpty()
+    internal val hasNoTypeName: Boolean = builder.typeName == null
 
     /**
      * This init block is responsible for performing initial checks on the name parameter.

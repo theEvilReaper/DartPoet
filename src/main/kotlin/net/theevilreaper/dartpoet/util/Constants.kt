@@ -33,11 +33,14 @@ internal val ALLOWED_CLASS_CONST_MODIFIERS = setOf(DartModifier.CONST)
 internal val ALLOWED_CONST_MODIFIERS = setOf(DartModifier.STATIC, DartModifier.CONST)
 
 //RegEx
-private val namePattern: Regex = Regex("[a-z]+|([a-z]+)_+([a-z]+)")
+private val namePattern: Regex = Regex("^[a-z]+(?:_[a-z]+)*\$")
 private val lowerCamelCase: Regex = Regex("[a-z]+[A-Z0-9]*[a-z0-9]*[A-Za-z0-9]*")
 private val indentPattern: Regex = Regex(" +")
 
 internal val ALLOWED_PRIMITIVE_TYPES = setOf("Short", "Int", "Long", "Float", "Double", "Char", "Boolean")
+
+//Error message
+internal const val NO_PARAMETER_TYPE = "Parameter must have a type"
 
 /**
  * Checks if a given set of [DartModifier] matches with a given set which contains the allowed [DartModifier].

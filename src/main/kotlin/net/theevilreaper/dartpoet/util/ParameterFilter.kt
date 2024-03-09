@@ -1,6 +1,7 @@
 package net.theevilreaper.dartpoet.util
 
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import org.jetbrains.annotations.ApiStatus
 
 /**
  *  Utility class for filtering [ParameterSpec] lists.
@@ -8,6 +9,7 @@ import net.theevilreaper.dartpoet.parameter.ParameterSpec
  *  @version 1.0.0
  *  @author theEvilReaper
  */
+@ApiStatus.Internal
 internal object ParameterFilter {
 
     /**

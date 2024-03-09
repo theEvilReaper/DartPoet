@@ -42,9 +42,7 @@ internal class ConstructorWriter : Writeable<ConstructorSpec>, DocumentationAppe
             writer.emit(NEW_LINE)
             writer.indent()
 
-            spec.requiredAndNamedParameters.emitParameters(writer, emitSpace = false, forceNewLines = true) {
-                it.write(writer)
-            }
+            spec.requiredAndNamedParameters.emitParameters(writer, emitSpace = false, forceNewLines = true)
 
             writer.unindent()
             writer.emit(NEW_LINE)
