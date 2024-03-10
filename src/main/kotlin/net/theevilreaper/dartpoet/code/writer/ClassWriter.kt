@@ -116,14 +116,14 @@ internal class ClassWriter : Writeable<ClassSpec> {
                 writer.emit("·")
                 writer.emit(if (spec.modifiers.contains(PRIVATE)) PRIVATE.identifier else EMPTY_STRING)
                 if (spec.name.orEmpty().trim().isNotEmpty()) {
-                    writer.emit(spec.name!!)
+                    writer.emit(spec.name)
                 }
             }
 
             ClassType.ABSTRACT -> {
                 writer.emit("${type.keyword}·${ClassType.CLASS.keyword}·")
                 writer.emit(if (spec.modifiers.contains(PRIVATE)) PRIVATE.identifier else EMPTY_STRING)
-                writer.emit(spec.name!!)
+                writer.emit(spec.name)
             }
 
             else -> {
