@@ -14,7 +14,6 @@ import net.theevilreaper.dartpoet.util.toImmutableSet
 class EnumPropertySpec(
     val builder: EnumPropertyBuilder
 ) {
-
     internal val name = builder.name
     internal val generic = builder.genericValueCast
     internal val hasGeneric = builder.genericValueCast != null
@@ -53,6 +52,9 @@ class EnumPropertySpec(
         return builder
     }
 
+    /**
+     * The companion object contains some helper methods to create a new instance of a [EnumPropertyBuilder].
+     */
     companion object {
 
         /**

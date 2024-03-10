@@ -10,11 +10,13 @@ import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asClassName
 import net.theevilreaper.dartpoet.type.asTypeName
+import net.theevilreaper.dartpoet.util.NO_PARAMETER_TYPE
 import java.lang.reflect.Type
 import kotlin.reflect.KClass
 
 /**
  * The builder class allows the creation of an [FunctionBuilder] without any effort.
+ * @param name the name of the function
  * @author 1.0.0
  * @since 1.0.0
  */
@@ -26,7 +28,6 @@ class FunctionBuilder internal constructor(
     internal var async: Boolean = false
     internal var returnType: TypeName? = null
     internal val body: CodeBlock.Builder = CodeBlock.builder()
-    internal var typedef: Boolean = false
     internal var typeCast: TypeName? = null
     internal var setter: Boolean = false
     internal var getter: Boolean = false
@@ -94,14 +95,6 @@ class FunctionBuilder internal constructor(
      */
     fun typeCast(cast: KClass<*>) = apply { this.typeCast = cast.asTypeName() }
 
-    /**
-     * If the function should be generated as typedef definition.
-     * @param typeDef true for a typedef
-     */
-    fun typedef(typeDef: Boolean) = apply {
-        this.typedef = typeDef
-    }
-
     fun addCode(format: String, vararg args: Any?) = apply {
         body.add(format, *args)
     }
@@ -140,14 +133,20 @@ class FunctionBuilder internal constructor(
     }
 
     fun parameter(parameter: ParameterSpec) = apply {
+        check(!parameter.hasNoTypeName) { NO_PARAMETER_TYPE }
         this.parameters += parameter
     }
 
     fun parameter(parameter: () -> ParameterSpec) = apply {
+        check(!parameter().hasNoTypeName) { NO_PARAMETER_TYPE }
         this.parameters += parameter()
     }
 
     fun parameters(vararg parameters: ParameterSpec) = apply {
+        if (parameters.isEmpty()) return@apply
+        parameters.forEach {
+            check(!it.hasNoTypeName) { NO_PARAMETER_TYPE }
+        }
         this.parameters += parameters
     }
 
@@ -180,12 +179,6 @@ class FunctionBuilder internal constructor(
      * @return the created instance
      */
     fun build(): FunctionSpec {
-        // Remove typedef keyword from the list to prevent problems
-        if (specData.modifiers.contains(DartModifier.TYPEDEF)) {
-            typedef(true)
-            specData.modifiers.remove(DartModifier.TYPEDEF)
-        }
-
         return FunctionSpec(this)
     }
 }

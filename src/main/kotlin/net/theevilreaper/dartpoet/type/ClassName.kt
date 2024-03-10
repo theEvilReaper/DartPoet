@@ -7,6 +7,7 @@ import kotlin.reflect.KClass
 
 /**
  * A class representing a custom type named [ClassName].
+ * It can be used to model class names, interface names, typedef names, and enum names which are not built-in types.
  *
  * @param name the name of the [ClassName]
  * @param isNullable a flag indicating whether the [ClassName] can be null (default is false).
@@ -44,8 +45,14 @@ open class ClassName(
     override fun copy(nullable: Boolean): TypeName {
         return ClassName(name, nullable)
     }
+
+    override fun getRawData(): String = name
 }
 
+/**
+ * Converts a generic [KClass] instance to a [ClassName] instance.
+ * @return the created [ClassName] instance
+ */
 @JvmName("get")
 fun KClass<*>.asClassName(): ClassName {
     val simpleName = this.simpleName!!
@@ -57,9 +64,13 @@ fun KClass<*>.asClassName(): ClassName {
         return ClassName(Void::class.simpleName!!.replaceFirstChar { it.lowercase() })
     }
     return ClassName(simpleName)
-
 }
 
+/**
+ * Converts a generic [Class] instance to a [ClassName] instance.
+ * @return the created [ClassName] instance
+ * @throws IllegalArgumentException if the class is a primitive type, a void type or an array
+ */
 @JvmName("get")
 fun Class<*>.asClassName(): ClassName {
     require(!isPrimitive) { "A primitive type can't be represented over a ClassName!" }
@@ -67,5 +78,3 @@ fun Class<*>.asClassName(): ClassName {
     require(!isArray) { "An array can't be represented over a ClassName!" }
     return ClassName(this.simpleName)
 }
-
-

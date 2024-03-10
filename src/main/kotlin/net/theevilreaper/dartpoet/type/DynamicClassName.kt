@@ -1,6 +1,7 @@
 package net.theevilreaper.dartpoet.type
 
 import net.theevilreaper.dartpoet.DartModifier
+import org.jetbrains.annotations.ApiStatus
 
 /**
  * [DynamicClassName] extends [ClassName] and is used to represent the 'dynamic' type in Dart programming language.
@@ -10,6 +11,7 @@ import net.theevilreaper.dartpoet.DartModifier
  * @author theEvilReaper
  * @since 1.0.0
  */
+@ApiStatus.Internal
 internal class DynamicClassName : ClassName(DartModifier.DYNAMIC.identifier) {
 
     /**
@@ -20,7 +22,5 @@ internal class DynamicClassName : ClassName(DartModifier.DYNAMIC.identifier) {
      * @throws IllegalAccessException always throws an exception indicating that the 'dynamic' type cannot be copied
      */
     @Throws(IllegalAccessException::class)
-    override fun copy(nullable: Boolean): TypeName {
-        throw IllegalAccessException("The dynamic type can't be copied")
-    }
+    override fun copy(nullable: Boolean) = throw IllegalAccessException("The dynamic type can't be copied")
 }

@@ -1,6 +1,5 @@
 package net.theevilreaper.dartpoet.property.consts
 
-import net.theevilreaper.dartpoet.DartFileBuilder
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.property.PropertySpec
@@ -8,7 +7,7 @@ import net.theevilreaper.dartpoet.type.TypeName
 
 /**
  * The [ConstantPropertyBuilder] can be used to construct new [ConstantPropertySpec] object reference which can be set
- * into a [DartFileBuilder].
+ * into a [ConstantPropertySpec].
  * @author theEvilReaper
  * @since 1.0.0
  */
@@ -18,7 +17,7 @@ class ConstantPropertyBuilder internal constructor(
     val modifiers: Set<DartModifier>
 ) {
     internal var initializer: CodeBlock.Builder = CodeBlock.Builder()
-    internal var isPrivat: Boolean = false
+    internal var isPrivate: Boolean = false
 
     /**
      * Apply a given format which contains the parts for the init block of the [PropertySpec].
@@ -37,8 +36,14 @@ class ConstantPropertyBuilder internal constructor(
         this.initializer = codeFragment
     }
 
-    fun asPrivat(boolean: Boolean) = apply {
-        this.isPrivat = boolean
+    /**
+     * Indicates if the property should be private.
+     * The option is only allowed when to property is no file level constant property.
+     * @param boolean True for a private property otherwise false
+     * @return the current [ConstantPropertyBuilder] instance
+     */
+    fun private(boolean: Boolean) = apply {
+        this.isPrivate = boolean
     }
 
     /**

@@ -5,13 +5,14 @@ import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.util.DART_FILE_ENDING
 
 /**
- * Represents the base implementation for each [Directive].
+ * The class represents the basic implementation which are used from all directive implementations.
+ * @param path the path for the directive
  * @author theEvilReaper
  * @since 1.0.0
  */
 abstract class BaseDirective(
     private val path: String
-): Directive {
+) : Directive {
 
     init {
         check(path.trim().isNotEmpty()) { "The path of an directive can't be empty" }
@@ -27,12 +28,12 @@ abstract class BaseDirective(
      * Creates a string representation from a [BaseDirective] implementation.
      * @return the created string
      */
-    override fun toString() = buildCodeString { write(this) }
+    override fun asString() = buildCodeString { write(this) }
 
     /**
      * Makes a comparison with two [Directive] implementation over a [Comparable]
      */
-    override fun compareTo(other: Directive): Int = toString().compareTo(other.toString())
+    override fun compareTo(other: Directive): Int = asString().compareTo(other.toString())
 
     /**
      * Ensures that the directive path ends with .dart.
@@ -53,4 +54,10 @@ abstract class BaseDirective(
     protected fun isDartImport(): Boolean {
         return path.startsWith("dart")
     }
+
+    /**
+     * Returns the raw data string from the directive.
+     * @return the raw data string
+     */
+    override fun getRawPath(): String = this.path
 }

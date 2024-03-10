@@ -17,6 +17,7 @@ import kotlin.reflect.KClass
 /**
  * The property spec class contains all variables which are comes from the [PropertyBuilder].
  * Some values are checked for certain conditions to avoid errors during the generation.
+ * @param builder the builder instance to retrieve the data from
  * @author theEvilReaper
  * @since 1.0.0
  */
@@ -30,7 +31,6 @@ class PropertySpec(
     internal var isPrivate = builder.modifiers.contains(DartModifier.PRIVATE)
     internal var isConst = builder.modifiers.contains(DartModifier.CONST)
     internal val docs = builder.docs
-    internal val hasDocs = builder.docs.isNotEmpty()
     internal var modifiers: Set<DartModifier> = builder.modifiers
         .also {
             if (it.isNotEmpty()) {
@@ -42,7 +42,7 @@ class PropertySpec(
                 }
             }
         }.filter { it != DartModifier.PRIVATE && it != DartModifier.PUBLIC }.toImmutableSet()
-
+    internal val hasModifiers: Boolean = modifiers.isNotEmpty()
     init {
         require(name.trim().isNotEmpty()) { "The name of a property can't be empty" }
 
@@ -84,6 +84,9 @@ class PropertySpec(
         return builder
     }
 
+    /**
+     * The companion object contains some helper methods to create a new instance from the [PropertyBuilder].
+     */
     companion object {
 
         /**

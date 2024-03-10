@@ -22,6 +22,7 @@ package net.theevilreaper.dartpoet.code
 
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asTypeName
+import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.escapeIfNecessary
 import net.theevilreaper.dartpoet.util.isOneOf
 import net.theevilreaper.dartpoet.util.toImmutableList
@@ -342,7 +343,7 @@ class CodeBlock private constructor(
                         unused += "%" + (i + 1)
                     }
                 }
-                val s = if (unused.size == 1) "" else "s"
+                val s = if (unused.size == 1) EMPTY_STRING else "s"
                 require(unused.isEmpty()) { "unused argument$s: ${unused.joinToString(", ")}" }
             }
         }
@@ -492,8 +493,8 @@ class CodeBlock private constructor(
 @JvmOverloads
 fun Collection<CodeBlock>.joinToCode(
     separator: CharSequence = ", ",
-    prefix: CharSequence = "",
-    suffix: CharSequence = "",
+    prefix: CharSequence = EMPTY_STRING,
+    suffix: CharSequence = EMPTY_STRING,
 ): CodeBlock {
     val blocks = toTypedArray()
     val placeholders = Array(blocks.size) { "%L" }

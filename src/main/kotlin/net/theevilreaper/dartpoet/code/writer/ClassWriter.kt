@@ -27,11 +27,6 @@ internal class ClassWriter : Writeable<ClassSpec> {
             writeAnonymousClass(spec, writer)
             return
         }
-        spec.typeDefStack.emitFunctions(writer)
-
-        if (spec.typeDefStack.isNotEmpty()) {
-            writer.emit(NEW_LINE)
-        }
 
         spec.annotations.emitAnnotations(writer, inLineAnnotations = false)
         writeClassHeader(spec, writer)
@@ -100,13 +95,8 @@ internal class ClassWriter : Writeable<ClassSpec> {
     }
 
     private fun writeAnonymousClass(spec: ClassSpec, writer: CodeWriter) {
-        spec.typeDefStack.emitFunctions(writer) {
-            it.write(writer)
-        }
-
-        spec.functions.emitFunctions(writer) {
-            it.write(writer)
-        }
+        spec.typeDefs.emitTypeDefs(writer)
+        spec.functions.emitFunctions(writer)
 
         if (spec.endsWithNewLine) {
             writer.emit(NEW_LINE)

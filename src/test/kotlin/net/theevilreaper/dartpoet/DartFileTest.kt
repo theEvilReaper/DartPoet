@@ -1,24 +1,24 @@
 package net.theevilreaper.dartpoet
 
-import com.google.common.truth.Truth.*
+import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.code.buildCodeBlock
-import net.theevilreaper.dartpoet.enum.EnumPropertySpec
+import net.theevilreaper.dartpoet.directive.CastType
+import net.theevilreaper.dartpoet.directive.DirectiveFactory
+import net.theevilreaper.dartpoet.directive.DirectiveType
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
-import net.theevilreaper.dartpoet.directive.DartDirective
-import net.theevilreaper.dartpoet.directive.CastType
-import net.theevilreaper.dartpoet.directive.LibraryDirective
-import net.theevilreaper.dartpoet.directive.PartDirective
-import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
+import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
+import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.DYNAMIC
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
 import net.theevilreaper.dartpoet.type.asTypeName
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import kotlin.test.assertContentEquals
 
@@ -88,9 +88,9 @@ class DartFileTest {
             }
         val versionFile = DartFile.builder("version.dart")
             .directives(
-                DartDirective("freezed_annotation/freezed_annotation.dart"),
-                PartDirective("version.freezed.dart"),
-                PartDirective("version.g.dart")
+                DirectiveFactory.create(DirectiveType.IMPORT, "freezed_annotation/freezed_annotation.dart"),
+                DirectiveFactory.create(DirectiveType.PART, "version.freezed.dart"),
+                DirectiveFactory.create(DirectiveType.PART, "version.g.dart")
             )
             .type(
                 versionFreezedClass
@@ -123,10 +123,8 @@ class DartFileTest {
         val libClass = DartFile.builder("testLib")
             .type(
                 ClassSpec.anonymousClassBuilder()
-                    .endWithNewLine(true)
-                    .function(
-                        FunctionSpec.builder("JsonMap")
-                            .typedef(true)
+                    .typedef(
+                        TypeDefSpec.builder("JsonMap")
                             .returns(Map::class.parameterizedBy(String::class.asTypeName(), DYNAMIC))
                             .build()
 
@@ -134,9 +132,9 @@ class DartFileTest {
                     .build()
             )
             .directives(
-                DartDirective("dart:html"),
-                LibraryDirective("testLib"),
-                DartDirective("dart:math", CastType.AS, "math"),
+                DirectiveFactory.create(DirectiveType.IMPORT, "dart:html"),
+                DirectiveFactory.createLib("testLib"),
+                DirectiveFactory.create(DirectiveType.IMPORT, "dart:math", CastType.AS, "math"),
             )
             .build()
         assertThat(libClass.toString()).isEqualTo(
@@ -148,57 +146,6 @@ class DartFileTest {
             
             typedef JsonMap = Map<String, dynamic>;
             
-            """.trimIndent()
-        )
-    }
-
-    @Test
-    fun `test enum class write`() {
-        val enumClass = DartFile.builder("navigation_entry")
-            .type(
-                ClassSpec.enumClass("NavigationEntry")
-                    .properties(
-                        PropertySpec.builder("name", String::class)
-                            .modifier { DartModifier.FINAL }.build(),
-                        PropertySpec.builder("route", String::class)
-                            .modifier { DartModifier.FINAL }.build()
-
-                    )
-                    .enumProperties(
-                        EnumPropertySpec.builder("dashboard")
-                            .parameter("%C", "Dashboard")
-                            .parameter("%C", "/dashboard")
-                            .build(),
-                        EnumPropertySpec.builder("build")
-                            .parameter("%C", "Build")
-                            .parameter("%C", "/build")
-                            .build()
-                    )
-                    .constructor(
-                        ConstructorSpec.builder("NavigationEntry")
-                            .modifier(DartModifier.CONST)
-                            .parameters(
-                                ParameterSpec.builder("name").build(),
-                                ParameterSpec.builder("route").build()
-                            )
-                            .build()
-                    )
-                    .build()
-            )
-            .build()
-        assertThat(enumClass.toString()).isEqualTo(
-            """
-            enum NavigationEntry {
-            
-              dashboard('Dashboard', '/dashboard'),
-              build('Build', '/build');
-            
-              final String name;
-              final String route;
-            
-              const NavigationEntry(this.name, this.route);
-            
-            }
             """.trimIndent()
         )
     }
@@ -252,7 +199,7 @@ class DartFileTest {
             .build()
 
         val file = DartFile.builder("${className}Handler")
-            .directive(LibraryDirective("testLibrary", true))
+            .directive(DirectiveFactory.createLib("testLibrary", true))
             .type(handlerApiClass)
             .build()
         assertThat(file.toString()).isEqualTo(
@@ -337,7 +284,7 @@ class DartFileTest {
     fun `test class write with constant values`() {
         val name = "environment"
         val classFile = DartFile.builder(name)
-            .directive(DartDirective("dart:html"))
+            .directive(DirectiveFactory.create(DirectiveType.IMPORT, "dart:html"))
             .constants(
                 ConstantPropertySpec.fileConst("typeLive").initWith("1").build(),
                 ConstantPropertySpec.fileConst("typeTest").initWith("10").build(),

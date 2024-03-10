@@ -27,14 +27,14 @@ class ConstantPropertySpec(
     internal val name = builder.name
     internal val typeName = builder.typeName
     internal val initializer = builder.initializer
-    internal val isPrivat = builder.isPrivat
+    internal val isPrivate = builder.isPrivate
     internal val modifiers = builder.modifiers.toImmutableSet()
 
     init {
         require(name.trim().isNotEmpty()) { "The name of a file constant can't be empty" }
         require(initializer.isNotEmpty()) { "The initializer can't be empty" }
 
-        if (this.modifiers.size == 1 && this.modifiers.first() == DartModifier.CONST && isPrivat) {
+        if (this.modifiers.size == 1 && this.modifiers.first() == DartModifier.CONST && isPrivate) {
             throw IllegalArgumentException("A file constant can't be private")
         }
     }
@@ -61,10 +61,13 @@ class ConstantPropertySpec(
     fun toBuilder(): ConstantPropertyBuilder {
         val builder = ConstantPropertyBuilder(name, typeName, modifiers)
         builder.initializer = initializer
-        builder.isPrivat = isPrivat
+        builder.isPrivate = isPrivate
         return builder
     }
 
+    /**
+     * The companion object contains some helper methods to create a new instance from the [ConstantPropertyBuilder].
+     */
     companion object {
 
         /**

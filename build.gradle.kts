@@ -17,6 +17,7 @@ repositories {
 }
 
 dependencies {
+    compileOnly(libs.jetbrains.annotations)
     testImplementation(kotlin("test"))
     testImplementation(libs.google.truth)
     testImplementation(libs.junit.api)

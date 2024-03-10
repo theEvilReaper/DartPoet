@@ -74,7 +74,7 @@ class ConstantPropertyWriterTest {
                 {
                     ConstantPropertySpec.classConst("test", Int::class)
                         .initWith("%L", "1")
-                        .asPrivat(true)
+                        .private(true)
                         .build()
                 }
             )

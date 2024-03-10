@@ -5,6 +5,7 @@ import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.directive.Directive
+import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
@@ -110,13 +111,9 @@ internal fun Set<ConstructorSpec>.emitConstructors(
 internal fun List<ParameterSpec>.emitParameters(
     codeWriter: CodeWriter,
     forceNewLines: Boolean = false,
-    emitBrackets: Boolean = true,
     emitSpace: Boolean = true,
     emitBlock: (ParameterSpec) -> Unit = { it.write(codeWriter) }
 ) = with(codeWriter) {
-    if (emitBrackets) {
-        emit("(")
-    }
     if (isNotEmpty()) {
         val emitComma = size > 1
         forEachIndexed { index, parameter ->
@@ -134,9 +131,6 @@ internal fun List<ParameterSpec>.emitParameters(
                 }
             }
         }
-    }
-    if (emitBrackets) {
-        emit(")")
     }
 }
 
@@ -164,7 +158,7 @@ internal fun List<ExtensionSpec>.emitExtensions(
 internal fun <T: Directive> List<T>.writeImports(
     writer: CodeWriter,
     newLineAtBegin: Boolean = true,
-    emitBlock: (T) -> String = { it.toString() }
+    emitBlock: (T) -> String = { it.asString() }
 ) {
     if (isNotEmpty()) {
         if (newLineAtBegin) {
@@ -174,6 +168,7 @@ internal fun <T: Directive> List<T>.writeImports(
             if (index > 0) {
                 writer.emit(NEW_LINE)
             }
+
             writer.emit(emitBlock(import))
         }
 
@@ -196,6 +191,20 @@ fun Set<ConstantPropertySpec>.emitConstants(
         }
         emit(NEW_LINE)
     }
+}
+
+fun List<TypeDefSpec>.emitTypeDefs(
+    codeWriter: CodeWriter,
+    emitBlock: (TypeDefSpec) -> Unit = { it.write(codeWriter) }
+) = with(codeWriter) {
+    val emitNewLines = size > 1
+    forEachIndexed { index, typeDefSpec ->
+        if (index > 0 && emitNewLines) {
+            emit(NEW_LINE)
+        }
+        emitBlock(typeDefSpec)
+    }
+    emit(NEW_LINE)
 }
 
 fun Set<PropertySpec>.emitProperties(

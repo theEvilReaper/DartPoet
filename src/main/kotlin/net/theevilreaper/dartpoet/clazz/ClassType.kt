@@ -3,7 +3,7 @@ package net.theevilreaper.dartpoet.clazz
 import net.theevilreaper.dartpoet.DartModifier
 
 /**
- * The enum contains all class variant which are currently available in dart.
+ * The [ClassType] enum defines all class variants which are currently available in the programming language Dart.
  * @author theEvilReaper
  * @version 1.0.0
  * @since 1.0.0

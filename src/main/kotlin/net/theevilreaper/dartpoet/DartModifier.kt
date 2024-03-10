@@ -9,7 +9,6 @@ enum class DartModifier(
     internal val identifier: String,
     private vararg val modifiers: ModifierTarget
 ) {
-
     PUBLIC("", ModifierTarget.CLASS, ModifierTarget.PROPERTY, ModifierTarget.FUNCTION),
     PRIVATE("_", ModifierTarget.FUNCTION, ModifierTarget.PROPERTY),
     STATIC("static", ModifierTarget.FUNCTION, ModifierTarget.PROPERTY),

@@ -1,5 +1,6 @@
 package net.theevilreaper.dartpoet.parameter
 
+import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.ParameterWriter
@@ -18,6 +19,7 @@ import kotlin.reflect.KClass
  *
  * This class is typically used in code generation tasks to define and manipulate parameter specifications
  * for generating source code.
+ * @param builder the builder instance to retrieve the data from
  * @author theEvilReaper
  * @since 1.0.0
  */
@@ -28,9 +30,11 @@ class ParameterSpec internal constructor(
     internal val type = builder.typeName
     internal val isNamed = builder.named
     internal val isNullable = builder.nullable
-    internal val isRequired = builder.required
+    internal val isRequired = builder.specData.modifiers.contains(DartModifier.REQUIRED)
     internal val initializer = builder.initializer
     internal val annotations = builder.specData.annotations.toImmutableSet()
+    internal val hasInitializer = initializer != null && initializer.isNotEmpty()
+    internal val hasNoTypeName: Boolean = builder.typeName == null
 
     /**
      * This init block is responsible for performing initial checks on the name parameter.
@@ -64,8 +68,10 @@ class ParameterSpec internal constructor(
         val builder = ParameterBuilder(this.name, this.type)
         builder.named = isNamed
         builder.nullable = isNullable
-        builder.required = isRequired
         builder.annotations(*this.annotations.toTypedArray())
+        if (isRequired) {
+            builder.modifiers(DartModifier.REQUIRED)
+        }
         builder.initializer = initializer
         return builder
     }
@@ -75,8 +81,8 @@ class ParameterSpec internal constructor(
         /**
          * Creates a new instance of [ParameterBuilder] with the specified name and type.
          *
-         * @param name The name for the parameter. Should adhere to naming conventions
-         * @param type The type for the parameter, represented as a [TypeName]
+         * @param name the name for the parameter. Should adhere to naming conventions
+         * @param type the type for the parameter, represented as a [TypeName]
          * @return A new [ParameterBuilder] instance initialized with the provided name and type
          */
         @JvmStatic
@@ -86,7 +92,7 @@ class ParameterSpec internal constructor(
          * Creates a new instance of [ParameterBuilder] with the specified name and type.
          *
          * @param name The name for the parameter. Should adhere to naming conventions
-         * @param type The type for the parameter, represented as a [KClass]
+         * @param type the type for the parameter, represented as a [KClass]
          * @return A new [ParameterBuilder] instance initialized with the provided name and type
          */
         @JvmStatic
@@ -95,8 +101,8 @@ class ParameterSpec internal constructor(
         /**
          * Creates a new instance of [ParameterBuilder] with the specified name and type.
          *
-         * @param name The name for the parameter. Should adhere to naming conventions
-         * @param type The type for the parameter, represented as a [ClassName]
+         * @param name the name for the parameter. Should adhere to naming conventions
+         * @param className the type for the parameter, represented as a [ClassName]
          * @return A new [ParameterBuilder] instance initialized with the provided name and type
          */
         @JvmStatic
@@ -105,7 +111,7 @@ class ParameterSpec internal constructor(
         /**
          * Creates a new instance of [ParameterBuilder] with the specified name and type.
          *
-         * @param name The name for the parameter. Should adhere to naming conventions
+         * @param name the name for the parameter. Should adhere to naming conventions
          * @return A new [ParameterBuilder] instance initialized with the provided name and type
          */
         @JvmStatic
