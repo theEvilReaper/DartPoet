@@ -5,7 +5,6 @@ import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asTypeName
-import org.jetbrains.annotations.ApiStatus
 import kotlin.reflect.KClass
 
 /**
