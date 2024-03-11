@@ -31,12 +31,18 @@ class ConstructorSpec internal constructor(
         check(name.trim().isNotEmpty()) { "The name of a constructor can't be empty" }
     }
 
-    internal fun write(
-        codeWriter: CodeWriter
-    ) {
+    /**
+     * Calls the write process of the [ConstructorSpec] over the [ConstructorWriter] to the given [CodeWriter].
+     * @param codeWriter the writer to write the constructor
+     */
+    internal fun write(codeWriter: CodeWriter) {
         ConstructorWriter().write(this, codeWriter)
     }
 
+    /**
+     * Creates a textual representation from the spec object.
+     * @return the created string
+     */
     override fun toString() = buildCodeString { write(this) }
 
     /**
@@ -66,8 +72,13 @@ class ConstructorSpec internal constructor(
         @JvmStatic
         fun named(name: String, methodName: String) = ConstructorBuilder(name, methodName)
 
+        /**
+         * Creates a new [ConstructorBuilder] reference which allows the creation of a constant constructor.
+         * @param name the name of the constructor
+         * @return the created [ConstructorBuilder] instance
+         */
         @JvmStatic
         fun const(name: String) =
-            ConstructorBuilder(name, const = true, modifiers = arrayOf(DartModifier.STATIC, DartModifier.FINAL))
+            ConstructorBuilder(name, const = true, modifiers = arrayOf(DartModifier.STATIC, DartModifier.CONST))
     }
 }
