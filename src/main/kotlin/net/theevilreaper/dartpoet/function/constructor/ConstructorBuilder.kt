@@ -4,9 +4,17 @@ import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 
-class ConstructorBuilder(
+/**
+ * The builder for the constructor. This class is used to create a new [ConstructorSpec] object.
+ * @param name the name of the constructor
+ * @param named the named constructor
+ * @param const indicates if the constructor is a const constructor
+ * @param modifiers the modifiers for the constructor
+ */
+class ConstructorBuilder internal constructor(
     val name: String,
     val named: String? = null,
+    val const: Boolean = false,
     vararg modifiers: DartModifier
 ) {
     internal val parameters: MutableList<ParameterSpec> = mutableListOf()
@@ -30,6 +38,7 @@ class ConstructorBuilder(
      * @param modifier the modifier to add
      */
     fun modifier(modifier: DartModifier) = apply {
+        require(!const) { "A const constructor can't have any additional modifier" }
         this.modifiers += modifier
     }
 
@@ -38,6 +47,7 @@ class ConstructorBuilder(
      * @param modifiers the modifiers to add
      */
     fun modifiers(vararg modifiers: DartModifier) = apply {
+        require(!const) { "A const constructor can't have any additional modifier" }
         this.modifiers += modifiers
     }
 
@@ -103,7 +113,5 @@ class ConstructorBuilder(
      * Creates a new object reference from the [ConstructorSpec].
      * @return the created reference
      */
-    fun build(): ConstructorSpec {
-        return ConstructorSpec(this)
-    }
+    fun build(): ConstructorSpec = ConstructorSpec(this)
 }
