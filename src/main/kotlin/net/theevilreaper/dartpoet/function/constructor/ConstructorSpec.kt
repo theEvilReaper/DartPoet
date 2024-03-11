@@ -1,5 +1,6 @@
 package net.theevilreaper.dartpoet.function.constructor
 
+import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.ConstructorWriter
@@ -7,9 +8,9 @@ import net.theevilreaper.dartpoet.function.ConstructorBase
 import net.theevilreaper.dartpoet.util.toImmutableList
 import net.theevilreaper.dartpoet.util.toImmutableSet
 
-class ConstructorSpec(
+class ConstructorSpec internal constructor(
     builder: ConstructorBuilder
-): ConstructorBase {
+) : ConstructorBase {
 
     internal val name = builder.name
     internal val named = builder.named
@@ -17,6 +18,7 @@ class ConstructorSpec(
     internal val isLambda = builder.lambda
     internal val initializer = builder.initializer
     internal val modifiers = builder.modifiers.toImmutableSet()
+    internal val isConst = builder.const
     private val modelParameters = builder.parameters.toImmutableSet()
     internal val requiredAndNamedParameters =
         builder.parameters.filter { it.isRequired || it.isNamed }.toImmutableList()
@@ -25,13 +27,17 @@ class ConstructorSpec(
     internal val hasNamedParameters = requiredAndNamedParameters.isNotEmpty()
     internal val docs = builder.docs.toImmutableList()
 
+    init {
+        check(name.trim().isNotEmpty()) { "The name of a constructor can't be empty" }
+    }
+
     internal fun write(
         codeWriter: CodeWriter
     ) {
         ConstructorWriter().write(this, codeWriter)
     }
 
-    override fun toString() = buildCodeString { write(this,) }
+    override fun toString() = buildCodeString { write(this) }
 
     /**
      * Creates a new [ConstructorBuilder] reference from an existing [ConstructorSpec] object.
@@ -59,5 +65,9 @@ class ConstructorSpec(
 
         @JvmStatic
         fun named(name: String, methodName: String) = ConstructorBuilder(name, methodName)
+
+        @JvmStatic
+        fun const(name: String) =
+            ConstructorBuilder(name, const = true, modifiers = arrayOf(DartModifier.STATIC, DartModifier.FINAL))
     }
 }
