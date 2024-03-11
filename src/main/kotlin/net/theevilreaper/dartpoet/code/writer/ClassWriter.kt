@@ -77,7 +77,7 @@ internal class ClassWriter : Writeable<ClassSpec> {
 
         spec.constructors.emitConstructors(writer)
 
-        if (spec.constructors.isNotEmpty() && spec.constructors.size <= 1) {
+        if (spec.constructors.isNotEmpty()) {
             writer.emit(NEW_LINE)
         }
 

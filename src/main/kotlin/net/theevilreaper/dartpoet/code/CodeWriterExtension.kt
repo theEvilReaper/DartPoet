@@ -1,14 +1,16 @@
 package net.theevilreaper.dartpoet.code
 
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
+import net.theevilreaper.dartpoet.directive.Directive
 import net.theevilreaper.dartpoet.extension.ExtensionSpec
+import net.theevilreaper.dartpoet.function.ConstructorBase
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
-import net.theevilreaper.dartpoet.directive.Directive
+import net.theevilreaper.dartpoet.function.factory.FactorySpec
 import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
-import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
+import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.util.CURLY_CLOSE
 import net.theevilreaper.dartpoet.util.CURLY_OPEN
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
@@ -38,13 +40,14 @@ val Char.isMultiCharNoArgPlaceholder get() = this == '%'
 
 internal val String.isPlaceholder
     get() = (length == 1 && first().isSingleCharNoArgPlaceholder) ||
-            (length == 2 && first().isMultiCharNoArgPlaceholder)
+        (length == 2 && first().isMultiCharNoArgPlaceholder)
+
 fun String.nextPotentialPlaceholderPosition(startIndex: Int) =
     indexOfAny(NO_ARG_PLACEHOLDERS, startIndex)
 
 internal fun Set<FunctionSpec>.emitFunctions(
     codeWriter: CodeWriter,
-    emitBlock: (FunctionSpec) -> Unit = { it.write(codeWriter) }
+    emitBlock: (FunctionSpec) -> Unit = { it.write(codeWriter) },
 ) = with(codeWriter) {
     if (isNotEmpty()) {
         val newLines = size > 1
@@ -64,7 +67,7 @@ internal fun Set<AnnotationSpec>.emitAnnotations(
     codeWriter: CodeWriter,
     inLineAnnotations: Boolean = true,
     endWithNewLine: Boolean = true,
-    emitBlock: (AnnotationSpec) -> Unit = { it.write(codeWriter) }
+    emitBlock: (AnnotationSpec) -> Unit = { it.write(codeWriter) },
 ) = with(codeWriter) {
     if (isNotEmpty()) {
         forEachIndexed { index, annotation ->
@@ -82,29 +85,27 @@ internal fun Set<AnnotationSpec>.emitAnnotations(
     }
 }
 
-internal fun Set<ConstructorSpec>.emitConstructors(
+internal fun Set<ConstructorBase>.emitConstructors(
     codeWriter: CodeWriter,
-    forceNewLines: Boolean = false,
     leadingNewLine: Boolean = false,
-    emitBlock: (ConstructorSpec) -> Unit = { it.write(codeWriter) }
-) = with(codeWriter) {
-    if (isNotEmpty()) {
-        if (leadingNewLine) {
+    emitBlock: (ConstructorBase) -> Unit = {
+        if (it is ConstructorSpec) {
+            (it.write(codeWriter))
+        } else if (it is FactorySpec) {
+            (it.write(codeWriter))
+        }
+    },
+) {
+    if (isEmpty()) return
+    if (leadingNewLine) {
+        codeWriter.emit(NEW_LINE)
+    }
+    forEachIndexed { index, constructorBase ->
+        if (index > 0) {
             codeWriter.emit(NEW_LINE)
         }
-        forEachIndexed { index, constructorSpec ->
-            val emitNewLines = size >= 1 || forceNewLines
-
-            if (index > 0 && emitNewLines) {
-                codeWriter.emit(NEW_LINE)
-            }
-
-            emitBlock(constructorSpec)
-
-            if (emitNewLines) {
-                codeWriter.emit(NEW_LINE)
-            }
-        }
+        emitBlock(constructorBase)
+        codeWriter.emit(NEW_LINE)
     }
 }
 
@@ -112,12 +113,12 @@ internal fun List<ParameterSpec>.emitParameters(
     codeWriter: CodeWriter,
     forceNewLines: Boolean = false,
     emitSpace: Boolean = true,
-    emitBlock: (ParameterSpec) -> Unit = { it.write(codeWriter) }
+    emitBlock: (ParameterSpec) -> Unit = { it.write(codeWriter) },
 ) = with(codeWriter) {
     if (isNotEmpty()) {
         val emitComma = size > 1
         forEachIndexed { index, parameter ->
-            if (index > 0 && forceNewLines)  {
+            if (index > 0 && forceNewLines) {
                 emit(NEW_LINE)
             }
 
@@ -137,13 +138,13 @@ internal fun List<ParameterSpec>.emitParameters(
 internal fun List<ExtensionSpec>.emitExtensions(
     codeWriter: CodeWriter,
     forceNewLines: Boolean = false,
-    emitBlock: (ExtensionSpec) -> Unit = { it.write(codeWriter) }
+    emitBlock: (ExtensionSpec) -> Unit = { it.write(codeWriter) },
 ) = with(codeWriter) {
     if (isNotEmpty()) {
         val emitNewLines = size > 1 || forceNewLines
 
         forEachIndexed { index, parameter ->
-            if (index > 0 && emitNewLines)  {
+            if (index > 0 && emitNewLines) {
                 emit(NEW_LINE)
             }
             emitBlock(parameter)
@@ -155,10 +156,10 @@ internal fun List<ExtensionSpec>.emitExtensions(
     }
 }
 
-internal fun <T: Directive> List<T>.writeImports(
+internal fun <T : Directive> List<T>.writeImports(
     writer: CodeWriter,
     newLineAtBegin: Boolean = true,
-    emitBlock: (T) -> String = { it.asString() }
+    emitBlock: (T) -> String = { it.asString() },
 ) {
     if (isNotEmpty()) {
         if (newLineAtBegin) {
@@ -178,7 +179,7 @@ internal fun <T: Directive> List<T>.writeImports(
 
 fun Set<ConstantPropertySpec>.emitConstants(
     codeWriter: CodeWriter,
-    emitBlock: (ConstantPropertySpec) -> Unit = { it.write(codeWriter) }
+    emitBlock: (ConstantPropertySpec) -> Unit = { it.write(codeWriter) },
 ) = with(codeWriter) {
     if (isNotEmpty()) {
         val emitNewLines = size > 1
@@ -195,7 +196,7 @@ fun Set<ConstantPropertySpec>.emitConstants(
 
 fun List<TypeDefSpec>.emitTypeDefs(
     codeWriter: CodeWriter,
-    emitBlock: (TypeDefSpec) -> Unit = { it.write(codeWriter) }
+    emitBlock: (TypeDefSpec) -> Unit = { it.write(codeWriter) },
 ) = with(codeWriter) {
     val emitNewLines = size > 1
     forEachIndexed { index, typeDefSpec ->
@@ -210,7 +211,7 @@ fun List<TypeDefSpec>.emitTypeDefs(
 fun Set<PropertySpec>.emitProperties(
     codeWriter: CodeWriter,
     forceNewLines: Boolean = false,
-    emitBlock: (PropertySpec) -> Unit = { it.write(codeWriter) }
+    emitBlock: (PropertySpec) -> Unit = { it.write(codeWriter) },
 ) = with(codeWriter) {
     if (isNotEmpty()) {
         val emitNewLines = size > 1 || forceNewLines

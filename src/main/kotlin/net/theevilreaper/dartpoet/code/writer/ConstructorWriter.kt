@@ -19,10 +19,6 @@ internal class ConstructorWriter : Writeable<ConstructorSpec>, DocumentationAppe
             writer.emit("${DartModifier.CONST.identifier}·")
         }
 
-        if (spec.isFactory) {
-            writer.emit("${DartModifier.FACTORY.identifier}·")
-        }
-
         writer.emit(spec.name)
 
         if (spec.isNamed) {
@@ -67,10 +63,6 @@ internal class ConstructorWriter : Writeable<ConstructorSpec>, DocumentationAppe
                 writer.emitCode(spec.initializer.build(), ensureTrailingNewline = false)
                 writer.emit(SEMICOLON)
                 return
-            }
-
-            if (spec.isFactory) {
-                writer.emit(" = _${spec.name}")
             }
 
             writer.emit(SEMICOLON)
