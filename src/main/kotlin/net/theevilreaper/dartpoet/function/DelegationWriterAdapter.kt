@@ -5,6 +5,7 @@ import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.function.factory.FactorySpec
 import net.theevilreaper.dartpoet.util.NEW_LINE
+import net.theevilreaper.dartpoet.util.SEMICOLON
 import org.jetbrains.annotations.ApiStatus
 
 /**
@@ -24,11 +25,11 @@ internal object DelegationWriterAdapter {
      * @param codeWriter the writer to append the delegation
      */
     fun appendFactoryDelegation(delegation: FactoryDelegation, block: CodeBlock, codeWriter: CodeWriter) {
-        val delegationString = if (delegation == FactoryDelegation.NONE) {
-            if (block.isEmpty()) ";" else " {$NEW_LINE"
-        } else {
-            "·${delegation.delegation}·"
-        }
+        val delegationString = getDelegation(
+            delegation.delegation,
+            { delegation == FactoryDelegation.NONE },
+            { block.isEmpty() }
+        )
         appendDelegation(
             delegationString,
             block,
@@ -44,12 +45,11 @@ internal object DelegationWriterAdapter {
      * @param codeWriter the writer to append the delegation
      */
     fun appendConstructorDelegation(delegation: ConstructorDelegation, block: CodeBlock, codeWriter: CodeWriter) {
-        val delegationString = if (delegation == ConstructorDelegation.NONE) {
-            if (block.isEmpty()) ";" else " {$NEW_LINE"
-        } else {
-            "·${delegation.delegation}·"
-        }
-
+        val delegationString = getDelegation(
+            delegation.delegation,
+            { delegation == ConstructorDelegation.NONE },
+            { block.isEmpty() }
+        )
         appendDelegation(
             delegationString,
             block,
@@ -63,10 +63,38 @@ internal object DelegationWriterAdapter {
      * @param block the block to check
      * @return the end delegation or null
      */
-    private inline fun getEndDelegation(crossinline block: () -> Boolean): String? = if (block()) {
-        "\n}"
-    } else {
-        null
+    private inline fun getEndDelegation(crossinline block: () -> Boolean): String? {
+        return if (block()) {
+            "\n}"
+        } else {
+            null
+        }
+    }
+
+    /**
+     * Returns the delegation string based on the given parameters.
+     * The current behaviour is a bit hardcoded because the delegation should only use brackets if the block is not empty.
+     * @param delegation the delegation to append
+     * @param delegationCheck the check if the delegation is none
+     * @param blockCheck the check if the block is empty
+     * @return the delegation string
+     */
+    private inline fun getDelegation(
+        delegation: String,
+        crossinline delegationCheck: () -> Boolean,
+        crossinline blockCheck: () -> Boolean,
+    ): String {
+        return when {
+            // Calls the delegation check
+            delegationCheck() -> {
+                when (blockCheck()) {
+                    true -> SEMICOLON
+                    else -> "·{$NEW_LINE"
+                }
+            }
+
+            else -> "·$delegation·"
+        }
     }
 
     /**
