@@ -76,6 +76,7 @@ class FactoryBuilder(
      */
     fun delegation(type: ConstructorDelegation) = apply {
         if (this.delegation == type) return@apply
+        check(type != ConstructorDelegation.INHERIT) { "Inheritance is not allowed for factory constructors" }
         this.delegation = type
     }
 
