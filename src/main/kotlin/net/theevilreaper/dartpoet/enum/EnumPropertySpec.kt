@@ -11,7 +11,7 @@ import net.theevilreaper.dartpoet.util.toImmutableSet
  * @since 1.0.0
  * @author theEvilReaper
  */
-class EnumPropertySpec(
+class EnumPropertySpec internal constructor(
     val builder: EnumPropertyBuilder
 ) {
     internal val name = builder.name

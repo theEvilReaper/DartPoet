@@ -22,7 +22,7 @@ import kotlin.reflect.KClass
  * @since 1.0.0
  * @author theEvilReaper
  */
-class ExtensionSpec(
+class ExtensionSpec internal constructor(
     builder: ExtensionBuilder
 ) {
     internal val name: String? = builder.name

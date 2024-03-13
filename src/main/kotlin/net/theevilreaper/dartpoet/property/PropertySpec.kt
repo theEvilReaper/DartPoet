@@ -21,7 +21,7 @@ import kotlin.reflect.KClass
  * @author theEvilReaper
  * @since 1.0.0
  */
-class PropertySpec(
+class PropertySpec internal constructor(
     builder: PropertyBuilder
 ) {
     internal var name = builder.name

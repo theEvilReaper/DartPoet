@@ -20,7 +20,7 @@ import net.theevilreaper.dartpoet.util.toImmutableSet
  * @since 1.0.0
  * @version 1.0.0
  */
-class FunctionSpec(
+class FunctionSpec internal constructor(
     builder: FunctionBuilder
 ) {
     internal val name = builder.name
