@@ -24,6 +24,10 @@ class FactorySpecTest {
                 { FactorySpec.constBuilder(Int::class.asTypeName()).build() },
                 "The initializer block must not be empty"
             ),
+            Arguments.of(
+                { FactorySpec.builder(String::class.asTypeName()).delegation(ConstructorDelegation.INHERIT).build() },
+                "Inheritance is not allowed for factory constructors"
+            )
         )
     }
 
