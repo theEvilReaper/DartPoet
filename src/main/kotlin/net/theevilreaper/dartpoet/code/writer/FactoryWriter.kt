@@ -9,6 +9,7 @@ import net.theevilreaper.dartpoet.code.emitParameters
 import net.theevilreaper.dartpoet.function.DelegationWriterAdapter
 import net.theevilreaper.dartpoet.function.factory.FactorySpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.util.COMMA_WITH_SPACE
 import net.theevilreaper.dartpoet.util.CURLY_CLOSE
 import net.theevilreaper.dartpoet.util.CURLY_OPEN
 import net.theevilreaper.dartpoet.util.ROUND_CLOSE
@@ -34,9 +35,9 @@ internal class FactoryWriter : InitializerAppender<FactorySpec>, DocumentationAp
             return
         }
 
-        codeWriter.emitCode(ROUND_OPEN)
+        codeWriter.emit(ROUND_OPEN)
         writeParameters(spec, codeWriter)
-        codeWriter.emitCode(ROUND_CLOSE)
+        codeWriter.emit(ROUND_CLOSE)
 
         DelegationWriterAdapter.appendFactoryDelegation(spec.factoryDelegation, spec.initializerBlock, codeWriter)
     }
@@ -55,7 +56,7 @@ internal class FactoryWriter : InitializerAppender<FactorySpec>, DocumentationAp
         spec.normalParameter.emitParameters(codeWriter, forceNewLines = false)
 
         if (spec.normalParameter.isNotEmpty() && (spec.hasAdditionalParameters || spec.parametersWithDefaults.isNotEmpty())) {
-            codeWriter.emit(", ")
+            codeWriter.emit(COMMA_WITH_SPACE)
         }
 
         if (spec.hasAdditionalParameters) {
@@ -93,7 +94,7 @@ internal class FactoryWriter : InitializerAppender<FactorySpec>, DocumentationAp
     ) {
         if (parameters.isEmpty()) return
         if (emitSpaceComma) {
-            codeWriter.emit(", ")
+            codeWriter.emit(COMMA_WITH_SPACE)
         }
         parameters.emitParameters(codeWriter, forceNewLines = false)
     }
