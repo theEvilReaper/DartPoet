@@ -6,8 +6,10 @@ import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.function.ConstructorDelegation
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
+@DisplayName("Test basic constructor generation")
 class ConstructorWriterTest {
 
     @Test
@@ -23,6 +25,21 @@ class ConstructorWriterTest {
         assertThat(constructor.toString()).isEqualTo(
             """
             Car(this.maker, this.model, this.yearMade, this.hasABS);
+            """.trimIndent()
+        )
+    }
+
+    @Test
+    fun `test constant constructor generation`() {
+        val constructor = ConstructorSpec.const("Car")
+            .parameters(
+                ParameterSpec.builder("maker").build(),
+                ParameterSpec.builder("model").build()
+            )
+            .build()
+        assertThat(constructor.toString()).isEqualTo(
+            """
+            static const Car(this.maker, this.model);
             """.trimIndent()
         )
     }
