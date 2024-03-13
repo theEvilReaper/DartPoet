@@ -24,7 +24,7 @@ import kotlin.reflect.KClass
  * @version 1.0.0
  * @since 1.0.0
  */
-class AnnotationSpec(
+class AnnotationSpec internal constructor(
     builder: AnnotationSpecBuilder,
 ) {
     internal val typeName: TypeName = builder.typeName
