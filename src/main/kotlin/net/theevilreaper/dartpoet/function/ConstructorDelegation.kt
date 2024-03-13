@@ -21,6 +21,7 @@ enum class ConstructorDelegation(val delegation: String) {
 
     NONE(""),
     LAMBDA("=>"),
+    INHERIT(":"),
     REDIRECT("=");
 
     companion object {
