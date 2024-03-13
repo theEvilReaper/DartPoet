@@ -15,8 +15,8 @@ class ConstructorSpec internal constructor(
     internal val name = builder.name
     internal val named = builder.named
     internal val isNamed = named.orEmpty().trim().isNotEmpty()
-    internal val isLambda = builder.lambda
     internal val initializer = builder.initializer
+    internal val delegation = builder.delegation
     internal val modifiers = builder.modifiers.toImmutableSet()
     internal val isConst = builder.const
     private val modelParameters = builder.parameters.toImmutableSet()
@@ -29,6 +29,9 @@ class ConstructorSpec internal constructor(
 
     init {
         check(name.trim().isNotEmpty()) { "The name of a constructor can't be empty" }
+        if (named != null) {
+            check(named.orEmpty().trim().isNotEmpty()) { "The named part of an constructor can't be empty" }
+        }
     }
 
     /**
@@ -51,7 +54,7 @@ class ConstructorSpec internal constructor(
      */
     fun toBuilder(): ConstructorBuilder {
         val builder = ConstructorBuilder(this.name, this.named)
-        builder.lambda = this.isLambda
+        builder.delegation = this.delegation
         builder.modifiers.addAll(this.modifiers)
         builder.parameters.addAll(this.modelParameters)
 

@@ -1,50 +1,17 @@
 package net.theevilreaper.dartpoet.function
 
-import net.theevilreaper.dartpoet.code.CodeBlock
-import net.theevilreaper.dartpoet.code.CodeWriter
-import net.theevilreaper.dartpoet.util.NEW_LINE
+import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
 
 /**
- * Constructors in the programming langauge Dart has a bit of different syntax than in other languages.
- * To reduce the boilerplate code in the project and increase the readability / usage of the library there is a mapping structure.
- * The [ConstructorDelegation] is a simple enum which contains the different types of constructor delegations. To use the enum there are
- * some function in specific classes which can be used to the delegation.
- *
- * **Note**: The delegation is only used for the constructor of a class and nothing more.
- * There are ways to detect the delegation by analyzing the data but this has more effort which is hard to maintain.
- *
- * @author theEvilReaper
- * @version 1.0.0
+ * The [ConstructorDelegation] enum class provides the different types of constructor delegations which are available for [ConstructorSpec].
+ * The delegation is used to reduce the boilerplate code and increase the readability of the library.
+ * @param delegation the delegation to use
  * @since 1.0.0
- **/
+ * @version 1.0.0
+ */
 enum class ConstructorDelegation(val delegation: String) {
 
     NONE(""),
     LAMBDA("=>"),
-    INHERIT(":"),
-    REDIRECT("=");
-
-    companion object {
-
-        /**
-         * Appends the constructor delegation with the code from a [CodeBlock] to the given [CodeWriter].
-         * @param delegation the delegation type
-         * @param block the [CodeBlock] which contains the information about the constructor
-         * @param codeWriter the [CodeWriter] to append the code
-         */
-        fun appendDelegation(delegation: ConstructorDelegation, block: CodeBlock, codeWriter: CodeWriter) {
-            val delegationString = if (delegation == NONE) {
-                " {$NEW_LINE"
-            } else {
-                "·${delegation.delegation}·"
-            }
-            codeWriter.emitCode(delegationString)
-            codeWriter.indent()
-            codeWriter.emitCode(block)
-            codeWriter.unindent()
-            if (delegation == NONE) {
-                codeWriter.emitCode("\n}")
-            }
-        }
-    }
+    INHERIT(":")
 }

@@ -2,7 +2,7 @@ package net.theevilreaper.dartpoet.function.factory
 
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
-import net.theevilreaper.dartpoet.function.ConstructorDelegation
+import net.theevilreaper.dartpoet.function.FactoryDelegation
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.TypeName
 
@@ -20,7 +20,7 @@ class FactoryBuilder(
     internal val annotations: MutableSet<AnnotationSpec> = mutableSetOf()
     internal val parameters: MutableSet<ParameterSpec> = mutableSetOf()
     internal val initializerBlock: CodeBlock.Builder = CodeBlock.builder()
-    internal var delegation: ConstructorDelegation = ConstructorDelegation.NONE
+    internal var delegation: FactoryDelegation = FactoryDelegation.NONE
     internal var namedString: String? = null
 
     /**
@@ -74,9 +74,8 @@ class FactoryBuilder(
      * @param type the type of the delegation
      * @return the current [FactoryBuilder] instance
      */
-    fun delegation(type: ConstructorDelegation) = apply {
+    fun delegation(type: FactoryDelegation) = apply {
         if (this.delegation == type) return@apply
-        check(type != ConstructorDelegation.INHERIT) { "Inheritance is not allowed for factory constructors" }
         this.delegation = type
     }
 

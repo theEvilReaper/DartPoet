@@ -2,6 +2,8 @@ package net.theevilreaper.dartpoet.function.constructor
 
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeBlock
+import net.theevilreaper.dartpoet.function.ConstructorDelegation
+import net.theevilreaper.dartpoet.function.factory.FactoryBuilder
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 
 /**
@@ -18,10 +20,10 @@ class ConstructorBuilder internal constructor(
     vararg modifiers: DartModifier
 ) {
     internal val parameters: MutableList<ParameterSpec> = mutableListOf()
-    internal var lambda: Boolean = false
     internal val initializer: CodeBlock.Builder = CodeBlock.builder()
     internal val modifiers: MutableList<DartModifier> = mutableListOf(*modifiers)
     internal val docs: MutableList<CodeBlock> = mutableListOf()
+    internal var delegation: ConstructorDelegation = ConstructorDelegation.NONE
 
     /**
      * Add a comment over for the extension class.
@@ -78,11 +80,13 @@ class ConstructorBuilder internal constructor(
     }
 
     /**
-     * Indicates if the constructor should be generated with lambda.
-     * @param lambda True for a lambda variant otherwise false
+     * Set the delegation type for the factory constructor.
+     * @param type the type of the delegation
+     * @return the current [FactoryBuilder] instance
      */
-    fun lambda(lambda: Boolean) = apply {
-        this.lambda = lambda
+    fun delegation(type: ConstructorDelegation) = apply {
+        if (this.delegation == type) return@apply
+        this.delegation = type
     }
 
     /**

@@ -6,7 +6,7 @@ import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.FactoryWriter
 import net.theevilreaper.dartpoet.function.ConstructorBase
-import net.theevilreaper.dartpoet.function.ConstructorDelegation
+import net.theevilreaper.dartpoet.function.FactoryDelegation
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
@@ -30,7 +30,7 @@ class FactorySpec(
     val initializerBlock: CodeBlock = builder.initializerBlock.build()
     val named: String? = builder.namedString
     val hasNamedData = named.orEmpty().trim().isNotEmpty()
-    val constructorDelegation: ConstructorDelegation = builder.delegation
+    val factoryDelegation: FactoryDelegation = builder.delegation
     internal val parametersWithDefaults =
         ParameterFilter.filterParameter(parameters) { !it.isRequired && it.hasInitializer }
     internal val requiredParameter =
@@ -73,7 +73,7 @@ class FactorySpec(
         builder.annotations.addAll(annotations)
         builder.parameters.addAll(parameters)
         builder.initializerBlock.add(initializerBlock)
-        builder.delegation = constructorDelegation
+        builder.delegation = factoryDelegation
         builder.namedString = named
         return builder
     }
