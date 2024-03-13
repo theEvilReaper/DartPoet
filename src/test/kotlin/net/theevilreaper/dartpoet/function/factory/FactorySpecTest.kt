@@ -1,6 +1,6 @@
 package net.theevilreaper.dartpoet.function.factory
 
-import net.theevilreaper.dartpoet.function.ConstructorDelegation
+import net.theevilreaper.dartpoet.function.FactoryDelegation
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.asTypeName
 import org.junit.Assert.assertThrows
@@ -24,10 +24,6 @@ class FactorySpecTest {
                 { FactorySpec.constBuilder(Int::class.asTypeName()).build() },
                 "The initializer block must not be empty"
             ),
-            Arguments.of(
-                { FactorySpec.builder(String::class.asTypeName()).delegation(ConstructorDelegation.INHERIT).build() },
-                "Inheritance is not allowed for factory constructors"
-            )
         )
     }
 
@@ -43,7 +39,7 @@ class FactorySpecTest {
     fun `test to toBuilder conversion`() {
         val factorySpec = FactorySpec.constBuilder(Int::class.asTypeName())
             .addCode("()")
-            .delegation(ConstructorDelegation.LAMBDA)
+            .delegation(FactoryDelegation.LAMBDA)
             .parameter(
                 ParameterSpec.builder("test", Int::class.asTypeName())
                     .build()
@@ -51,7 +47,7 @@ class FactorySpecTest {
             .build()
         val specAsBuilder = factorySpec.toBuilder()
         assertEquals(factorySpec.typeName, specAsBuilder.typeName)
-        assertEquals(ConstructorDelegation.LAMBDA, specAsBuilder.delegation)
+        assertEquals(FactoryDelegation.LAMBDA, specAsBuilder.delegation)
         assertTrue(specAsBuilder.const)
         assertEquals(1, specAsBuilder.parameters.size)
     }

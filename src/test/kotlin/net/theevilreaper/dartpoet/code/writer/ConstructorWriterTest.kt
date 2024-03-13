@@ -3,6 +3,7 @@ package net.theevilreaper.dartpoet.code.writer
 import com.google.common.truth.Truth.*
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeBlock
+import net.theevilreaper.dartpoet.function.ConstructorDelegation
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import org.junit.jupiter.api.Test
@@ -45,6 +46,7 @@ class ConstructorWriterTest {
     @Test
     fun `test named constructor2 write without any special parameter`() {
         val constructor = ConstructorSpec.named("Car", "withoutABS")
+            .delegation(ConstructorDelegation.INHERIT)
             .parameters(
                 ParameterSpec.builder("maker").build(),
                 ParameterSpec.builder("model").build(),
@@ -52,13 +54,13 @@ class ConstructorWriterTest {
             )
             .addCode(
                 CodeBlock.of(
-                    "hasABS = false"
+                    "hasABS = false;"
                 )
             )
             .build()
         assertThat(constructor.toString()).isEqualTo(
             """
-            Car.withoutABS(this.maker, this.model, this.yearMade): hasABS = false;
+            Car.withoutABS(this.maker, this.model, this.yearMade) : hasABS = false;
             """.trimIndent()
         )
     }

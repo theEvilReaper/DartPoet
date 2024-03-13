@@ -7,7 +7,7 @@ import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.directive.DirectiveFactory
 import net.theevilreaper.dartpoet.directive.DirectiveType
-import net.theevilreaper.dartpoet.function.ConstructorDelegation
+import net.theevilreaper.dartpoet.function.FactoryDelegation
 import net.theevilreaper.dartpoet.function.factory.FactorySpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.ClassName
@@ -35,7 +35,7 @@ class FactoryFileTest {
             .annotation { AnnotationSpec.builder("freezed").build() }
             .constructor {
                 FactorySpec.constBuilder(versionModelClass)
-                    .delegation(ConstructorDelegation.REDIRECT)
+                    .delegation(FactoryDelegation.REDIRECT)
                     .parameter(
                         ParameterSpec.builder("version", String::class)
                             .named(true)
@@ -52,7 +52,7 @@ class FactoryFileTest {
             }
             .constructor {
                 FactorySpec.builder(versionModelClass)
-                    .delegation(ConstructorDelegation.LAMBDA)
+                    .delegation(FactoryDelegation.LAMBDA)
                     .named("fromJson")
                     .parameter(
                         ParameterSpec.builder(

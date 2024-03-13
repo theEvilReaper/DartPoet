@@ -7,6 +7,7 @@ import net.theevilreaper.dartpoet.code.buildCodeBlock
 import net.theevilreaper.dartpoet.directive.CastType
 import net.theevilreaper.dartpoet.directive.DirectiveFactory
 import net.theevilreaper.dartpoet.directive.DirectiveType
+import net.theevilreaper.dartpoet.function.ConstructorDelegation
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
@@ -95,12 +96,13 @@ class DartFileTest {
             )
             .constructor(
                 ConstructorSpec.builder(className)
+                    .delegation(ConstructorDelegation.INHERIT)
                     .parameter(
                         ParameterSpec.builder(apiClient.replaceFirstChar { it.lowercase() }, apiClassName).build()
                     )
                     .addCode(buildCodeBlock {
                         add(
-                            "%L = %L",
+                            "%L = %L;",
                             apiClient.replaceFirstChar { it.lowercase() },
                             apiClient.replaceFirstChar { it.lowercase() })
                     })
@@ -142,7 +144,7 @@ class DartFileTest {
             
               final ApiClient apiClient;
             
-              DefectApi(ApiClient apiClient): apiClient = apiClient;
+              DefectApi(ApiClient apiClient) : apiClient = apiClient;
            
               Future<DefectDTO> getByID(int id) async {
                 final queryParams = <String, dynamic>{};
