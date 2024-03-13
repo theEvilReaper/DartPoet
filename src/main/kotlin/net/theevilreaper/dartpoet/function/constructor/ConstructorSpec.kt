@@ -30,7 +30,7 @@ class ConstructorSpec internal constructor(
     init {
         check(name.trim().isNotEmpty()) { "The name of a constructor can't be empty" }
         if (named != null) {
-            check(named.orEmpty().trim().isNotEmpty()) { "The named part of an constructor can't be empty" }
+            check(named.trim().isNotEmpty()) { "The named part of an constructor can't be empty" }
         }
     }
 
