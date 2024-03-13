@@ -19,7 +19,7 @@ import net.theevilreaper.dartpoet.util.toImmutableSet
  * The language allows the definition of factory constructors which works like a normal constructor but with a
  * different syntax.
  */
-class FactorySpec(
+class FactorySpec internal constructor(
     builder: FactoryBuilder,
 ) : ConstructorBase {
     val typeName: TypeName = builder.typeName
