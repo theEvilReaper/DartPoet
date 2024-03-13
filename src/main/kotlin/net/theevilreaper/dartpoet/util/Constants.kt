@@ -11,6 +11,7 @@ internal const val NULLABLE_CHAR = "?"
 internal const val SPACE_CHAR = ' '
 internal const val SPACE = SPACE_CHAR.toString()
 const val DEFAULT_INDENT = "  "
+internal const val COMMA_WITH_SPACE = ", "
 
 internal const val NEW_LINE_CHAR = '\n'
 internal const val NEW_LINE = NEW_LINE_CHAR.toString()
