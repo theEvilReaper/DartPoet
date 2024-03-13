@@ -5,6 +5,7 @@ import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.DocumentationAppender
 import net.theevilreaper.dartpoet.code.Writeable
 import net.theevilreaper.dartpoet.code.emitParameters
+import net.theevilreaper.dartpoet.function.DelegationWriterAdapter
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.util.CURLY_CLOSE
 import net.theevilreaper.dartpoet.util.CURLY_OPEN
@@ -15,7 +16,8 @@ internal class ConstructorWriter : Writeable<ConstructorSpec>, DocumentationAppe
 
     override fun write(spec: ConstructorSpec, writer: CodeWriter) {
         emitDocumentation(spec.docs, writer)
-        if (spec.modifiers.contains(DartModifier.CONST)) {
+
+        if (!spec.isConst && spec.modifiers.contains(DartModifier.CONST)) {
             writer.emit("${DartModifier.CONST.identifier}·")
         }
 
@@ -52,20 +54,6 @@ internal class ConstructorWriter : Writeable<ConstructorSpec>, DocumentationAppe
 
         writer.emit(")")
 
-        if (spec.isLambda) {
-            writer.emit("·=>$NEW_LINE")
-            writer.indent(2)
-            writer.emitCode(spec.initializer.build(), ensureTrailingNewline = true)
-            writer.unindent(2)
-        } else {
-            if (spec.initializer.isNotEmpty()) {
-                writer.emit(":·")
-                writer.emitCode(spec.initializer.build(), ensureTrailingNewline = false)
-                writer.emit(SEMICOLON)
-                return
-            }
-
-            writer.emit(SEMICOLON)
-        }
+        DelegationWriterAdapter.appendConstructorDelegation(spec.delegation, spec.initializer.build(), writer)
     }
 }

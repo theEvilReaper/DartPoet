@@ -6,7 +6,7 @@ import net.theevilreaper.dartpoet.code.DocumentationAppender
 import net.theevilreaper.dartpoet.code.InitializerAppender
 import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.code.emitParameters
-import net.theevilreaper.dartpoet.function.ConstructorDelegation
+import net.theevilreaper.dartpoet.function.DelegationWriterAdapter
 import net.theevilreaper.dartpoet.function.factory.FactorySpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.util.CURLY_CLOSE
@@ -38,7 +38,7 @@ internal class FactoryWriter : InitializerAppender<FactorySpec>, DocumentationAp
         writeParameters(spec, codeWriter)
         codeWriter.emitCode(ROUND_CLOSE)
 
-        ConstructorDelegation.appendDelegation(spec.constructorDelegation, spec.initializerBlock, codeWriter)
+        DelegationWriterAdapter.appendFactoryDelegation(spec.factoryDelegation, spec.initializerBlock, codeWriter)
     }
 
     private fun emitAnnotations(spec: FactorySpec, codeWriter: CodeWriter) {
@@ -48,7 +48,7 @@ internal class FactoryWriter : InitializerAppender<FactorySpec>, DocumentationAp
 
     private fun writeSimpleConstructor(spec: FactorySpec, codeWriter: CodeWriter) {
         codeWriter.emit("()")
-        ConstructorDelegation.appendDelegation(spec.constructorDelegation, spec.initializerBlock, codeWriter)
+        DelegationWriterAdapter.appendFactoryDelegation(spec.factoryDelegation, spec.initializerBlock, codeWriter)
     }
 
     private fun writeParameters(spec: FactorySpec, codeWriter: CodeWriter) {
