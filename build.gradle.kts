@@ -41,17 +41,23 @@ tasks {
 }
 
 val sourceJar by tasks.register<Jar>("kotlinJar") {
+    description = "Creates a JAR archive containing all source files"
+    group = JavaBasePlugin.BUILD_TASK_NAME
     from(sourceSets.main.get().allSource)
     archiveClassifier.set("sources")
 }
 
 val dokkaJavadocJar by tasks.register<Jar>("dokkaHtmlJar") {
+    description = "Generates the documentation in the HTML format"
+    group = JavaBasePlugin.DOCUMENTATION_GROUP
     dependsOn(rootProject.tasks.dokkaHtml)
     from(rootProject.tasks.dokkaHtml.flatMap { it.outputDirectory })
     archiveClassifier.set("html-docs")
 }
 
 val dokkaHtmlJar by tasks.register<Jar>("dokkaJavadocJar") {
+    description = "Generates documentation in Javadoc format"
+    group = JavaBasePlugin.DOCUMENTATION_GROUP
     dependsOn(rootProject.tasks.dokkaJavadoc)
     from(rootProject.tasks.dokkaJavadoc.flatMap { it.outputDirectory })
     archiveClassifier.set("javadoc")
