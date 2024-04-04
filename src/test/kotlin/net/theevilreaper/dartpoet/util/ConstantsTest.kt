@@ -1,44 +1,20 @@
 package net.theevilreaper.dartpoet.util
 
 import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.Arguments
-import org.junit.jupiter.params.provider.MethodSource
-import java.util.stream.Stream
+import org.junit.jupiter.params.provider.ValueSource
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class ConstantsTest {
 
-    companion object {
-
-        @JvmStatic
-        private fun validPatterns() = Stream.of(
-            Arguments.of("item_model"),
-            Arguments.of("item_model.dart"),
-            Arguments.of("model.dart"),
-            Arguments.of("boss_bar_colour_meep"),
-            Arguments.of("test"),
-        )
-
-        @JvmStatic
-        private fun invalidPatterns() = Stream.of(
-            Arguments.of("hello__world.dart"),
-            Arguments.of("_hello__world_.dart"),
-            Arguments.of("_test"),
-            Arguments.of("model_"),
-            Arguments.of(""),
-            Arguments.of("Dart_FILE"),
-        )
-    }
-
     @ParameterizedTest(name = "Test valid name pattern: {arguments}")
-    @MethodSource("validPatterns")
+    @ValueSource(strings = ["item_model", "item_model.dart", "model.dart", "boss_bar_colour_meep", "test"])
     fun `test name pattern`(pattern: String) {
         assertTrue { isDartConventionFileName(pattern) }
     }
 
     @ParameterizedTest(name = "Test invalid name pattern: {arguments}")
-    @MethodSource("invalidPatterns")
+    @ValueSource(strings = ["hello__world.dart", "_hello__world_.dart", "_test", "model_", "", "Dart_FILE"])
     fun `test invalid file patterns`(pattern: String) {
         assertFalse { isDartConventionFileName(pattern) }
     }
