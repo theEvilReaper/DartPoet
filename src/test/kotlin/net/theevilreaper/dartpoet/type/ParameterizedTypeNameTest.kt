@@ -51,19 +51,19 @@ class ParameterizedTypeNameTest {
         )
     }
 
-    @ParameterizedTest(name = "Test creation of: {arguments}")
+    @ParameterizedTest(name = "Test creation of: {0}")
     @MethodSource("testTypeNamesWithGenerics")
     fun `test parameterized type name class`(expected: String, parameter: ParameterizedTypeName) {
         assertEquals(expected, parameter.toString())
     }
 
-    @ParameterizedTest(name = "Test creation over companion: {arguments}")
+    @ParameterizedTest(name = "Test creation over companion: {0}")
     @MethodSource("typeNameCompanions")
     fun `test method from the parameterized companion object`(expected: String, parameter: ParameterizedTypeName) {
         assertEquals(expected, parameter.toString())
     }
 
-    @ParameterizedTest(name = "Test creation with enclosing name: {arguments}")
+    @ParameterizedTest(name = "Test creation with enclosing name: {0}")
     @MethodSource("testEnclosingTyeName")
     fun `test parameterized write with an enclosingTypeName`(expected: String, parameter: ParameterizedTypeName) {
         assertEquals(expected, parameter.toString())

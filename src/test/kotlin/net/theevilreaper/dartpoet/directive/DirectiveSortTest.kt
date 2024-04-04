@@ -1,6 +1,7 @@
 package net.theevilreaper.dartpoet.directive
 
 import net.theevilreaper.dartpoet.util.DirectiveOrdering
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
@@ -9,6 +10,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 
+@DisplayName("Test directive ordering")
 class DirectiveSortTest {
 
     companion object {

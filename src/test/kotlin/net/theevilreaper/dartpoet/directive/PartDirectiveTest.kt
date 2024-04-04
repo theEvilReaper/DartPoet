@@ -1,25 +1,35 @@
 package net.theevilreaper.dartpoet.directive
 
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
+import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
+import java.util.stream.Stream
 
 class PartDirectiveTest {
 
     private val expectedImport = "part 'item_model.freezed.dart';"
 
-    @Test
-    fun `test import with empty path`() {
-        Assertions.assertThrows(
-            IllegalStateException::class.java,
-            { DirectiveFactory.create(DirectiveType.IMPORT, " ") },
-            "The path of an Import can't be empty"
+    companion object {
+        @JvmStatic
+        private fun invalidPartDirectives(): Stream<Arguments> = Stream.of(
+            Arguments.of(
+                { DirectiveFactory.create(DirectiveType.IMPORT, " ") },
+                "The path of an Import can't be empty"
+            ),
+            Arguments.of(
+                { DirectiveFactory.create(DirectiveType.RELATIVE, " ") },
+                "The path of an Import can't be empty"
+            )
         )
-        Assertions.assertThrows(
-            IllegalStateException::class.java,
-            { DirectiveFactory.create(DirectiveType.RELATIVE, " ") },
-            "The path of an Import can't be empty"
-        )
+    }
+
+    @ParameterizedTest(name = "Test invalid directive creation over the DirectiveFactory")
+    @MethodSource("invalidPartDirectives")
+    fun `test import with empty path`(current: () -> Directive, expectedMessage: String) {
+        assertThrows<IllegalStateException>(expectedMessage) { current() }
     }
 
     @Test

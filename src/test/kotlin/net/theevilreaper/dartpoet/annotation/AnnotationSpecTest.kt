@@ -13,23 +13,23 @@ import java.util.stream.Stream
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 
-@DisplayName("Test creation of several objects from the AnnotationSpec class")
+@DisplayName("Test AnnotationSpec creation")
 class AnnotationSpecTest {
 
     companion object {
 
         @JvmStatic
         private fun testSimpleAnnotations() = Stream.of(
-            Arguments.of("@override",OVERRIDE),
-            Arguments.of("@deprecated",DEPRECATED,),
+            Arguments.of("@override", OVERRIDE),
+            Arguments.of("@deprecated", DEPRECATED),
             Arguments.of("@pragma", PRAGMA),
-            Arguments.of("@Override", AnnotationSpec.builder(Override::class).build(), )
+            Arguments.of("@Override", AnnotationSpec.builder(Override::class).build())
         )
     }
 
-    @ParameterizedTest(name = "Test annotation creation for case: {arguments}")
+    @ParameterizedTest(name = "Test annotation creation for case: {0}")
     @MethodSource("testSimpleAnnotations")
-    fun `test simple annotations`(expected: String,annotation: AnnotationSpec, ) {
+    fun `test simple annotations`(expected: String, annotation: AnnotationSpec) {
         assertEquals(expected, annotation.toString())
     }
 

@@ -6,8 +6,10 @@ import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.ClassName
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
+@DisplayName("Test some AbstractClass creations")
 class AbstractClassTest {
 
     @Test

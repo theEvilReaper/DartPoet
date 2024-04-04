@@ -8,6 +8,7 @@ import net.theevilreaper.dartpoet.enum.EnumPropertySpec
 import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
@@ -16,6 +17,7 @@ import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
 import kotlin.test.assertEquals
 
+@DisplayName("Test some EnumClass creations")
 class EnumClassTest {
 
     companion object {
@@ -126,29 +128,4 @@ class EnumClassTest {
             """.trimIndent()
         )
     }
-
-    @Test
-    fun d() {
-        val enumClass = ClassSpec.enumClass("TestEnum")
-            .enumProperties(
-                EnumPropertySpec.builder("test")
-                    .parameter("%C", "Test")
-                    .build()
-            )
-            .properties(
-                PropertySpec.builder("name", String::class).build()
-            )
-            .constructor(
-                ConstructorSpec.builder("TestEnum")
-                    .parameter(ParameterSpec.builder("name").build())
-                    .build()
-            )
-            .build()
-        val file = DartFile.builder("test")
-            .type(enumClass)
-            .build()
-        file.write(System.out)
-    }
 }
-
-

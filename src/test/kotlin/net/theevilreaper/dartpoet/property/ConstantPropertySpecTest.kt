@@ -32,7 +32,7 @@ class ConstantPropertySpecTest {
         )
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "Test invalid file constant spec: {arguments}")
     @MethodSource("invalidFileConstantSpec")
     fun `test invalid file constant spec`(message: String, block: () -> ConstantPropertySpec) {
         val exception = assertThrows<IllegalArgumentException> { block() }

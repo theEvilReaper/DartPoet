@@ -21,9 +21,10 @@ class TypeDefSpecTest {
             ),
             Arguments.of(
                 IllegalArgumentException::class.java,
-                { TypeDefSpec.builder("Test", Int::class)
-                    .name("")
-                    .returns(String::class).build()
+                {
+                    TypeDefSpec.builder("Test", Int::class)
+                        .name("")
+                        .returns(String::class).build()
                 },
                 "The function name of a typedef can't be empty"
             )
