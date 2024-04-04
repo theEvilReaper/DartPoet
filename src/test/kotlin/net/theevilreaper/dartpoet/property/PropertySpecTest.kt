@@ -77,7 +77,7 @@ class PropertySpecTest {
 
     @ParameterizedTest(name = "Test parameter creation to test: {arguments}")
     @MethodSource("parameters")
-    fun `test properties`(propertySpec: PropertySpec, expected: String) {
+    fun `test properties`(expected: String, propertySpec: PropertySpec) {
         assertThat(propertySpec.toString()).isEqualTo(expected)
     }
 

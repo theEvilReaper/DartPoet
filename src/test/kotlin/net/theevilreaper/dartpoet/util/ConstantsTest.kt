@@ -1,11 +1,11 @@
 package net.theevilreaper.dartpoet.util
 
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
 import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class ConstantsTest {
 
@@ -33,8 +33,8 @@ class ConstantsTest {
 
     @ParameterizedTest(name = "Test valid name pattern: {arguments}")
     @MethodSource("validPatterns")
-    fun `test name pattern`(name: String, result: Boolean) {
-        assertEquals(result, isDartConventionFileName(name))
+    fun `test name pattern`(pattern: String) {
+        assertTrue { isDartConventionFileName(pattern) }
     }
 
     @ParameterizedTest(name = "Test invalid name pattern: {arguments}")
