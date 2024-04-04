@@ -1,18 +1,17 @@
 package net.theevilreaper.dartpoet.type
 
-import net.theevilreaper.dartpoet.clazz.ClassSpec
-import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.lang.IllegalArgumentException
-import java.lang.reflect.Type
 import java.util.function.BiFunction
 import java.util.stream.Stream
 
+@DisplayName("Test some cases for the conversation from a class to a TypeName")
 class TypeNameTest {
 
     companion object {
@@ -28,7 +27,7 @@ class TypeNameTest {
         )
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "Test primitive cases: {arguments}")
     @MethodSource("primitiveTests")
     fun `test primitive type conversation to a ClassName`(expectedType: String, type: TypeName) {
         assertEquals(expectedType, type.toString())

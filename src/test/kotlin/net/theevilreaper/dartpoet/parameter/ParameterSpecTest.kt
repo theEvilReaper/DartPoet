@@ -3,6 +3,7 @@ package net.theevilreaper.dartpoet.parameter
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -10,6 +11,7 @@ import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
 import kotlin.test.assertContentEquals
 
+@DisplayName("Test the definition of different ParameterSpec objects")
 class ParameterSpecTest {
 
     companion object {
@@ -17,25 +19,25 @@ class ParameterSpecTest {
         @JvmStatic
         private fun parameterVariants(): Stream<Arguments> = Stream.of(
             Arguments.of(
+                "required int amount",
                 { ParameterSpec.builder("amount", Int::class).modifiers(DartModifier.REQUIRED) },
-                "required int amount"
             ),
             Arguments.of(
+                "String name = 'theEvilReaper'",
                 { ParameterSpec.builder("name", String::class).initializer("%C", "theEvilReaper") },
-                "String name = 'theEvilReaper'"
             ),
             Arguments.of(
+                "String name = 'theEvilReaper'",
                 {
                     ParameterSpec.builder("name", String::class).named(true).initializer("%C", "theEvilReaper")
                 },
-                "String name = 'theEvilReaper'"
             )
         )
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "Test parameter generation for case: {arguments}")
     @MethodSource("parameterVariants")
-    fun `test parameter spec builder`(specBuilder: () -> ParameterBuilder, expected: String) {
+    fun `test parameter spec builder`(expected: String, specBuilder: () -> ParameterBuilder) {
         val parameterSpec = specBuilder.invoke().build()
         assertNotNull(parameterSpec)
         assertEquals(expected, parameterSpec.toString())

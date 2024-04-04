@@ -1,9 +1,11 @@
 package net.theevilreaper.dartpoet
 
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
+@DisplayName("Test some operations on the DartModifier enum")
 class DartModifierTest {
 
     @Test

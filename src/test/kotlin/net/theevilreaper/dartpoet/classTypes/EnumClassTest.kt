@@ -54,7 +54,7 @@ class EnumClassTest {
         )
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "Test cases for invalid enum definitions")
     @MethodSource("invalidEnums")
     fun `test invalid enum creation`(classSpec: () -> Unit, message: String) {
         val exception = assertThrows<IllegalStateException> { classSpec() }

@@ -2,8 +2,10 @@ package net.theevilreaper.dartpoet.util
 
 import net.theevilreaper.dartpoet.DartModifier
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
+@DisplayName("Test each method from the StringHelper utility class")
 class StringHelperTest {
 
     @Test

@@ -4,6 +4,7 @@ import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.DEPRECATED
 import net.theevilreaper.dartpoet.type.OVERRIDE
 import net.theevilreaper.dartpoet.type.PRAGMA
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -12,22 +13,23 @@ import java.util.stream.Stream
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 
+@DisplayName("Test creation of several objects from the AnnotationSpec class")
 class AnnotationSpecTest {
 
     companion object {
 
         @JvmStatic
         private fun testSimpleAnnotations() = Stream.of(
-            Arguments.of(OVERRIDE, "@override"),
-            Arguments.of(DEPRECATED, "@deprecated"),
-            Arguments.of(PRAGMA, "@pragma"),
-            Arguments.of(AnnotationSpec.builder(Override::class).build(), "@Override")
+            Arguments.of("@override",OVERRIDE),
+            Arguments.of("@deprecated",DEPRECATED,),
+            Arguments.of("@pragma", PRAGMA),
+            Arguments.of("@Override", AnnotationSpec.builder(Override::class).build(), )
         )
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "Test annotation creation for case: {arguments}")
     @MethodSource("testSimpleAnnotations")
-    fun `test simple annotations`(annotation: AnnotationSpec, expected: String) {
+    fun `test simple annotations`(expected: String,annotation: AnnotationSpec, ) {
         assertEquals(expected, annotation.toString())
     }
 

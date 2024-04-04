@@ -5,30 +5,41 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
+import kotlin.test.assertFalse
 
 class ConstantsTest {
 
     companion object {
 
         @JvmStatic
-        private fun patterns() = Stream.of(
-            Arguments.of("", false),
-            Arguments.of("Dart_FILE", false),
-            Arguments.of("item_model", true),
-            Arguments.of("item_model.dart", true),
-            Arguments.of("model.dart", true),
-            Arguments.of("model_", false),
-            Arguments.of("boss_bar_colour_meep", true),
-            Arguments.of("hello__world.dart", false),
-            Arguments.of("_hello__world_.dart", false),
-            Arguments.of("test", true),
-            Arguments.of("_test", false)
+        private fun validPatterns() = Stream.of(
+            Arguments.of("item_model"),
+            Arguments.of("item_model.dart"),
+            Arguments.of("model.dart"),
+            Arguments.of("boss_bar_colour_meep"),
+            Arguments.of("test"),
+        )
+
+        @JvmStatic
+        private fun invalidPatterns() = Stream.of(
+            Arguments.of("hello__world.dart"),
+            Arguments.of("_hello__world_.dart"),
+            Arguments.of("_test"),
+            Arguments.of("model_"),
+            Arguments.of(""),
+            Arguments.of("Dart_FILE"),
         )
     }
 
-    @ParameterizedTest
-    @MethodSource("patterns")
+    @ParameterizedTest(name = "Test valid name pattern: {arguments}")
+    @MethodSource("validPatterns")
     fun `test name pattern`(name: String, result: Boolean) {
         assertEquals(result, isDartConventionFileName(name))
+    }
+
+    @ParameterizedTest(name = "Test invalid name pattern: {arguments}")
+    @MethodSource("invalidPatterns")
+    fun `test invalid file patterns`(pattern: String) {
+        assertFalse { isDartConventionFileName(pattern) }
     }
 }

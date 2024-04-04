@@ -3,12 +3,14 @@ package net.theevilreaper.dartpoet.extension
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
 
+@DisplayName("Test some ExtensionSpec object creations")
 class ExtensionSpecTest {
 
     companion object {
@@ -52,7 +54,7 @@ class ExtensionSpecTest {
         )
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "Test invalid extension spec definitions")
     @MethodSource("invalidExtensionSpecs")
     fun `test invalid extension spec`(exception: Class<out Exception>, function: () -> Unit, message: String) {
         val givenException = assertThrows(exception) { function() }

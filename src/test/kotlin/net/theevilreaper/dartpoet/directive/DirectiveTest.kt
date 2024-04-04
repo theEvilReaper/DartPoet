@@ -38,12 +38,12 @@ class DirectiveTest {
         @JvmStatic
         private fun libDirectives() = Stream.of(
             Arguments.of(
+                "library testLib;",
                 DirectiveFactory.createLib("testLib"),
-                "library testLib;"
             ),
             Arguments.of(
+                "part of testLib;",
                 DirectiveFactory.createLib("testLib", true),
-                "part of testLib;"
             ),
         )
 
@@ -108,9 +108,9 @@ class DirectiveTest {
         assertEquals(expectedMessage, exception.message)
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "Test lib directive creation for: {arguments}")
     @MethodSource("libDirectives")
-    fun `test library imports`(current: Directive, expected: String) {
+    fun `test library imports`(expected: String, current: Directive, ) {
         assertEquals(expected, current.asString())
     }
 
