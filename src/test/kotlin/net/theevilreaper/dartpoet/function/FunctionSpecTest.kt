@@ -6,6 +6,7 @@ import net.theevilreaper.dartpoet.type.asTypeName
 import net.theevilreaper.dartpoet.util.NO_PARAMETER_TYPE
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -15,6 +16,7 @@ import java.util.stream.Stream
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
+@DisplayName("Test function spec creation")
 class FunctionSpecTest {
 
     companion object {

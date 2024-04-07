@@ -1,9 +1,10 @@
 package net.theevilreaper.dartpoet.code
 
 import com.google.common.truth.Truth.assertThat
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
-//TODO: Add tests
+@DisplayName("Test code block usage")
 class CodeBlockTest {
 
     @Test

@@ -2,6 +2,7 @@ package net.theevilreaper.dartpoet.property
 
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
@@ -10,7 +11,7 @@ import org.junit.jupiter.params.provider.MethodSource
 import java.lang.IllegalArgumentException
 import java.util.stream.Stream
 
-
+@DisplayName("Test constant property spec creation")
 class ConstantPropertySpecTest {
 
     companion object {

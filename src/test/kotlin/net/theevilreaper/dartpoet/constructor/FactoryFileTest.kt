@@ -14,6 +14,7 @@ import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.DYNAMIC
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
 import net.theevilreaper.dartpoet.type.asTypeName
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 /**
@@ -22,6 +23,7 @@ import org.junit.jupiter.api.Test
  * @version 1.0.0
  * @since
  **/
+@DisplayName("Test file generations with factory constructors")
 class FactoryFileTest {
 
     private val versionModel = "VersionModel"

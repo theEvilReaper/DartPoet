@@ -2,12 +2,15 @@ package net.theevilreaper.dartpoet.function.typedef
 
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
 
+@DisplayName("Test TypeDefSpec creation")
 class TypeDefSpecTest {
 
     companion object {
@@ -15,12 +18,12 @@ class TypeDefSpecTest {
         @JvmStatic
         private fun invalidTypeDefs(): Stream<Arguments> = Stream.of(
             Arguments.of(
-                IllegalArgumentException::class.java,
+                "Empty name",
                 { TypeDefSpec.builder("").build() },
                 "The name of a typedef can't be empty"
             ),
             Arguments.of(
-                IllegalArgumentException::class.java,
+                "Empty function name",
                 {
                     TypeDefSpec.builder("Test", Int::class)
                         .name("")
@@ -31,11 +34,11 @@ class TypeDefSpecTest {
         )
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "Test invalid typedef definitions with: {0}")
     @MethodSource("invalidTypeDefs")
-    fun `test invalid typedef creation`(exception: Class<Exception>, function: () -> Unit, message: String) {
-        val exceptionMessage = assertThrows(exception, function, message).message
-        assertEquals(message, exceptionMessage)
+    fun `test invalid typedef creation`(name: String, function: () -> Unit, message: String) {
+        val exception = assertThrows<IllegalArgumentException> { function() }
+        assertEquals(message, exception.message)
     }
 
     @Test

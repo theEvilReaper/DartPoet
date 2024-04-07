@@ -25,19 +25,25 @@ class TypeNameTest {
             Arguments.of("double", Float::class.asClassName()),
             Arguments.of("bool", Boolean::class.asTypeName())
         )
+
+        @JvmStatic
+        private fun invalidTests() = Stream.of(
+            Arguments.of("Array", "An array type is not supported at the moment", { TypeName.get(intArrayOf()::class.java) }),
+            Arguments.of("Ulong", "The given ${ULong::class} is not a primitive object", { TypeName.parseSimpleKClass(ULong::class) })
+        )
     }
 
-    @ParameterizedTest(name = "Test primitive cases: {arguments}")
+    @ParameterizedTest(name = "Test primitive cases: {0}")
     @MethodSource("primitiveTests")
     fun `test primitive type conversation to a ClassName`(expectedType: String, type: TypeName) {
         assertEquals(expectedType, type.toString())
     }
 
-    @Test
-    fun `test get typeName with the java type and its an array`() {
-        val arrayType = intArrayOf()
-        val exception = assertThrows<IllegalArgumentException> { TypeName.get(arrayType::class.java) }
-        assertEquals("An array type is not supported at the moment", exception.message)
+    @ParameterizedTest(name = "Test invalid cases: {0}")
+    @MethodSource("invalidTests")
+    fun `test invalid cases`(expectedType: String, expectedMessage: String, objectCall: () -> Unit) {
+        val exception = assertThrows<IllegalArgumentException> { objectCall() }
+        assertEquals(expectedMessage, exception.message)
     }
 
     @Test
@@ -52,12 +58,5 @@ class TypeNameTest {
         val className = String::class.asClassName()
         val typeNameFromMethod = TypeName.parseSimpleKClass(String::class)
         assertEquals(className, typeNameFromMethod)
-    }
-
-    @Test
-    fun `test parseSimpleKClass with raise an exception`() {
-        val type = ULong::class
-        val exception = assertThrows<IllegalArgumentException> { TypeName.parseSimpleKClass(type) }
-        assertEquals("The given $type is not a primitive object", exception.message)
     }
 }
