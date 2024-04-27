@@ -35,7 +35,7 @@ tasks {
     }
     compileKotlin {
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_17)
+            jvmTarget.set(JvmTarget.JVM_21)
         }
     }
 }
@@ -64,7 +64,7 @@ val dokkaHtmlJar by tasks.register<Jar>("dokkaJavadocJar") {
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
 }
 
 changelog {
