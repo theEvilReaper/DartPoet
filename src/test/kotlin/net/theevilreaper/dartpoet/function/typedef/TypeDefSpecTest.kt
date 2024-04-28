@@ -1,6 +1,7 @@
 package net.theevilreaper.dartpoet.function.typedef
 
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -19,14 +20,14 @@ class TypeDefSpecTest {
         private fun invalidTypeDefs(): Stream<Arguments> = Stream.of(
             Arguments.of(
                 "Empty name",
-                { TypeDefSpec.builder("").build() },
+                { TypeDefSpec.builder(EMPTY_STRING).build() },
                 "The name of a typedef can't be empty"
             ),
             Arguments.of(
                 "Empty function name",
                 {
                     TypeDefSpec.builder("Test", Int::class)
-                        .name("")
+                        .name(EMPTY_STRING)
                         .returns(String::class).build()
                 },
                 "The function name of a typedef can't be empty"

@@ -1,5 +1,7 @@
 package net.theevilreaper.dartpoet.type
 
+import net.theevilreaper.dartpoet.util.EMPTY_STRING
+import net.theevilreaper.dartpoet.util.SPACE_STRING
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -16,8 +18,8 @@ class TypeNameExceptionsTest {
 
         @JvmStatic
         private fun testTypeNameConditions() = Stream.of(
-            Arguments.of({ ClassName("") }, "The name of a ClassName can't be empty (includes only spaces)"),
-            Arguments.of({ ClassName("  ") }, "The name of a ClassName can't be empty (includes only spaces)"),
+            Arguments.of({ ClassName(EMPTY_STRING) }, "The name of a ClassName can't be empty (includes only spaces)"),
+            Arguments.of({ ClassName(SPACE_STRING) }, "The name of a ClassName can't be empty (includes only spaces)"),
             Arguments.of(
                 {
                     ParameterizedTypeName(

@@ -16,7 +16,7 @@ class FileConventionNamingTest {
     }
 
     @ParameterizedTest(name = "Test invalid name pattern: {arguments}")
-    @ValueSource(strings = ["hello__world.dart", "_hello__world_.dart", "_test", "model_", "", "Dart_FILE"])
+    @ValueSource(strings = ["hello__world.dart", "_hello__world_.dart", "_test", "model_", EMPTY_STRING, "Dart_FILE"])
     fun `test invalid file patterns`(pattern: String) {
         assertFalse { isDartConventionFileName(pattern) }
     }

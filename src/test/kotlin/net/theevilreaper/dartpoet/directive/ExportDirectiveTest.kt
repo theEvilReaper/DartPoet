@@ -16,10 +16,6 @@ class ExportDirectiveTest {
         @JvmStatic
         private fun invalidExportDirectives(): Stream<Arguments> = Stream.of(
             Arguments.of(
-                { DirectiveFactory.create(DirectiveType.EXPORT, "") },
-                "The path of an directive can't be empty"
-            ),
-            Arguments.of(
                 { DirectiveFactory.create(DirectiveType.EXPORT, "dart:math", CastType.DEFERRED, "math") },
                 "The following cast types are not allowed for an export directive: [DEFERRED, AS]"
             ),

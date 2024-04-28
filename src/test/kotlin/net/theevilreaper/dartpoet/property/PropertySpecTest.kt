@@ -5,6 +5,7 @@ import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.type.asTypeName
 import net.theevilreaper.dartpoet.util.ALLOWED_CONST_MODIFIERS
 import net.theevilreaper.dartpoet.util.ALLOWED_PROPERTY_MODIFIERS
+import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -57,7 +58,7 @@ class PropertySpecTest {
                 "These modifiers [REQUIRED] are not allowed in a property context. Allowed modifiers: $ALLOWED_PROPERTY_MODIFIERS"
             ),
             Arguments.of(
-                { PropertySpec.builder("", String::class).build() },
+                { PropertySpec.builder(EMPTY_STRING, String::class).build() },
                 "The name of a property can't be empty"
             ),
             Arguments.of(

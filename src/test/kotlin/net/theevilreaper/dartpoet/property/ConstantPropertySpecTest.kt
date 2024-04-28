@@ -1,6 +1,7 @@
 package net.theevilreaper.dartpoet.property
 
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
+import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -20,7 +21,7 @@ class ConstantPropertySpecTest {
         private fun invalidFileConstantSpec() = Stream.of(
             Arguments.of(
                 "The name of a file constant can't be empty",
-                { ConstantPropertySpec.classConst("", String::class).build() }
+                { ConstantPropertySpec.classConst(EMPTY_STRING, String::class).build() }
             ),
             Arguments.of(
                 "The initializer can't be empty",

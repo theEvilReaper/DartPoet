@@ -10,13 +10,13 @@ import kotlin.test.assertTrue
 class IndentTest {
 
     @ParameterizedTest(name = "Test valid indent value: {arguments}")
-    @ValueSource(strings = [" ", "  "])
+    @ValueSource(strings = [SPACE_STRING, "  "])
     fun `test valid indent pattern`(indent: String) {
         assertTrue { isIndent(indent) }
     }
 
     @ParameterizedTest(name = "Test invalid indent value: {arguments}")
-    @ValueSource(strings = ["", " a", "123"])
+    @ValueSource(strings = [EMPTY_STRING, " a", "123"])
     fun `test invalid indent patterns`(indent: String) {
         assertFalse { isIndent(indent) }
     }

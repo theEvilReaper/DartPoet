@@ -2,6 +2,7 @@ package net.theevilreaper.dartpoet.extension
 
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
+import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -19,12 +20,12 @@ class ExtensionSpecTest {
         private fun invalidExtensionSpecs() = Stream.of(
             Arguments.of(
                 IllegalStateException::class.java,
-                { ExtensionSpec.builder("", String::class).build() },
+                { ExtensionSpec.builder(EMPTY_STRING, String::class).build() },
                 "The name of a extension can't be empty"
             ),
             Arguments.of(
                 IllegalArgumentException::class.java,
-                { ExtensionSpec.builder("StringExt", "").build() },
+                { ExtensionSpec.builder("StringExt", EMPTY_STRING).build() },
                 "The name of a ClassName can't be empty (includes only spaces)"
             ),
             Arguments.of(

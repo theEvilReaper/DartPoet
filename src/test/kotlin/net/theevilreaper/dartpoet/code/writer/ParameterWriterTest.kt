@@ -3,6 +3,7 @@ package net.theevilreaper.dartpoet.code.writer
 import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
+import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -51,7 +52,7 @@ class ParameterWriterTest {
     fun `test invalid parameter definition`() {
         assertThrows(
             IllegalStateException::class.java,
-            { ParameterSpec.builder("").build() },
+            { ParameterSpec.builder(EMPTY_STRING).build() },
             "The name of a parameter can't be empty"
         )
     }
