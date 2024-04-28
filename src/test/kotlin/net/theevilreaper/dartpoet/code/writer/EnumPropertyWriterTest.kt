@@ -3,11 +3,13 @@ package net.theevilreaper.dartpoet.code.writer
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.enum.EnumPropertySpec
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
 
+@DisplayName("Test enum property writer")
 class EnumPropertyWriterTest {
 
     companion object {

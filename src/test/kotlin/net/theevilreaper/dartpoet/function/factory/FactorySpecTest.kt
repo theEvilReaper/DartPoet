@@ -8,30 +8,15 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.Arguments
-import org.junit.jupiter.params.provider.MethodSource
-import java.util.stream.Stream
 
 @DisplayName("Tests for the factory spec object")
 class FactorySpecTest {
 
-    companion object {
-
-        @JvmStatic
-        private fun invalidFactoryCalls(): Stream<Arguments> = Stream.of(
-            Arguments.of(
-                { FactorySpec.constBuilder(Int::class.asTypeName()).build() },
-                "The initializer block must not be empty"
-            ),
-        )
-    }
-
-    @ParameterizedTest
-    @MethodSource("invalidFactoryCalls")
-    fun `test invalid factory calls`(factory: () -> FactorySpec, message: String) {
-        assertThrows(message, IllegalStateException::class.java) {
-            factory.invoke()
+    @Test
+    fun `test invalid factory creation`() {
+        assertThrows("The initializer block must not be empty", IllegalStateException::class.java) {
+            FactorySpec.constBuilder(Int::class.asTypeName())
+                .build()
         }
     }
 

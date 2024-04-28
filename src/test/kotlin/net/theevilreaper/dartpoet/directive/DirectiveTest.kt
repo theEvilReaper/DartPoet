@@ -1,14 +1,18 @@
 package net.theevilreaper.dartpoet.directive
 
+import net.theevilreaper.dartpoet.util.EMPTY_STRING
+import net.theevilreaper.dartpoet.util.SPACE_STRING
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.EnumSource
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
 
+@DisplayName("Test directive creation")
 class DirectiveTest {
 
     private val packageImport = "import 'package:flutter/material.dart';"
@@ -22,11 +26,11 @@ class DirectiveTest {
 
         @JvmStatic
         private fun directivesWhichThrowsException() = Stream.of(
-            Arguments.of({ DartDirective(" ") }, EMPTY_NAME_MESSAGE),
-            Arguments.of({ LibraryDirective("") }, EMPTY_NAME_MESSAGE),
-            Arguments.of({ PartDirective("") }, EMPTY_NAME_MESSAGE),
-            Arguments.of({ RelativeDirective("") }, EMPTY_NAME_MESSAGE),
-            Arguments.of({ LibraryDirective("") }, EMPTY_NAME_MESSAGE),
+            Arguments.of({ DartDirective(SPACE_STRING) }, EMPTY_NAME_MESSAGE),
+            Arguments.of({ LibraryDirective(EMPTY_STRING) }, EMPTY_NAME_MESSAGE),
+            Arguments.of({ PartDirective(EMPTY_STRING) }, EMPTY_NAME_MESSAGE),
+            Arguments.of({ RelativeDirective(EMPTY_STRING) }, EMPTY_NAME_MESSAGE),
+            Arguments.of({ LibraryDirective(EMPTY_STRING) }, EMPTY_NAME_MESSAGE),
             Arguments.of({ DartDirective("flutter/material.dart", CastType.AS, null) }, INVALID_CAST_USAGE),
             Arguments.of({ DartDirective("flutter/material.dart", null, "test") }, INVALID_CAST_USAGE),
             Arguments.of({ RelativeDirective("flutter/material.dart", CastType.AS, null) }, INVALID_CAST_USAGE),
@@ -38,12 +42,12 @@ class DirectiveTest {
         @JvmStatic
         private fun libDirectives() = Stream.of(
             Arguments.of(
+                "library testLib;",
                 DirectiveFactory.createLib("testLib"),
-                "library testLib;"
             ),
             Arguments.of(
+                "part of testLib;",
                 DirectiveFactory.createLib("testLib", true),
-                "part of testLib;"
             ),
         )
 
@@ -108,9 +112,9 @@ class DirectiveTest {
         assertEquals(expectedMessage, exception.message)
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "Test lib directive creation for: {arguments}")
     @MethodSource("libDirectives")
-    fun `test library imports`(current: Directive, expected: String) {
+    fun `test library imports`(expected: String, current: Directive, ) {
         assertEquals(expected, current.asString())
     }
 
@@ -132,20 +136,13 @@ class DirectiveTest {
         assertEquals(expected, current.asString())
     }
 
-    @Test
-    fun `test cast import with empty cast`() {
-        assertThrows(
-            IllegalStateException::class.java,
-            { DirectiveFactory.create(DirectiveType.IMPORT, "flutter/material.dart", CastType.AS, " ") },
-            "The importCast can't be empty"
-        )
-        assertThrows(
-            IllegalStateException::class.java,
-            { DirectiveFactory.create(DirectiveType.IMPORT, "flutter/material.dart", CastType.AS, "") },
-            "The importCast can't be empty"
-        )
+    @ParameterizedTest
+    @EnumSource(value = CastType::class, mode = EnumSource.Mode.MATCH_ALL)
+    fun `test invalid cast import mapping`(castType: CastType) {
+        assertThrows<IllegalStateException> {
+            DirectiveFactory.create(DirectiveType.IMPORT, "flutter/material.dart", castType, SPACE_STRING)
+        }
     }
-
 
     @Test
     fun `test package import`() {

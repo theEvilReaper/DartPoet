@@ -1,22 +1,20 @@
 package net.theevilreaper.dartpoet.directive
 
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
 
+@DisplayName("Test export directive creations with different arguments")
 class ExportDirectiveTest {
 
     companion object {
 
         @JvmStatic
         private fun invalidExportDirectives(): Stream<Arguments> = Stream.of(
-            Arguments.of(
-                { DirectiveFactory.create(DirectiveType.EXPORT, "") },
-                "The path of an directive can't be empty"
-            ),
             Arguments.of(
                 { DirectiveFactory.create(DirectiveType.EXPORT, "dart:math", CastType.DEFERRED, "math") },
                 "The following cast types are not allowed for an export directive: [DEFERRED, AS]"

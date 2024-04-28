@@ -2,9 +2,11 @@ package net.theevilreaper.dartpoet.meta
 
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
+@DisplayName("Test behaviour of the SpecData structure")
 class SpecDataTest {
 
     private var specData: SpecData = SpecData()

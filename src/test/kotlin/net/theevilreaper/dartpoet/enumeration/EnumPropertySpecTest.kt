@@ -3,6 +3,7 @@ package net.theevilreaper.dartpoet.enumeration
 import com.google.common.truth.Truth
 import net.theevilreaper.dartpoet.enum.EnumPropertySpec
 import net.theevilreaper.dartpoet.type.ClassName
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -13,6 +14,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
+@DisplayName("Test enum property spec creation")
 class EnumPropertySpecTest {
 
     companion object {

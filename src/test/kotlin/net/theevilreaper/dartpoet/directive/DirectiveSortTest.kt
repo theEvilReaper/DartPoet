@@ -1,6 +1,8 @@
 package net.theevilreaper.dartpoet.directive
 
 import net.theevilreaper.dartpoet.util.DirectiveOrdering
+import net.theevilreaper.dartpoet.util.EMPTY_STRING
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
@@ -9,6 +11,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 
+@DisplayName("Test directive ordering")
 class DirectiveSortTest {
 
     companion object {
@@ -80,7 +83,7 @@ class DirectiveSortTest {
         return directives.map {
             var directive: String = it.asString()
             for (placeholder in placeholders) {
-                directive = directive.replace(placeholder, "")
+                directive = directive.replace(placeholder, EMPTY_STRING)
             }
             return@map directive
         }.toList()

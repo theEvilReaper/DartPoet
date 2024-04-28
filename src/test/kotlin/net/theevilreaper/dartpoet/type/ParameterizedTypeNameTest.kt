@@ -2,18 +2,20 @@ package net.theevilreaper.dartpoet.type
 
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
 
+@DisplayName("Test cases for the ParameterizedTypeName implementation")
 class ParameterizedTypeNameTest {
 
     companion object {
 
         @JvmStatic
-        private fun typeNameTest() = Stream.of(
+        private fun testTypeNamesWithGenerics() = Stream.of(
             Arguments.of("List<int>", List::class.parameterizedBy(Int::class)),
             Arguments.of(
                 "Map<String, String>",
@@ -49,19 +51,19 @@ class ParameterizedTypeNameTest {
         )
     }
 
-    @ParameterizedTest
-    @MethodSource("typeNameTest")
+    @ParameterizedTest(name = "Test creation of: {0}")
+    @MethodSource("testTypeNamesWithGenerics")
     fun `test parameterized type name class`(expected: String, parameter: ParameterizedTypeName) {
         assertEquals(expected, parameter.toString())
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "Test creation over companion: {0}")
     @MethodSource("typeNameCompanions")
     fun `test method from the parameterized companion object`(expected: String, parameter: ParameterizedTypeName) {
         assertEquals(expected, parameter.toString())
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "Test creation with enclosing name: {0}")
     @MethodSource("testEnclosingTyeName")
     fun `test parameterized write with an enclosingTypeName`(expected: String, parameter: ParameterizedTypeName) {
         assertEquals(expected, parameter.toString())

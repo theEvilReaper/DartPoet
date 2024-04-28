@@ -5,6 +5,8 @@ import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.type.asTypeName
 import net.theevilreaper.dartpoet.util.ALLOWED_CONST_MODIFIERS
 import net.theevilreaper.dartpoet.util.ALLOWED_PROPERTY_MODIFIERS
+import net.theevilreaper.dartpoet.util.EMPTY_STRING
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
@@ -15,6 +17,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
+@DisplayName("Test the creation of different PropertySpec objects")
 class PropertySpecTest {
 
     companion object {
@@ -22,25 +25,25 @@ class PropertySpecTest {
         @JvmStatic
         fun parameters(): Stream<Arguments> = Stream.of(
             Arguments.of(
+                "String? test;",
                 PropertySpec.builder("test", String::class.asTypeName().copy(nullable = true)).build(),
-                "String? test;"
             ),
             Arguments.of(
+                "int value;",
                 PropertySpec.builder("value", Int::class).build(),
-                "int value;"
             ),
             Arguments.of(
+                "int data = 4;",
                 PropertySpec.builder("data", Int::class).initWith("%L", "4").build(),
-                "int data = 4;"
             ),
             Arguments.of(
+                "final int data = 4;",
                 PropertySpec.builder("data", Int::class).initWith("%L", "4").modifier { DartModifier.FINAL }.build(),
-                "final int data = 4;"
             ),
             Arguments.of(
+                "final String _id;",
                 PropertySpec.builder("id", String::class).modifiers(DartModifier.FINAL, DartModifier.PRIVATE)
                     .build(),
-                "final String _id;"
             )
         )
 
@@ -55,7 +58,7 @@ class PropertySpecTest {
                 "These modifiers [REQUIRED] are not allowed in a property context. Allowed modifiers: $ALLOWED_PROPERTY_MODIFIERS"
             ),
             Arguments.of(
-                { PropertySpec.builder("", String::class).build() },
+                { PropertySpec.builder(EMPTY_STRING, String::class).build() },
                 "The name of a property can't be empty"
             ),
             Arguments.of(
@@ -73,9 +76,9 @@ class PropertySpecTest {
         )
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "Test parameter creation to test: {arguments}")
     @MethodSource("parameters")
-    fun `test properties`(propertySpec: PropertySpec, expected: String) {
+    fun `test properties`(expected: String, propertySpec: PropertySpec) {
         assertThat(propertySpec.toString()).isEqualTo(expected)
     }
 

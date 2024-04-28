@@ -1,33 +1,23 @@
 package net.theevilreaper.dartpoet.util
 
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.Arguments
-import org.junit.jupiter.params.provider.MethodSource
-import java.util.stream.Stream
+import org.junit.jupiter.params.provider.ValueSource
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
+@DisplayName("Test if a given indent is a valid indent for the project")
 class IndentTest {
 
-    companion object {
-
-        @JvmStatic
-        private fun indentTest() = Stream.of(
-            Arguments.of(" ", true),
-            Arguments.of("  ", true),
-            Arguments.of("", false),
-            Arguments.of(" a", false),
-            Arguments.of("123", false),
-        )
+    @ParameterizedTest(name = "Test valid indent value: {arguments}")
+    @ValueSource(strings = [SPACE_STRING, "  "])
+    fun `test valid indent pattern`(indent: String) {
+        assertTrue { isIndent(indent) }
     }
 
-    @ParameterizedTest
-    @MethodSource("indentTest")
-    fun `test indent pattern`(indent: String, expected: Boolean) {
-        if (expected) {
-            assertTrue { isIndent(indent) }
-        } else {
-            assertFalse { isIndent(indent) }
-        }
+    @ParameterizedTest(name = "Test invalid indent value: {arguments}")
+    @ValueSource(strings = [EMPTY_STRING, " a", "123"])
+    fun `test invalid indent patterns`(indent: String) {
+        assertFalse { isIndent(indent) }
     }
 }

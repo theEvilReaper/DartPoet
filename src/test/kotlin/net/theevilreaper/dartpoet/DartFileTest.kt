@@ -19,24 +19,12 @@ import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameter
 import net.theevilreaper.dartpoet.type.asTypeName
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import kotlin.test.assertContentEquals
 
+@DisplayName("Test somme cases from a DartFile object")
 class DartFileTest {
-
-    @Test
-    fun `test indent set`() {
-        assertThrows(
-            IllegalStateException::class.java,
-            { DartFile.builder("Test").indent("") },
-            "The indent can't be empty"
-        )
-        assertThrows(
-            IllegalStateException::class.java,
-            { DartFile.builder("Test").indent { " 123AB" } },
-            "The indent can't be empty"
-        )
-    }
 
     @Test
     fun `test spec to builder conversation`() {

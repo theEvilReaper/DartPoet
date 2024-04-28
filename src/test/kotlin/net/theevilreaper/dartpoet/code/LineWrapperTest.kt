@@ -3,8 +3,10 @@ package net.theevilreaper.dartpoet.code
 import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.util.DEFAULT_INDENT
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
+@DisplayName("Test line wrapper")
 class LineWrapperTest {
 
     @Test

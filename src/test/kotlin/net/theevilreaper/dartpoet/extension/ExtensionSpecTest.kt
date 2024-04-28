@@ -2,13 +2,16 @@ package net.theevilreaper.dartpoet.extension
 
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
+import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
 
+@DisplayName("Test some ExtensionSpec object creations")
 class ExtensionSpecTest {
 
     companion object {
@@ -17,12 +20,12 @@ class ExtensionSpecTest {
         private fun invalidExtensionSpecs() = Stream.of(
             Arguments.of(
                 IllegalStateException::class.java,
-                { ExtensionSpec.builder("", String::class).build() },
+                { ExtensionSpec.builder(EMPTY_STRING, String::class).build() },
                 "The name of a extension can't be empty"
             ),
             Arguments.of(
                 IllegalArgumentException::class.java,
-                { ExtensionSpec.builder("StringExt", "").build() },
+                { ExtensionSpec.builder("StringExt", EMPTY_STRING).build() },
                 "The name of a ClassName can't be empty (includes only spaces)"
             ),
             Arguments.of(
@@ -52,7 +55,7 @@ class ExtensionSpecTest {
         )
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "Test invalid extension spec definitions")
     @MethodSource("invalidExtensionSpecs")
     fun `test invalid extension spec`(exception: Class<out Exception>, function: () -> Unit, message: String) {
         val givenException = assertThrows(exception) { function() }

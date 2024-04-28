@@ -10,8 +10,10 @@ import net.theevilreaper.dartpoet.directive.DirectiveType
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
+import org.junit.jupiter.api.DisplayName
 import kotlin.test.Test
 
+@DisplayName("Test some file generations with directive usage")
 class DartFileImportTest {
 
     @Test
