@@ -1,6 +1,7 @@
 package net.theevilreaper.dartpoet.enum
 
 import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.EnumPropertyWriter
 import net.theevilreaper.dartpoet.util.toImmutableList
@@ -31,7 +32,7 @@ class EnumPropertySpec internal constructor(
 
 
     internal fun write(codeWriter: CodeWriter) {
-        EnumPropertyWriter().write(this, codeWriter)
+        WriterHelper.enumPropertyWriter.write(this, codeWriter)
     }
 
     /**

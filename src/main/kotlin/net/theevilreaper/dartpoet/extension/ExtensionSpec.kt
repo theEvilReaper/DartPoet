@@ -2,6 +2,7 @@ package net.theevilreaper.dartpoet.extension
 
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.ExtensionWriter
 import net.theevilreaper.dartpoet.function.FunctionSpec
@@ -64,7 +65,7 @@ class ExtensionSpec internal constructor(
      * @param codeWriter the writer instance to apply the data as code
      */
     internal fun write(codeWriter: CodeWriter) {
-        ExtensionWriter().write(this, codeWriter)
+        WriterHelper.extensionWriter.write(this, codeWriter)
     }
 
     /**

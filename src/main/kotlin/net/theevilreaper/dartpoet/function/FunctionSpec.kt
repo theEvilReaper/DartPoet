@@ -4,6 +4,7 @@ import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.writer.FunctionWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
@@ -73,7 +74,7 @@ class FunctionSpec internal constructor(
      * @param codeWriter the writer instance
      */
     internal fun write(codeWriter: CodeWriter) {
-        FunctionWriter().write(this, codeWriter)
+        WriterHelper.functionWriter.write(this, codeWriter)
     }
 
     /**

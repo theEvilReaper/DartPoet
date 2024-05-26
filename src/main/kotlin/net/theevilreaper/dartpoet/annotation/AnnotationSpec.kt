@@ -1,7 +1,6 @@
 package net.theevilreaper.dartpoet.annotation
 
 import net.theevilreaper.dartpoet.code.*
-import net.theevilreaper.dartpoet.code.writer.AnnotationWriter
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asClassName
@@ -41,7 +40,7 @@ class AnnotationSpec internal constructor(
         codeWriter: CodeWriter,
         inline: Boolean = true,
     ) {
-        AnnotationWriter().emit(this, codeWriter, inline = inline)
+        WriterHelper.annotationWriter.emit(this, codeWriter, inline = inline)
     }
 
     /**

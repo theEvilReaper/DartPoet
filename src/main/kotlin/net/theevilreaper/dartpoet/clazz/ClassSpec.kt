@@ -6,6 +6,7 @@ import net.theevilreaper.dartpoet.DartModifier.WITH
 import net.theevilreaper.dartpoet.InheritKeyword
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.ClassWriter
 import net.theevilreaper.dartpoet.enum.EnumPropertySpec
@@ -75,7 +76,7 @@ class ClassSpec internal constructor(
      * @param codeWriter the [CodeWriter] instance to apply the data
      */
     internal fun write(codeWriter: CodeWriter) {
-        ClassWriter().write(this, codeWriter)
+        WriterHelper.classWriter.write(this, codeWriter)
     }
 
     /**

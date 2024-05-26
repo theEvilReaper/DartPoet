@@ -2,6 +2,7 @@ package net.theevilreaper.dartpoet.property.consts
 
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.ConstantPropertyWriter
 import net.theevilreaper.dartpoet.property.PropertySpec
@@ -44,7 +45,7 @@ class ConstantPropertySpec(
      * @param codeWriter the [CodeWriter] to apply the content from the spec
      */
     internal fun write(codeWriter: CodeWriter) {
-        ConstantPropertyWriter().write(this, codeWriter)
+        WriterHelper.constantPropertyWriter.write(this, codeWriter)
     }
 
     /**

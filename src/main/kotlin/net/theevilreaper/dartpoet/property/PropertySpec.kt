@@ -3,6 +3,7 @@ package net.theevilreaper.dartpoet.property
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.writer.PropertyWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.type.ClassName
@@ -60,7 +61,7 @@ class PropertySpec internal constructor(
      * @param codeWriter the [CodeWriter] to apply the content from the spec
      */
     internal fun write(codeWriter: CodeWriter) {
-        PropertyWriter().write(this, codeWriter)
+        WriterHelper.propertyWriter.write(this, codeWriter)
     }
 
     /**
