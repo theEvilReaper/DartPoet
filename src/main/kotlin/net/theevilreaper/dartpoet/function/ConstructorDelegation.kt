@@ -32,10 +32,9 @@ enum class ConstructorDelegation(val delegation: String) {
          * @param codeWriter the [CodeWriter] to append the code
          */
         fun appendDelegation(delegation: ConstructorDelegation, block: CodeBlock, codeWriter: CodeWriter) {
-            val delegationString = if (delegation == NONE) {
-                " {$NEW_LINE"
-            } else {
-                "·${delegation.delegation}·"
+            val delegationString = when (delegation) {
+                NONE -> " {$NEW_LINE"
+                else -> "·${delegation.delegation}·"
             }
             codeWriter.emitCode(delegationString)
             codeWriter.indent()
