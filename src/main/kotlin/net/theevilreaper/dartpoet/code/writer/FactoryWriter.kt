@@ -6,8 +6,8 @@ import net.theevilreaper.dartpoet.code.DocumentationAppender
 import net.theevilreaper.dartpoet.code.InitializerAppender
 import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.code.emitParameters
-import net.theevilreaper.dartpoet.function.ConstructorDelegation
-import net.theevilreaper.dartpoet.function.factory.FactorySpec
+import net.theevilreaper.dartpoet.constructor.ConstructorDelegation
+import net.theevilreaper.dartpoet.constructor.factory.FactorySpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.util.CURLY_CLOSE
 import net.theevilreaper.dartpoet.util.CURLY_OPEN

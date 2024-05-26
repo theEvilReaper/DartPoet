@@ -1,4 +1,4 @@
-package net.theevilreaper.dartpoet.function.constructor
+package net.theevilreaper.dartpoet.constructor
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName

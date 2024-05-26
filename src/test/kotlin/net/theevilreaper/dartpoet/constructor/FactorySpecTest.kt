@@ -1,6 +1,6 @@
-package net.theevilreaper.dartpoet.function.factory
+package net.theevilreaper.dartpoet.constructor
 
-import net.theevilreaper.dartpoet.function.ConstructorDelegation
+import net.theevilreaper.dartpoet.constructor.factory.FactorySpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.asTypeName
 import org.junit.Assert.assertThrows
