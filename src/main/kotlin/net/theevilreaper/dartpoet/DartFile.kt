@@ -3,15 +3,14 @@ package net.theevilreaper.dartpoet
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.buildCodeString
-import net.theevilreaper.dartpoet.code.writer.DartFileWriter
 import net.theevilreaper.dartpoet.directive.DartDirective
 import net.theevilreaper.dartpoet.directive.ExportDirective
 import net.theevilreaper.dartpoet.directive.LibraryDirective
 import net.theevilreaper.dartpoet.directive.PartDirective
 import net.theevilreaper.dartpoet.directive.RelativeDirective
 import net.theevilreaper.dartpoet.extension.ExtensionSpec
-import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.util.DART_FILE_ENDING
@@ -58,22 +57,10 @@ class DartFile internal constructor(
     }
 
     internal fun write(codeWriter: CodeWriter) {
-        DartFileWriter().write(this, codeWriter)
+        WriterHelper.fileWriter.write(this, codeWriter)
     }
 
     override fun toString() = buildCodeString { write(this) }
-
-    internal val callEmit: (Any, CodeWriter) -> Unit = { o: Any, c: CodeWriter ->
-        emitInternal(o, c)
-    }
-
-    private fun emitInternal(o: Any, c: CodeWriter) {
-        when (o::class) {
-            FunctionSpec::class -> {
-                callEmit(o, c)
-            }
-        }
-    }
 
     /**
      * Writes the content from a [DartFile] to the given [Appendable].

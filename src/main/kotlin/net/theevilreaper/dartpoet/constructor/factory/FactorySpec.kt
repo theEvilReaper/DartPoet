@@ -3,6 +3,7 @@ package net.theevilreaper.dartpoet.constructor.factory
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.FactoryWriter
 import net.theevilreaper.dartpoet.constructor.ConstructorBase
@@ -54,7 +55,7 @@ class FactorySpec(
      * @see FactoryWriter
      */
     internal fun write(codeWriter: CodeWriter) {
-        FactoryWriter().write(this, codeWriter)
+        WriterHelper.factoryWriter.write(this, codeWriter)
     }
 
     /**

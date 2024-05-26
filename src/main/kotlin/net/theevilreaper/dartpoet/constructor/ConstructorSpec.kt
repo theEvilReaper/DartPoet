@@ -1,6 +1,7 @@
 package net.theevilreaper.dartpoet.constructor
 
 import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.ConstructorWriter
 import net.theevilreaper.dartpoet.util.toImmutableList
@@ -37,7 +38,7 @@ class ConstructorSpec internal constructor(
      * @param codeWriter the instance to a [CodeWriter] to append the data
      */
     internal fun write(codeWriter: CodeWriter) {
-        ConstructorWriter().write(this, codeWriter)
+        WriterHelper.constructorWriter.write(this, codeWriter)
     }
 
     /**

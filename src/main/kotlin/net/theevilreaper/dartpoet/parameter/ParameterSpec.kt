@@ -2,6 +2,7 @@ package net.theevilreaper.dartpoet.parameter
 
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.ParameterWriter
 import net.theevilreaper.dartpoet.type.ClassName
@@ -51,7 +52,7 @@ class ParameterSpec internal constructor(
      * @param codeWriter the [CodeWriter] to which the parameter should be written
      */
     internal fun write(codeWriter: CodeWriter) {
-        ParameterWriter().write(this, codeWriter)
+        WriterHelper.parameterWriter.write(this, codeWriter)
     }
 
     /**

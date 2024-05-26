@@ -1,9 +1,9 @@
 package net.theevilreaper.dartpoet.function.typedef
 
 import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.FunctionWriter
-import net.theevilreaper.dartpoet.code.writer.TypeDefWriter
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asTypeName
@@ -50,7 +50,7 @@ class TypeDefSpec(
      * @param codeWriter the writer instance
      */
     internal fun write(codeWriter: CodeWriter) {
-        TypeDefWriter().write(this, codeWriter)
+        WriterHelper.typeDefWriter.write(this, codeWriter)
     }
 
     /**
