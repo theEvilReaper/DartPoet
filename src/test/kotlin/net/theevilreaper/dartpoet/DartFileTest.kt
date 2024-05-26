@@ -8,7 +8,7 @@ import net.theevilreaper.dartpoet.directive.CastType
 import net.theevilreaper.dartpoet.directive.DirectiveFactory
 import net.theevilreaper.dartpoet.directive.DirectiveType
 import net.theevilreaper.dartpoet.function.FunctionSpec
-import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
+import net.theevilreaper.dartpoet.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
@@ -18,7 +18,6 @@ import net.theevilreaper.dartpoet.type.DYNAMIC
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
 import net.theevilreaper.dartpoet.type.asTypeName
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import kotlin.test.assertContentEquals

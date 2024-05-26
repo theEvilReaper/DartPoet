@@ -9,7 +9,7 @@ import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.ClassWriter
 import net.theevilreaper.dartpoet.enum.EnumPropertySpec
-import net.theevilreaper.dartpoet.function.ConstructorBase
+import net.theevilreaper.dartpoet.constructor.ConstructorBase
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
 import net.theevilreaper.dartpoet.property.PropertySpec

@@ -1,10 +1,21 @@
-package net.theevilreaper.dartpoet.function.constructor
+package net.theevilreaper.dartpoet.constructor
 
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 
-class ConstructorBuilder(
+/**
+ * The [ConstructorBuilder] allows the creation of a constructor for the programming language Dart.
+ * To reduce the complexity of the usage the class is designed as builder which requires some values for the creation.
+ * All other method are optional and should be used to create a constructor for the given context.
+ * @param name the name for the constructor
+ * @param named the string part for a named constructor
+ * @param modifiers an [Array] of [DartModifier] which should be applied
+ * @see ConstructorSpec
+ * @since 1.0.0
+ * @author theEvilReaper
+ */
+class ConstructorBuilder internal constructor(
     val name: String,
     val named: String? = null,
     vararg modifiers: DartModifier
@@ -103,7 +114,5 @@ class ConstructorBuilder(
      * Creates a new object reference from the [ConstructorSpec].
      * @return the created reference
      */
-    fun build(): ConstructorSpec {
-        return ConstructorSpec(this)
-    }
+    fun build(): ConstructorSpec = ConstructorSpec(this)
 }

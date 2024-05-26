@@ -3,10 +3,10 @@ package net.theevilreaper.dartpoet.code
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.directive.Directive
 import net.theevilreaper.dartpoet.extension.ExtensionSpec
-import net.theevilreaper.dartpoet.function.ConstructorBase
+import net.theevilreaper.dartpoet.constructor.ConstructorBase
 import net.theevilreaper.dartpoet.function.FunctionSpec
-import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
-import net.theevilreaper.dartpoet.function.factory.FactorySpec
+import net.theevilreaper.dartpoet.constructor.ConstructorSpec
+import net.theevilreaper.dartpoet.constructor.factory.FactorySpec
 import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec

@@ -5,7 +5,7 @@ import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.DocumentationAppender
 import net.theevilreaper.dartpoet.code.Writeable
 import net.theevilreaper.dartpoet.code.emitParameters
-import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
+import net.theevilreaper.dartpoet.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.util.CURLY_CLOSE
 import net.theevilreaper.dartpoet.util.CURLY_OPEN
 import net.theevilreaper.dartpoet.util.NEW_LINE

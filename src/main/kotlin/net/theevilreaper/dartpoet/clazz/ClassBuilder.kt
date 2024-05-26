@@ -4,11 +4,11 @@ import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.InheritKeyword
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.enum.EnumPropertySpec
-import net.theevilreaper.dartpoet.function.ConstructorBase
+import net.theevilreaper.dartpoet.constructor.ConstructorBase
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.meta.SpecData
 import net.theevilreaper.dartpoet.meta.SpecMethods
-import net.theevilreaper.dartpoet.function.constructor.ConstructorSpec
+import net.theevilreaper.dartpoet.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec

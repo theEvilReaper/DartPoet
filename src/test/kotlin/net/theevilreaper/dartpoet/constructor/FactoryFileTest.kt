@@ -7,8 +7,7 @@ import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.directive.DirectiveFactory
 import net.theevilreaper.dartpoet.directive.DirectiveType
-import net.theevilreaper.dartpoet.function.ConstructorDelegation
-import net.theevilreaper.dartpoet.function.factory.FactorySpec
+import net.theevilreaper.dartpoet.constructor.factory.FactorySpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.DYNAMIC
