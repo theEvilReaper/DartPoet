@@ -37,7 +37,11 @@ class ExtensionSpec internal constructor(
     internal val joinedRawTypes by lazy {
         if (genericType.isEmpty()) return@lazy EMPTY_STRING
         val withComma = genericType.size > 1
-        genericType.joinToString(if (withComma) ", " else EMPTY_STRING) { it.getRawData() }
+        val separator = when (withComma) {
+            true -> ", "
+            false -> EMPTY_STRING
+        }
+        genericType.joinToString(separator) { it.getRawData() }
     }
 
     /**
