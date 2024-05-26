@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "net.theevilreaper.dartpoet"
-version = "0.0.1-SNAPSHOT"
+version = System.getenv("TAG_VERSION") ?: "0.0.1-SNAPSHOT"
 
 repositories {
     mavenCentral()
