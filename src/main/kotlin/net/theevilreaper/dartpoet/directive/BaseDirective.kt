@@ -40,10 +40,9 @@ abstract class BaseDirective(
      * @return the original string or the string with .dart at the end
      */
     protected fun String.ensureDartFileEnding(): String {
-        return if (!this.endsWith(DART_FILE_ENDING) && !isDartImport()) {
-            "$this$DART_FILE_ENDING"
-        } else {
-            this
+        return when (!this.endsWith(DART_FILE_ENDING) && !isDartImport()) {
+            true -> "$this$DART_FILE_ENDING"
+            false -> this
         }
     }
 
