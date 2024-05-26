@@ -16,7 +16,7 @@ class EnumPropertyWriterTest {
 
         @JvmStatic
         private fun properties() = Stream.of(
-            Arguments.of(EnumPropertySpec.builder("test").generic(String::class).build(), "test<String>"),
+            Arguments.of(EnumPropertySpec.builder("test", String::class).build(), "test<String>"),
             Arguments.of(
                 EnumPropertySpec.builder("test")
                     .parameter("%C", "/dash")
