@@ -2,23 +2,21 @@ package net.theevilreaper.dartpoet.enum
 
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
-import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
-import net.theevilreaper.dartpoet.type.asClassName
-import kotlin.reflect.KClass
 
 /**
  * Builder for creating instances of [EnumPropertySpec].
  * Contains methods to add parameter objects and set a generic cast to the property.
  * @param name the name for the property
+ * @param genericValueCast the generic cast for the property
  * @version 1.0.0
  * @since 1.0.0
  * @author theEvilReaper
  */
-class EnumPropertyBuilder(
-    val name: String
+class EnumPropertyBuilder internal constructor(
+    val name: String,
+    val genericValueCast: TypeName? = null,
 ) {
-    internal var genericValueCast: TypeName? = null
     internal val parameters: MutableList<CodeBlock> = mutableListOf()
     internal val annotations: MutableList<AnnotationSpec> = mutableListOf()
 
@@ -58,27 +56,6 @@ class EnumPropertyBuilder(
     fun parameter(block: CodeBlock) = apply {
         this.parameters += block
     }
-
-    /**
-     * Sets the generic cast to the enum property.
-     * @param value The value to set as [TypeName]
-     * @return the builder instance
-     */
-    fun generic(value: TypeName) = apply { this.genericValueCast = value }
-
-    /**
-     * Set the cast value for a property.
-     * @param value the value to set as [ClassName]
-     * @return the builder instance
-     */
-    fun generic(value: ClassName) = apply { this.genericValueCast = value }
-
-    /**
-     * Set the cast value for a property.
-     * @param value the value to set as [TypeName]
-     * @return the builder instance
-     */
-    fun generic(value: KClass<*>) = apply { this.genericValueCast = value.asClassName() }
 
     /**
      * Creates a new instance from the [EnumPropertySpec] with the builder instance as parameter.

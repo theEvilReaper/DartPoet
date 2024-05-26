@@ -4,8 +4,14 @@ import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.EnumPropertyWriter
+import net.theevilreaper.dartpoet.type.ClassName
+import net.theevilreaper.dartpoet.type.TypeName
+import net.theevilreaper.dartpoet.type.asClassName
+import net.theevilreaper.dartpoet.type.asTypeName
 import net.theevilreaper.dartpoet.util.toImmutableList
 import net.theevilreaper.dartpoet.util.toImmutableSet
+import java.lang.reflect.Type
+import kotlin.reflect.KClass
 
 /**
  *
@@ -46,9 +52,8 @@ class EnumPropertySpec internal constructor(
      * @return the created instance
      */
     fun toBuilder(): EnumPropertyBuilder {
-        val builder = EnumPropertyBuilder(this.name)
+        val builder = EnumPropertyBuilder(this.name, this.generic)
         builder.annotations.addAll(this.annotations)
-        builder.genericValueCast = this.generic
         builder.parameters.addAll(this.parameters)
         return builder
     }
@@ -65,5 +70,41 @@ class EnumPropertySpec internal constructor(
          */
         @JvmStatic
         fun builder(name: String) = EnumPropertyBuilder(name)
+
+        /**
+         * Creates a new instance from the [EnumPropertyBuilder] to construct a new property.
+         * @param name the name for the property
+         * @param genericCast the generic cast for the property as [TypeName]
+         * @return the created instance from the [EnumPropertyBuilder]
+         */
+        @JvmStatic
+        fun builder(name: String, genericCast: TypeName) = EnumPropertyBuilder(name, genericCast)
+
+        /**
+         * Creates a new instance from the [EnumPropertyBuilder] to construct a new property.
+         * @param name the name for the property
+         * @param genericCast the generic cast for the property as [ClassName]
+         * @return the created instance from the [EnumPropertyBuilder]
+         */
+        @JvmStatic
+        fun builder(name: String, genericCast: ClassName) = EnumPropertyBuilder(name, genericCast)
+
+        /**
+         * Creates a new instance from the [EnumPropertyBuilder] to construct a new property.
+         * @param name the name for the property
+         * @param genericCast the generic cast for the property as [KClass]
+         * @return the created instance from the [EnumPropertyBuilder]
+         */
+        @JvmStatic
+        fun builder(name: String, genericCast: KClass<*>) = EnumPropertyBuilder(name, genericCast.asClassName())
+
+        /**
+         * Creates a new instance from the [EnumPropertyBuilder] to construct a new property.
+         * @param name the name for the property
+         * @param genericCast the generic cast for the property as [Type]
+         * @return the created instance from the [EnumPropertyBuilder]
+         */
+        @JvmStatic
+        fun builder(name: String, genericCast: Type) = EnumPropertyBuilder(name, genericCast.asTypeName())
     }
 }
