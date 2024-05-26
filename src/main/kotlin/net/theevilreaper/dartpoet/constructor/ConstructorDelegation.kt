@@ -1,4 +1,4 @@
-package net.theevilreaper.dartpoet.function
+package net.theevilreaper.dartpoet.constructor
 
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
@@ -33,7 +33,7 @@ enum class ConstructorDelegation(val delegation: String) {
          */
         fun appendDelegation(delegation: ConstructorDelegation, block: CodeBlock, codeWriter: CodeWriter) {
             val delegationString = when (delegation) {
-                NONE -> " {$NEW_LINE"
+                NONE -> "·{$NEW_LINE"
                 else -> "·${delegation.delegation}·"
             }
             codeWriter.emitCode(delegationString)

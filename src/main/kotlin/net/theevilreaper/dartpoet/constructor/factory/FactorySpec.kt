@@ -1,12 +1,12 @@
-package net.theevilreaper.dartpoet.function.factory
+package net.theevilreaper.dartpoet.constructor.factory
 
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.FactoryWriter
-import net.theevilreaper.dartpoet.function.ConstructorBase
-import net.theevilreaper.dartpoet.function.ConstructorDelegation
+import net.theevilreaper.dartpoet.constructor.ConstructorBase
+import net.theevilreaper.dartpoet.constructor.ConstructorDelegation
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
