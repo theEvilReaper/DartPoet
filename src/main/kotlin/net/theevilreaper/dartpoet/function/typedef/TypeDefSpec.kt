@@ -65,7 +65,11 @@ class TypeDefSpec(
      * @return the created builder
      */
     fun toBuilder(): TypeDefBuilder {
-        return builder
+        val newBuilder = TypeDefBuilder(this.typeDefName, *this.typeCasts)
+        newBuilder.name = this.name
+        newBuilder.returnType = this.returnType
+        newBuilder.parameters.addAll(this.parameters)
+        return newBuilder
     }
 
     /**
