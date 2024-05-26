@@ -50,6 +50,8 @@ class TypeDefSpecTest {
         assertNotEquals(Void::class.java, typeSpec.returnType)
 
         val newBuilder = typeSpec.toBuilder()
+        assertEquals(typeSpec.returnType, newBuilder.returnType)
+        assertEquals(typeSpec.name, newBuilder.name)
         newBuilder.parameter(ParameterSpec.builder("test", String::class).build())
 
         val newTypeSpec = newBuilder.build()
