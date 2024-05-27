@@ -22,6 +22,7 @@ package net.theevilreaper.dartpoet.code
 
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asTypeName
+import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.escapeIfNecessary
 import net.theevilreaper.dartpoet.util.isOneOf
@@ -492,7 +493,7 @@ class CodeBlock private constructor(
 
 @JvmOverloads
 fun Collection<CodeBlock>.joinToCode(
-    separator: CharSequence = ", ",
+    separator: CharSequence = COMMA_SEPARATOR,
     prefix: CharSequence = EMPTY_STRING,
     suffix: CharSequence = EMPTY_STRING,
 ): CodeBlock {

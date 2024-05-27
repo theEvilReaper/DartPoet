@@ -1,7 +1,11 @@
 package net.theevilreaper.dartpoet.type
 
 import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.util.COMMA_SEPARATOR
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
+import net.theevilreaper.dartpoet.util.GREATER_THAN_SIGN
+import net.theevilreaper.dartpoet.util.LESS_THAN_SIGN
+import net.theevilreaper.dartpoet.util.StringHelper
 import org.jetbrains.annotations.ApiStatus
 import java.lang.reflect.Type
 import kotlin.reflect.KClass
@@ -73,12 +77,13 @@ class ParameterizedTypeName internal constructor(
         }
 
         if (typeArguments.isNotEmpty()) {
-            out.emit("<")
-            typeArguments.forEachIndexed { index, typeName ->
-                if (index > 0) out.emit(", ")
-                typeName.emit(out)
-            }
-            out.emit(">")
+            val joinedArguments = StringHelper.concatData(
+                typeArguments,
+                prefix = LESS_THAN_SIGN,
+                separator = COMMA_SEPARATOR,
+                postfix = GREATER_THAN_SIGN
+            ) { it.toString() }
+            out.emit(joinedArguments)
         }
         return out
     }
@@ -91,7 +96,7 @@ class ParameterizedTypeName internal constructor(
      */
     override fun getRawData(): String {
         if (typeArguments.isEmpty()) return EMPTY_STRING
-        return typeArguments.joinToString(separator = ", ")
+        return typeArguments.joinToString(separator = COMMA_SEPARATOR)
     }
 
     /**

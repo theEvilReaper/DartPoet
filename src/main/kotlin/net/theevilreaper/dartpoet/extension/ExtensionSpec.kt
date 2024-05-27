@@ -9,6 +9,7 @@ import net.theevilreaper.dartpoet.parameter.ParameterBuilder
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asTypeName
+import net.theevilreaper.dartpoet.util.COMMA_SEPARATOR
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.toImmutableList
 import net.theevilreaper.dartpoet.util.toImmutableSet
@@ -38,7 +39,7 @@ class ExtensionSpec internal constructor(
         if (genericType.isEmpty()) return@lazy EMPTY_STRING
         val withComma = genericType.size > 1
         val separator = when (withComma) {
-            true -> ", "
+            true -> COMMA_SEPARATOR
             false -> EMPTY_STRING
         }
         genericType.joinToString(separator) { it.getRawData() }
