@@ -16,6 +16,7 @@ import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asClassName
 import net.theevilreaper.dartpoet.type.asTypeName
+import net.theevilreaper.dartpoet.util.NO_GENERIC_ON_LIBRARIES
 import java.lang.reflect.Type
 import kotlin.reflect.KClass
 
@@ -249,24 +250,51 @@ class ClassBuilder internal constructor(
         this.classMetaData.modifiers(*modifiers)
     }
 
+    /**
+     * Add a generic type to the class builder.
+     * @param type the [TypeName] to add
+     * @return the given instance of an [ClassBuilder]
+     */
     fun generic(type: TypeName) = apply {
+        check(this.classType != ClassType.LIBRARY) { NO_GENERIC_ON_LIBRARIES }
         this.genericCasts += type
     }
 
+    /**
+     * Add a generic type to the class builder.
+     * @param type the [ClassName] to add
+     * @return the given instance of an [ClassBuilder]
+     */
     fun generic(type: ClassName) = apply {
+        check(this.classType != ClassType.LIBRARY) { NO_GENERIC_ON_LIBRARIES }
         this.genericCasts += type
     }
 
+    /**
+     * Add a generic type to the class builder.
+     * @param type the [Type] to add
+     * @return the given instance of an [ClassBuilder]
+     */
     fun generic(type: Type) = apply {
-        this.genericCasts += type.asTypeName()
+        generic(type.asTypeName())
     }
 
+    /**
+     * Add a generic type to the class builder.
+     * @param type the [KClass] to add
+     * @return the given instance of an [ClassBuilder]
+     */
     fun generic(type: KClass<*>) = apply {
-        this.genericCasts += type.asTypeName()
+        generic(type.asTypeName())
     }
 
+    /**
+     * Add a generic type to the class builder.
+     * @param type the [Class] to add
+     * @return the given instance of an [ClassBuilder]
+     */
     fun generic(type: Class<*>) = apply {
-        this.genericCasts += type.asClassName()
+        generic(type.asClassName())
     }
 
     /**
