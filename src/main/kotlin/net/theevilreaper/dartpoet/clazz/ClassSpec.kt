@@ -33,11 +33,11 @@ class ClassSpec internal constructor(
     internal val modifiers: Set<DartModifier> = builder.classMetaData.modifiers.toImmutableSet()
     internal val annotations: Set<AnnotationSpec> = builder.classMetaData.annotations.toImmutableSet()
     internal val endsWithNewLine: Boolean = builder.endWithNewLine
-    internal val isEnum: Boolean = builder.isEnumClass
-    internal val isAbstract: Boolean = builder.isAbstract
-    internal val isMixin: Boolean = builder.isMixinClass
-    internal val isAnonymous: Boolean = builder.isAnonymousClass
-    internal val isLibrary: Boolean = builder.isLibrary
+    internal val isEnum: Boolean = builder.classType == ClassType.ENUM
+    internal val isAbstract: Boolean = builder.classType == ClassType.ABSTRACT
+    internal val isMixin: Boolean = builder.classType == ClassType.MIXIN
+    internal val isAnonymous: Boolean = builder.name == null && builder.classType == ClassType.CLASS
+    internal val isLibrary: Boolean = builder.classType == ClassType.LIBRARY
     internal val superClass: TypeName? = builder.superClass
     internal val inheritKeyWord: InheritKeyword? = builder.inheritKeyWord
     internal val classModifiers: Set<DartModifier> = modifiers.filter { it != WITH }.toImmutableSet()
@@ -46,8 +46,8 @@ class ClassSpec internal constructor(
     internal val properties: Set<PropertySpec> = builder.propertyStack.toImmutableSet()
     internal val constructors: Set<ConstructorBase> = builder.constructorStack.toImmutableSet()
     internal val enumPropertyStack: List<EnumPropertySpec> = builder.enumPropertyStack.toImmutableList()
-    internal var constantStack = builder.constantStack.toImmutableSet()
-
+    internal val constantStack = builder.constantStack.toImmutableSet()
+    internal val genericCasts: Set<TypeName> = builder.genericCasts.toImmutableSet()
     /**
      * Returns true when the class has no content to generate.
      */
@@ -55,7 +55,7 @@ class ClassSpec internal constructor(
         get() = functions.isEmpty() && properties.isEmpty() && constructors.isEmpty() && constantStack.isEmpty() && enumPropertyStack.isEmpty()
 
     init {
-        if (!isLibrary) {
+        if (isLibrary) {
             check(name.isNotEmpty()) { "The name of a class can't be empty" }
         }
 
@@ -83,6 +83,32 @@ class ClassSpec internal constructor(
      * @return the generated representation as string
      */
     override fun toString() = buildCodeString { write(this) }
+
+    /**
+     * Converts a [ClassSpec] reference into a new [ClassBuilder] instance.
+     * This allows the modification of a given spec reference.
+     * By default, the spec class can't be modified because it's immutable.
+     * @return the created [ClassBuilder] instance
+     */
+    fun toBuilder(): ClassBuilder {
+        val classBuilder = ClassBuilder(name, classType)
+        classBuilder.endWithNewLine = endsWithNewLine
+        classBuilder.classMetaData.modifiers.addAll(modifiers)
+        classBuilder.classMetaData.annotations.addAll(annotations)
+        // Apply enum values to the builder when the class is an enum
+        if (isEnum) {
+            classBuilder.enumPropertyStack.addAll(enumPropertyStack)
+        }
+
+        classBuilder.propertyStack.addAll(properties)
+        classBuilder.functionStack.addAll(functions)
+        classBuilder.constructorStack.addAll(constructors)
+        classBuilder.constantStack.addAll(constantStack)
+        classBuilder.typedefs.addAll(typeDefs)
+        classBuilder.superClass = superClass
+        classBuilder.inheritKeyWord = inheritKeyWord
+        return classBuilder
+    }
 
     /**
      * The class contains methods to create a new [ClassBuilder] instance for a specific class.
