@@ -10,6 +10,7 @@ internal const val NULLABLE_CHAR = "?"
 
 internal const val SPACE_CHAR = ' '
 internal const val SPACE = SPACE_CHAR.toString()
+internal const val COMMA_SEPARATOR = ", "
 const val DEFAULT_INDENT = "  "
 
 internal const val NEW_LINE_CHAR = '\n'
@@ -25,6 +26,8 @@ internal const val CURLY_OPEN = '{'
 internal const val CURLY_CLOSE = '}'
 internal const val ROUND_OPEN = "("
 internal const val ROUND_CLOSE = ")"
+internal const val LESS_THAN_SIGN = "<"
+internal const val GREATER_THAN_SIGN = ">"
 
 internal val ALLOWED_FUNCTION_MODIFIERS = setOf(DartModifier.PUBLIC, DartModifier.PRIVATE, DartModifier.STATIC, DartModifier.ABSTRACT)
 internal val ALLOWED_PROPERTY_MODIFIERS =
