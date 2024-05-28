@@ -61,7 +61,5 @@ class EnumPropertyBuilder internal constructor(
      * Creates a new instance from the [EnumPropertySpec] with the builder instance as parameter.
      * @return a created instance from an [EnumPropertySpec]
      */
-    fun build(): EnumPropertySpec {
-        return EnumPropertySpec(this)
-    }
+    fun build(): EnumPropertySpec = EnumPropertySpec(this)
 }

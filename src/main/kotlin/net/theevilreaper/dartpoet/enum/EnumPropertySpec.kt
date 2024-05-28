@@ -14,7 +14,12 @@ import java.lang.reflect.Type
 import kotlin.reflect.KClass
 
 /**
+ * The [EnumPropertySpec] class represents an entry in an enumeration from Dart.
+ * It describes all properties which such entry can have in an enumeration.
  *
+ * Note: The usage of required parameters is not supported in the current implementation.
+ *
+ * @param builder the builder instance to retrieve the data from
  * @since 1.0.0
  * @author theEvilReaper
  */
@@ -36,7 +41,10 @@ class EnumPropertySpec internal constructor(
         check(name.trim().isNotEmpty()) { "The name of a EnumProperty can't be empty" }
     }
 
-
+    /**
+     * Triggers the write process of the data which is stored in the spec object.
+     * @param codeWriter the [CodeWriter] instance to write the data
+     */
     internal fun write(codeWriter: CodeWriter) {
         WriterHelper.enumPropertyWriter.write(this, codeWriter)
     }
