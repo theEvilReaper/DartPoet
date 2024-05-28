@@ -28,11 +28,11 @@ internal class PropertyWriter : Writeable<PropertySpec>, DocumentationAppender,
             it.write(writer, inline = false)
         }
 
-        val modifierString = StringHelper.joinModifiers(
+        val modifierString = StringHelper.concatData(
             spec.modifiers,
             separator = SPACE,
             postfix = if (spec.hasModifiers) SPACE else EMPTY_STRING
-        )
+        ) { it.identifier }
         writer.emit(modifierString)
 
         if (spec.type != null) {

@@ -8,6 +8,7 @@ import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.code.emitConstructors
 import net.theevilreaper.dartpoet.code.emitFunctions
 import net.theevilreaper.dartpoet.enum.EnumPropertySpec
+import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.util.CURLY_CLOSE
 import net.theevilreaper.dartpoet.util.CURLY_OPEN
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
@@ -30,7 +31,7 @@ internal class ClassWriter : Writeable<ClassSpec> {
 
         spec.annotations.emitAnnotations(writer, inLineAnnotations = false)
         writeClassHeader(spec, writer)
-
+        writeGenericArguments(spec, writer)
         //Only write {} when the class contains now content
         if (spec.hasNoContent) {
             writer.emit("$CURLY_OPEN$CURLY_CLOSE")
@@ -94,6 +95,31 @@ internal class ClassWriter : Writeable<ClassSpec> {
         }
     }
 
+    /**
+     * Writes the generic arguments for the class header of a class in dart.
+     * @param spec the [ClassSpec] which contains the generic arguments
+     * @param writer the [CodeWriter] to write the generic arguments
+     */
+    private fun writeGenericArguments(spec: ClassSpec, writer: CodeWriter) {
+        when (spec.genericCasts.isEmpty()) {
+            true -> writer.emit("·")
+            false -> {
+                val joinedGenerics = StringHelper.concatData(
+                    spec.genericCasts,
+                    prefix = LESS_THAN_SIGN,
+                    separator = COMMA_SEPARATOR,
+                    postfix = GREATER_THAN_SIGN
+                ) { it.toString() }
+                writer.emitCode("%L·", joinedGenerics)
+            }
+        }
+    }
+
+    /**
+     * The method contains the logic to write an anonymous class declaration for a [ClassSpec].
+     * @param spec the [ClassSpec] which contains all data for a class
+     * @param writer the [CodeWriter] to write the class declaration
+     */
     private fun writeAnonymousClass(spec: ClassSpec, writer: CodeWriter) {
         spec.typeDefs.emitTypeDefs(writer)
         spec.functions.emitFunctions(writer)
@@ -101,7 +127,6 @@ internal class ClassWriter : Writeable<ClassSpec> {
         if (spec.endsWithNewLine) {
             writer.emit(NEW_LINE)
         }
-
     }
 
     /**
@@ -110,36 +135,23 @@ internal class ClassWriter : Writeable<ClassSpec> {
      * @param writer the [CodeWriter] to write the class declaration
      */
     private fun writeClassHeader(spec: ClassSpec, writer: CodeWriter) {
-        when (val type = spec.classType) {
-            ClassType.CLASS, ClassType.MIXIN, ClassType.ENUM -> {
-                writer.emit(type.keyword)
-                writer.emit("·")
-                writer.emit(if (spec.modifiers.contains(PRIVATE)) PRIVATE.identifier else EMPTY_STRING)
-                if (spec.name.orEmpty().trim().isNotEmpty()) {
-                    writer.emit(spec.name)
-                }
-            }
-
-            ClassType.ABSTRACT -> {
-                writer.emit("${type.keyword}·${ClassType.CLASS.keyword}·")
-                writer.emit(if (spec.modifiers.contains(PRIVATE)) PRIVATE.identifier else EMPTY_STRING)
-                writer.emit(spec.name)
-            }
-
-            else -> {
-                //TODO: Check if a library class needs a header
-                // A library class doesn't have any class header
-            }
+        if (spec.classType == ClassType.LIBRARY) return
+        val privateModifier: String = when (spec.modifiers.contains(PRIVATE)) {
+            true -> PRIVATE.identifier
+            false -> EMPTY_STRING
         }
-        writer.emit("·")
+        val abstractPart: String = when (spec.classType) {
+            ClassType.ABSTRACT -> "${CLASS.identifier}·"
+            else -> EMPTY_STRING
+        }
+        writer.emitCode("%L·", spec.classType.keyword)
+        writer.emitCode("%L%L%L", abstractPart, privateModifier, spec.name)
     }
 
     private fun writeInheritance(spec: ClassSpec, writer: CodeWriter) {
-        if (spec.superClass != null) {
-            writer.emit("${spec.inheritKeyWord!!.identifier}·")
-            writer.emitCode("%T", spec.superClass)
-            writer.emit("·")
-        }
+        if (spec.superClass == null) return
+        writer.emit("${spec.inheritKeyWord!!.identifier}·")
+        writer.emitCode("%T·", spec.superClass)
     }
 
     private fun List<EnumPropertySpec>.emit(

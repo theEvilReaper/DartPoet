@@ -22,7 +22,7 @@ internal class ConstantPropertyWriter : Writeable<ConstantPropertySpec>, Initial
      * @param writer the instance from the [CodeWriter] to append the data
      **/
     override fun write(spec: ConstantPropertySpec, writer: CodeWriter) {
-        val modifierString = StringHelper.joinModifiers(spec.modifiers, separator = SPACE, postfix = SPACE)
+        val modifierString = StringHelper.concatData(spec.modifiers, separator = SPACE, postfix = SPACE) { it.identifier }
         writer.emit(modifierString)
 
         if (spec.typeName != null) {

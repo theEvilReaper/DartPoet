@@ -11,23 +11,22 @@ import net.theevilreaper.dartpoet.DartModifier
 internal object StringHelper {
 
     /**
-     * Joins a given [Set] of [DartModifier] to a string representation.
-     * @param modifiers the [Set] of [DartModifier] to join
+     * Joins a given [Iterable] of [T] to a string representation.
+     * @param data the [Iterable] of [T] to join
      * @param prefix the prefix for the string
      * @param separator the separator for the string
      * @param postfix the postfix for the string
      * @param value the function to get the value from the [DartModifier]
      * @return the joined string or an empty string if the [Set] is empty
      */
-    inline fun joinModifiers(
-        modifiers: Set<DartModifier>,
+    inline fun <T> concatData(
+        data: Iterable<T>,
         prefix: String = EMPTY_STRING,
         separator: String = EMPTY_STRING,
         postfix: String = EMPTY_STRING,
-        crossinline value: (DartModifier) -> String = { it.identifier }
+        crossinline value: (T) -> String
     ): String {
-        if (modifiers.isEmpty()) return EMPTY_STRING
-        return modifiers.joinToString(prefix = prefix, separator = separator, postfix = postfix) { value(it) }
+        return data.joinToString(separator = separator, prefix = prefix, postfix = postfix) { value(it) }
     }
 
     /**
