@@ -4,7 +4,9 @@ import net.theevilreaper.dartpoet.DartModifier.*
 import net.theevilreaper.dartpoet.code.*
 import net.theevilreaper.dartpoet.code.DocumentationAppender
 import net.theevilreaper.dartpoet.code.emitParameters
+import net.theevilreaper.dartpoet.function.FunctionDelegation
 import net.theevilreaper.dartpoet.function.FunctionSpec
+import net.theevilreaper.dartpoet.function.MethodAccessorType
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
@@ -35,7 +37,7 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
             if (spec.isAsync) {
                 writer.emitCode("Future<%L>", VOID.identifier)
             } else {
-                if (spec.asSetter) {
+                if (spec.hasSetterAccessor) {
                     writer.emitCode("set·")
                 } else {
                     writer.emit("${VOID.identifier}·")
@@ -48,7 +50,7 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
             }
             writer.emitCode("%T", spec.returnType)
 
-            if (spec.isGetter) {
+            if (spec.hasGetterAccessor) {
                 writer.emit("·get")
             }
 
@@ -63,7 +65,7 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
             writer.emitCode("<%T>", spec.typeCast)
         }
 
-        if (spec.isGetter) {
+        if (spec.hasGetterAccessor) {
             writer.emit("·=>·")
             writer.emitCode(spec.body.returnsWithoutLinebreak(), ensureTrailingNewline = false)
         } else {
@@ -81,7 +83,7 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
             writer.emit("·${ASYNC.identifier}")
         }
         if (spec.isLambda) {
-            writer.emit("·=>·")
+            writer.emitCode("·%L·", FunctionDelegation.SHORTEN.identifier)
         } else {
             writer.emit("·{\n")
             writer.indent()

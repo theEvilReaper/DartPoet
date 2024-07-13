@@ -29,10 +29,10 @@ class FunctionBuilder internal constructor(
     internal var returnType: TypeName? = null
     internal val body: CodeBlock.Builder = CodeBlock.builder()
     internal var typeCast: TypeName? = null
-    internal var setter: Boolean = false
-    internal var getter: Boolean = false
     internal var lambda: Boolean = false
     internal val docs: MutableList<CodeBlock> = mutableListOf()
+    internal var delegation: FunctionDelegation = FunctionDelegation.NONE
+    internal var methodAccessorType: MethodAccessorType? = null
 
     /**
      * Add a comment over for the extension class.
@@ -53,19 +53,11 @@ class FunctionBuilder internal constructor(
     }
 
     /**
-     * Indicates if the method should be generated as set function.
-     * @param setter True for a setter generation
+     * Set the accessor type for the function.
+     * @param methodAccessorType the accessor type to set
      */
-    fun setter(setter: Boolean) = apply {
-        this.setter = setter
-    }
-
-    /**
-     * Indicates if the method should be generated as get function.
-     * @param getter True for a get generation
-     */
-    fun getter(getter: Boolean) = apply {
-        this.getter = getter
+    fun accessorType(methodAccessorType: MethodAccessorType) = apply {
+        this.methodAccessorType = methodAccessorType
     }
 
     /**
@@ -108,6 +100,15 @@ class FunctionBuilder internal constructor(
     }
 
     /**
+     * Updates the used method delegation
+     * @param delegation the new delegation to set
+     */
+    fun delegation(delegation: FunctionDelegation) = apply {
+        if (delegation.ordinal == this.delegation.ordinal) return@apply
+        this.delegation = delegation
+    }
+
+    /**
      * Set the returnType for a generated function.
      * If the type should be void you can set the type to void or ignore this option
      * @param returnType the given type
@@ -116,6 +117,10 @@ class FunctionBuilder internal constructor(
         this.returnType = returnType
     }
 
+    /**
+     * Set the returnType of the function as [ClassName].
+     * @param returnType the given type
+     */
     fun returns(returnType: ClassName) = apply {
         this.returnType = returnType
     }
@@ -178,7 +183,5 @@ class FunctionBuilder internal constructor(
      * Constructs a new reference from the [FunctionSpec].
      * @return the created instance
      */
-    fun build(): FunctionSpec {
-        return FunctionSpec(this)
-    }
+    fun build(): FunctionSpec = FunctionSpec(this)
 }

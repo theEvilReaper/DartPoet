@@ -26,6 +26,8 @@ class FunctionSpec internal constructor(
 ) {
     internal val name = builder.name
     internal val returnType: TypeName? = builder.returnType
+    internal val delegation: FunctionDelegation = builder.delegation
+    internal val methodAccessorType: MethodAccessorType? = builder.methodAccessorType
     internal val body: CodeBlock = builder.body.build()
     private val parameters: List<ParameterSpec> = builder.parameters.toImmutableList()
     internal val isAsync: Boolean = builder.async
@@ -45,18 +47,15 @@ class FunctionSpec internal constructor(
 
     internal val isPrivate = builder.specData.modifiers.remove(DartModifier.PRIVATE)
     internal val typeCast = builder.typeCast
-    internal val asSetter = builder.setter
-    internal val isGetter = builder.getter
     internal val isLambda = builder.lambda
     internal val docs = builder.docs
+
+    internal val hasSetterAccessor = methodAccessorType != null && methodAccessorType == MethodAccessorType.SETTER
+    internal val hasGetterAccessor = methodAccessorType != null && methodAccessorType == MethodAccessorType.GETTER
 
     init {
         require(name.trim().isNotEmpty()) { "The name of a function can't be empty" }
         require(body.isEmpty() || !modifiers.contains(DartModifier.ABSTRACT)) { "An abstract method can't have a body" }
-
-        if (isGetter && asSetter) {
-            throw IllegalArgumentException("The function can't be a setter and a getter twice")
-        }
 
         if (isLambda && body.isEmpty()) {
             throw IllegalArgumentException("Lambda can only be used with a body")
@@ -95,8 +94,7 @@ class FunctionSpec internal constructor(
         builder.parameters.addAll(this.parameters)
         builder.async = this.isAsync
         builder.typeCast = this.typeCast
-        builder.setter = this.asSetter
-        builder.getter = this.isGetter
+        builder.methodAccessorType = this.methodAccessorType
         builder.lambda = this.isLambda
         builder.body.formatParts.addAll(this.body.formatParts)
         builder.body.args.add(this.body.args)
