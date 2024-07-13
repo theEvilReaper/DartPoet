@@ -9,8 +9,8 @@ package net.theevilreaper.dartpoet.function
  * @version 1.0.0
  * @author theEvilReaper
  */
-enum class MethodAccessorType {
+enum class MethodAccessorType(val keyword: String) {
 
-    SETTER,
-    GETTER
+    SETTER("set"),
+    GETTER("get"),
 }

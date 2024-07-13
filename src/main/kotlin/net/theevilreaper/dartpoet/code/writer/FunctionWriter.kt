@@ -25,6 +25,11 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
             writer.emit(NEW_LINE)
         }
 
+        if (spec.hasMethodAccessorType) {
+            this.writeMethodAccessorDefinition(spec, writer)
+            return
+        }
+
         val writeableModifiers = spec.modifiers.filter { it != PRIVATE && it != PUBLIC }.toImmutableSet()
         val modifierString = writeableModifiers.joinToString(
             separator = SPACE,
@@ -44,16 +49,10 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
                 }
             }
         } else {
-
             if (spec.isAsync) {
                 writer.emit("Future<")
             }
             writer.emitCode("%T", spec.returnType)
-
-            if (spec.hasGetterAccessor) {
-                writer.emit("·get")
-            }
-
             if (spec.isAsync) {
                 writer.emit(">")
             }
@@ -65,12 +64,47 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
             writer.emitCode("<%T>", spec.typeCast)
         }
 
+        writeParameters(spec, writer)
+        writeBody(spec, writer)
+    }
+
+    private fun writeMethodAccessorDefinition(spec: FunctionSpec, writer: CodeWriter) {
+        if (spec.modifiers.isNotEmpty()) {
+            val keywords = StringHelper.concatData(data = spec.modifiers, separator = SPACE) { it.identifier }
+            writer.emitCode("%L·", keywords)
+        }
+        val typeDefinition: CodeBlock = buildCodeBlock {
+            when (spec.methodAccessorType!!) {
+                MethodAccessorType.SETTER -> add(MethodAccessorType.SETTER.keyword)
+                MethodAccessorType.GETTER -> add("%T·${MethodAccessorType.GETTER.keyword}", spec.returnType)
+            }
+        }
+        writer.emitCode(codeBlock = typeDefinition, ensureTrailingNewline = false)
+        writer.emitCode("·%L", spec.name)
         if (spec.hasGetterAccessor) {
-            writer.emit("·=>·")
-            writer.emitCode(spec.body.returnsWithoutLinebreak(), ensureTrailingNewline = false)
-        } else {
-            writeParameters(spec, writer)
-            writeBody(spec, writer)
+            writer.emit("·")
+        }
+
+        if (spec.hasSetterAccessor) {
+            writeParameters(spec = spec, codeWriter = writer)
+        }
+
+        val bracketType = when (spec.delegation) {
+            FunctionDelegation.NONE -> {
+                "·$CURLY_OPEN\n"
+            }
+            FunctionDelegation.SHORTEN -> "${FunctionDelegation.SHORTEN.identifier}·"
+        }
+
+        if (spec.delegation == FunctionDelegation.NONE) {
+            writer.indent()
+        }
+
+        writer.emit(bracketType)
+        writer.emitCode(spec.body.returnsWithoutLinebreak(), ensureTrailingNewline = false)
+        if (spec.delegation == FunctionDelegation.NONE) {
+            writer.unindent()
+            writer.emit("\n$CURLY_CLOSE")
         }
     }
 

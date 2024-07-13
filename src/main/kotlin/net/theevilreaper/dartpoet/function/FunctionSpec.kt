@@ -50,8 +50,9 @@ class FunctionSpec internal constructor(
     internal val isLambda = builder.lambda
     internal val docs = builder.docs
 
-    internal val hasSetterAccessor = methodAccessorType != null && methodAccessorType == MethodAccessorType.SETTER
-    internal val hasGetterAccessor = methodAccessorType != null && methodAccessorType == MethodAccessorType.GETTER
+    internal val hasMethodAccessorType = methodAccessorType != null
+    internal val hasSetterAccessor = hasMethodAccessorType && methodAccessorType == MethodAccessorType.SETTER
+    internal val hasGetterAccessor = hasMethodAccessorType && methodAccessorType == MethodAccessorType.GETTER
 
     init {
         require(name.trim().isNotEmpty()) { "The name of a function can't be empty" }

@@ -9,6 +9,7 @@ import net.theevilreaper.dartpoet.directive.DirectiveFactory
 import net.theevilreaper.dartpoet.directive.DirectiveType
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.constructor.ConstructorSpec
+import net.theevilreaper.dartpoet.function.FunctionDelegation
 import net.theevilreaper.dartpoet.function.MethodAccessorType
 import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
@@ -160,6 +161,7 @@ class DartFileTest {
                 FunctionSpec.builder("serializer")
                     .returns(ClassName("Serializer<$name>"))
                     .lambda(true)
+                    .delegation(FunctionDelegation.SHORTEN)
                     .accessorType(MethodAccessorType.GETTER)
                     .modifier(DartModifier.STATIC)
                     .addCode("%L", "_\$${name}Serializer;")

@@ -5,6 +5,7 @@ import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.buildCodeBlock
+import net.theevilreaper.dartpoet.function.FunctionDelegation
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.MethodAccessorType
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
@@ -173,6 +174,7 @@ class FunctionWriterTest {
     fun `test other getter variant write`() {
         val function = FunctionSpec.builder("value")
             .returns(Int::class)
+            .delegation(FunctionDelegation.SHORTEN)
             .accessorType(MethodAccessorType.GETTER)
             .addCode("%L", "_value;")
             .build()
