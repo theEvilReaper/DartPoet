@@ -46,10 +46,10 @@ internal fun buildCodeString(
 }
 
 /**
- * Converts a [FileSpec] to a string suitable to both human- and kotlinc-consumption. This honors
+ * Converts a [DartFile] to a string suitable to both human- and kotlinc-consumption. This honors
  * imports, indentation, and deferred variable names.
  */
-class CodeWriter constructor(
+class CodeWriter(
     out: Appendable,
     private val indent: String = DEFAULT_INDENT,
     columnLimit: Int = 100,
