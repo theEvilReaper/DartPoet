@@ -8,13 +8,22 @@ import net.theevilreaper.dartpoet.function.FunctionDelegation
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.MethodAccessorType
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
+import net.theevilreaper.dartpoet.type.TypeName
+import net.theevilreaper.dartpoet.type.asTypeName
 import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.NEW_LINE
 import net.theevilreaper.dartpoet.util.SEMICOLON
 import net.theevilreaper.dartpoet.util.SPACE
 import net.theevilreaper.dartpoet.util.toImmutableSet
+import java.util.concurrent.Future
 
+/**
+ * @version 1.0.0
+ * @since 1.0.0
+ * @author theEvilReaper
+ */
 internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
 
     override fun write(spec: FunctionSpec, writer: CodeWriter) {
@@ -31,34 +40,26 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
         }
 
         val writeableModifiers = spec.modifiers.filter { it != PRIVATE && it != PUBLIC }.toImmutableSet()
-        val modifierString = writeableModifiers.joinToString(
-            separator = SPACE,
-            postfix = if (writeableModifiers.isNotEmpty()) SPACE else EMPTY_STRING
-        ) { it.identifier }
+        val postFix: String = when (writeableModifiers.isNotEmpty()) {
+            true -> SPACE
+            else -> EMPTY_STRING
+        }
+        val modifierString = writeableModifiers.joinToString(separator = SPACE, postfix = postFix) { it.identifier }
 
         writer.emit(modifierString)
 
-        if (spec.returnType == null) {
-            if (spec.isAsync) {
-                writer.emitCode("Future<%L>", VOID.identifier)
-            } else {
-                if (spec.hasSetterAccessor) {
-                    writer.emitCode("set·")
-                } else {
-                    writer.emit("${VOID.identifier}·")
-                }
-            }
-        } else {
-            if (spec.isAsync) {
-                writer.emit("Future<")
-            }
-            writer.emitCode("%T", spec.returnType)
-            if (spec.isAsync) {
-                writer.emit(">")
-            }
-            writer.emit("·")
+        val returnTypeArgument: TypeName = when (spec.returnType) {
+            null -> Void::class.asTypeName()
+            else -> spec.returnType
         }
-        writer.emit("${if (spec.isPrivate) PRIVATE.identifier else ""}${spec.name}")
+        // The fallback is used when the spec doesn't have an async case
+        val parameterizedReturnType: TypeName = parameterizedReturnType(spec) ?: returnTypeArgument
+        writer.emitCode("%T", parameterizedReturnType)
+        writer.emitSpace()
+        when (spec.isPrivate) {
+            true -> writer.emitCode("%L%L", PRIVATE.identifier, spec.name)
+            false -> writer.emit(spec.name)
+        }
 
         if (spec.typeCast != null) {
             writer.emitCode("<%T>", spec.typeCast)
@@ -66,6 +67,16 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
 
         writeParameters(spec, writer)
         writeBody(spec, writer)
+    }
+
+    private fun parameterizedReturnType(spec: FunctionSpec): TypeName? {
+        if (!spec.isAsync) {
+            return null
+        }
+        return when (spec.returnType) {
+            null -> Future::class.asTypeName()
+            else -> Future::class.parameterizedBy(spec.returnType)
+        }
     }
 
     private fun writeMethodAccessorDefinition(spec: FunctionSpec, writer: CodeWriter) {
@@ -82,7 +93,7 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
         writer.emitCode(codeBlock = typeDefinition, ensureTrailingNewline = false)
         writer.emitCode("·%L", spec.name)
         if (spec.hasGetterAccessor) {
-            writer.emit("·")
+            writer.emitSpace()
         }
 
         if (spec.hasSetterAccessor) {
@@ -93,6 +104,7 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
             FunctionDelegation.NONE -> {
                 "·$CURLY_OPEN\n"
             }
+
             FunctionDelegation.SHORTEN -> "${FunctionDelegation.SHORTEN.identifier}·"
         }
 
@@ -106,6 +118,10 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
             writer.unindent()
             writer.emit("\n$CURLY_CLOSE")
         }
+    }
+
+    private fun writeBody2(spec: FunctionSpec, writer: CodeWriter) {
+        writer.emitCode(spec.body.returnsWithoutLinebreak(), ensureTrailingNewline = false)
     }
 
     private fun writeBody(spec: FunctionSpec, writer: CodeWriter) {
