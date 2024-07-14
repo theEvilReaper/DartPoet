@@ -26,7 +26,7 @@ class FunctionSpec internal constructor(
 ) {
     internal val name = builder.name
     internal val returnType: TypeName? = builder.returnType
-    internal val delegation: FunctionDelegation = builder.delegation
+    internal val delegation: FunctionType = builder.delegation
     internal val methodAccessorType: MethodAccessorType? = builder.methodAccessorType
     internal val body: CodeBlock = builder.body.build()
     private val parameters: List<ParameterSpec> = builder.parameters.toImmutableList()
@@ -47,7 +47,6 @@ class FunctionSpec internal constructor(
 
     internal val isPrivate = builder.specData.modifiers.remove(DartModifier.PRIVATE)
     internal val typeCast = builder.typeCast
-    internal val isLambda = builder.lambda
     internal val docs = builder.docs
 
     internal val hasMethodAccessorType = methodAccessorType != null
@@ -58,15 +57,13 @@ class FunctionSpec internal constructor(
         require(name.trim().isNotEmpty()) { "The name of a function can't be empty" }
         require(body.isEmpty() || !modifiers.contains(DartModifier.ABSTRACT)) { "An abstract method can't have a body" }
 
-        if (isLambda && body.isEmpty()) {
+        if (delegation == FunctionType.SHORTEN && body.isEmpty()) {
             throw IllegalArgumentException("Lambda can only be used with a body")
         }
 
         if (requiredParameter.isNotEmpty() && parametersWithDefaults.isNotEmpty()) {
             throw IllegalArgumentException("A function can't have required and optional parameters")
         }
-
-        //require (isFactory && returnType == null && !isNullable) { "A void function can't be nullable" }
     }
 
     /**
@@ -96,7 +93,6 @@ class FunctionSpec internal constructor(
         builder.async = this.isAsync
         builder.typeCast = this.typeCast
         builder.methodAccessorType = this.methodAccessorType
-        builder.lambda = this.isLambda
         builder.body.formatParts.addAll(this.body.formatParts)
         builder.body.args.add(this.body.args)
         builder.docs.addAll(this.docs)

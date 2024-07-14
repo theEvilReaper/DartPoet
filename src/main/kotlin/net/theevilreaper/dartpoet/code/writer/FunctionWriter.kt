@@ -4,7 +4,7 @@ import net.theevilreaper.dartpoet.DartModifier.*
 import net.theevilreaper.dartpoet.code.*
 import net.theevilreaper.dartpoet.code.DocumentationAppender
 import net.theevilreaper.dartpoet.code.emitParameters
-import net.theevilreaper.dartpoet.function.FunctionDelegation
+import net.theevilreaper.dartpoet.function.FunctionType
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.MethodAccessorType
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
@@ -66,6 +66,10 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
         }
 
         writeParameters(spec, writer)
+        if (spec.isAsync) {
+            writer.emitSpace()
+            writer.emit(ASYNC.identifier)
+        }
         writeBody(spec, writer)
     }
 
@@ -101,27 +105,23 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
         }
 
         val bracketType = when (spec.delegation) {
-            FunctionDelegation.NONE -> {
+            FunctionType.STANDARD -> {
                 "·$CURLY_OPEN\n"
             }
 
-            FunctionDelegation.SHORTEN -> "${FunctionDelegation.SHORTEN.identifier}·"
+            FunctionType.SHORTEN -> "${FunctionType.SHORTEN.identifier}·"
         }
 
-        if (spec.delegation == FunctionDelegation.NONE) {
+        if (spec.delegation == FunctionType.STANDARD) {
             writer.indent()
         }
 
         writer.emit(bracketType)
         writer.emitCode(spec.body.returnsWithoutLinebreak(), ensureTrailingNewline = false)
-        if (spec.delegation == FunctionDelegation.NONE) {
+        if (spec.delegation == FunctionType.STANDARD) {
             writer.unindent()
             writer.emit("\n$CURLY_CLOSE")
         }
-    }
-
-    private fun writeBody2(spec: FunctionSpec, writer: CodeWriter) {
-        writer.emitCode(spec.body.returnsWithoutLinebreak(), ensureTrailingNewline = false)
     }
 
     private fun writeBody(spec: FunctionSpec, writer: CodeWriter) {
@@ -129,20 +129,26 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
             writer.emit(SEMICOLON)
             return
         }
-        if (spec.isAsync) {
-            writer.emit("·${ASYNC.identifier}")
+
+        when (spec.delegation) {
+            FunctionType.STANDARD -> {
+                writer.emit("·{\n")
+                writer.indent()
+                writeMethodBody(spec, writer)
+                writer.unindent()
+                writer.emit("\n}")
+            }
+            FunctionType.SHORTEN -> {
+                writer.emitSpace()
+                writer.emit(FunctionType.SHORTEN.identifier)
+                writer.emitSpace()
+                writer.emitCode(spec.body.returnsWithoutLinebreak(), ensureTrailingNewline = false)
+            }
         }
-        if (spec.isLambda) {
-            writer.emitCode("·%L·", FunctionDelegation.SHORTEN.identifier)
-        } else {
-            writer.emit("·{\n")
-            writer.indent()
-        }
+    }
+
+    private fun writeMethodBody(spec: FunctionSpec, writer: CodeWriter) {
         writer.emitCode(spec.body.returnsWithoutLinebreak(), ensureTrailingNewline = false)
-        if (!spec.isLambda) {
-            writer.unindent()
-            writer.emit("\n}")
-        }
     }
 
     private fun writeParameters(spec: FunctionSpec, codeWriter: CodeWriter) {
