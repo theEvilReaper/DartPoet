@@ -259,6 +259,10 @@ class CodeWriter constructor(
         }
     }
 
+    fun emitSpace() = apply {
+        out.appendNonWrapping(SPACE)
+    }
+
     /**
      * Perform emitting actions on the current [CodeWriter] using a custom [Appendable]. The
      * [CodeWriter] will continue using the old [Appendable] after this method returns.
