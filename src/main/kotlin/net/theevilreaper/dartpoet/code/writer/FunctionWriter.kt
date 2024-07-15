@@ -118,7 +118,7 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
         }
 
         writer.emit(bracketType)
-        writer.emitCode(spec.body.returnsWithoutLinebreak(), ensureTrailingNewline = false)
+        writer.emitCode(spec.body, ensureTrailingNewline = false)
         if (spec.delegation == FunctionType.STANDARD) {
             writer.unindent()
             writer.emit("\n$CURLY_CLOSE")
@@ -144,13 +144,13 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
                 writer.emitSpace()
                 writer.emit(FunctionType.SHORTEN.identifier)
                 writer.emitSpace()
-                writer.emitCode(spec.body.returnsWithoutLinebreak(), ensureTrailingNewline = false)
+                writer.emitCode(spec.body, ensureTrailingNewline = false)
             }
         }
     }
 
     private fun writeMethodBody(spec: FunctionSpec, writer: CodeWriter) {
-        writer.emitCode(spec.body.returnsWithoutLinebreak(), ensureTrailingNewline = false)
+        writer.emitCode(spec.body, ensureTrailingNewline = false)
     }
 
     private fun writeParameters(spec: FunctionSpec, codeWriter: CodeWriter) {
@@ -204,39 +204,5 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
             codeWriter.emit(", ")
         }
         parameters.emitParameters(codeWriter, forceNewLines = false)
-    }
-
-    private val RETURN_EXPRESSION_BODY_PREFIX_SPACE = CodeBlock.of("return ")
-    private val RETURN_EXPRESSION_BODY_PREFIX_NBSP = CodeBlock.of("return·")
-    private val THROW_EXPRESSION_BODY_PREFIX_SPACE = CodeBlock.of("throw ")
-    private val THROW_EXPRESSION_BODY_PREFIX_NBSP = CodeBlock.of("throw·")
-
-    private fun CodeBlock.returnsWithoutLinebreak(): CodeBlock {
-        val returnWithSpace = RETURN_EXPRESSION_BODY_PREFIX_SPACE.formatParts[0]
-        val returnWithNbsp = RETURN_EXPRESSION_BODY_PREFIX_NBSP.formatParts[0]
-        var originCodeBlockBuilder: CodeBlock.Builder? = null
-        for ((i, formatPart) in formatParts.withIndex()) {
-            if (formatPart.startsWith(returnWithSpace)) {
-                val builder = originCodeBlockBuilder ?: toBuilder()
-                originCodeBlockBuilder = builder
-                builder.formatParts[i] = formatPart.replaceFirst(returnWithSpace, returnWithNbsp)
-            }
-        }
-        return originCodeBlockBuilder?.build() ?: this
-    }
-
-    private fun CodeBlock.asExpressionBody(): CodeBlock? {
-        val codeBlock = this.trim()
-        val asReturnExpressionBody = codeBlock.withoutPrefix(RETURN_EXPRESSION_BODY_PREFIX_SPACE)
-            ?: codeBlock.withoutPrefix(RETURN_EXPRESSION_BODY_PREFIX_NBSP)
-        if (asReturnExpressionBody != null) {
-            return asReturnExpressionBody
-        }
-        if (codeBlock.withoutPrefix(THROW_EXPRESSION_BODY_PREFIX_SPACE) != null ||
-            codeBlock.withoutPrefix(THROW_EXPRESSION_BODY_PREFIX_NBSP) != null
-        ) {
-            return codeBlock
-        }
-        return null
     }
 }
