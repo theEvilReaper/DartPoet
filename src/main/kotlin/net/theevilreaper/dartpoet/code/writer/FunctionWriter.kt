@@ -1,6 +1,8 @@
 package net.theevilreaper.dartpoet.code.writer
 
-import net.theevilreaper.dartpoet.DartModifier.*
+import net.theevilreaper.dartpoet.DartModifier.ASYNC
+import net.theevilreaper.dartpoet.DartModifier.PUBLIC
+import net.theevilreaper.dartpoet.DartModifier.PRIVATE
 import net.theevilreaper.dartpoet.code.*
 import net.theevilreaper.dartpoet.code.DocumentationAppender
 import net.theevilreaper.dartpoet.code.emitParameters
@@ -8,9 +10,9 @@ import net.theevilreaper.dartpoet.function.FunctionType
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.MethodAccessorType
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.type.ParameterizedTypeName
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
 import net.theevilreaper.dartpoet.type.TypeName
-import net.theevilreaper.dartpoet.type.asTypeName
 import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.NEW_LINE
@@ -48,12 +50,8 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
 
         writer.emit(modifierString)
 
-        val returnTypeArgument: TypeName = when (spec.returnType) {
-            null -> Void::class.asTypeName()
-            else -> spec.returnType
-        }
         // The fallback is used when the spec doesn't have an async case
-        val parameterizedReturnType: TypeName = parameterizedReturnType(spec) ?: returnTypeArgument
+        val parameterizedReturnType: TypeName = parameterizedReturnType(spec) ?: spec.returnType
         writer.emitCode("%T", parameterizedReturnType)
         writer.emitSpace()
         when (spec.isPrivate) {
@@ -73,12 +71,15 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
         writeBody(spec, writer)
     }
 
+    /**
+     * Returns a [ParameterizedTypeName] if the spec is async otherwise null.
+     * This is required because the return value of an async function must be wrapped in a [Future].
+     * @param spec The function spec to check
+     * @return null or the [ParameterizedTypeName]
+     */
     private fun parameterizedReturnType(spec: FunctionSpec): TypeName? {
-        if (!spec.isAsync) {
-            return null
-        }
-        return when (spec.returnType) {
-            null -> Future::class.asTypeName()
+        return when (!spec.isAsync) {
+            true -> null
             else -> Future::class.parameterizedBy(spec.returnType)
         }
     }
@@ -138,6 +139,7 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
                 writer.unindent()
                 writer.emit("\n}")
             }
+
             FunctionType.SHORTEN -> {
                 writer.emitSpace()
                 writer.emit(FunctionType.SHORTEN.identifier)
