@@ -22,11 +22,11 @@ import kotlin.reflect.KClass
  */
 class FunctionBuilder internal constructor(
     val name: String,
+    var returnType: TypeName = Void::class.asTypeName()
 ) : SpecMethods<FunctionBuilder> {
     internal val specData: SpecData = SpecData()
     internal val parameters: MutableList<ParameterSpec> = mutableListOf()
     internal var async: Boolean = false
-    internal var returnType: TypeName? = null
     internal val body: CodeBlock.Builder = CodeBlock.builder()
     internal var typeCast: TypeName? = null
     internal var lambda: Boolean = false
