@@ -8,10 +8,14 @@ import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.writer.FunctionWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
+import net.theevilreaper.dartpoet.type.asTypeName
 import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.util.toImmutableList
 import net.theevilreaper.dartpoet.util.toImmutableSet
+import java.lang.reflect.Type
+import kotlin.reflect.KClass
 
 /**
  * The spec class contains all relevant information about a function in dart.
@@ -25,7 +29,7 @@ class FunctionSpec internal constructor(
     builder: FunctionBuilder
 ) {
     internal val name = builder.name
-    internal val returnType: TypeName? = builder.returnType
+    internal val returnType: TypeName = builder.returnType
     internal val delegation: FunctionType = builder.delegation
     internal val methodAccessorType: MethodAccessorType? = builder.methodAccessorType
     internal val body: CodeBlock = builder.body.build()
@@ -85,8 +89,7 @@ class FunctionSpec internal constructor(
      * @return the created [FunctionBuilder] instance
      */
     fun toBuilder(): FunctionBuilder {
-        val builder = FunctionBuilder(this.name)
-        builder.returnType = this.returnType
+        val builder = FunctionBuilder(this.name, this.returnType)
         builder.annotations(*this.annotation.toTypedArray())
         builder.modifiers(*this.modifiers.toTypedArray())
         builder.parameters.addAll(this.parameters)
@@ -107,5 +110,13 @@ class FunctionSpec internal constructor(
          */
         @JvmStatic
         fun builder(name: String) = FunctionBuilder(name)
+
+        fun builder(name: String, returnType: TypeName) = FunctionBuilder(name, returnType)
+
+        fun builder(name: String, returnType: ClassName) = FunctionBuilder(name, returnType)
+
+        fun builder(name: String, returnType: KClass<*>) = FunctionBuilder(name, returnType.asTypeName())
+
+        fun builder(name: String, returnType: Type) = FunctionBuilder(name, returnType.asTypeName())
     }
 }
