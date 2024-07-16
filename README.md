@@ -7,7 +7,7 @@ simplifies the creation of Dart source files by providing a fluent and expressiv
 useful for developers looking to automate Dart code generation, ensuring consistency and reducing manual coding effort.
 
 The API allows the creation of the core functionalities of the Dart language, such as classes, methods, fields and more.
-Some of the newer feature are not directly supported by the api itself, but can be added by using the `CodeBlock` class.
+Some of the newer features are not directly supported by the api itself, but can be added by using the `CodeBlock` class.
 At least the generated code relies on the null-safety feature from Dart. Which means that the code is generated for Dart
 version `2.12.0` or higher.
 
