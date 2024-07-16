@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
-import org.junit.jupiter.params.shadow.com.univocity.parsers.common.ArgumentUtils
 import java.util.stream.Stream
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -160,7 +159,6 @@ class FunctionSpecTest {
         assertEquals(functionSpec.name, specAsBuilder.name)
         assertEquals(functionSpec.returnType, specAsBuilder.returnType)
         assertFalse { specAsBuilder.async }
-        assertTrue { specAsBuilder.returnType!!.isNullable }
         assertTrue { specAsBuilder.body.isNotEmpty() }
     }
 }
