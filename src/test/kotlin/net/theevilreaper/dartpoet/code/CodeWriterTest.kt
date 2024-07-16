@@ -1,9 +1,11 @@
 package net.theevilreaper.dartpoet.code
 
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
+import kotlin.test.Test
 
 @DisplayName("Test some functionalities from the CodeWriter class")
 class CodeWriterTest {
@@ -14,6 +16,14 @@ class CodeWriterTest {
         assertThrows<IllegalStateException>("The amount of spaces must be greater than 0") {
             val writer = CodeWriter(System.out)
             writer.emitSpaces(amount)
+        }
+    }
+
+    @Test
+    fun `test valid space amount usage`() {
+        assertDoesNotThrow("The amount of spaces must be greater than 0") {
+            val writer = CodeWriter(System.out)
+            writer.emitSpaces(1)
         }
     }
 }
