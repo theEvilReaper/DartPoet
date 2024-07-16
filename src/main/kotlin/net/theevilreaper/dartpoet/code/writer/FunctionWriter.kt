@@ -18,6 +18,7 @@ import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.NEW_LINE
 import net.theevilreaper.dartpoet.util.SEMICOLON
 import net.theevilreaper.dartpoet.util.SPACE
+import net.theevilreaper.dartpoet.util.parameter.ParameterData
 import net.theevilreaper.dartpoet.util.toImmutableSet
 import java.util.concurrent.Future
 

@@ -2,9 +2,8 @@ package net.theevilreaper.dartpoet.util
 
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.emitParameters
-import net.theevilreaper.dartpoet.constructor.factory.FactorySpec
-import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.util.parameter.ParameterData
 import org.jetbrains.annotations.ApiStatus
 
 @ApiStatus.Internal
@@ -18,66 +17,63 @@ object ParameterHelper {
     }
 
     fun writeParameters(
-        spec: FunctionSpec,
+        data: ParameterData,
         codeWriter: CodeWriter,
+        indent: Boolean = false,
+        filterExcluded: Boolean = true
     ) {
-        if (!spec.hasParameters) {
+        if (!data.hasParameters) {
             codeWriter.emit("()")
             return
         }
         codeWriter.emit("(")
-        spec.normalParameter.emitParameters(codeWriter, forceNewLines = false)
+        data.normalParameters.emitParameters(codeWriter, forceNewLines = false)
 
-        if (spec.normalParameter.isNotEmpty() && (spec.hasAdditionalParameters || spec.parametersWithDefaults.isNotEmpty())) {
+        if (data.normalParameters.isNotEmpty() && (data.hasAdditionalParameters || data.parametersWithDefaults.isNotEmpty())) {
             codeWriter.emit(", ")
         }
 
-        if (spec.hasAdditionalParameters) {
-            emitRequiredAndNamedParameter(
-                namedParameter = spec.namedParameter,
-                normalParameters = spec.normalParameter,
-                requiredParameters = spec.requiredParameter,
-                codeWriter = codeWriter
-            )
+        if (data.hasAdditionalParameters) {
+            emitRequiredAndNamedParameter(data, codeWriter, indent, filterExcluded)
         }
 
-        if (spec.parametersWithDefaults.isNotEmpty()) {
+        if (data.parametersWithDefaults.isNotEmpty()) {
             codeWriter.emit("[")
-            spec.parametersWithDefaults.emitParameters(codeWriter, forceNewLines = false)
+            data.parametersWithDefaults.emitParameters(codeWriter, forceNewLines = false)
             codeWriter.emit("]")
         }
 
         codeWriter.emit(")")
     }
 
-    private fun emitRequiredAndNamedParameter(spec: FunctionSpec, codeWriter: CodeWriter) {
-        codeWriter.emit("$CURLY_OPEN")
-
-        val namedRequired = spec.namedParameter.filter { it.isRequired && !it.hasInitializer }.toImmutableList()
-        writeParameters(namedRequired, spec.normalParameter.isNotEmpty(), codeWriter)
-        writeParameters(spec.requiredParameter, namedRequired.isNotEmpty(), codeWriter)
-        val namedParameter =
-            excludeParameters(spec.namedParameter, namedRequired).filter { it.isNullable || it.hasInitializer }
-        val emitSpace: Boolean = spec.requiredParameter.isNotEmpty() || namedRequired.isNotEmpty()
-        writeParameters(namedParameter, emitSpace, codeWriter)
-        codeWriter.emit("$CURLY_CLOSE")
-    }
-
     private fun emitRequiredAndNamedParameter(
-        namedParameter: List<ParameterSpec>,
-        normalParameters: List<ParameterSpec>,
-        requiredParameters: List<ParameterSpec>,
-        codeWriter: CodeWriter
+        data: ParameterData,
+        codeWriter: CodeWriter,
+        indent: Boolean = false,
+        filterExcluded: Boolean = true
     ) {
         codeWriter.emit("$CURLY_OPEN")
 
-        val namedRequired = namedParameter.filter { it.isRequired && !it.hasInitializer }.toImmutableList()
-        writeParameters(namedRequired, normalParameters.isNotEmpty(), codeWriter)
-        writeParameters(requiredParameters, namedRequired.isNotEmpty(), codeWriter)
-        val excludedNamedParameters =
-            excludeParameters(namedParameter, namedRequired).filter { it.isNullable || it.hasInitializer }
-        val emitSpace: Boolean = requiredParameters.isNotEmpty() || namedRequired.isNotEmpty()
+        if (indent) {
+            codeWriter.emit(NEW_LINE)
+            codeWriter.indent()
+        }
+
+        val namedRequired = data.namedParameter.filter { it.isRequired && !it.hasInitializer }.toImmutableList()
+        writeParameters(namedRequired, data.normalParameters.isNotEmpty(), codeWriter)
+        writeParameters(data.requiredParameters, namedRequired.isNotEmpty(), codeWriter)
+        val excludedNamedParameters = when (filterExcluded) {
+            true -> excludeParameters(data.namedParameter, namedRequired).filter { it.isNullable || it.hasInitializer }
+            false -> excludeParameters(data.namedParameter, namedRequired)
+        }
+        val emitSpace: Boolean = data.requiredParameters.isNotEmpty() || namedRequired.isNotEmpty()
         writeParameters(excludedNamedParameters, emitSpace, codeWriter)
+
+        if (indent) {
+            codeWriter.emit(NEW_LINE)
+            codeWriter.unindent()
+        }
+
         codeWriter.emit("$CURLY_CLOSE")
     }
 
