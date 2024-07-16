@@ -98,7 +98,7 @@ class TypeDefSpec(
         /**
          * Static method to create a new instance from the [TypeDefBuilder].
          * @param typeDefName the name of the typedef
-         * @param typeCast the type cast for the typedef as [Class]
+         * @param typeCasts the type cast for the typedef as [Class]
          * @return the created instance
          */
         @JvmStatic
