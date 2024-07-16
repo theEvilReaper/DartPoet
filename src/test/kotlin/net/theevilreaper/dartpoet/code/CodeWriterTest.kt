@@ -12,7 +12,7 @@ class CodeWriterTest {
     @ValueSource(ints = [0, -1])
     fun `test invalid space usage`(amount: Int) {
         assertThrows<IllegalStateException>("The amount of spaces must be greater than 0") {
-            val writer: CodeWriter = CodeWriter(System.out)
+            val writer = CodeWriter(System.out)
             writer.emitSpaces(amount)
         }
     }
