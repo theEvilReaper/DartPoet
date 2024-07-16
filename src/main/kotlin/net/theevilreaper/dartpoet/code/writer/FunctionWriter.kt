@@ -105,7 +105,7 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
             writeParameters(spec = spec, codeWriter = writer)
         }
 
-        val bracketType = when (spec.delegation) {
+        val bracketType = when (spec.type) {
             FunctionType.STANDARD -> {
                 "·$CURLY_OPEN\n"
             }
@@ -113,13 +113,13 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
             FunctionType.SHORTEN -> "${FunctionType.SHORTEN.identifier}·"
         }
 
-        if (spec.delegation == FunctionType.STANDARD) {
+        if (spec.type == FunctionType.STANDARD) {
             writer.indent()
         }
 
         writer.emit(bracketType)
         writer.emitCode(spec.body, ensureTrailingNewline = false)
-        if (spec.delegation == FunctionType.STANDARD) {
+        if (spec.type == FunctionType.STANDARD) {
             writer.unindent()
             writer.emit("\n$CURLY_CLOSE")
         }
@@ -131,7 +131,7 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
             return
         }
 
-        when (spec.delegation) {
+        when (spec.type) {
             FunctionType.STANDARD -> {
                 writer.emit("·{\n")
                 writer.indent()

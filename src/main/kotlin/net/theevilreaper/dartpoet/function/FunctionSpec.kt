@@ -30,7 +30,7 @@ class FunctionSpec internal constructor(
 ) {
     internal val name = builder.name
     internal val returnType: TypeName = builder.returnType
-    internal val delegation: FunctionType = builder.delegation
+    internal val type: FunctionType = builder.type
     internal val methodAccessorType: MethodAccessorType? = builder.methodAccessorType
     internal val body: CodeBlock = builder.body.build()
     private val parameters: List<ParameterSpec> = builder.parameters.toImmutableList()
@@ -61,7 +61,7 @@ class FunctionSpec internal constructor(
         require(name.trim().isNotEmpty()) { "The name of a function can't be empty" }
         require(body.isEmpty() || !modifiers.contains(DartModifier.ABSTRACT)) { "An abstract method can't have a body" }
 
-        if (delegation == FunctionType.SHORTEN && body.isEmpty()) {
+        if (type == FunctionType.SHORTEN && body.isEmpty()) {
             throw IllegalArgumentException("Lambda can only be used with a body")
         }
 

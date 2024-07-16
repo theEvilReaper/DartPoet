@@ -31,7 +31,7 @@ class FunctionBuilder internal constructor(
     internal var typeCast: TypeName? = null
     internal var lambda: Boolean = false
     internal val docs: MutableList<CodeBlock> = mutableListOf()
-    internal var delegation: FunctionType = FunctionType.STANDARD
+    internal var type: FunctionType = FunctionType.STANDARD
     internal var methodAccessorType: MethodAccessorType? = null
 
     /**
@@ -103,9 +103,9 @@ class FunctionBuilder internal constructor(
      * Updates the used method delegation
      * @param delegation the new delegation to set
      */
-    fun delegation(delegation: FunctionType) = apply {
-        if (delegation.ordinal == this.delegation.ordinal) return@apply
-        this.delegation = delegation
+    fun type(delegation: FunctionType) = apply {
+        if (delegation.ordinal == this.type.ordinal) return@apply
+        this.type = delegation
     }
 
     /**

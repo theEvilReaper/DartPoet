@@ -174,7 +174,7 @@ class FunctionWriterTest {
     fun `test other getter variant write`() {
         val function = FunctionSpec.builder("value")
             .returns(Int::class)
-            .delegation(FunctionType.SHORTEN)
+            .type(FunctionType.SHORTEN)
             .accessorType(MethodAccessorType.GETTER)
             .addCode("%L", "_value;")
             .build()
@@ -207,7 +207,7 @@ class FunctionWriterTest {
     fun `test lambda method write`() {
         val function = FunctionSpec.builder("isNoble")
             .parameter(ParameterSpec.builder("atomicNumber", Int::class).build())
-            .delegation(FunctionType.SHORTEN)
+            .type(FunctionType.SHORTEN)
             .returns(Boolean::class)
             .addCode("_nobleGases[atomicNumber] != null;")
             .build()

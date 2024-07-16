@@ -161,7 +161,7 @@ class DartFileTest {
                 FunctionSpec.builder("serializer")
                     .returns(ClassName("Serializer<$name>"))
                     .lambda(true)
-                    .delegation(FunctionType.SHORTEN)
+                    .type(FunctionType.SHORTEN)
                     .accessorType(MethodAccessorType.GETTER)
                     .modifier(DartModifier.STATIC)
                     .addCode("%L", "_\$${name}Serializer;")
@@ -169,7 +169,7 @@ class DartFileTest {
             )
             .function(
                 FunctionSpec.builder("fromJson")
-                    .delegation(FunctionType.SHORTEN)
+                    .type(FunctionType.SHORTEN)
                     .returns(houseClass)
                     .modifier(DartModifier.STATIC)
                     .parameter(ParameterSpec.builder("json", DYNAMIC).build())
@@ -182,7 +182,7 @@ class DartFileTest {
             )
             .function(
                 FunctionSpec.builder("toJson")
-                    .delegation(FunctionType.SHORTEN)
+                    .type(FunctionType.SHORTEN)
                     .returns(DYNAMIC)
                     .addCode(
                         buildCodeBlock {
