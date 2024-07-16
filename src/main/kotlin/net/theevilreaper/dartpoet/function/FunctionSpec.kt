@@ -44,11 +44,9 @@ class FunctionSpec internal constructor(
     internal val requiredParameter =
         ParameterFilter.filterParameter(parameters) { it.isRequired && !it.isNamed && !it.hasInitializer }
     internal val namedParameter = ParameterFilter.filterParameter(parameters) { it.isNamed }
-    internal val normalParameter =
-        parameters.minus(parametersWithDefaults).minus(requiredParameter).minus(namedParameter).toImmutableList()
+    internal val normalParameter = ParameterHelper.excludeParameters(parameters, parametersWithDefaults, requiredParameter, namedParameter)
     internal val hasParameters = parameters.isNotEmpty()
     internal val hasAdditionalParameters = requiredParameter.isNotEmpty() || namedParameter.isNotEmpty()
-
     internal val isPrivate = builder.specData.modifiers.remove(DartModifier.PRIVATE)
     internal val typeCast = builder.typeCast
     internal val docs = builder.docs
