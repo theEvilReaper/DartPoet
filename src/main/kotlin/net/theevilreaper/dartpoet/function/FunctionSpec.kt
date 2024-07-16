@@ -60,14 +60,8 @@ class FunctionSpec internal constructor(
     init {
         require(name.trim().isNotEmpty()) { "The name of a function can't be empty" }
         require(body.isEmpty() || !modifiers.contains(DartModifier.ABSTRACT)) { "An abstract method can't have a body" }
-
-        if (type == FunctionType.SHORTEN && body.isEmpty()) {
-            throw IllegalArgumentException("Lambda can only be used with a body")
-        }
-
-        if (requiredParameter.isNotEmpty() && parametersWithDefaults.isNotEmpty()) {
-            throw IllegalArgumentException("A function can't have required and optional parameters")
-        }
+        require(!(type == FunctionType.SHORTEN && body.isEmpty())) { "Lambda can only be used with a body" }
+        require(!(requiredParameter.isNotEmpty() && parametersWithDefaults.isNotEmpty())) { "A function can't have required and optional parameters" }
     }
 
     /**
@@ -102,21 +96,59 @@ class FunctionSpec internal constructor(
         return builder
     }
 
+    /**
+     * The companion object contains several factory methods to create a new instance of [FunctionSpec].
+     * @since 1.0.0
+     * @version 1.0.0
+     * @see FunctionBuilder
+     * @author theEvilReaper
+     */
     companion object {
 
         /**
-         * Static method to create a new instance from the [FunctionBuilder].
-         * @return the created instance
+         * Creates a new instance of [FunctionBuilder] with the specified name.
+         * The return type of the function is set to [Void] by default.
+         * If you want to change the type use the [FunctionBuilder.returns] method.
+         * @param name the name for the function
+         * @return the created [FunctionBuilder] instance
          */
         @JvmStatic
         fun builder(name: String) = FunctionBuilder(name)
 
+        /**
+         * Creates a new instance of [FunctionBuilder] with the specified name and return type.
+         * @param name the name for the function
+         * @param returnType the return type of the function as [TypeName]
+         * @return the created [FunctionBuilder] instance
+         */
+        @JvmStatic
         fun builder(name: String, returnType: TypeName) = FunctionBuilder(name, returnType)
 
+        /**
+         * Creates a new instance of [FunctionBuilder] with the specified name and return type.
+         * @param name the name for the function
+         * @param returnType the return type of the function as [ClassName]
+         * @return the created [FunctionBuilder] instance
+         */
+        @JvmStatic
         fun builder(name: String, returnType: ClassName) = FunctionBuilder(name, returnType)
 
+        /**
+         * Creates a new instance of [FunctionBuilder] with the specified name and return type.
+         * @param name the name for the function
+         * @param returnType the return type of the function as [KClass]
+         * @return the created [FunctionBuilder] instance
+         */
+        @JvmStatic
         fun builder(name: String, returnType: KClass<*>) = FunctionBuilder(name, returnType.asTypeName())
 
+        /**
+         * Creates a new instance of [FunctionBuilder] with the specified name and return type.
+         * @param name the name for the function
+         * @param returnType the return type of the function as [Type]
+         * @return the created [FunctionBuilder] instance
+         */
+        @JvmStatic
         fun builder(name: String, returnType: Type) = FunctionBuilder(name, returnType.asTypeName())
     }
 }
