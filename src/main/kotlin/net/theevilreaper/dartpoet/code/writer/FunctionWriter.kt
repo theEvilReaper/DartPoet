@@ -64,7 +64,8 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
             writer.emitCode("<%T>", spec.typeCast)
         }
 
-        ParameterHelper.writeParameters(spec, writer)
+        val parameterData = ParameterData.fromFunction(spec)
+        ParameterHelper.writeParameters(parameterData, writer)
         if (spec.isAsync) {
             writer.emitSpace()
             writer.emit(ASYNC.identifier)
@@ -103,7 +104,8 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
         }
 
         if (spec.hasSetterAccessor) {
-            ParameterHelper.writeParameters(spec, writer)
+            val parameterData = ParameterData.fromFunction(spec)
+            ParameterHelper.writeParameters(parameterData, writer)
         }
 
         val bracketType = when (spec.type) {
