@@ -2,20 +2,36 @@
 
 [![license](https://img.shields.io/github/license/theEvilReaper/DartPoet?style=for-the-badge&color=b2234c)](../LICENSE)
 
-# **DartPoet is still in development and not ready for production use.**
+DartPoet is a Kotlin-based library designed for generating Dart code programmatically. DartPoet, inspired by the design
+of JavaPoet and KotlinPoet, simplifies the creation of Dart source files by providing a fluent and expressive API. This
+library is particularly
+useful for developers looking to automate Dart code generation, ensuring consistency and reducing manual coding effort.
 
-## Description
-Helps developers to write dart code in a more fluent way via kotlin api.
-## Motivation
-Our company uses kotlin for all of our projects. We wanted to write our dart code in a more fluent way. So we decided to write our own library for code generation.
-## Focus
-Our focus lies within a basic implementation of DartPoet, its core and reaching the goal of stable builds to use it in production later on.
+The API allows the creation of the core functionalities of the Dart language, such as classes, methods, fields and more.
+Some of the newer features are not directly supported by the api itself, but can be added by using the `CodeBlock`
+class.
+At least the generated code relies on the null-safety feature from Dart. Which means that the code is generated for Dart
+version `2.12.0` or higher.
 
-## Contributing
-We are happy to see that you are interested in contributing to our project. Please read our [contributing guidelines](CONTRIBUTING.md) before you start.
+> [!CAUTION]
+>
+> The library can be used in production, but it is still in development.
+> This means that some features can contain bugs or may change in the future.
+> We recommend to use the library with caution and to report any issues you encounter.
 
-## Maven
+## Usage
+
+At the moment the library is only available over the snapshot repository. This means that you have to add the snapshot
+repository from Maven to your project. The library is not yet available on Maven Central.
+
+The url to the repository can be found [here](https://s01.oss.sonatype.org/content/repositories/snapshots/)
+
+To add the library to your project you can use the following snippet:
+
+Maven:
+
 ```xml
+
 <dependency>
     <groupId>dev.themeinerlp</groupId>
     <artifactId>dartpoet</artifactId>
@@ -23,11 +39,26 @@ We are happy to see that you are interested in contributing to our project. Plea
 </dependency>
 ```
 
-## Gradle
+Gradle:
+
 ```kotlin
 implementation("dev.themeinerlp:dartpoet:0.0.1-SNAPSHOT")
 ```
 
-## Usage
-```kotlin
-``
+## Contributing
+
+We are happy to see that you are interested in contributing to our project. Please read
+our [contributing guidelines](CONTRIBUTING.md) before you start.
+
+## Wiki
+
+The wiki contains all the information you need to get started with the library.
+It provides explanations for different parts of the library and how to use them.
+
+> [!CAUTION]
+>
+> Due to the state of the project, the wiki is not yet available. We are working on it and will provide it as soon as
+> possible.
+>
+> If you want to see how you can use the library, you can take a look at the tests.
+> They contain examples for different parts of the library.
