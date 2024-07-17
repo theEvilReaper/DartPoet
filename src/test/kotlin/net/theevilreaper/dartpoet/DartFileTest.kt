@@ -9,6 +9,8 @@ import net.theevilreaper.dartpoet.directive.DirectiveFactory
 import net.theevilreaper.dartpoet.directive.DirectiveType
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.constructor.ConstructorSpec
+import net.theevilreaper.dartpoet.function.FunctionType
+import net.theevilreaper.dartpoet.function.MethodAccessorType
 import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
@@ -159,29 +161,34 @@ class DartFileTest {
                 FunctionSpec.builder("serializer")
                     .returns(ClassName("Serializer<$name>"))
                     .lambda(true)
-                    .getter(true)
+                    .type(FunctionType.SHORTEN)
+                    .accessorType(MethodAccessorType.GETTER)
                     .modifier(DartModifier.STATIC)
                     .addCode("%L", "_\$${name}Serializer;")
                     .build()
             )
             .function(
                 FunctionSpec.builder("fromJson")
-                    .lambda(true)
+                    .type(FunctionType.SHORTEN)
                     .returns(houseClass)
                     .modifier(DartModifier.STATIC)
                     .parameter(ParameterSpec.builder("json", DYNAMIC).build())
-                    .addCode(buildCodeBlock {
-                        add("%L.deserialize(json);", serializer)
-                    })
+                    .addCode(
+                        buildCodeBlock {
+                            add("%L.deserialize(json);", serializer)
+                        }
+                    )
                     .build()
             )
             .function(
                 FunctionSpec.builder("toJson")
-                    .lambda(true)
+                    .type(FunctionType.SHORTEN)
                     .returns(DYNAMIC)
-                    .addCode(buildCodeBlock {
-                        add("%L.serialize(this);", "standardSerializers")
-                    })
+                    .addCode(
+                        buildCodeBlock {
+                            add("%L.serialize(this);", "standardSerializers")
+                        }
+                    )
                     .build()
             )
             .build()
@@ -264,9 +271,11 @@ class DartFileTest {
                 FunctionSpec.builder("getName")
                     .doc("Returns the given name from the object")
                     .returns(String::class)
-                    .addCode(buildCodeBlock {
-                        add("return name;")
-                    })
+                    .addCode(
+                        buildCodeBlock {
+                            add("return name;")
+                        }
+                    )
                     .build()
             )
         val file = DartFile.builder("test_model")

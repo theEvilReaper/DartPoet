@@ -5,7 +5,9 @@ import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.buildCodeBlock
+import net.theevilreaper.dartpoet.function.FunctionType
 import net.theevilreaper.dartpoet.function.FunctionSpec
+import net.theevilreaper.dartpoet.function.MethodAccessorType
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.DYNAMIC
@@ -172,7 +174,8 @@ class FunctionWriterTest {
     fun `test other getter variant write`() {
         val function = FunctionSpec.builder("value")
             .returns(Int::class)
-            .getter(true)
+            .type(FunctionType.SHORTEN)
+            .accessorType(MethodAccessorType.GETTER)
             .addCode("%L", "_value;")
             .build()
         assertThat(function.toString()).isEqualTo("int get value => _value;");
@@ -184,10 +187,12 @@ class FunctionWriterTest {
             .parameter(
                 ParameterSpec.builder("value", Int::class).build()
             )
-            .setter(true)
-            .addCode(buildCodeBlock {
-                add("%L = %L;", "_value", "value")
-            })
+            .accessorType(MethodAccessorType.SETTER)
+            .addCode(
+                buildCodeBlock {
+                    add("%L = %L;", "_value", "value")
+                }
+            )
             .build()
         assertThat(function.toString()).isEqualTo(
             """
@@ -201,8 +206,8 @@ class FunctionWriterTest {
     @Test
     fun `test lambda method write`() {
         val function = FunctionSpec.builder("isNoble")
-            .lambda(true)
             .parameter(ParameterSpec.builder("atomicNumber", Int::class).build())
+            .type(FunctionType.SHORTEN)
             .returns(Boolean::class)
             .addCode("_nobleGases[atomicNumber] != null;")
             .build()

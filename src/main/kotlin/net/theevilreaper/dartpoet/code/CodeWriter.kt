@@ -46,10 +46,10 @@ internal fun buildCodeString(
 }
 
 /**
- * Converts a [FileSpec] to a string suitable to both human- and kotlinc-consumption. This honors
+ * Converts a [DartFile] to a string suitable to both human- and kotlinc-consumption. This honors
  * imports, indentation, and deferred variable names.
  */
-class CodeWriter constructor(
+class CodeWriter(
     out: Appendable,
     private val indent: String = DEFAULT_INDENT,
     columnLimit: Int = 100,
@@ -257,6 +257,26 @@ class CodeWriter constructor(
         for (j in 0 until indentLevel) {
             out.appendNonWrapping(indent)
         }
+    }
+
+    /**
+     * Emits a specific amount of [SPACE] strings to the given [Appendable].
+     * @param amount the amount of spaces which should be applied
+     * @return the instance from the writer
+     */
+    fun emitSpaces(amount: Int = 1) = apply {
+        check(amount > 0) { "The amount can't be negative" }
+        for (i in 0 until amount) {
+            out.appendNonWrapping(SPACE)
+        }
+    }
+
+    /**
+     * Applies one [SPACE] string to the given [Appendable].
+     * @return the instance from the writer
+     */
+    fun emitSpace() = apply {
+        out.appendNonWrapping(SPACE)
     }
 
     /**
