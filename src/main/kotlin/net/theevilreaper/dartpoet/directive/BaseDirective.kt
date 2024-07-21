@@ -11,6 +11,7 @@ import net.theevilreaper.dartpoet.util.DART_FILE_ENDING
  * @since 1.0.0
  */
 abstract class BaseDirective(
+    protected val type: DirectiveType,
     private val path: String
 ) : Directive {
 
@@ -39,7 +40,7 @@ abstract class BaseDirective(
      * Ensures that the directive path ends with .dart.
      * @return the original string or the string with .dart at the end
      */
-    protected fun String.ensureDartFileEnding(): String {
+    private fun String.ensureDartFileEnding(): String {
         return when (!this.endsWith(DART_FILE_ENDING) && !isDartImport()) {
             true -> "$this$DART_FILE_ENDING"
             false -> this
@@ -50,7 +51,7 @@ abstract class BaseDirective(
      * Checks if a given import path starts with the word dart.
      * @return true when the path starts with the word otherwise false
      */
-    protected fun isDartImport(): Boolean {
+    private fun isDartImport(): Boolean {
         return path.startsWith("dart")
     }
 
@@ -59,4 +60,16 @@ abstract class BaseDirective(
      * @return the raw data string
      */
     override fun getRawPath(): String = this.path
+
+    /**
+     * Returns the type of the directive.
+     * @return the [DirectiveType] of the directive
+     */
+    override fun type(): DirectiveType = type
+
+    /**
+     * Returns the path of the directive with the ending .dart.
+     * @return the path with the ending
+     */
+    override fun getPathWithEnding(): String = this.path.ensureDartFileEnding()
 }

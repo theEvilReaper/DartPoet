@@ -18,6 +18,8 @@ package net.theevilreaper.dartpoet.directive
  */
 sealed interface Directive : Comparable<Directive> {
 
+    fun type(): DirectiveType
+
     /**
      * Returns a string representation of the directive.
      * @return the string representation
@@ -29,4 +31,10 @@ sealed interface Directive : Comparable<Directive> {
      * @return the raw path
      */
     fun getRawPath(): String
+
+    /**
+     * Returns the path with the ending .dart.
+     * @return the path with the ending
+     */
+    fun getPathWithEnding(): String
 }
