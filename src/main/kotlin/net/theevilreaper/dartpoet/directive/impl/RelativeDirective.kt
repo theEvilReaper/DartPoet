@@ -1,7 +1,10 @@
-package net.theevilreaper.dartpoet.directive
+package net.theevilreaper.dartpoet.directive.impl
 
 import net.theevilreaper.dartpoet.code.CodeWriter
-import net.theevilreaper.dartpoet.util.SEMICOLON
+import net.theevilreaper.dartpoet.directive.BaseDirective
+import net.theevilreaper.dartpoet.directive.CastType
+import net.theevilreaper.dartpoet.directive.DirectiveHelper
+import net.theevilreaper.dartpoet.directive.DirectiveType
 
 /**
  * This implementation represents a relative directive from dart.
@@ -10,10 +13,10 @@ import net.theevilreaper.dartpoet.util.SEMICOLON
  * @author theEvilReaper
  */
 class RelativeDirective internal constructor(
-    private val path: String,
+    path: String,
     private val castType: CastType? = null,
     private val importCast: String? = null,
-) : BaseDirective(path) {
+) : BaseDirective(DirectiveType.RELATIVE, path) {
 
     init {
         if (importCast != null) {
@@ -30,14 +33,6 @@ class RelativeDirective internal constructor(
      * @param writer the [CodeWriter] instance to append the directive
      */
     override fun write(writer: CodeWriter) {
-        writer.emit("import ")
-        writer.emit("'")
-        writer.emit(path)
-        writer.emit("'")
-
-        if (castType != null && importCast != null) {
-            writer.emit(" ${castType.identifier} $importCast")
-        }
-        writer.emit(SEMICOLON)
+        DirectiveHelper.writeDirective(writer, this, importCast, castType)
     }
 }

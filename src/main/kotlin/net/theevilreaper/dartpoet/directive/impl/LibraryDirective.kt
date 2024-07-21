@@ -1,8 +1,9 @@
-package net.theevilreaper.dartpoet.directive
+package net.theevilreaper.dartpoet.directive.impl
 
-import net.theevilreaper.dartpoet.DartModifier.LIBRARY
 import net.theevilreaper.dartpoet.code.CodeWriter
-import net.theevilreaper.dartpoet.util.SEMICOLON
+import net.theevilreaper.dartpoet.directive.BaseDirective
+import net.theevilreaper.dartpoet.directive.DirectiveHelper
+import net.theevilreaper.dartpoet.directive.DirectiveType
 
 /**
  * The [LibraryDirective] represents the library directive from dart.
@@ -10,18 +11,15 @@ import net.theevilreaper.dartpoet.util.SEMICOLON
  * @author theEvilReaper
  */
 class LibraryDirective internal constructor(
-    private val path: String,
+    path: String,
     private val asPartOf: Boolean = false
-) : BaseDirective(path) {
+) : BaseDirective(DirectiveType.LIBRARY, path) {
 
     /**
      * Writes the data from the [LibraryDirective] to a given instance from a [CodeWriter].
      * @param writer the [CodeWriter] instance to append the directive
      */
     override fun write(writer: CodeWriter) {
-        val baseString = if (asPartOf) "part of" else LIBRARY.identifier
-        writer.emit("$baseString·")
-        writer.emit(path)
-        writer.emit(SEMICOLON)
+        DirectiveHelper.writePartOrLibDirective(writer, this, asPartOf)
     }
 }
