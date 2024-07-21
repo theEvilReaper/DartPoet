@@ -1,5 +1,6 @@
 package net.theevilreaper.dartpoet.directive
 
+import net.theevilreaper.dartpoet.directive.impl.DartDirective
 import net.theevilreaper.dartpoet.util.DirectiveOrdering
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import org.junit.jupiter.api.DisplayName
