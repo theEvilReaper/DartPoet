@@ -17,7 +17,6 @@ internal const val NEW_LINE_CHAR = '\n'
 internal const val NEW_LINE = NEW_LINE_CHAR.toString()
 internal const val SEMICOLON = ";"
 internal const val DOCUMENTATION_CHAR = "///"
-internal const val IMPORT = "import"
 internal const val ANNOTATION_CHAR = "@"
 internal const val DART_FILE_ENDING = ".dart"
 
