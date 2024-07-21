@@ -1,7 +1,9 @@
-package net.theevilreaper.dartpoet.directive
+package net.theevilreaper.dartpoet.directive.impl
 
 import net.theevilreaper.dartpoet.code.CodeWriter
-import net.theevilreaper.dartpoet.util.SEMICOLON
+import net.theevilreaper.dartpoet.directive.BaseDirective
+import net.theevilreaper.dartpoet.directive.DirectiveHelper
+import net.theevilreaper.dartpoet.directive.DirectiveType
 
 /**
  * This implementation represents a part directive from dart.
@@ -10,17 +12,14 @@ import net.theevilreaper.dartpoet.util.SEMICOLON
  * @author theEvilReaper
  */
 class PartDirective internal constructor(
-    private val path: String
-) : BaseDirective(path) {
+    path: String
+) : BaseDirective(DirectiveType.PART, path) {
 
     /**
      * Writes the content for a part directive to an instance of an [CodeWriter].
      * @param writer the [CodeWriter] instance to append the directive
      */
     override fun write(writer: CodeWriter) {
-        writer.emit("part ")
-        writer.emit("'")
-        writer.emit(path)
-        writer.emit("'$SEMICOLON")
+        DirectiveHelper.writePartOrLibDirective(writer, this)
     }
 }

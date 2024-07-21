@@ -1,5 +1,7 @@
 package net.theevilreaper.dartpoet.directive
 
+import net.theevilreaper.dartpoet.directive.impl.*
+
 /**
  * The [DirectiveFactory] should be used to create a new instance of different [Directive] implementations.
  * It's required to use this factory to create a new instance because it will check if the given [DirectiveType].
@@ -73,13 +75,11 @@ object DirectiveFactory {
         partOf: Boolean = false,
         castType: CastType? = null,
         importCast: String? = null,
-    ): Directive {
-        return when (directive) {
-            DirectiveType.IMPORT -> DartDirective(path, castType, importCast)
-            DirectiveType.RELATIVE -> RelativeDirective(path, castType, importCast)
-            DirectiveType.PART -> PartDirective(path)
-            DirectiveType.LIBRARY -> LibraryDirective(path, partOf)
-            DirectiveType.EXPORT -> ExportDirective(path, castType, importCast)
-        }
+    ): Directive = when (directive) {
+        DirectiveType.IMPORT -> DartDirective(path, castType, importCast)
+        DirectiveType.RELATIVE -> RelativeDirective(path, castType, importCast)
+        DirectiveType.PART -> PartDirective(path)
+        DirectiveType.LIBRARY -> LibraryDirective(path, partOf)
+        DirectiveType.EXPORT -> ExportDirective(path, castType, importCast)
     }
 }

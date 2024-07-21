@@ -1,8 +1,10 @@
-package net.theevilreaper.dartpoet.directive
+package net.theevilreaper.dartpoet.directive.impl
 
 import net.theevilreaper.dartpoet.code.CodeWriter
-import net.theevilreaper.dartpoet.util.IMPORT
-import net.theevilreaper.dartpoet.util.SEMICOLON
+import net.theevilreaper.dartpoet.directive.BaseDirective
+import net.theevilreaper.dartpoet.directive.CastType
+import net.theevilreaper.dartpoet.directive.DirectiveHelper
+import net.theevilreaper.dartpoet.directive.DirectiveType
 
 /**
  * Represents an import directive from dart which usual starts with `dart` or `package`.
@@ -16,10 +18,10 @@ import net.theevilreaper.dartpoet.util.SEMICOLON
  * @constructor Creates a Dart import directive with the specified path as [String], a cast type as [CastType], and a importCast a [String].
  */
 class DartDirective internal constructor(
-    private val path: String,
+    path: String,
     private val castType: CastType? = null,
     private val importCast: String? = null,
-) : BaseDirective(path) {
+) : BaseDirective(DirectiveType.IMPORT, path) {
 
     /**
      * Check if some conditions are false and throw an exception.
@@ -40,14 +42,6 @@ class DartDirective internal constructor(
      * @param writer the writer instance to append the directive
      */
     override fun write(writer: CodeWriter) {
-        writer.emit("$IMPORT ")
-        val ensuredPath = path.ensureDartFileEnding()
-        val pathToWrite = if (isDartImport()) ensuredPath else "package:$ensuredPath"
-        writer.emit("'$pathToWrite'")
-
-        if (importCast != null && castType != null) {
-            writer.emit(" ${castType.identifier} $importCast")
-        }
-        writer.emit(SEMICOLON)
+        DirectiveHelper.writeDirective(writer, this, importCast, castType)
     }
 }

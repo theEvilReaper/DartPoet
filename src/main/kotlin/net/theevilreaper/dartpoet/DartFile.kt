@@ -5,11 +5,11 @@ import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.buildCodeString
-import net.theevilreaper.dartpoet.directive.DartDirective
-import net.theevilreaper.dartpoet.directive.ExportDirective
-import net.theevilreaper.dartpoet.directive.LibraryDirective
-import net.theevilreaper.dartpoet.directive.PartDirective
-import net.theevilreaper.dartpoet.directive.RelativeDirective
+import net.theevilreaper.dartpoet.directive.impl.DartDirective
+import net.theevilreaper.dartpoet.directive.impl.ExportDirective
+import net.theevilreaper.dartpoet.directive.impl.LibraryDirective
+import net.theevilreaper.dartpoet.directive.impl.PartDirective
+import net.theevilreaper.dartpoet.directive.impl.RelativeDirective
 import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
@@ -32,9 +32,7 @@ class DartFile internal constructor(
     internal val extensions: List<ExtensionSpec> = builder.extensionStack
     internal val docs = builder.docs
     internal val constants: Set<ConstantPropertySpec> = builder.constants.toImmutableSet()
-
     private val directives = builder.directives.toImmutableList()
-
     internal val dartImports =
         DirectiveOrdering.sortDirectives<DartDirective>(DartDirective::class, directives) { it.contains("dart:") }
     internal val packageImports =
@@ -45,7 +43,6 @@ class DartFile internal constructor(
         DirectiveOrdering.sortDirectives<ExportDirective>(ExportDirective::class, directives)
     internal val relativeImports =
         DirectiveOrdering.sortDirectives<RelativeDirective>(RelativeDirective::class, directives)
-
     internal val typeDefs = builder.typeDefs.toImmutableList()
     internal val hasTypeDefs = typeDefs.isNotEmpty()
 

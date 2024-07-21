@@ -1,5 +1,6 @@
 package net.theevilreaper.dartpoet.directive
 
+import net.theevilreaper.dartpoet.directive.impl.ExportDirective
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.assertThrows
