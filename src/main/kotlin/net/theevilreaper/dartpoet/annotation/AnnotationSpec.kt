@@ -24,7 +24,7 @@ import kotlin.reflect.KClass
  * @since 1.0.0
  */
 class AnnotationSpec internal constructor(
-    builder: AnnotationSpecBuilder,
+    builder: AnnotationBuilder,
 ) {
     internal val typeName: TypeName = builder.typeName
     internal val content: Set<CodeBlock> = builder.content.toImmutableSet()
@@ -51,58 +51,58 @@ class AnnotationSpec internal constructor(
     override fun toString() = buildCodeString { write(this) }
 
     /**
-     * Creates a new [AnnotationSpecBuilder] reference from an existing [AnnotationSpec] object.
-     * @return the created [AnnotationSpecBuilder] instance
+     * Creates a new [AnnotationBuilder] reference from an existing [AnnotationSpec] object.
+     * @return the created [AnnotationBuilder] instance
      */
-    fun toBuilder(): AnnotationSpecBuilder {
-        val builder = AnnotationSpecBuilder(this.typeName)
+    fun toBuilder(): AnnotationBuilder {
+        val builder = AnnotationBuilder(this.typeName)
         builder.content.addAll(this.content)
         return builder
     }
 
     /**
-     * The companion object contains some helper methods to create a new instance from the [AnnotationSpecBuilder].
+     * The companion object contains some helper methods to create a new instance from the [AnnotationBuilder].
      */
     companion object {
 
         /**
-         * Creates a new instance from the [AnnotationSpecBuilder].
+         * Creates a new instance from the [AnnotationBuilder].
          * @param name the name for the annotation provided as [String]
-         * @return the created instance from the [AnnotationSpecBuilder]
+         * @return the created instance from the [AnnotationBuilder]
          */
         @JvmStatic
-        fun builder(name: String) = AnnotationSpecBuilder(ClassName(name))
+        fun builder(name: String) = AnnotationBuilder(ClassName(name))
 
         /**
-         * Creates a new instance from the [AnnotationSpecBuilder].
+         * Creates a new instance from the [AnnotationBuilder].
          * @param type the type for the annotation provided as [ClassName]
-         * @return the created instance from the [AnnotationSpecBuilder]
+         * @return the created instance from the [AnnotationBuilder]
          */
         @JvmStatic
-        fun builder(type: ClassName) = AnnotationSpecBuilder(type)
+        fun builder(type: ClassName) = AnnotationBuilder(type)
 
         /**
-         * Creates a new instance from the [AnnotationSpecBuilder].
+         * Creates a new instance from the [AnnotationBuilder].
          * @param type the type for the annotation provided as [TypeName]
-         * @return the created instance from the [AnnotationSpecBuilder]
+         * @return the created instance from the [AnnotationBuilder]
          */
         @JvmStatic
-        fun builder(type: TypeName) = AnnotationSpecBuilder(type)
+        fun builder(type: TypeName) = AnnotationBuilder(type)
 
         /**
-         * Creates a new instance from the [AnnotationSpecBuilder].
+         * Creates a new instance from the [AnnotationBuilder].
          * @param type the type for the annotation provided as [Class]
-         * @return the created instance from the [AnnotationSpecBuilder]
+         * @return the created instance from the [AnnotationBuilder]
          */
         @JvmStatic
-        fun builder(type: Class<*>) = AnnotationSpecBuilder(type.asClassName())
+        fun builder(type: Class<*>) = AnnotationBuilder(type.asClassName())
 
         /**
-         * Creates a new instance from the [AnnotationSpecBuilder].
+         * Creates a new instance from the [AnnotationBuilder].
          * @param type the type for the annotation provided as [KClass]
-         * @return the created instance from the [AnnotationSpecBuilder]
+         * @return the created instance from the [AnnotationBuilder]
          */
         @JvmStatic
-        fun builder(type: KClass<out Annotation>) = AnnotationSpecBuilder(type.asClassName())
+        fun builder(type: KClass<out Annotation>) = AnnotationBuilder(type.asClassName())
     }
 }
