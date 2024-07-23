@@ -11,7 +11,7 @@ import net.theevilreaper.dartpoet.type.TypeName
  * @version 1.0.0
  * @since
  **/
-class AnnotationSpecBuilder(
+class AnnotationBuilder(
     internal val typeName: TypeName
 ) {
     /**
@@ -23,7 +23,7 @@ class AnnotationSpecBuilder(
      * Add a content part to the annotation.
      * @param format the format string
      * @param args the arguments for the format string
-     * @return the given instance of an [AnnotationSpecBuilder]
+     * @return the given instance of an [AnnotationBuilder]
      */
     fun content(format: String, vararg args: Any) = apply {
         content(CodeBlock.of(format, *args))
@@ -32,7 +32,7 @@ class AnnotationSpecBuilder(
     /**
      * Add a content part to the annotation.
      * @param codeFragment the code fragment to add provided as [CodeBlock]
-     * @return the given instance of an [AnnotationSpecBuilder]
+     * @return the given instance of an [AnnotationBuilder]
      */
     fun content(codeFragment: CodeBlock) = apply {
         this.content += codeFragment
@@ -41,7 +41,7 @@ class AnnotationSpecBuilder(
     /**
      * Add a content part to the annotation.
      * @param codeFragment the code fragment to add provided as lambda block
-     * @return the given instance of an [AnnotationSpecBuilder]
+     * @return the given instance of an [AnnotationBuilder]
      */
     fun content(codeFragment: () -> CodeBlock) = apply {
         this.content += codeFragment()
@@ -51,7 +51,5 @@ class AnnotationSpecBuilder(
      * Creates a new instance from the [AnnotationSpec].
      * @return the created instance
      */
-    fun build(): AnnotationSpec {
-        return AnnotationSpec(this)
-    }
+    fun build(): AnnotationSpec = AnnotationSpec(this)
 }
