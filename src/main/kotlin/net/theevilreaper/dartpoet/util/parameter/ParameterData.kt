@@ -2,6 +2,7 @@ package net.theevilreaper.dartpoet.util.parameter
 
 import net.theevilreaper.dartpoet.constructor.factory.FactorySpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
+import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 
 data class ParameterData internal constructor(
@@ -51,5 +52,21 @@ data class ParameterData internal constructor(
             )
         }
 
+        @JvmStatic
+        fun fromTypeDef(typeDefSpec: TypeDefSpec): ParameterData {
+            val normalParameters = typeDefSpec.normalParameter
+            val namedParameter = typeDefSpec.namedParameter
+            val requiredParameters = typeDefSpec.requiredParameter
+            val parametersWithDefaults = typeDefSpec.parametersWithDefaults
+            return ParameterData(
+                normalParameters,
+                namedParameter,
+                requiredParameters,
+                parametersWithDefaults,
+                typeDefSpec.hasParameters,
+                typeDefSpec.hasAdditionalParameters,
+                typeDefSpec.parametersWithDefaults.isNotEmpty()
+            )
+        }
     }
 }
