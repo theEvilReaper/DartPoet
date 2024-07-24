@@ -1,12 +1,12 @@
 package net.theevilreaper.dartpoet.code
 
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
-import net.theevilreaper.dartpoet.directive.Directive
-import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.constructor.ConstructorBase
-import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.constructor.factory.FactorySpec
+import net.theevilreaper.dartpoet.directive.Directive
+import net.theevilreaper.dartpoet.extension.ExtensionSpec
+import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
@@ -40,7 +40,7 @@ val Char.isMultiCharNoArgPlaceholder get() = this == '%'
 
 internal val String.isPlaceholder
     get() = (length == 1 && first().isSingleCharNoArgPlaceholder) ||
-        (length == 2 && first().isMultiCharNoArgPlaceholder)
+            (length == 2 && first().isMultiCharNoArgPlaceholder)
 
 fun String.nextPotentialPlaceholderPosition(startIndex: Int) =
     indexOfAny(NO_ARG_PLACEHOLDERS, startIndex)
@@ -69,19 +69,17 @@ internal fun Set<AnnotationSpec>.emitAnnotations(
     endWithNewLine: Boolean = true,
     emitBlock: (AnnotationSpec) -> Unit = { it.write(codeWriter) },
 ) = with(codeWriter) {
-    if (isNotEmpty()) {
-        forEachIndexed { index, annotation ->
-            if (index > 0) {
-                codeWriter.emit(if (inLineAnnotations) EMPTY_STRING else NEW_LINE)
-            }
-            emitBlock(annotation)
+    if (isEmpty()) return@with
+    forEachIndexed { index, annotation ->
+        if (index > 0) {
+            codeWriter.emit(if (inLineAnnotations) EMPTY_STRING else NEW_LINE)
         }
+        emitBlock(annotation)
+    }
 
-        if (endWithNewLine) {
-            emit(NEW_LINE)
-        } else {
-            emit(SPACE)
-        }
+    when {
+        endWithNewLine -> emit(NEW_LINE)
+        else -> emit(SPACE)
     }
 }
 
@@ -115,21 +113,20 @@ internal fun List<ParameterSpec>.emitParameters(
     emitSpace: Boolean = true,
     emitBlock: (ParameterSpec) -> Unit = { it.write(codeWriter) },
 ) = with(codeWriter) {
-    if (isNotEmpty()) {
-        val emitComma = size > 1
-        forEachIndexed { index, parameter ->
-            if (index > 0 && forceNewLines) {
-                emit(NEW_LINE)
-            }
+    if (isEmpty()) return@with
+    val emitComma = size > 1
+    forEachIndexed { index, parameter ->
+        if (index > 0 && forceNewLines) {
+            emit(NEW_LINE)
+        }
 
-            emitBlock(parameter)
-            if (emitComma) {
-                if (index < size - 1) {
-                    emit(",")
-                }
-                if (emitSpace && index < size - 1) {
-                    emit(SPACE)
-                }
+        emitBlock(parameter)
+        if (emitComma) {
+            if (index < size - 1) {
+                emit(",")
+            }
+            if (emitSpace && index < size - 1) {
+                emit(SPACE)
             }
         }
     }
@@ -140,19 +137,18 @@ internal fun List<ExtensionSpec>.emitExtensions(
     forceNewLines: Boolean = false,
     emitBlock: (ExtensionSpec) -> Unit = { it.write(codeWriter) },
 ) = with(codeWriter) {
-    if (isNotEmpty()) {
-        val emitNewLines = size > 1 || forceNewLines
+    if (isEmpty()) return@with
+    val emitNewLines = size > 1 || forceNewLines
 
-        forEachIndexed { index, parameter ->
-            if (index > 0 && emitNewLines) {
-                emit(NEW_LINE)
-            }
-            emitBlock(parameter)
+    forEachIndexed { index, parameter ->
+        if (index > 0 && emitNewLines) {
+            emit(NEW_LINE)
         }
+        emitBlock(parameter)
+    }
 
-        if (emitNewLines) {
-            codeWriter.emit(NEW_LINE)
-        }
+    if (emitNewLines) {
+        codeWriter.emit(NEW_LINE)
     }
 }
 
@@ -161,37 +157,35 @@ internal fun <T : Directive> List<T>.writeImports(
     newLineAtBegin: Boolean = true,
     emitBlock: (T) -> String = { it.asString() },
 ) {
-    if (isNotEmpty()) {
-        if (newLineAtBegin) {
-            writer.emit(NEW_LINE)
-        }
-        forEachIndexed { index, import ->
-            if (index > 0) {
-                writer.emit(NEW_LINE)
-            }
-
-            writer.emit(emitBlock(import))
-        }
-
+    if (isEmpty()) return
+    if (newLineAtBegin) {
         writer.emit(NEW_LINE)
     }
+    forEachIndexed { index, import ->
+        if (index > 0) {
+            writer.emit(NEW_LINE)
+        }
+
+        writer.emit(emitBlock(import))
+    }
+
+    writer.emit(NEW_LINE)
 }
 
 fun Set<ConstantPropertySpec>.emitConstants(
     codeWriter: CodeWriter,
     emitBlock: (ConstantPropertySpec) -> Unit = { it.write(codeWriter) },
 ) = with(codeWriter) {
-    if (isNotEmpty()) {
-        val emitNewLines = size > 1
+    if (isEmpty()) return@with
+    val emitNewLines = size > 1
 
-        forEachIndexed { index, property ->
-            if (index > 0) {
-                emit(if (emitNewLines) NEW_LINE else EMPTY_STRING)
-            }
-            emitBlock(property)
+    forEachIndexed { index, property ->
+        if (index > 0) {
+            emit(if (emitNewLines) NEW_LINE else EMPTY_STRING)
         }
-        emit(NEW_LINE)
+        emitBlock(property)
     }
+    emit(NEW_LINE)
 }
 
 fun List<TypeDefSpec>.emitTypeDefs(
@@ -213,15 +207,14 @@ fun Set<PropertySpec>.emitProperties(
     forceNewLines: Boolean = false,
     emitBlock: (PropertySpec) -> Unit = { it.write(codeWriter) },
 ) = with(codeWriter) {
-    if (isNotEmpty()) {
-        val emitNewLines = size > 1 || forceNewLines
+    if (isEmpty()) return@with
+    val emitNewLines = size > 1 || forceNewLines
 
-        forEachIndexed { index, property ->
-            if (index > 0) {
-                emit(if (emitNewLines) NEW_LINE else EMPTY_STRING)
-            }
-            emitBlock(property)
+    forEachIndexed { index, property ->
+        if (index > 0) {
+            emit(if (emitNewLines) NEW_LINE else EMPTY_STRING)
         }
-        emit(NEW_LINE)
+        emitBlock(property)
     }
+    emit(NEW_LINE)
 }
