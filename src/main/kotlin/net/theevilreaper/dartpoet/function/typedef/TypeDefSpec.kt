@@ -32,8 +32,8 @@ class TypeDefSpec(
         ParameterFilter.filterParameter(parameters) { it.isRequired && !it.isNamed && !it.hasInitializer }
     internal val namedParameter = ParameterFilter.filterParameter(parameters) { it.isNamed }
     internal val normalParameter = ParameterHelper.excludeParameters(parameters, parametersWithDefaults, requiredParameter, namedParameter)
+    internal val hasParameters = parameters.isNotEmpty()
     internal val hasAdditionalParameters = requiredParameter.isNotEmpty() || namedParameter.isNotEmpty()
-    internal val hasParameters = normalParameter.isNotEmpty()
 
     /**
      * Performs some checks to avoid invalid data.
