@@ -157,13 +157,12 @@ internal class ClassWriter : Writeable<ClassSpec> {
     private fun List<EnumPropertySpec>.emit(
         codeWriter: CodeWriter,
         emitBlock: (EnumPropertySpec) -> Unit = { it.write(codeWriter) }
-    ) = with(codeWriter) {
-        if (isNotEmpty()) {
-            forEachIndexed { index, enumPropertySpec ->
-                emitBlock(enumPropertySpec)
-                if (index < size - 1) {
-                    codeWriter.emit(",$NEW_LINE")
-                }
+    ) {
+        if (isEmpty()) return
+        forEachIndexed { index, enumPropertySpec ->
+            emitBlock(enumPropertySpec)
+            if (index < size - 1) {
+                codeWriter.emit(",$NEW_LINE")
             }
         }
     }
