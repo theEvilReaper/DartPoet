@@ -44,16 +44,11 @@ class PropertySpec internal constructor(
             }
         }.filter { it != DartModifier.PRIVATE && it != DartModifier.PUBLIC }.toImmutableSet()
     internal val hasModifiers: Boolean = modifiers.isNotEmpty()
+
     init {
         require(name.trim().isNotEmpty()) { "The name of a property can't be empty" }
-
-        if (builder.type == null && !isConst) {
-            throw IllegalArgumentException("Only a const property can have no type")
-        }
-
-        if (isConst && this.initBlock.isEmpty()) {
-            throw IllegalArgumentException("A const variable needs an init block")
-        }
+        require(!(builder.type == null && !isConst)) { "Only a const property can have no type" }
+        require(!(isConst && this.initBlock.isEmpty())) { "A const variable needs an init block" }
     }
 
     /**

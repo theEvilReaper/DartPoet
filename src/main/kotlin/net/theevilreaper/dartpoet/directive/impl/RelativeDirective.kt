@@ -22,9 +22,8 @@ class RelativeDirective internal constructor(
         if (importCast != null) {
             check(importCast.trim().isNotEmpty()) { "The importCast can't be empty" }
         }
-
-        if ((castType != null && importCast == null) || (castType == null && importCast != null)) {
-            throw IllegalStateException("The castType and importCast must be set together or must be null. A mixed state is not allowed")
+        check(!((castType != null && importCast == null) || (castType == null && importCast != null))) {
+            "The castType and importCast must be set together or must be null. A mixed state is not allowed"
         }
     }
 

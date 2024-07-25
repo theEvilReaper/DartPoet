@@ -18,20 +18,16 @@ class ExportDirective internal constructor(
     private val importCast: String? = null,
 ) : BaseDirective(DirectiveType.EXPORT, path) {
 
-    private val export = "export"
-    private val invalidCastType = arrayOf(CastType.DEFERRED, CastType.AS)
-
     init {
-        check(!(castType != null && castType in invalidCastType)) {
-            "The following cast types are not allowed for an export directive: [${invalidCastType.joinToString()}]"
+        check(!(castType != null && castType in Companion.invalidCastType)) {
+            "The following cast types are not allowed for an export directive: [${Companion.invalidCastType.joinToString()}]"
         }
 
         if (importCast != null) {
             check(importCast.trim().isNotEmpty()) { "The importCast can't be empty" }
         }
-
-        if ((castType != null && importCast == null) || (castType == null && importCast != null)) {
-            throw IllegalStateException("The castType and importCast must be set together or must be null. A mixed state is not allowed")
+        check(!((castType != null && importCast == null) || (castType == null && importCast != null))) {
+            "The castType and importCast must be set together or must be null. A mixed state is not allowed"
         }
     }
 
@@ -41,5 +37,9 @@ class ExportDirective internal constructor(
      */
     override fun write(writer: CodeWriter) {
         DirectiveHelper.writeDirective(writer, this, importCast, castType)
+    }
+
+    companion object {
+        private val invalidCastType = arrayOf(CastType.DEFERRED, CastType.AS)
     }
 }
