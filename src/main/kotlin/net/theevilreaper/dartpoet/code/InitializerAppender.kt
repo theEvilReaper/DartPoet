@@ -18,7 +18,9 @@ internal interface InitializerAppender<T: Any> {
      */
     fun writeInitBlock(initBlock: CodeBlock, writer: CodeWriter, isConstantContext: Boolean = true) {
         if (initBlock.isEmpty()) return
-        writer.emit("·=·")
+        writer.emitSpace()
+        writer.emit("=")
+        writer.emitSpace()
         writer.emitCode(initBlock, isConstantContext)
     }
 
