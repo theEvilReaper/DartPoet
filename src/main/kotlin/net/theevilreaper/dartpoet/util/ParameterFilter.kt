@@ -18,8 +18,13 @@ internal object ParameterFilter {
      * @param predicate the predicate to filter the list
      * @return the filtered list
      */
-    internal inline fun filterParameter(parameters: List<ParameterSpec>, crossinline predicate: (ParameterSpec) -> Boolean): List<ParameterSpec> {
-        if (parameters.isEmpty()) return emptyList()
-        return parameters.filter(predicate).toImmutableList()
+    internal inline fun filterParameter(
+        parameters: List<ParameterSpec>,
+        crossinline predicate: (ParameterSpec) -> Boolean,
+    ): List<ParameterSpec> {
+        return when (parameters.isEmpty()) {
+            true -> emptyList()
+            else -> parameters.filter(predicate).toImmutableList()
+        }
     }
 }

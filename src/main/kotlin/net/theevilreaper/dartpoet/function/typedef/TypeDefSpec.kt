@@ -8,6 +8,7 @@ import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asTypeName
 import net.theevilreaper.dartpoet.util.ParameterFilter
+import net.theevilreaper.dartpoet.util.ParameterHelper
 import net.theevilreaper.dartpoet.util.toImmutableList
 import kotlin.reflect.KClass
 
@@ -30,10 +31,9 @@ class TypeDefSpec(
     internal val requiredParameter =
         ParameterFilter.filterParameter(parameters) { it.isRequired && !it.isNamed && !it.hasInitializer }
     internal val namedParameter = ParameterFilter.filterParameter(parameters) { it.isNamed }
-    internal val normalParameter =
-        parameters.minus(parametersWithDefaults).minus(requiredParameter).minus(namedParameter).toImmutableList()
+    internal val normalParameter = ParameterHelper.excludeParameters(parameters, parametersWithDefaults, requiredParameter, namedParameter)
+    internal val hasParameters = parameters.isNotEmpty()
     internal val hasAdditionalParameters = requiredParameter.isNotEmpty() || namedParameter.isNotEmpty()
-    internal val hasParameters = normalParameter.isNotEmpty()
 
     /**
      * Performs some checks to avoid invalid data.

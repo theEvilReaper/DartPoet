@@ -18,6 +18,7 @@ import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.NEW_LINE
 import net.theevilreaper.dartpoet.util.SEMICOLON
 import net.theevilreaper.dartpoet.util.SPACE
+import net.theevilreaper.dartpoet.util.parameter.ParameterData
 import net.theevilreaper.dartpoet.util.toImmutableSet
 import java.util.concurrent.Future
 
@@ -63,7 +64,8 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
             writer.emitCode("<%T>", spec.typeCast)
         }
 
-        writeParameters(spec, writer)
+        val parameterData = ParameterData.fromFunction(spec)
+        ParameterHelper.writeParameters(parameterData, writer)
         if (spec.isAsync) {
             writer.emitSpace()
             writer.emit(ASYNC.identifier)
@@ -102,7 +104,8 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
         }
 
         if (spec.hasSetterAccessor) {
-            writeParameters(spec = spec, codeWriter = writer)
+            val parameterData = ParameterData.fromFunction(spec)
+            ParameterHelper.writeParameters(parameterData, writer)
         }
 
         val bracketType = when (spec.type) {
@@ -151,58 +154,5 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
 
     private fun writeMethodBody(spec: FunctionSpec, writer: CodeWriter) {
         writer.emitCode(spec.body, ensureTrailingNewline = false)
-    }
-
-    private fun writeParameters(spec: FunctionSpec, codeWriter: CodeWriter) {
-        if (!spec.hasParameters) {
-            codeWriter.emit("()")
-            return
-        }
-        codeWriter.emit("(")
-        spec.normalParameter.emitParameters(codeWriter, forceNewLines = false)
-
-        if (spec.normalParameter.isNotEmpty() && (spec.hasAdditionalParameters || spec.parametersWithDefaults.isNotEmpty())) {
-            codeWriter.emit(", ")
-        }
-
-        if (spec.hasAdditionalParameters) {
-            emitRequiredAndNamedParameter(spec, codeWriter)
-        }
-
-        if (spec.parametersWithDefaults.isNotEmpty()) {
-            codeWriter.emit("[")
-            spec.parametersWithDefaults.emitParameters(codeWriter, forceNewLines = false)
-            codeWriter.emit("]")
-        }
-
-        codeWriter.emit(")")
-    }
-
-    private fun emitRequiredAndNamedParameter(spec: FunctionSpec, codeWriter: CodeWriter) {
-        codeWriter.emit("$CURLY_OPEN")
-
-        val namedRequired = spec.namedParameter.filter { it.isRequired && !it.hasInitializer }.toImmutableList()
-
-        writeParameters(namedRequired, spec.normalParameter.isNotEmpty(), codeWriter)
-        writeParameters(spec.requiredParameter, namedRequired.isNotEmpty(), codeWriter)
-
-        val test =
-            spec.namedParameter.minus(namedRequired).filter { it.isNullable || it.hasInitializer }.toImmutableList()
-
-        writeParameters(test, spec.requiredParameter.isNotEmpty() || namedRequired.isNotEmpty(), codeWriter)
-
-        codeWriter.emit("$CURLY_CLOSE")
-    }
-
-    private fun writeParameters(
-        parameters: List<ParameterSpec>,
-        emitSpaceComma: Boolean = false,
-        codeWriter: CodeWriter
-    ) {
-        if (parameters.isEmpty()) return
-        if (emitSpaceComma) {
-            codeWriter.emit(", ")
-        }
-        parameters.emitParameters(codeWriter, forceNewLines = false)
     }
 }

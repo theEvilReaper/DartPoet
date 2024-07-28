@@ -4,6 +4,7 @@ import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.ConstructorWriter
+import net.theevilreaper.dartpoet.util.ParameterHelper
 import net.theevilreaper.dartpoet.util.toImmutableList
 import net.theevilreaper.dartpoet.util.toImmutableSet
 
@@ -28,7 +29,7 @@ class ConstructorSpec internal constructor(
     private val modelParameters = builder.parameters.toImmutableSet()
     internal val requiredAndNamedParameters =
         builder.parameters.filter { it.isRequired || it.isNamed }.toImmutableList()
-    internal val parameters = modelParameters.minus(requiredAndNamedParameters.toSet()).toImmutableList()
+    internal val parameters = ParameterHelper.excludeParameters(modelParameters.toList(), requiredAndNamedParameters)
     internal val hasParameters = builder.parameters.isNotEmpty()
     internal val hasNamedParameters = requiredAndNamedParameters.isNotEmpty()
     internal val docs = builder.docs.toImmutableList()
