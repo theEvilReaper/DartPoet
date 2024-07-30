@@ -22,6 +22,7 @@ import net.theevilreaper.dartpoet.type.TypeName
  */
 class ParameterBuilder internal constructor(
     val name: String,
+    val type: ParameterType = ParameterType.STANDARD,
     val typeName: TypeName?,
 ) : SpecMethods<ParameterBuilder> {
     internal val specData: SpecData = SpecData()
@@ -37,6 +38,7 @@ class ParameterBuilder internal constructor(
         this.initializer = block
     }
 
+    @Deprecated(message = "Please use the right builder function instead")
     fun named(named: Boolean) = apply {
         this.named = named
     }
@@ -54,6 +56,7 @@ class ParameterBuilder internal constructor(
      * Indicates that the parameter is required.
      * @return the current [ParameterBuilder] instance
      */
+    @Deprecated(message = "Please use the right builder function instead")
     fun required() = apply {
         this.modifiers(DartModifier.REQUIRED)
     }
