@@ -54,7 +54,7 @@ class FunctionSpecTest {
                     FunctionSpec.builder("print")
                         .modifiers(DartModifier.ABSTRACT)
                         .parameters(
-                            ParameterSpec.builder("text", String::class).initializer("%C", "Hello World").build()
+                            ParameterSpec.optional("text", String::class).initializer("%C", "Hello World").build()
                         )
                         .build()
                 },
@@ -91,7 +91,7 @@ class FunctionSpecTest {
                         .modifiers(DartModifier.ABSTRACT)
                         .parameters(
                             ParameterSpec.builder("text", String::class).build(),
-                            ParameterSpec.builder("additional", String::class).initializer("%C", "Hello World!")
+                            ParameterSpec.optional("additional", String::class).initializer("%C", "Hello World!")
                                 .build(),
                         )
                         .build()

@@ -4,6 +4,7 @@ import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.FunctionWriter
+import net.theevilreaper.dartpoet.parameter.ParameterChecker
 import net.theevilreaper.dartpoet.parameter.ParameterType
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
@@ -36,7 +37,8 @@ class TypeDefSpec(
     internal val normalParameter = ParameterHelper.excludeParameters(parameters, parametersWithDefaults, requiredParameter, namedParameter)
 
     internal val normalParameters2 = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.STANDARD }
-    internal val namedParameter2 = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.NAMED }
+    internal val namedParameter2 = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.NAMED && !it.isNullable && !it.hasInitializer }
+    internal val optionalNamed = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.NAMED && (it.isNullable || it.hasInitializer) }
     internal val requiredParameters2 = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.REQUIRED }
     internal val parametersWithDefaults2 = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.OPTIONAL }
 
@@ -51,6 +53,9 @@ class TypeDefSpec(
         if (name != null) {
             require(name.trim().isNotEmpty()) { "The function name of a typedef can't be empty" }
         }
+
+       // ParameterChecker.checkRequiredPositional(normalParameters2)
+        ParameterChecker.checkOptionalParameters(parametersWithDefaults2)
     }
 
     /**

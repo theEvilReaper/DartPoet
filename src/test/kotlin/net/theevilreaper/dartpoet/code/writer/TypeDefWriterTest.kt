@@ -128,11 +128,9 @@ class TypeDefWriterTest {
                     .parameters(
                         ParameterSpec.builder("data", genericClassName)
                             .build(),
-                        ParameterSpec.named("a", String::class).named(true).nullable(true).build(),
-                        ParameterSpec.named("b", String::class).named(true).required().build(),
+                        ParameterSpec.named("a", String::class).nullable(true).build(),
+                        ParameterSpec.named("b", String::class).required().build(),
                         ParameterSpec.named("c", Int::class)
-                            .named(true)
-                            .required()
                             .initializer("%L", "10")
                             .build()
                     )

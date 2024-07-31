@@ -64,7 +64,7 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
             writer.emitCode("<%T>", spec.typeCast)
         }
 
-        val parameterData = ParameterData.fromFunction(spec)
+        val parameterData = ParameterData.fromFunction2(spec)
         ParameterHelper.writeParameters(parameterData, writer)
         if (spec.isAsync) {
             writer.emitSpace()
@@ -104,7 +104,7 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
         }
 
         if (spec.hasSetterAccessor) {
-            val parameterData = ParameterData.fromFunction(spec)
+            val parameterData = ParameterData.fromFunction2(spec)
             ParameterHelper.writeParameters(parameterData, writer)
         }
 

@@ -8,6 +8,7 @@ import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.writer.FunctionWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.parameter.ParameterType
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asTypeName
@@ -47,7 +48,13 @@ class FunctionSpec internal constructor(
     internal val namedParameter = ParameterFilter.filterParameter(parameters) { it.isNamed }
     internal val normalParameter = ParameterHelper.excludeParameters(parameters, parametersWithDefaults, requiredParameter, namedParameter)
     internal val hasParameters = parameters.isNotEmpty()
+    internal val normalParameters2 = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.STANDARD }
+    internal val namedParameter2 = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.NAMED }
+    internal val requiredParameters2 = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.REQUIRED }
+    internal val parametersWithDefaults2 = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.OPTIONAL }
+
     internal val hasAdditionalParameters = requiredParameter.isNotEmpty() || namedParameter.isNotEmpty()
+    internal val hasAdditionalParameters2 = requiredParameters2.isNotEmpty() || namedParameter2.isNotEmpty()
 
     internal val isPrivate = builder.specData.modifiers.remove(DartModifier.PRIVATE)
     internal val typeCast = builder.typeCast

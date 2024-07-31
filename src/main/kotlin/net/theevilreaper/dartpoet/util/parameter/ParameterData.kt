@@ -35,6 +35,23 @@ data class ParameterData internal constructor(
         }
 
         @JvmStatic
+        fun fromFunction2(functionSpec: FunctionSpec): ParameterData {
+            val namedParameter = functionSpec.namedParameter2
+            val normalParameters = functionSpec.normalParameters2
+            val requiredParameters = functionSpec.requiredParameters2
+            val parametersWithDefaults = functionSpec.parametersWithDefaults2
+            return ParameterData(
+                normalParameters,
+                namedParameter,
+                requiredParameters,
+                parametersWithDefaults,
+                functionSpec.hasParameters,
+                functionSpec.hasAdditionalParameters2,
+                functionSpec.parametersWithDefaults2.isNotEmpty()
+            )
+        }
+
+        @JvmStatic
         fun fromFactory(factory: FactorySpec): ParameterData {
             val normalParameters = factory.normalParameter
             val namedParameter = factory.namedParameter
