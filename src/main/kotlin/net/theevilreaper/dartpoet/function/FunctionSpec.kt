@@ -33,12 +33,13 @@ class FunctionSpec internal constructor(
     internal val type: FunctionType = builder.type
     internal val methodAccessorType: MethodAccessorType? = builder.methodAccessorType
     internal val body: CodeBlock = builder.body.build()
-    private val parameters: List<ParameterSpec> = builder.parameters.toImmutableList()
     internal val isAsync: Boolean = builder.async
     internal val annotation: Set<AnnotationSpec> = builder.specData.annotations.toImmutableSet()
     internal val modifiers: Set<DartModifier> = builder.specData.modifiers.also {
         hasAllowedModifiers(it, ALLOWED_FUNCTION_MODIFIERS, "function")
     }.filter { it != DartModifier.PRIVATE && it != DartModifier.PUBLIC }.toImmutableSet()
+
+    private val parameters: List<ParameterSpec> = builder.parameters.toImmutableList()
     internal val parametersWithDefaults =
         ParameterFilter.filterParameter(parameters) { !it.isRequired && it.hasInitializer }
     internal val requiredParameter =
@@ -47,6 +48,7 @@ class FunctionSpec internal constructor(
     internal val normalParameter = ParameterHelper.excludeParameters(parameters, parametersWithDefaults, requiredParameter, namedParameter)
     internal val hasParameters = parameters.isNotEmpty()
     internal val hasAdditionalParameters = requiredParameter.isNotEmpty() || namedParameter.isNotEmpty()
+
     internal val isPrivate = builder.specData.modifiers.remove(DartModifier.PRIVATE)
     internal val typeCast = builder.typeCast
     internal val docs = builder.docs

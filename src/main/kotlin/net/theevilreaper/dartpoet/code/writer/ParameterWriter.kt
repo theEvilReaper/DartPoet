@@ -4,6 +4,7 @@ import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.*
 import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.parameter.ParameterType
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
 
 /**
@@ -22,9 +23,15 @@ internal class ParameterWriter : Writeable<ParameterSpec>, InitializerAppender<P
     override fun write(spec: ParameterSpec, writer: CodeWriter) {
         spec.annotations.emitAnnotations(writer, endWithNewLine = false)
 
-        if (spec.isRequired && (!spec.isNamed || !spec.hasInitializer)) {
-            writer.emit("${DartModifier.REQUIRED.identifier}·")
+        if (spec.parameterType == ParameterType.REQUIRED) {
+            writer.emitCode("%L", DartModifier.REQUIRED.identifier)
+            writer.emitSpace()
+        } else {
+            if (spec.isRequired && (!spec.isNamed || !spec.hasInitializer)) {
+                writer.emit("${DartModifier.REQUIRED.identifier}·")
+            }
         }
+
 
         if (spec.type != null) {
             writer.emitCode("%T", spec.type)

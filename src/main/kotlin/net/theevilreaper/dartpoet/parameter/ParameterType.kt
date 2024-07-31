@@ -14,4 +14,5 @@ enum class ParameterType {
     STANDARD,
     NAMED,
     REQUIRED,
+    OPTIONAL,
 }

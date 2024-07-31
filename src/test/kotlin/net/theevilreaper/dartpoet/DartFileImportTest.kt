@@ -8,6 +8,7 @@ import net.theevilreaper.dartpoet.directive.CastType
 import net.theevilreaper.dartpoet.directive.DirectiveFactory
 import net.theevilreaper.dartpoet.directive.DirectiveType
 import net.theevilreaper.dartpoet.function.FunctionSpec
+import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
 import org.junit.jupiter.api.DisplayName
@@ -69,6 +70,16 @@ class DartFileImportTest {
             
             """.trimIndent()
         )
+
+        val property: PropertySpec = PropertySpec.builder("amount", Int::class)
+            .initWith("%L", 10)
+            .build()
+        val stringWithAmount = "Your amount is " + "$" + "amount"
+        val functionSpec: FunctionSpec = FunctionSpec.builder("getAmount", String::class)
+            .addCode("%P", stringWithAmount)
+            .build()
+
+        println(functionSpec.toString());
     }
 
     @Test

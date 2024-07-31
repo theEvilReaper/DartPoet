@@ -85,7 +85,7 @@ class TypeDefWriterTest {
                     .parameters(
                         ParameterSpec.builder("value", String::class)
                             .build(),
-                        ParameterSpec.builder("data", genericClassName)
+                        ParameterSpec.optional("data", genericClassName)
                             .nullable(true)
                             .initializer("%L", "null")
                             .build()
@@ -100,7 +100,7 @@ class TypeDefWriterTest {
                     .parameters(
                         ParameterSpec.builder("map", Map::class.parameterizedBy(String::class, Int::class))
                             .build(),
-                        ParameterSpec.builder("data", genericClassName)
+                        ParameterSpec.optional("data", genericClassName)
                             .nullable(true)
                             .initializer("%L", "null")
                             .build()
@@ -115,8 +115,7 @@ class TypeDefWriterTest {
                     .parameters(
                         ParameterSpec.builder("list", List::class.parameterizedBy(String::class))
                             .build(),
-                        ParameterSpec.builder("data", genericClassName)
-                            .required()
+                        ParameterSpec.required("data", genericClassName)
                             .build(),
                     )
                     .build(),
@@ -129,9 +128,9 @@ class TypeDefWriterTest {
                     .parameters(
                         ParameterSpec.builder("data", genericClassName)
                             .build(),
-                        ParameterSpec.builder("a", String::class).named(true).nullable(true).build(),
-                        ParameterSpec.builder("b", String::class).named(true).required().build(),
-                        ParameterSpec.builder("c", Int::class)
+                        ParameterSpec.named("a", String::class).named(true).nullable(true).build(),
+                        ParameterSpec.named("b", String::class).named(true).required().build(),
+                        ParameterSpec.named("c", Int::class)
                             .named(true)
                             .required()
                             .initializer("%L", "10")

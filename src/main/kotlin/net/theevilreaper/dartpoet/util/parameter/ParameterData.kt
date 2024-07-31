@@ -68,5 +68,22 @@ data class ParameterData internal constructor(
                 typeDefSpec.parametersWithDefaults.isNotEmpty()
             )
         }
+
+        @JvmStatic
+        fun fromTypeDef2(typeDefSpec: TypeDefSpec): ParameterData {
+            val normalParameters = typeDefSpec.normalParameters2
+            val namedParameter = typeDefSpec.namedParameter2
+            val requiredParameters = typeDefSpec.requiredParameters2
+            val parametersWithDefaults = typeDefSpec.parametersWithDefaults2
+            return ParameterData(
+                normalParameters,
+                namedParameter,
+                requiredParameters,
+                parametersWithDefaults,
+                typeDefSpec.hasParameters,
+                typeDefSpec.hasAdditionalParameters2,
+                typeDefSpec.parametersWithDefaults2.isNotEmpty()
+            )
+        }
     }
 }

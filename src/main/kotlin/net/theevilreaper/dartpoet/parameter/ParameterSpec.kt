@@ -125,6 +125,10 @@ class ParameterSpec internal constructor(
         fun builder(name: String) = ParameterBuilder(name, type = ParameterType.STANDARD, null)
 
         @JvmStatic
+        fun required(name: String) =
+            ParameterBuilder(name, type = ParameterType.REQUIRED, typeName = null)
+
+        @JvmStatic
         fun required(name: String, typeName: TypeName) =
             ParameterBuilder(name, type = ParameterType.REQUIRED, typeName = typeName)
 
@@ -155,5 +159,21 @@ class ParameterSpec internal constructor(
         @JvmStatic
         fun named(name: String, typeName: Class<*>) =
             ParameterBuilder(name, type = ParameterType.NAMED, typeName = typeName.asClassName())
+
+        @JvmStatic
+        fun optional(name: String, typeName: TypeName) =
+            ParameterBuilder(name, type = ParameterType.OPTIONAL, typeName = typeName)
+
+        @JvmStatic
+        fun optional(name: String, typeName: ClassName) =
+            ParameterBuilder(name, type = ParameterType.OPTIONAL, typeName = typeName)
+
+        @JvmStatic
+        fun optional(name: String, typeName: KClass<*>) =
+            ParameterBuilder(name, type = ParameterType.OPTIONAL, typeName = typeName.asTypeName())
+
+        @JvmStatic
+        fun optional(name: String, typeName: Class<*>) =
+            ParameterBuilder(name, type = ParameterType.OPTIONAL, typeName = typeName.asClassName())
     }
 }
