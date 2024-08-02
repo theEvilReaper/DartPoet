@@ -3,6 +3,7 @@ package net.theevilreaper.dartpoet.property
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
+import net.theevilreaper.dartpoet.parameter.ParameterBuilder
 import net.theevilreaper.dartpoet.type.TypeName
 
 /**
@@ -95,5 +96,12 @@ class PropertyBuilder internal constructor(
      */
     fun build(): PropertySpec {
         return PropertySpec(this)
+    }
+
+    fun toParameter(): ParameterBuilder {
+        return ParameterBuilder(this.name, this.type)
+            .modifiers(*this.modifiers.toTypedArray())
+            .annotations(*this.annotations.toTypedArray())
+            .initializer(this.initBlock.build())
     }
 }

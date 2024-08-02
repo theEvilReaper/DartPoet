@@ -21,7 +21,7 @@ import kotlin.test.assertEquals
 class EnumClassTest {
 
     companion object {
-
+        private val testProperty = PropertySpec.builder("name", String::class)
         @JvmStatic
         private fun invalidEnums() = Stream.of(
             Arguments.of(
@@ -43,10 +43,10 @@ class EnumClassTest {
                                 .parameter("%L", "10")
                                 .build()
                         )
-                        .property(PropertySpec.builder("name", String::class).build())
+                        .property(testProperty.build())
                         .constructor(
                             ConstructorSpec.builder("TestEnum")
-                                .parameter(ParameterSpec.builder("name").build())
+                                .parameter(testProperty.toParameter().build())
                                 .build()
                         )
                         .build()
