@@ -47,15 +47,6 @@ class ParameterBuilder internal constructor(
         this.nullable = nullable
     }
 
-    /**
-     * Indicates that the parameter is required.
-     * @return the current [ParameterBuilder] instance
-     */
-    @Deprecated(message = "Please use the right builder function instead")
-    fun required() = apply {
-        this.modifiers(DartModifier.REQUIRED)
-    }
-
     override fun annotation(annotation: () -> AnnotationSpec) = apply {
         this.specData.annotations += annotation()
     }
