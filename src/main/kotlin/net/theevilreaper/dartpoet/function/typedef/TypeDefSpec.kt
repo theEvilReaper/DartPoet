@@ -29,22 +29,16 @@ class TypeDefSpec(
     internal val returnType = builder.returnType ?: Void::class.asTypeName()
 
     internal val parameters = builder.parameters.toImmutableList()
-    internal val parametersWithDefaults =
-        ParameterFilter.filterParameter(parameters) { !it.isRequired && it.hasInitializer }
-    internal val requiredParameter =
-        ParameterFilter.filterParameter(parameters) { it.isRequired && !it.isNamed && !it.hasInitializer }
-    internal val namedParameter = ParameterFilter.filterParameter(parameters) { it.isNamed }
-    internal val normalParameter = ParameterHelper.excludeParameters(parameters, parametersWithDefaults, requiredParameter, namedParameter)
 
-    internal val normalParameters2 = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.STANDARD }
-    internal val namedParameter2 = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.NAMED && !it.isNullable && !it.hasInitializer }
+    /// -----------------------
     internal val optionalNamed = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.NAMED && (it.isNullable || it.hasInitializer) }
-    internal val requiredParameters2 = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.REQUIRED }
-    internal val parametersWithDefaults2 = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.OPTIONAL }
+    internal val requiredParameters = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.REQUIRED }
+    internal val parametersWithDefaults = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.OPTIONAL }
+    internal val normalParameters = ParameterHelper.excludeParameters(parameters, optionalNamed, requiredParameters, parametersWithDefaults)
+    /// -----------------------
 
     internal val hasParameters = parameters.isNotEmpty()
-    internal val hasAdditionalParameters = requiredParameter.isNotEmpty() || namedParameter.isNotEmpty()
-    internal val hasAdditionalParameters2 = requiredParameters2.isNotEmpty() || namedParameter2.isNotEmpty()
+    internal val hasAdditionalParameters = requiredParameters.isNotEmpty() || optionalNamed.isNotEmpty()
     /**
      * Performs some checks to avoid invalid data.
      */
@@ -55,7 +49,7 @@ class TypeDefSpec(
         }
 
        // ParameterChecker.checkRequiredPositional(normalParameters2)
-        ParameterChecker.checkOptionalParameters(parametersWithDefaults2)
+        ParameterChecker.checkOptionalParameters(parametersWithDefaults)
     }
 
     /**
