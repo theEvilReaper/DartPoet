@@ -20,7 +20,7 @@ class ParameterSpecTest {
         private fun parameterVariants(): Stream<Arguments> = Stream.of(
             Arguments.of(
                 "required int amount",
-                { ParameterSpec.builder("amount", Int::class).modifiers(DartModifier.REQUIRED) },
+                { ParameterSpec.required("amount", Int::class) },
             ),
             Arguments.of(
                 "String name = 'theEvilReaper'",
@@ -56,6 +56,6 @@ class ParameterSpecTest {
         assertEquals(parameterSpec.type, specAsBuilder.typeName)
         assertEquals(parameterSpec.isNullable, specAsBuilder.nullable)
         assertTrue { specAsBuilder.initializer!!.isNotEmpty() }
-        assertContentEquals(parameterSpec.annotations, specAsBuilder.specData.annotations)
+        assertContentEquals(parameterSpec.annotations, specAsBuilder.annotations)
     }
 }

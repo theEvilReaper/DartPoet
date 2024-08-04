@@ -26,12 +26,7 @@ internal class ParameterWriter : Writeable<ParameterSpec>, InitializerAppender<P
         if (spec.parameterType == ParameterType.REQUIRED) {
             writer.emitCode("%L", DartModifier.REQUIRED.identifier)
             writer.emitSpace()
-        } else {
-            if (spec.isRequired && (!spec.isNamed || !spec.hasInitializer)) {
-                writer.emit("${DartModifier.REQUIRED.identifier}·")
-            }
         }
-
 
         if (spec.type != null) {
             writer.emitCode("%T", spec.type)
