@@ -33,9 +33,8 @@ class ParameterSpec internal constructor(
     internal val type = builder.typeName
     internal val isNamed = builder.named
     internal val isNullable = builder.nullable
-    internal val isRequired = builder.specData.modifiers.contains(DartModifier.REQUIRED)
     internal val initializer = builder.initializer
-    internal val annotations = builder.specData.annotations.toImmutableSet()
+    internal val annotations = builder.annotations.toImmutableSet()
     internal val hasInitializer = initializer != null && initializer.isNotEmpty()
     internal val hasNoTypeName: Boolean = builder.typeName == null
 
@@ -72,9 +71,6 @@ class ParameterSpec internal constructor(
         builder.named = isNamed
         builder.nullable = isNullable
         builder.annotations(*this.annotations.toTypedArray())
-        if (isRequired) {
-            builder.modifiers(DartModifier.REQUIRED)
-        }
         builder.initializer = initializer
         return builder
     }
