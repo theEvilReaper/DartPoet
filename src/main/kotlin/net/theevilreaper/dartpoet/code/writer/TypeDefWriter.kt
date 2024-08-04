@@ -44,7 +44,7 @@ class TypeDefWriter : Writeable<TypeDefSpec> {
             writer.emitCode("%L", spec.name)
         }
 
-        val parameterData: ParameterData = ParameterData.fromTypeDef2(spec)
+        val parameterData: ParameterData = ParameterData.fromTypeDef(spec)
 
         if (parameterData.hasParameters) {
             ParameterHelper.writeParameters(parameterData, writer, indent = parameterData.requiredParameters.size > 1)

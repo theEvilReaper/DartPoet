@@ -5,11 +5,9 @@ import net.theevilreaper.dartpoet.DartModifier.PUBLIC
 import net.theevilreaper.dartpoet.DartModifier.PRIVATE
 import net.theevilreaper.dartpoet.code.*
 import net.theevilreaper.dartpoet.code.DocumentationAppender
-import net.theevilreaper.dartpoet.code.emitParameters
 import net.theevilreaper.dartpoet.function.FunctionType
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.MethodAccessorType
-import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
 import net.theevilreaper.dartpoet.type.TypeName
@@ -64,7 +62,7 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
             writer.emitCode("<%T>", spec.typeCast)
         }
 
-        val parameterData = ParameterData.fromFunction2(spec)
+        val parameterData = ParameterData.fromFunction(spec)
         ParameterHelper.writeParameters(parameterData, writer)
         if (spec.isAsync) {
             writer.emitSpace()
@@ -104,7 +102,7 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
         }
 
         if (spec.hasSetterAccessor) {
-            val parameterData = ParameterData.fromFunction2(spec)
+            val parameterData = ParameterData.fromFunction(spec)
             ParameterHelper.writeParameters(parameterData, writer)
         }
 

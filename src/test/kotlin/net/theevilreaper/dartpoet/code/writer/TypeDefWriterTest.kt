@@ -127,12 +127,12 @@ class TypeDefWriterTest {
                     .returns(genericClassName)
                     .parameters(
                         ParameterSpec.builder("data", genericClassName)
-                            .build(),
-                        ParameterSpec.named("a", String::class).nullable(true).build(),
-                        ParameterSpec.named("b", String::class).required().build(),
+                            .build(), //Positional aka nen normaler Param ohne spezielle Eigenschaften
+                        ParameterSpec.named("a", String::class).nullable(true).build(),  // Named optional
+                        ParameterSpec.required("b", String::class).build(), //TODO: named required
                         ParameterSpec.named("c", Int::class)
                             .initializer("%L", "10")
-                            .build()
+                            .build() // Named optional weil nullable oder default
                     )
                     .build(),
                 "typedef ValueUpdate<E> = E Function(E data, {required String b, String? a, int c = 10});"

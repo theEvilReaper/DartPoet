@@ -6,11 +6,12 @@ import net.theevilreaper.dartpoet.code.writer.ConstructorWriter
 import net.theevilreaper.dartpoet.code.writer.FunctionWriter
 import net.theevilreaper.dartpoet.code.writer.TypeDefWriter
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.util.parameter.ParameterData
 import org.jetbrains.annotations.ApiStatus
 
 /**
- * The [ParameterHelper] includes a generalization of the write process for each parameter implementation.
+ * The [ParameterHelper2] includes a generalization of the write process for each parameter implementation.
  * It helps to reduce the complexity of the [FunctionWriter], [ConstructorWriter] and [TypeDefWriter] by providing a common way to write.
  * Before this change, each writer had its own implementation which was redundant and error-prone.
  * @since 1.0.0
@@ -51,9 +52,9 @@ internal object ParameterHelper {
             return
         }
         codeWriter.emit("(")
-        data.normalParameters.emitParameters(codeWriter, forceNewLines = false)
+        data.positionalParameters.emitParameters(codeWriter, forceNewLines = false)
 
-        if (data.normalParameters.isNotEmpty() && (data.hasAdditionalParameters || data.parametersWithDefaults.isNotEmpty())) {
+        if (data.positionalParameters.isNotEmpty() && (data.hasAdditionalParameters || data.optionalAndDefault.isNotEmpty())) {
             codeWriter.emit(", ")
         }
 
@@ -61,9 +62,9 @@ internal object ParameterHelper {
             emitRequiredAndNamedParameter(data, codeWriter, indent, filterExcluded)
         }
 
-        if (data.parametersWithDefaults.isNotEmpty()) {
+        if (data.optionalAndDefault.isNotEmpty()) {
             codeWriter.emit("[")
-            data.parametersWithDefaults.emitParameters(codeWriter, forceNewLines = false)
+            data.optionalAndDefault.emitParameters(codeWriter, forceNewLines = false)
             codeWriter.emit("]")
         }
 
@@ -91,14 +92,8 @@ internal object ParameterHelper {
             codeWriter.indent()
         }
 
-        val namedRequired = data.namedParameter.filter { it.isRequired && !it.hasInitializer }.toImmutableList()
-        val excludedNamedParameters = when (filterExcluded) {
-            true -> excludeParameters(data.namedParameter, namedRequired).filter { it.isNullable || it.hasInitializer }
-            false -> excludeParameters(data.namedParameter, namedRequired)
-        }
-        internalParameterWrite(namedRequired, namedRequired.isNotEmpty(), codeWriter)
-        internalParameterWrite(data.requiredParameters, excludedNamedParameters.isNotEmpty(), codeWriter)
-        internalParameterWrite(excludedNamedParameters, codeWriter = codeWriter)
+        internalParameterWrite(data.requiredParameters, data.namedParameters.isNotEmpty(), codeWriter)
+        internalParameterWrite(data.namedParameters, codeWriter = codeWriter)
 
         if (indent) {
             codeWriter.emit(NEW_LINE)

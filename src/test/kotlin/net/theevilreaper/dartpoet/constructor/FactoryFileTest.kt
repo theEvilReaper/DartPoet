@@ -38,8 +38,7 @@ class FactoryFileTest {
                 FactorySpec.constBuilder(versionModelClass)
                     .delegation(ConstructorDelegation.REDIRECT)
                     .parameter(
-                        ParameterSpec.builder("version", String::class)
-                            .named(true)
+                        ParameterSpec.named("version", String::class)
                             .annotations(
                                 AnnotationSpec.builder("JsonKey")
                                     .content("name: %C", "version").build(),

@@ -37,8 +37,8 @@ class FunctionSpecTest {
                     FunctionSpec.builder("print")
                         .modifiers(DartModifier.ABSTRACT)
                         .parameters(
-                            ParameterSpec.builder("name", String::class).initializer("%C", "theEvilReaper").build(),
-                            ParameterSpec.builder("value", Int::class).modifiers(DartModifier.REQUIRED).build()
+                            ParameterSpec.optional("name", String::class).initializer("%C", "theEvilReaper").build(),
+                            ParameterSpec.required("value", Int::class).build()
                         )
                         .build()
                 },

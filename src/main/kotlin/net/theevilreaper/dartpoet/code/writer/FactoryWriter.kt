@@ -7,7 +7,7 @@ import net.theevilreaper.dartpoet.code.InitializerAppender
 import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.constructor.ConstructorDelegation
 import net.theevilreaper.dartpoet.constructor.factory.FactorySpec
-import net.theevilreaper.dartpoet.util.*
+import net.theevilreaper.dartpoet.util.ParameterHelper
 import net.theevilreaper.dartpoet.util.parameter.ParameterData
 
 internal class FactoryWriter : InitializerAppender<FactorySpec>, DocumentationAppender {

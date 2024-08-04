@@ -22,7 +22,7 @@ import net.theevilreaper.dartpoet.type.TypeName
  */
 class ParameterBuilder internal constructor(
     val name: String,
-    val type: ParameterType = ParameterType.STANDARD,
+    val type: ParameterType = ParameterType.POSITIONAL,
     val typeName: TypeName?,
 ) : SpecMethods<ParameterBuilder> {
     internal val specData: SpecData = SpecData()
@@ -36,11 +36,6 @@ class ParameterBuilder internal constructor(
 
     fun initializer(block: CodeBlock) = apply {
         this.initializer = block
-    }
-
-    @Deprecated(message = "Please use the right builder function instead")
-    fun named(named: Boolean) = apply {
-        this.named = named
     }
 
     /**

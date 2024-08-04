@@ -238,11 +238,9 @@ class FunctionWriterTest {
         val functionSpec = FunctionSpec.builder("testMethod")
             .modifiers(DartModifier.ABSTRACT)
             .parameters(
-                ParameterSpec.builder("a", String::class).named(true).nullable(true).build(),
-                ParameterSpec.builder("b", String::class).named(true).required().build(),
-                ParameterSpec.builder("c", Int::class)
-                    .named(true)
-                    .required()
+                ParameterSpec.named("a", String::class).nullable(true).build(),
+                ParameterSpec.required("b", String::class).build(),
+                ParameterSpec.named("c", Int::class)
                     .initializer("%L", "10")
                     .build()
             )

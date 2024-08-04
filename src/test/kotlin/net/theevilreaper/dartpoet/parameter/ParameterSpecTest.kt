@@ -29,7 +29,7 @@ class ParameterSpecTest {
             Arguments.of(
                 "String name = 'theEvilReaper'",
                 {
-                    ParameterSpec.builder("name", String::class).named(true).initializer("%C", "theEvilReaper")
+                    ParameterSpec.named("name", String::class).initializer("%C", "theEvilReaper")
                 },
             )
         )
