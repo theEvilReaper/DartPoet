@@ -10,7 +10,6 @@ import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asClassName
 import net.theevilreaper.dartpoet.type.asTypeName
 import net.theevilreaper.dartpoet.util.toImmutableSet
-import kotlin.jvm.Throws
 import kotlin.reflect.KClass
 
 /**
@@ -122,7 +121,7 @@ class ParameterSpec internal constructor(
          * @return A new [ParameterBuilder] instance initialized with the provided name and type
          */
         @JvmStatic
-        fun builder(name: String) = ParameterBuilder(name, type = ParameterType.STANDARD, null)
+        fun builder(name: String) = ParameterBuilder(name, type = ParameterType.POSITIONAL, null)
 
         @JvmStatic
         fun required(name: String) =
@@ -151,6 +150,10 @@ class ParameterSpec internal constructor(
         @JvmStatic
         fun named(name: String, typeName: ClassName) =
             ParameterBuilder(name, type = ParameterType.NAMED, typeName = typeName)
+
+        @JvmStatic
+        fun named(name: String) =
+            ParameterBuilder(name, type = ParameterType.NAMED, typeName = null)
 
         @JvmStatic
         fun named(name: String, typeName: KClass<*>) =
