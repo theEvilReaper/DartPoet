@@ -11,7 +11,7 @@ package net.theevilreaper.dartpoet.parameter
  */
 enum class ParameterType {
 
-    STANDARD,
+    POSITIONAL,
     NAMED,
     REQUIRED,
     OPTIONAL,
