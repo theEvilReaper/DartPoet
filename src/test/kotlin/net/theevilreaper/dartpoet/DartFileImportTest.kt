@@ -70,16 +70,6 @@ class DartFileImportTest {
             
             """.trimIndent()
         )
-
-        val property: PropertySpec = PropertySpec.builder("amount", Int::class)
-            .initWith("%L", 10)
-            .build()
-        val stringWithAmount = "Your amount is " + "$" + "amount"
-        val functionSpec: FunctionSpec = FunctionSpec.builder("getAmount", String::class)
-            .addCode("%P", stringWithAmount)
-            .build()
-
-        println(functionSpec.toString());
     }
 
     @Test
