@@ -87,7 +87,7 @@ class ConstructorWriterTest {
         val constructor = ConstructorSpec.builder("Car")
             .parameters(
                 ParameterSpec.required("maker").build(),
-                ParameterSpec.named("model").build(),
+                ParameterSpec.named("model").nullable(true).build(),
                 ParameterSpec.required("yearMade").build(),
             )
             .build()
