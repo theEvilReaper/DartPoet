@@ -137,7 +137,7 @@ class CodeWriter(
                     } else {
                         NULL_STRING
                     }
-
+                    //TODO: Add better fix later
                     val updated: String = "'" + literal.replace("\"", "") + "'"
 
                     emit(updated, nonWrapping = true)
