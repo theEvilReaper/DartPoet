@@ -1,6 +1,5 @@
 package net.theevilreaper.dartpoet.parameter
 
-import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
@@ -24,7 +23,7 @@ class ParameterSpecTest {
             ),
             Arguments.of(
                 "String name = 'theEvilReaper'",
-                { ParameterSpec.builder("name", String::class).initializer("%C", "theEvilReaper") },
+                { ParameterSpec.positional("name", String::class).initializer("%C", "theEvilReaper") },
             ),
             Arguments.of(
                 "String name = 'theEvilReaper'",
@@ -45,7 +44,7 @@ class ParameterSpecTest {
 
     @Test
     fun `test spec to builder conversation`() {
-        val parameterSpec = ParameterSpec.builder("amount", Int::class)
+        val parameterSpec = ParameterSpec.positional("amount", Int::class)
             .nullable(true)
             .initializer("%L", "10")
             .annotation(AnnotationSpec.builder("nullable").build())

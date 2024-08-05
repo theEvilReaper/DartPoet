@@ -26,7 +26,7 @@ class FactorySpecTest {
             .addCode("()")
             .delegation(ConstructorDelegation.LAMBDA)
             .parameter(
-                ParameterSpec.builder("test", Int::class.asTypeName())
+                ParameterSpec.positional("test", Int::class.asTypeName())
                     .build()
             )
             .build()

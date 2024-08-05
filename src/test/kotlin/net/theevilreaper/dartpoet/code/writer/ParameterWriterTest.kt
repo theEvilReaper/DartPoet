@@ -19,23 +19,23 @@ class ParameterWriterTest {
 
         @JvmStatic
         private fun parameterTests(): Stream<Arguments> = Stream.of(
-            Arguments.of(ParameterSpec.builder("age", Int::class).build(), "int age"),
-            Arguments.of(ParameterSpec.builder("age", Int::class).initializer("%L", "10").build(), "int age = 10"),
-            Arguments.of(ParameterSpec.builder("test", String::class).nullable(true).build(), "String? test"),
+            Arguments.of(ParameterSpec.positional("age", Int::class).build(), "int age"),
+            Arguments.of(ParameterSpec.positional("age", Int::class).initializer("%L", "10").build(), "int age = 10"),
+            Arguments.of(ParameterSpec.positional("test", String::class).nullable(true).build(), "String? test"),
             Arguments.of(
-                ParameterSpec.builder("list", List::class.parameterizedBy(Int::class)).build(),
+                ParameterSpec.positional("list", List::class.parameterizedBy(Int::class)).build(),
                 "List<int> list"
             ),
             Arguments.of(
-                ParameterSpec.builder("list", List::class.parameterizedBy(Int::class)).initializer("%L", "[]").build(),
+                ParameterSpec.positional("list", List::class.parameterizedBy(Int::class)).initializer("%L", "[]").build(),
                 "List<int> list = []"
             ),
             Arguments.of(
-                ParameterSpec.builder("map", Map::class.parameterizedBy(String::class, Int::class)).build(),
+                ParameterSpec.positional("map", Map::class.parameterizedBy(String::class, Int::class)).build(),
                 "Map<String, int> map"
             ),
             Arguments.of(
-                ParameterSpec.builder("map", Map::class.parameterizedBy(String::class, Int::class))
+                ParameterSpec.positional("map", Map::class.parameterizedBy(String::class, Int::class))
                     .initializer("%L", "{}").build(),
                 "Map<String, int> map = {}"
             )
@@ -52,7 +52,7 @@ class ParameterWriterTest {
     fun `test invalid parameter definition`() {
         assertThrows(
             IllegalStateException::class.java,
-            { ParameterSpec.builder(EMPTY_STRING).build() },
+            { ParameterSpec.positional(EMPTY_STRING).build() },
             "The name of a parameter can't be empty"
         )
     }

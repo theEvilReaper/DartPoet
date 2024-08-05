@@ -53,7 +53,7 @@ class FactoryWriterTest {
     fun `test factory constructor with parameters`() {
         val loggerClass = "Logger"
         val constructor = FactorySpec.builder(ClassName(loggerClass))
-            .parameter(ParameterSpec.builder("name", String::class).build())
+            .parameter(ParameterSpec.positional("name", String::class).build())
             .addCode("return $loggerClass(name);")
             .build()
         Truth.assertThat(constructor.toString()).isEqualTo(
@@ -72,7 +72,7 @@ class FactoryWriterTest {
         val constructor = FactorySpec.builder(ClassName(loggerClass))
             .named("fromName")
             .parameter(
-                ParameterSpec.builder(
+                ParameterSpec.positional(
                     jsonKey,
                     Map::class.parameterizedBy(String::class.asTypeName(), ClassName("Object"))
                 ).build()

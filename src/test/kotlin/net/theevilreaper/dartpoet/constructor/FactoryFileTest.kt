@@ -55,7 +55,7 @@ class FactoryFileTest {
                     .delegation(ConstructorDelegation.LAMBDA)
                     .named("fromJson")
                     .parameter(
-                        ParameterSpec.builder(
+                        ParameterSpec.positional(
                             "json",
                             Map::class.parameterizedBy(String::class.asTypeName(), DYNAMIC)
                         ).build()

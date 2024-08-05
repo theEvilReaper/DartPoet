@@ -51,8 +51,8 @@ class FunctionWriterTest {
                 FunctionSpec.builder("getAllById")
                     .returns(List::class.parameterizedBy(ClassName("Model")))
                     .parameters(
-                        ParameterSpec.builder("id", String::class).build(),
-                        ParameterSpec.builder("amount", Int::class).build()
+                        ParameterSpec.positional("id", String::class).build(),
+                        ParameterSpec.positional("amount", Int::class).build()
                     )
                     .build(),
                 "List<Model> getAllById(String id, int amount);"
@@ -61,8 +61,8 @@ class FunctionWriterTest {
                 FunctionSpec.builder("test")
                     .returns(Void::class)
                     .parameters(
-                        ParameterSpec.builder("id", String::class).nullable(true).build(),
-                        ParameterSpec.builder("amount", Int::class).build()
+                        ParameterSpec.positional("id", String::class).nullable(true).build(),
+                        ParameterSpec.positional("amount", Int::class).build()
                     )
                     .build(),
                 "void test(String? id, int amount);"
@@ -153,7 +153,7 @@ class FunctionWriterTest {
             .returns(String::class)
             .async(true)
             .parameter {
-                ParameterSpec.builder("id", Int::class).build()
+                ParameterSpec.positional("id", Int::class).build()
             }
             .addCode(
                 CodeBlock.builder()
@@ -185,7 +185,7 @@ class FunctionWriterTest {
     fun `test other setter variant write`() {
         val function = FunctionSpec.builder("value")
             .parameter(
-                ParameterSpec.builder("value", Int::class).build()
+                ParameterSpec.positional("value", Int::class).build()
             )
             .accessorType(MethodAccessorType.SETTER)
             .addCode(
@@ -206,7 +206,7 @@ class FunctionWriterTest {
     @Test
     fun `test lambda method write`() {
         val function = FunctionSpec.builder("isNoble")
-            .parameter(ParameterSpec.builder("atomicNumber", Int::class).build())
+            .parameter(ParameterSpec.positional("atomicNumber", Int::class).build())
             .type(FunctionType.SHORTEN)
             .returns(Boolean::class)
             .addCode("_nobleGases[atomicNumber] != null;")
