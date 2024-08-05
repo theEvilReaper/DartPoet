@@ -6,6 +6,13 @@ import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 
+/**
+ * The [ParameterData] class is a record class that holds all necessary information about the parameters which are used in different specs.
+ * It helps to improve the writing process and reduces the complexity of the code.
+ * @since 1.0.0
+ * @version 1.0.0
+ * @author theEvilReaper
+ */
 data class ParameterData internal constructor(
     val positionalParameters: List<ParameterSpec>,
     val namedParameters: List<ParameterSpec>,
@@ -16,8 +23,19 @@ data class ParameterData internal constructor(
     val hasParametersWithDefaults: Boolean,
 ) {
 
+    /**
+     * Contains some static functions to convert spec instances to [ParameterData] instances.
+     * @since 1.0.0
+     * @version 1.0.0
+     * @author theEvilReaper
+     */
     companion object {
 
+        /**
+         * Creates a new [ParameterData] instance from the given [TypeDefSpec].
+         * @param typeDefSpec the spec to create the data from
+         * @return the created [ParameterData] instance
+         */
         @JvmStatic
         fun fromTypeDef(typeDefSpec: TypeDefSpec): ParameterData {
             val positionalParameters = typeDefSpec.normalParameters
@@ -35,6 +53,11 @@ data class ParameterData internal constructor(
             )
         }
 
+        /**
+         * Creates a new [ParameterData] instance from the given [FunctionSpec].
+         * @param functionSpec the spec to create the data from
+         * @return the created [ParameterData] instance
+         */
         @JvmStatic
         fun fromFunction(functionSpec: FunctionSpec): ParameterData {
             val positionalParameters = functionSpec.normalParameters
@@ -52,6 +75,11 @@ data class ParameterData internal constructor(
             )
         }
 
+        /**
+         * Creates a new [ParameterData] instance from the given [FactorySpec].
+         * @param factorySpec the spec to create the data from
+         * @return the created [ParameterData] instance
+         */
         @JvmStatic
         fun fromFactory(factorySpec: FactorySpec): ParameterData {
             val positionalParameters = factorySpec.normalParameters
@@ -69,6 +97,11 @@ data class ParameterData internal constructor(
             )
         }
 
+        /**
+         * Creates a new [ParameterData] instance from the given [ConstructorSpec].
+         * @param constructorSpec the spec to create the data from
+         * @return the created [ParameterData] instance
+         */
         @JvmStatic
         fun fromConstructor(constructorSpec: ConstructorSpec): ParameterData {
             val positionalParameters = constructorSpec.normalParameters
