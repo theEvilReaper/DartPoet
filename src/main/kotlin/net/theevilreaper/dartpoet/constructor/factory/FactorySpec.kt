@@ -35,13 +35,13 @@ class FactorySpec(
     val hasNamedData = named.orEmpty().trim().isNotEmpty()
     val constructorDelegation: ConstructorDelegation = builder.delegation
     internal val hasParameters = parameters.isNotEmpty()
-    /// -----------------------
+
     internal val optionalNamed = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.NAMED }
     internal val requiredParameters = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.REQUIRED }
     internal val parametersWithDefaults = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.OPTIONAL }
     internal val normalParameters = ParameterHelper.excludeParameters(parameters, optionalNamed, requiredParameters, parametersWithDefaults)
     internal val hasAdditionalParameters = requiredParameters.isNotEmpty() || optionalNamed.isNotEmpty()
-    /// -----------------------
+
 
     /**
      * Performs some checks on the spec object.
