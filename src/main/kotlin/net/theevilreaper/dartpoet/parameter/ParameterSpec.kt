@@ -1,6 +1,5 @@
 package net.theevilreaper.dartpoet.parameter
 
-import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.buildCodeString
@@ -82,95 +81,198 @@ class ParameterSpec internal constructor(
          *
          * @param name the name for the parameter. Should adhere to naming conventions
          * @param type the type for the parameter, represented as a [TypeName]
-         * @return A new [ParameterBuilder] instance initialized with the provided name and type
+         * @return a new [ParameterBuilder] instance initialized with the provided name and type
          */
         @JvmStatic
-        fun builder(name: String, type: TypeName) = ParameterBuilder(name, typeName = type)
+        fun positional(name: String, type: TypeName) = ParameterBuilder(name, typeName = type)
 
         /**
          * Creates a new instance of [ParameterBuilder] with the specified name and type.
          *
          * @param name The name for the parameter. Should adhere to naming conventions
          * @param type the type for the parameter, represented as a [KClass]
-         * @return A new [ParameterBuilder] instance initialized with the provided name and type
+         * @return a new [ParameterBuilder] instance initialized with the provided name and type
          */
         @JvmStatic
-        fun builder(name: String, type: KClass<*>) = ParameterBuilder(name, typeName = type.asClassName())
+        fun positional(name: String, type: KClass<*>) = ParameterBuilder(name, typeName = type.asClassName())
 
         /**
          * Creates a new instance of [ParameterBuilder] with the specified name and type.
          *
          * @param name the name for the parameter. Should adhere to naming conventions
          * @param className the type for the parameter, represented as a [ClassName]
-         * @return A new [ParameterBuilder] instance initialized with the provided name and type
+         * @return a new [ParameterBuilder] instance initialized with the provided name and type
          */
         @JvmStatic
-        fun builder(name: String, className: ClassName) = ParameterBuilder(name, typeName = className)
-
-        @JvmStatic
-        fun builder(name: String, className: Class<*>) = ParameterBuilder(name, typeName = className.asClassName())
+        fun positional(name: String, className: ClassName) = ParameterBuilder(name, typeName = className)
 
         /**
          * Creates a new instance of [ParameterBuilder] with the specified name and type.
          *
          * @param name the name for the parameter. Should adhere to naming conventions
-         * @return A new [ParameterBuilder] instance initialized with the provided name and type
+         * @param className the type for the parameter, represented as a [Class]
+         * @return a new [ParameterBuilder] instance initialized with the provided name and type
          */
         @JvmStatic
-        fun builder(name: String) = ParameterBuilder(name, type = ParameterType.POSITIONAL, null)
+        fun positional(name: String, className: Class<*>) = ParameterBuilder(name, typeName = className.asClassName())
 
+        /**
+         * Creates a new instance of [ParameterBuilder] with the specified name and type.
+         *
+         * @param name the name for the parameter. Should adhere to naming conventions
+         * @return a new [ParameterBuilder] instance initialized with the provided name and type
+         */
+        @JvmStatic
+        fun positional(name: String) = ParameterBuilder(name, type = ParameterType.POSITIONAL, null)
+
+        /**
+         * Creates a new instance of [ParameterBuilder] with the specified name and type.
+         *
+         * @param name the name for the parameter. Should adhere to naming conventions
+         * @return a new [ParameterBuilder] instance initialized with the provided name and type
+         */
         @JvmStatic
         fun required(name: String) =
             ParameterBuilder(name, type = ParameterType.REQUIRED, typeName = null)
 
+        /**
+         * Creates a new instance of [ParameterBuilder] with the specified name and type.
+         *
+         * @param name the name for the parameter. Should adhere to naming conventions
+         * @param typeName the type for the parameter, represented as a [TypeName]
+         * @return a new [ParameterBuilder] instance initialized with the provided name and type
+         */
         @JvmStatic
         fun required(name: String, typeName: TypeName) =
             ParameterBuilder(name, type = ParameterType.REQUIRED, typeName = typeName)
 
+        /**
+         * Creates a new instance of [ParameterBuilder] with the specified name and type.
+         *
+         * @param name the name for the parameter. Should adhere to naming conventions
+         * @param typeName the type for the parameter, represented as a [ClassName]
+         * @return a new [ParameterBuilder] instance initialized with the provided name and type
+         */
         @JvmStatic
         fun required(name: String, typeName: ClassName) =
             ParameterBuilder(name, type = ParameterType.REQUIRED, typeName = typeName)
 
+        /**
+         * Creates a new instance of [ParameterBuilder] with the specified name and type.
+         *
+         * @param name the name for the parameter. Should adhere to naming conventions
+         * @param typeName the type for the parameter, represented as a [KClass]
+         * @return a new [ParameterBuilder] instance initialized with the provided name and type
+         */
         @JvmStatic
         fun required(name: String, typeName: KClass<*>) =
             ParameterBuilder(name, type = ParameterType.REQUIRED, typeName = typeName.asTypeName())
 
+        /**
+         * Creates a new instance of [ParameterBuilder] with the specified name and type.
+         *
+         * @param name the name for the parameter. Should adhere to naming conventions
+         * @param typeName the type for the parameter, represented as a [Class]
+         * @return a new [ParameterBuilder] instance initialized with the provided name and type
+         */
         @JvmStatic
         fun required(name: String, typeName: Class<*>) =
             ParameterBuilder(name, type = ParameterType.REQUIRED, typeName = typeName.asClassName())
 
+        /**
+         * Creates a new instance of [ParameterBuilder] with the specified name and type.
+         *
+         * @param name the name for the parameter. Should adhere to naming conventions
+         * @param typeName the type for the parameter, represented as a [TypeName]
+         * @return a new [ParameterBuilder] instance initialized with the provided name and type
+         */
         @JvmStatic
         fun named(name: String, typeName: TypeName) =
             ParameterBuilder(name, type = ParameterType.NAMED, typeName = typeName)
 
+        /**
+         * Creates a new instance of [ParameterBuilder] with the specified name and type.
+         *
+         * @param name the name for the parameter. Should adhere to naming conventions
+         * @param typeName the type for the parameter, represented as a [ClassName]
+         * @return a new [ParameterBuilder] instance initialized with the provided name and type
+         */
         @JvmStatic
         fun named(name: String, typeName: ClassName) =
             ParameterBuilder(name, type = ParameterType.NAMED, typeName = typeName)
 
+        /**
+         * Creates a new instance of [ParameterBuilder] with the specified name and type.
+         *
+         * @param name the name for the parameter. Should adhere to naming conventions
+         * @return a new [ParameterBuilder] instance initialized with the provided name and type
+         */
         @JvmStatic
         fun named(name: String) =
             ParameterBuilder(name, type = ParameterType.NAMED, typeName = null)
 
+        /**
+         * Creates a new instance of [ParameterBuilder] with the specified name and type.
+         *
+         * @param name the name for the parameter. Should adhere to naming conventions
+         * @param typeName the type for the parameter, represented as a [KClass]
+         * @return a new [ParameterBuilder] instance initialized with the provided name and type
+         */
         @JvmStatic
         fun named(name: String, typeName: KClass<*>) =
             ParameterBuilder(name, type = ParameterType.NAMED, typeName = typeName.asTypeName())
 
+        /**
+         * Creates a new instance of [ParameterBuilder] with the specified name and type.
+         *
+         * @param name the name for the parameter. Should adhere to naming conventions
+         * @param typeName the type for the parameter, represented as a [Class]
+         * @return a new [ParameterBuilder] instance initialized with the provided name and type
+         */
         @JvmStatic
         fun named(name: String, typeName: Class<*>) =
             ParameterBuilder(name, type = ParameterType.NAMED, typeName = typeName.asClassName())
 
+        /**
+         * Creates a new instance of [ParameterBuilder] with the specified name and type.
+         *
+         * @param name the name for the parameter. Should adhere to naming conventions
+         * @param typeName the type for the parameter, represented as a [TypeName]
+         * @return a new [ParameterBuilder] instance initialized with the provided name and type
+         */
         @JvmStatic
         fun optional(name: String, typeName: TypeName) =
             ParameterBuilder(name, type = ParameterType.OPTIONAL, typeName = typeName)
 
+        /**
+         * Creates a new instance of [ParameterBuilder] with the specified name and type.
+         *
+         * @param name the name for the parameter. Should adhere to naming conventions
+         * @param typeName the type for the parameter, represented as a [ClassName]
+         * @return a new [ParameterBuilder] instance initialized with the provided name and type
+         */
         @JvmStatic
         fun optional(name: String, typeName: ClassName) =
             ParameterBuilder(name, type = ParameterType.OPTIONAL, typeName = typeName)
 
+        /**
+         * Creates a new instance of [ParameterBuilder] with the specified name and type.
+         *
+         * @param name the name for the parameter. Should adhere to naming conventions
+         * @param typeName the type for the parameter, represented as a [KClass]
+         * @return a new [ParameterBuilder] instance initialized with the provided name and type
+         */
         @JvmStatic
         fun optional(name: String, typeName: KClass<*>) =
             ParameterBuilder(name, type = ParameterType.OPTIONAL, typeName = typeName.asTypeName())
 
+        /**
+         * Creates a new instance of [ParameterBuilder] with the specified name and type.
+         *
+         * @param name the name for the parameter. Should adhere to naming conventions
+         * @param typeName the type for the parameter, represented as a [Class]
+         * @return a new [ParameterBuilder] instance initialized with the provided name and type
+         */
         @JvmStatic
         fun optional(name: String, typeName: Class<*>) =
             ParameterBuilder(name, type = ParameterType.OPTIONAL, typeName = typeName.asClassName())
