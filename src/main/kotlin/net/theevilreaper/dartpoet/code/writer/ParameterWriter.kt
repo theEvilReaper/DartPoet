@@ -31,7 +31,7 @@ internal class ParameterWriter : Writeable<ParameterSpec>, InitializerAppender<P
         if (spec.type != null) {
             writer.emitCode("%T", spec.type)
         }
-        val emitNullable = if (spec.isNullable) "?·" else if (spec.type != null) "·" else EMPTY_STRING
+        val emitNullable = if (spec.isNullable && spec.type != null) "?·" else if (spec.type != null) "·" else EMPTY_STRING
         writer.emit(emitNullable)
         if (spec.hasNoTypeName) {
             writer.emit("this.")
