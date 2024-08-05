@@ -49,7 +49,6 @@ class FunctionSpec internal constructor(
     internal val normalParameters = ParameterHelper.excludeParameters(parameters, optionalNamed, requiredParameters, parametersWithDefaults)
     internal val hasAdditionalParameters = requiredParameters.isNotEmpty() || optionalNamed.isNotEmpty()
 
-
     internal val isPrivate = builder.specData.modifiers.remove(DartModifier.PRIVATE)
     internal val typeCast = builder.typeCast
     internal val docs = builder.docs
