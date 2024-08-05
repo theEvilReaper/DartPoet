@@ -11,7 +11,7 @@ import net.theevilreaper.dartpoet.util.parameter.ParameterData
 import org.jetbrains.annotations.ApiStatus
 
 /**
- * The [ParameterHelper2] includes a generalization of the write process for each parameter implementation.
+ * The [ParameterHelper] includes a generalization of the write process for each parameter implementation.
  * It helps to reduce the complexity of the [FunctionWriter], [ConstructorWriter] and [TypeDefWriter] by providing a common way to write.
  * Before this change, each writer had its own implementation which was redundant and error-prone.
  * @since 1.0.0
