@@ -19,7 +19,7 @@ class AbstractClassTest {
             .function(
                 FunctionSpec.builder("getByID")
                     .returns(ClassName("TestModel"))
-                    .parameter(ParameterSpec.builder("id", Int::class).build())
+                    .parameter(ParameterSpec.positional("id", Int::class).build())
                     .build()
             )
             .function(FunctionSpec.builder("test").build())

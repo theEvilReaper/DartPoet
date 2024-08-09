@@ -9,6 +9,7 @@ import net.theevilreaper.dartpoet.code.writer.FactoryWriter
 import net.theevilreaper.dartpoet.constructor.ConstructorBase
 import net.theevilreaper.dartpoet.constructor.ConstructorDelegation
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.parameter.ParameterType
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.util.ParameterFilter
@@ -33,14 +34,14 @@ class FactorySpec(
     val named: String? = builder.namedString
     val hasNamedData = named.orEmpty().trim().isNotEmpty()
     val constructorDelegation: ConstructorDelegation = builder.delegation
-    internal val parametersWithDefaults =
-        ParameterFilter.filterParameter(parameters) { !it.isRequired && it.hasInitializer }
-    internal val requiredParameter =
-        ParameterFilter.filterParameter(parameters) { it.isRequired && !it.isNamed && !it.hasInitializer }
-    internal val namedParameter = ParameterFilter.filterParameter(parameters) { it.isNamed }
-    internal val normalParameter = ParameterHelper.excludeParameters(parameters, parametersWithDefaults, requiredParameter, namedParameter)
     internal val hasParameters = parameters.isNotEmpty()
-    internal val hasAdditionalParameters = requiredParameter.isNotEmpty() || namedParameter.isNotEmpty()
+
+    internal val optionalNamed = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.NAMED }
+    internal val requiredParameters = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.REQUIRED }
+    internal val parametersWithDefaults = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.OPTIONAL }
+    internal val normalParameters = ParameterHelper.excludeParameters(parameters, optionalNamed, requiredParameters, parametersWithDefaults)
+    internal val hasAdditionalParameters = requiredParameters.isNotEmpty() || optionalNamed.isNotEmpty()
+
 
     /**
      * Performs some checks on the spec object.

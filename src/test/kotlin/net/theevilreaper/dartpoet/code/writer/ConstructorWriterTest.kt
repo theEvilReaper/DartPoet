@@ -15,10 +15,10 @@ class ConstructorWriterTest {
     fun `test constructor write without any special parameter`() {
         val constructor = ConstructorSpec.builder("Car")
             .parameters(
-                ParameterSpec.builder("maker").build(),
-                ParameterSpec.builder("model").build(),
-                ParameterSpec.builder("yearMade").build(),
-                ParameterSpec.builder("hasABS").build()
+                ParameterSpec.positional("maker").build(),
+                ParameterSpec.positional("model").build(),
+                ParameterSpec.positional("yearMade").build(),
+                ParameterSpec.positional("hasABS").build()
             )
             .build()
         assertThat(constructor.toString()).isEqualTo(
@@ -32,9 +32,9 @@ class ConstructorWriterTest {
     fun `test named constructor write without any special parameter`() {
         val constructor = ConstructorSpec.named("Car", "withoutABS")
             .parameters(
-                ParameterSpec.builder("maker").build(),
-                ParameterSpec.builder("model").build(),
-                ParameterSpec.builder("yearMade").build(),
+                ParameterSpec.positional("maker").build(),
+                ParameterSpec.positional("model").build(),
+                ParameterSpec.positional("yearMade").build(),
             )
             .build()
         assertThat(constructor.toString()).isEqualTo(
@@ -48,9 +48,9 @@ class ConstructorWriterTest {
     fun `test named constructor2 write without any special parameter`() {
         val constructor = ConstructorSpec.named("Car", "withoutABS")
             .parameters(
-                ParameterSpec.builder("maker").build(),
-                ParameterSpec.builder("model").build(),
-                ParameterSpec.builder("yearMade").build(),
+                ParameterSpec.positional("maker").build(),
+                ParameterSpec.positional("model").build(),
+                ParameterSpec.positional("yearMade").build(),
             )
             .addCode(
                 CodeBlock.of(
@@ -70,9 +70,9 @@ class ConstructorWriterTest {
         val constructor = ConstructorSpec.builder("Car")
             .modifier(DartModifier.CONST)
             .parameters(
-                ParameterSpec.builder("maker").build(),
-                ParameterSpec.builder("model").build(),
-                ParameterSpec.builder("yearMade").build(),
+                ParameterSpec.positional("maker").build(),
+                ParameterSpec.positional("model").build(),
+                ParameterSpec.positional("yearMade").build(),
             )
             .build()
         assertThat(constructor.toString()).isEqualTo(
@@ -86,18 +86,14 @@ class ConstructorWriterTest {
     fun `test constructor with required and named parameters`() {
         val constructor = ConstructorSpec.builder("Car")
             .parameters(
-                ParameterSpec.builder("maker").required().build(),
-                ParameterSpec.builder("model").named(true).build(),
-                ParameterSpec.builder("yearMade").required().build(),
+                ParameterSpec.required("maker").build(),
+                ParameterSpec.named("model").nullable(true).build(),
+                ParameterSpec.required("yearMade").build(),
             )
             .build()
         assertThat(constructor.toString()).isEqualTo(
             """
-            Car({
-              required this.maker,
-              this.model,
-              required this.yearMade
-            });
+            Car({required this.maker, required this.yearMade, this.model});
             """.trimIndent()
         )
     }
@@ -106,18 +102,14 @@ class ConstructorWriterTest {
     fun `test constructor with named and variable with initializer`() {
         val constructor = ConstructorSpec.builder("Item")
             .parameters(
-                ParameterSpec.builder("name").required().build(),
-                ParameterSpec.builder("id").initializer("%L", 10L).build(),
-                ParameterSpec.builder("amount").required().build()
+                ParameterSpec.required("name").build(),
+                ParameterSpec.named("id").initializer("%L", 10L).build(),
+                ParameterSpec.required("amount").build()
             )
             .build()
         assertThat(constructor.toString()).isEqualTo(
             """
-            Item(this.id = 10,
-            {
-              required this.name,
-              required this.amount
-            });
+            Item({required this.name, required this.amount, this.id = 10});
             """.trimIndent()
         )
     }
@@ -127,7 +119,7 @@ class ConstructorWriterTest {
         val constructor = ConstructorSpec.builder("Item")
             .doc("Creates a new item object")
             .parameters(
-                ParameterSpec.builder("name").build())
+                ParameterSpec.positional("name").build())
             .build()
         assertThat(constructor.toString()).isEqualTo(
             """

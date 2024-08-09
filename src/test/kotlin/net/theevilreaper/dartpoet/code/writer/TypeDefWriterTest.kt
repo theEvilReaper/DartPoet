@@ -26,7 +26,7 @@ class TypeDefWriterTest {
             Arguments.of(
                 TypeDefSpec.builder("ValueUpdate", genericClassName)
                     .parameter(
-                        ParameterSpec.builder("value", genericClassName)
+                        ParameterSpec.positional("value", genericClassName)
                             .nullable(true)
                             .build()
                     )
@@ -51,10 +51,10 @@ class TypeDefWriterTest {
                 )
                     .name("Function")
                     .parameters(
-                        ParameterSpec.builder("first", genericClassName)
+                        ParameterSpec.positional("first", genericClassName)
                             .nullable(true)
                             .build(),
-                        ParameterSpec.builder("second", secondGenericClassName)
+                        ParameterSpec.positional("second", secondGenericClassName)
                             .nullable(true)
                             .build()
                     )
@@ -66,9 +66,9 @@ class TypeDefWriterTest {
                     .returns(Int::class)
                     .name("Function")
                     .parameters(
-                        ParameterSpec.builder("a", genericClassName)
+                        ParameterSpec.positional("a", genericClassName)
                             .build(),
-                        ParameterSpec.builder("b", genericClassName)
+                        ParameterSpec.positional("b", genericClassName)
                             .build()
                     )
                     .build(),
@@ -83,9 +83,9 @@ class TypeDefWriterTest {
                     .name("Function")
                     .returns(genericClassName)
                     .parameters(
-                        ParameterSpec.builder("value", String::class)
+                        ParameterSpec.positional("value", String::class)
                             .build(),
-                        ParameterSpec.builder("data", genericClassName)
+                        ParameterSpec.optional("data", genericClassName)
                             .nullable(true)
                             .initializer("%L", "null")
                             .build()
@@ -98,9 +98,9 @@ class TypeDefWriterTest {
                     .name("Function")
                     .returns(genericClassName)
                     .parameters(
-                        ParameterSpec.builder("map", Map::class.parameterizedBy(String::class, Int::class))
+                        ParameterSpec.positional("map", Map::class.parameterizedBy(String::class, Int::class))
                             .build(),
-                        ParameterSpec.builder("data", genericClassName)
+                        ParameterSpec.optional("data", genericClassName)
                             .nullable(true)
                             .initializer("%L", "null")
                             .build()
@@ -113,10 +113,9 @@ class TypeDefWriterTest {
                     .name("Function")
                     .returns(genericClassName)
                     .parameters(
-                        ParameterSpec.builder("list", List::class.parameterizedBy(String::class))
+                        ParameterSpec.positional("list", List::class.parameterizedBy(String::class))
                             .build(),
-                        ParameterSpec.builder("data", genericClassName)
-                            .required()
+                        ParameterSpec.required("data", genericClassName)
                             .build(),
                     )
                     .build(),
@@ -127,15 +126,13 @@ class TypeDefWriterTest {
                     .name("Function")
                     .returns(genericClassName)
                     .parameters(
-                        ParameterSpec.builder("data", genericClassName)
-                            .build(),
-                        ParameterSpec.builder("a", String::class).named(true).nullable(true).build(),
-                        ParameterSpec.builder("b", String::class).named(true).required().build(),
-                        ParameterSpec.builder("c", Int::class)
-                            .named(true)
-                            .required()
+                        ParameterSpec.positional("data", genericClassName)
+                            .build(), //Positional aka nen normaler Param ohne spezielle Eigenschaften
+                        ParameterSpec.named("a", String::class).nullable(true).build(),  // Named optional
+                        ParameterSpec.required("b", String::class).build(), //TODO: named required
+                        ParameterSpec.named("c", Int::class)
                             .initializer("%L", "10")
-                            .build()
+                            .build() // Named optional weil nullable oder default
                     )
                     .build(),
                 "typedef ValueUpdate<E> = E Function(E data, {required String b, String? a, int c = 10});"

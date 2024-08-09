@@ -8,6 +8,7 @@ import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.writer.FunctionWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.parameter.ParameterType
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asTypeName
@@ -33,20 +34,21 @@ class FunctionSpec internal constructor(
     internal val type: FunctionType = builder.type
     internal val methodAccessorType: MethodAccessorType? = builder.methodAccessorType
     internal val body: CodeBlock = builder.body.build()
-    private val parameters: List<ParameterSpec> = builder.parameters.toImmutableList()
     internal val isAsync: Boolean = builder.async
     internal val annotation: Set<AnnotationSpec> = builder.specData.annotations.toImmutableSet()
     internal val modifiers: Set<DartModifier> = builder.specData.modifiers.also {
         hasAllowedModifiers(it, ALLOWED_FUNCTION_MODIFIERS, "function")
     }.filter { it != DartModifier.PRIVATE && it != DartModifier.PUBLIC }.toImmutableSet()
-    internal val parametersWithDefaults =
-        ParameterFilter.filterParameter(parameters) { !it.isRequired && it.hasInitializer }
-    internal val requiredParameter =
-        ParameterFilter.filterParameter(parameters) { it.isRequired && !it.isNamed && !it.hasInitializer }
-    internal val namedParameter = ParameterFilter.filterParameter(parameters) { it.isNamed }
-    internal val normalParameter = ParameterHelper.excludeParameters(parameters, parametersWithDefaults, requiredParameter, namedParameter)
+
+    private val parameters: List<ParameterSpec> = builder.parameters.toImmutableList()
     internal val hasParameters = parameters.isNotEmpty()
-    internal val hasAdditionalParameters = requiredParameter.isNotEmpty() || namedParameter.isNotEmpty()
+
+    internal val optionalNamed = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.NAMED && (it.isNullable || it.hasInitializer) }
+    internal val requiredParameters = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.REQUIRED }
+    internal val parametersWithDefaults = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.OPTIONAL }
+    internal val normalParameters = ParameterHelper.excludeParameters(parameters, optionalNamed, requiredParameters, parametersWithDefaults)
+    internal val hasAdditionalParameters = requiredParameters.isNotEmpty() || optionalNamed.isNotEmpty()
+
     internal val isPrivate = builder.specData.modifiers.remove(DartModifier.PRIVATE)
     internal val typeCast = builder.typeCast
     internal val docs = builder.docs
@@ -59,7 +61,7 @@ class FunctionSpec internal constructor(
         require(name.trim().isNotEmpty()) { "The name of a function can't be empty" }
         require(body.isEmpty() || !modifiers.contains(DartModifier.ABSTRACT)) { "An abstract method can't have a body" }
         require(!(type == FunctionType.SHORTEN && body.isEmpty())) { "Lambda can only be used with a body" }
-        require(!(requiredParameter.isNotEmpty() && parametersWithDefaults.isNotEmpty())) { "A function can't have required and optional parameters" }
+        require(!(requiredParameters.isNotEmpty() && parametersWithDefaults.isNotEmpty())) { "A function can't have required and optional parameters" }
     }
 
     /**

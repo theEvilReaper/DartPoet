@@ -85,7 +85,7 @@ class DartFileTest {
             .constructor(
                 ConstructorSpec.builder(className)
                     .parameter(
-                        ParameterSpec.builder(apiClient.replaceFirstChar { it.lowercase() }, apiClassName).build()
+                        ParameterSpec.positional(apiClient.replaceFirstChar { it.lowercase() }, apiClassName).build()
                     )
                     .addCode(buildCodeBlock {
                         add(
@@ -99,7 +99,7 @@ class DartFileTest {
                 FunctionSpec.builder("getByID")
                     .async(true)
                     .returns(ClassName("DefectDTO"))
-                    .parameter(ParameterSpec.builder("id", Int::class).build())
+                    .parameter(ParameterSpec.positional("id", Int::class).build())
                     .addCode(buildCodeBlock {
                         addStatement("final queryParams = %L;", "<String, dynamic>{}")
                         addStatement("final baseUri = Uri.parse(apiClient.baseUrl);")
@@ -172,7 +172,7 @@ class DartFileTest {
                     .type(FunctionType.SHORTEN)
                     .returns(houseClass)
                     .modifier(DartModifier.STATIC)
-                    .parameter(ParameterSpec.builder("json", DYNAMIC).build())
+                    .parameter(ParameterSpec.positional("json", DYNAMIC).build())
                     .addCode(
                         buildCodeBlock {
                             add("%L.deserialize(json);", serializer)
@@ -263,7 +263,7 @@ class DartFileTest {
             }
             .constructor(
                 ConstructorSpec.builder("TestModel")
-                    .parameter(ParameterSpec.builder("name").build())
+                    .parameter(ParameterSpec.positional("name").build())
                     .doc("Good comment")
                     .build()
             )

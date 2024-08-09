@@ -38,8 +38,7 @@ class FactoryFileTest {
                 FactorySpec.constBuilder(versionModelClass)
                     .delegation(ConstructorDelegation.REDIRECT)
                     .parameter(
-                        ParameterSpec.builder("version", String::class)
-                            .named(true)
+                        ParameterSpec.named("version", String::class)
                             .annotations(
                                 AnnotationSpec.builder("JsonKey")
                                     .content("name: %C", "version").build(),
@@ -56,7 +55,7 @@ class FactoryFileTest {
                     .delegation(ConstructorDelegation.LAMBDA)
                     .named("fromJson")
                     .parameter(
-                        ParameterSpec.builder(
+                        ParameterSpec.positional(
                             "json",
                             Map::class.parameterizedBy(String::class.asTypeName(), DYNAMIC)
                         ).build()

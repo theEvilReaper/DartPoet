@@ -4,6 +4,8 @@ import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.ConstructorWriter
+import net.theevilreaper.dartpoet.parameter.ParameterType
+import net.theevilreaper.dartpoet.util.ParameterFilter
 import net.theevilreaper.dartpoet.util.ParameterHelper
 import net.theevilreaper.dartpoet.util.toImmutableList
 import net.theevilreaper.dartpoet.util.toImmutableSet
@@ -26,12 +28,16 @@ class ConstructorSpec internal constructor(
     internal val isLambda = builder.lambda
     internal val initializer = builder.initializer
     internal val modifiers = builder.modifiers.toImmutableSet()
-    private val modelParameters = builder.parameters.toImmutableSet()
-    internal val requiredAndNamedParameters =
-        builder.parameters.filter { it.isRequired || it.isNamed }.toImmutableList()
-    internal val parameters = ParameterHelper.excludeParameters(modelParameters.toList(), requiredAndNamedParameters)
-    internal val hasParameters = builder.parameters.isNotEmpty()
-    internal val hasNamedParameters = requiredAndNamedParameters.isNotEmpty()
+
+    internal val parameters = builder.parameters.toImmutableList()
+    internal val hasParameters = parameters.isNotEmpty()
+
+    internal val optionalNamed = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.NAMED && (it.isNullable || it.hasInitializer) }
+    internal val requiredParameters = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.REQUIRED }
+    internal val parametersWithDefaults = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.OPTIONAL }
+    internal val normalParameters = ParameterHelper.excludeParameters(parameters, optionalNamed, requiredParameters, parametersWithDefaults)
+    internal val hasAdditionalParameters = requiredParameters.isNotEmpty() || optionalNamed.isNotEmpty()
+
     internal val docs = builder.docs.toImmutableList()
 
     /**
@@ -56,7 +62,7 @@ class ConstructorSpec internal constructor(
         val builder = ConstructorBuilder(this.name, this.named)
         builder.lambda = this.isLambda
         builder.modifiers.addAll(this.modifiers)
-        builder.parameters.addAll(this.modelParameters)
+        builder.parameters.addAll(this.parameters)
 
         if (this.initializer.build().isNotEmpty()) {
             builder.initializer.formatParts.addAll(this.initializer.formatParts)

@@ -137,7 +137,11 @@ class CodeWriter(
                     } else {
                         NULL_STRING
                     }
-                    emit(literal.replace("\"", "'"), nonWrapping = true)
+                    //TODO: Add better fix later
+                    val updated: String = "'" + literal.replace("\"", "") + "'"
+
+                    emit(updated, nonWrapping = true)
+                   // emit(literal.replace("\"", "'"), nonWrapping = true)
                 }
                 "%T" -> {
                     var typeName = codeBlock.args[a++] as TypeName

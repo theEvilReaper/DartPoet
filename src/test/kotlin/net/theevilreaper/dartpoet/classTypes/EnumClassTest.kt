@@ -46,7 +46,7 @@ class EnumClassTest {
                         .property(PropertySpec.builder("name", String::class).build())
                         .constructor(
                             ConstructorSpec.builder("TestEnum")
-                                .parameter(ParameterSpec.builder("name").build())
+                                .parameter(ParameterSpec.positional("name").build())
                                 .build()
                         )
                         .build()
@@ -70,7 +70,7 @@ class EnumClassTest {
             .property(PropertySpec.builder("name", String::class).build())
             .constructor(
                 ConstructorSpec.builder("TestEnum")
-                    .parameter(ParameterSpec.builder("name").build())
+                    .parameter(ParameterSpec.positional("name").build())
                     .build()
             )
         val exception = assertThrows<IllegalStateException> { enumClass.build() }
@@ -104,8 +104,8 @@ class EnumClassTest {
                         ConstructorSpec.builder("NavigationEntry")
                             .modifier(DartModifier.CONST)
                             .parameters(
-                                ParameterSpec.builder("name").build(),
-                                ParameterSpec.builder("route").build()
+                                ParameterSpec.positional("name").build(),
+                                ParameterSpec.positional("route").build()
                             )
                             .build()
                     )

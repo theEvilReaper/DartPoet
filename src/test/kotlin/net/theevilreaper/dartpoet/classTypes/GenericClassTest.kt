@@ -34,7 +34,7 @@ class GenericClassTest {
             .function(
                 FunctionSpec.builder("add")
                     .parameters(
-                        ParameterSpec.builder("element", eClass)
+                        ParameterSpec.positional("element", eClass)
                             .build()
                     )
                     .returns(Void::class)

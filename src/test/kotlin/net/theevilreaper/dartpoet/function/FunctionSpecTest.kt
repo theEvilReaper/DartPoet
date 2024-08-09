@@ -37,8 +37,8 @@ class FunctionSpecTest {
                     FunctionSpec.builder("print")
                         .modifiers(DartModifier.ABSTRACT)
                         .parameters(
-                            ParameterSpec.builder("name", String::class).initializer("%C", "theEvilReaper").build(),
-                            ParameterSpec.builder("value", Int::class).modifiers(DartModifier.REQUIRED).build()
+                            ParameterSpec.optional("name", String::class).initializer("%C", "theEvilReaper").build(),
+                            ParameterSpec.required("value", Int::class).build()
                         )
                         .build()
                 },
@@ -54,7 +54,7 @@ class FunctionSpecTest {
                     FunctionSpec.builder("print")
                         .modifiers(DartModifier.ABSTRACT)
                         .parameters(
-                            ParameterSpec.builder("text", String::class).initializer("%C", "Hello World").build()
+                            ParameterSpec.optional("text", String::class).initializer("%C", "Hello World").build()
                         )
                         .build()
                 },
@@ -65,8 +65,8 @@ class FunctionSpecTest {
                     FunctionSpec.builder("print")
                         .modifiers(DartModifier.ABSTRACT)
                         .parameters(
-                            ParameterSpec.builder("text", String::class).required().build(),
-                            ParameterSpec.builder("name", String::class).required().build()
+                            ParameterSpec.required("text", String::class).build(),
+                            ParameterSpec.required("name", String::class).build()
                         )
                         .build()
                 },
@@ -77,9 +77,9 @@ class FunctionSpecTest {
                     FunctionSpec.builder("print")
                         .modifiers(DartModifier.ABSTRACT)
                         .parameters(
-                            ParameterSpec.builder("text", String::class).required().build(),
-                            ParameterSpec.builder("count", Int::class).build(),
-                            ParameterSpec.builder("name", String::class).required().build(),
+                            ParameterSpec.required("text", String::class).build(),
+                            ParameterSpec.positional("count", Int::class).build(),
+                            ParameterSpec.required("name", String::class).build(),
                         )
                         .build()
                 },
@@ -90,8 +90,8 @@ class FunctionSpecTest {
                     FunctionSpec.builder("print")
                         .modifiers(DartModifier.ABSTRACT)
                         .parameters(
-                            ParameterSpec.builder("text", String::class).build(),
-                            ParameterSpec.builder("additional", String::class).initializer("%C", "Hello World!")
+                            ParameterSpec.positional("text", String::class).build(),
+                            ParameterSpec.optional("additional", String::class).initializer("%C", "Hello World!")
                                 .build(),
                         )
                         .build()
@@ -105,14 +105,14 @@ class FunctionSpecTest {
             Arguments.of(
                 {
                     FunctionSpec.builder("Test")
-                        .parameter(ParameterSpec.builder("name").build())
+                        .parameter(ParameterSpec.positional("name").build())
                 },
                 NO_PARAMETER_TYPE
             ),
             Arguments.of(
                 {
                     FunctionSpec.builder("Test")
-                        .parameter { ParameterSpec.builder("name").build() }
+                        .parameter { ParameterSpec.positional("name").build() }
                 },
                 NO_PARAMETER_TYPE
             ),
@@ -120,8 +120,8 @@ class FunctionSpecTest {
                 {
                     FunctionSpec.builder("Test")
                         .parameters(
-                            ParameterSpec.builder("test", String::class).build(),
-                            ParameterSpec.builder("name").build()
+                            ParameterSpec.positional("test", String::class).build(),
+                            ParameterSpec.positional("name").build()
                         )
                 },
                 NO_PARAMETER_TYPE

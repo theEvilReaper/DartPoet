@@ -1,9 +1,7 @@
 package net.theevilreaper.dartpoet.parameter
 
-import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
-import net.theevilreaper.dartpoet.meta.SpecData
 import net.theevilreaper.dartpoet.meta.SpecMethods
 import net.theevilreaper.dartpoet.type.TypeName
 
@@ -22,23 +20,31 @@ import net.theevilreaper.dartpoet.type.TypeName
  */
 class ParameterBuilder internal constructor(
     val name: String,
+    val type: ParameterType = ParameterType.POSITIONAL,
     val typeName: TypeName?,
-) : SpecMethods<ParameterBuilder> {
-    internal val specData: SpecData = SpecData()
+) {
+    internal val annotations: MutableList<AnnotationSpec> = mutableListOf()
     internal var named: Boolean = false
     internal var nullable: Boolean = false
     internal var initializer: CodeBlock? = null
 
+    /**
+     * Add some manual code parts to the initializer block.
+     * @param format the format string
+     * @param args the arguments to replace in the format string
+     * @return the current [ParameterBuilder] instance
+     */
     fun initializer(format: String, vararg args: Any) = apply {
         initializer(CodeBlock.of(format, *args))
     }
 
+    /**
+     * Add a given [CodeBlock] to the initializer block.
+     * @param block the [CodeBlock] to add
+     * @return the current [ParameterBuilder] instance
+     */
     fun initializer(block: CodeBlock) = apply {
         this.initializer = block
-    }
-
-    fun named(named: Boolean) = apply {
-        this.named = named
     }
 
     /**
@@ -51,40 +57,30 @@ class ParameterBuilder internal constructor(
     }
 
     /**
-     * Indicates that the parameter is required.
+     * Add a given annotation via lambda reference to the parameter.
+     * @param annotation the lambda reference to the annotation
      * @return the current [ParameterBuilder] instance
      */
-    fun required() = apply {
-        this.modifiers(DartModifier.REQUIRED)
-    }
-
-    override fun annotation(annotation: () -> AnnotationSpec) = apply {
-        this.specData.annotations += annotation()
-    }
-
-    override fun annotation(annotation: AnnotationSpec) = apply {
-        this.specData.annotations += annotation
-    }
-
-    override fun annotations(vararg annotations: AnnotationSpec) = apply {
-        this.specData.annotations(*annotations)
-    }
-
-    override fun modifier(modifier: DartModifier) = apply {
-        this.specData.modifiers += modifier
-    }
-
-    override fun modifier(modifier: () -> DartModifier) = apply {
-        this.specData.modifiers += modifier()
+    fun annotation(annotation: () -> AnnotationSpec) = apply {
+        this.annotations += annotation()
     }
 
     /**
-     * Add a given array of [DartModifier] to the builder instance.
-     * @param modifiers the array to add
-     * @return the given instance from the builder
+     * Adds the given annotation to the parameter.
+     * @param annotation the annotation to add
+     * @return the current [ParameterBuilder] instance
      */
-    override fun modifiers(vararg modifiers: DartModifier) = apply {
-        this.specData.modifiers += modifiers
+    fun annotation(annotation: AnnotationSpec) = apply {
+        this.annotations += annotation
+    }
+
+    /**
+     * Adds the given annotations to the parameter.
+     * @param annotations the annotations to add
+     * @return the current [ParameterBuilder] instance
+     */
+    fun annotations(vararg annotations: AnnotationSpec) = apply {
+        this.annotations.addAll(annotations)
     }
 
     /**
@@ -94,7 +90,5 @@ class ParameterBuilder internal constructor(
      *
      * @return a [ParameterSpec] instance representing the parameter specification
      */
-    fun build(): ParameterSpec {
-        return ParameterSpec(this)
-    }
+    fun build(): ParameterSpec = ParameterSpec(this)
 }
