@@ -32,10 +32,11 @@ jobs:
           java-version: '21'
           distribution: 'adopt'
 
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v3
       - name: Publish package
-        uses: gradle/actions/setup-gradle@v4
         run: ./gradlew publishMavenJavaPublicationToMavenRepository
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
