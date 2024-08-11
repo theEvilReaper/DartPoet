@@ -1,5 +1,8 @@
 package net.theevilreaper.dartpoet.parameter.minimized
 
+import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.WriterHelper
+import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.parameter.ParameterType
@@ -24,6 +27,27 @@ data class MinimizedParameter internal constructor(
     val self: Boolean = true,
     val type: ParameterType
 ) {
+
+    init {
+        check(name.trim().isNotEmpty()) { "The name of the parameter must not be empty" }
+    }
+
+    /**
+    * This method delegates the writing process to a [MinimizedParameter] instance, which is responsible for
+    * writing the parameter details to the specified [CodeWriter].
+    *
+    * @param codeWriter the [CodeWriter] to which the parameter should be written
+    */
+    internal fun write(codeWriter: CodeWriter) {
+        WriterHelper.minimizedParameterWriter.write(this, codeWriter)
+    }
+
+    /**
+     * Returns a string representation of the [MinimizedParameter].
+     *
+     * @return the string representation.
+     */
+    override fun toString() = buildCodeString { write(this) }
 
     companion object {
 
