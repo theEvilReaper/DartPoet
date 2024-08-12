@@ -1,12 +1,13 @@
 package net.theevilreaper.dartpoet.parameter.minimized
 
+import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.buildCodeString
-import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.parameter.ParameterType
 import net.theevilreaper.dartpoet.property.PropertySpec
+import net.theevilreaper.dartpoet.type.TypeName
 
 /**
  * Represents a minimized version of a parameter used in Dart, where the [TypeName] is not required.
@@ -25,7 +26,8 @@ import net.theevilreaper.dartpoet.property.PropertySpec
 data class MinimizedParameter internal constructor(
     val name: String,
     val self: Boolean = true,
-    val type: ParameterType
+    val type: ParameterType,
+    val initializer: CodeBlock? = null,
 ) {
 
     init {
@@ -33,11 +35,11 @@ data class MinimizedParameter internal constructor(
     }
 
     /**
-    * This method delegates the writing process to a [MinimizedParameter] instance, which is responsible for
-    * writing the parameter details to the specified [CodeWriter].
-    *
-    * @param codeWriter the [CodeWriter] to which the parameter should be written
-    */
+     * This method delegates the writing process to a [MinimizedParameter] instance, which is responsible for
+     * writing the parameter details to the specified [CodeWriter].
+     *
+     * @param codeWriter the [CodeWriter] to which the parameter should be written
+     */
     internal fun write(codeWriter: CodeWriter) {
         WriterHelper.minimizedParameterWriter.write(this, codeWriter)
     }
@@ -61,7 +63,8 @@ data class MinimizedParameter internal constructor(
          */
         fun fromProperty(propertySpec: PropertySpec, type: ParameterType) = MinimizedParameter(
             name = propertySpec.name,
-            type = type
+            type = type,
+            initializer = propertySpec.initBlock.build()
         )
 
         /**
@@ -76,7 +79,8 @@ data class MinimizedParameter internal constructor(
         fun fromProperty(propertySpec: PropertySpec, type: ParameterType, selfCall: Boolean) = MinimizedParameter(
             type = type,
             self = selfCall,
-            name = propertySpec.name
+            name = propertySpec.name,
+            initializer = propertySpec.initBlock.build()
         )
 
         /**
@@ -88,7 +92,8 @@ data class MinimizedParameter internal constructor(
          */
         fun fromParameter(paramSpec: ParameterSpec) = MinimizedParameter(
             name = paramSpec.name,
-            type = paramSpec.parameterType
+            type = paramSpec.parameterType,
+            initializer = paramSpec.initializer
         )
 
         /**
@@ -102,7 +107,8 @@ data class MinimizedParameter internal constructor(
         fun fromParameter(paramSpec: ParameterSpec, selfCall: Boolean) = MinimizedParameter(
             name = paramSpec.name,
             type = paramSpec.parameterType,
-            self = selfCall
+            self = selfCall,
+            initializer = paramSpec.initializer
         )
     }
 }
