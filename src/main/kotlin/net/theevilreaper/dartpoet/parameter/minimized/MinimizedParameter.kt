@@ -17,10 +17,10 @@ import net.theevilreaper.dartpoet.type.TypeName
  *
  * @version 1.0.0
  * @since 1.0.0
- * @property name the name of the parameter.
- * @property self indicates whether the parameter is a self call.
- * @property type the type of the parameter.
- * @constructor creates a new instance of [MinimizedParameter].
+ * @property name the name of the parameter
+ * @property self indicates whether the parameter is a self call
+ * @property type the type of the parameter
+ * @constructor creates a new instance of [MinimizedParameter]
  * @author theEvilReaper
  */
 data class MinimizedParameter internal constructor(
@@ -47,7 +47,7 @@ data class MinimizedParameter internal constructor(
     /**
      * Returns a string representation of the [MinimizedParameter].
      *
-     * @return the string representation.
+     * @return the string representation
      */
     override fun toString() = buildCodeString { write(this) }
 
@@ -55,11 +55,11 @@ data class MinimizedParameter internal constructor(
 
         /**
          * Creates a new instance of [MinimizedParameter] using the provided [PropertySpec] and [type].
-         * This is typically used when the parameter originates from a property definition.
+         * This is typically used when the parameter originates from a property definition
          *
-         * @param propertySpec the property specification.
-         * @param type the type of the parameter.
-         * @return the created [MinimizedParameter].
+         * @param propertySpec the property specification
+         * @param type the type of the parameter
+         * @return the created [MinimizedParameter]
          */
         fun fromProperty(propertySpec: PropertySpec, type: ParameterType) = MinimizedParameter(
             name = propertySpec.name,
@@ -71,10 +71,10 @@ data class MinimizedParameter internal constructor(
          * Creates a new instance of [MinimizedParameter] with the given [PropertySpec], [type], and [selfCall].
          * This method is useful when the parameter is used in a self-referencing context.
          *
-         * @param propertySpec the property specification.
-         * @param type the type of the parameter.
-         * @param selfCall whether the parameter is a self call.
-         * @return the created [MinimizedParameter].
+         * @param propertySpec the property specification
+         * @param type the type of the parameter
+         * @param selfCall whether the parameter is a self call
+         * @return the created [MinimizedParameter]
          */
         fun fromProperty(propertySpec: PropertySpec, type: ParameterType, selfCall: Boolean) = MinimizedParameter(
             type = type,
@@ -87,8 +87,8 @@ data class MinimizedParameter internal constructor(
          * Creates a new instance of [MinimizedParameter] using the provided [ParameterSpec].
          * This is particularly useful for creating minimized parameters from existing parameter specifications.
          *
-         * @param paramSpec the parameter specification.
-         * @return the created [MinimizedParameter].
+         * @param paramSpec the parameter specification
+         * @return the created [MinimizedParameter]
          */
         fun fromParameter(paramSpec: ParameterSpec) = MinimizedParameter(
             name = paramSpec.name,
@@ -100,9 +100,9 @@ data class MinimizedParameter internal constructor(
          * Creates a new instance of [MinimizedParameter] with the given [ParameterSpec] and [selfCall].
          * Use this method when a self-referencing parameter is needed.
          *
-         * @param paramSpec the parameter specification.
-         * @param selfCall whether the parameter is a self call.
-         * @return the created [MinimizedParameter].
+         * @param paramSpec the parameter specification
+         * @param selfCall whether the parameter is a self call
+         * @return the created [MinimizedParameter]
          */
         fun fromParameter(paramSpec: ParameterSpec, selfCall: Boolean) = MinimizedParameter(
             name = paramSpec.name,
