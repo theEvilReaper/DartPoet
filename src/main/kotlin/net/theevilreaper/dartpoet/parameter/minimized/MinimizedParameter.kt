@@ -4,6 +4,7 @@ import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.buildCodeString
+import net.theevilreaper.dartpoet.parameter.ParameterBase
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.parameter.ParameterType
 import net.theevilreaper.dartpoet.property.PropertySpec
@@ -23,15 +24,17 @@ import net.theevilreaper.dartpoet.type.TypeName
  * @constructor creates a new instance of [MinimizedParameter]
  * @author theEvilReaper
  */
-data class MinimizedParameter internal constructor(
-    val name: String,
+class MinimizedParameter internal constructor(
+    name: String,
+    type: ParameterType,
     val self: Boolean = true,
-    val type: ParameterType,
     val initializer: CodeBlock? = null,
-) {
+): ParameterBase(name, type) {
 
     init {
-        check(name.trim().isNotEmpty()) { "The name of the parameter must not be empty" }
+        require(!(type == ParameterType. REQUIRED && initializer != null && initializer. hasStatements())) {
+            "A required parameter cannot have an initializer"
+        }
     }
 
     /**
@@ -61,7 +64,7 @@ data class MinimizedParameter internal constructor(
          * @param type the type of the parameter
          * @return the created [MinimizedParameter]
          */
-        fun fromProperty(propertySpec: PropertySpec, type: ParameterType) = MinimizedParameter(
+        fun fromProperty(propertySpec: PropertySpec, type: ParameterType = ParameterType.POSITIONAL) = MinimizedParameter(
             name = propertySpec.name,
             type = type,
             initializer = propertySpec.initBlock.build()
@@ -76,7 +79,7 @@ data class MinimizedParameter internal constructor(
          * @param selfCall whether the parameter is a self call
          * @return the created [MinimizedParameter]
          */
-        fun fromProperty(propertySpec: PropertySpec, type: ParameterType, selfCall: Boolean) = MinimizedParameter(
+        fun fromProperty(propertySpec: PropertySpec, type: ParameterType = ParameterType.POSITIONAL, selfCall: Boolean) = MinimizedParameter(
             type = type,
             self = selfCall,
             name = propertySpec.name,
