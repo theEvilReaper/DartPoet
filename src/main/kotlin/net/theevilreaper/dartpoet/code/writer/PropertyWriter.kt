@@ -36,7 +36,8 @@ internal class PropertyWriter : Writeable<PropertySpec>, DocumentationAppender,
         writer.emit(modifierString)
 
         if (spec.type != null) {
-            writer.emitCode("%T·", spec.type)
+            writer.emitCode("%T", spec.type)
+            writer.emitSpace()
         }
 
         writer.emit(StringHelper.ensureVariableNameWithPrivateModifier(spec.name, spec.isPrivate))

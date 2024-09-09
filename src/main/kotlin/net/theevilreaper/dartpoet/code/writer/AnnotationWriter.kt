@@ -5,6 +5,7 @@ import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.joinToCode
 import net.theevilreaper.dartpoet.util.ANNOTATION_CHAR
+import net.theevilreaper.dartpoet.util.COMMA_SEPARATOR
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.NEW_LINE
 import net.theevilreaper.dartpoet.util.ROUND_CLOSE
@@ -31,7 +32,7 @@ internal class AnnotationWriter {
         if (!spec.hasContent) return
 
         val whitespace = if (inline) EMPTY_STRING else NEW_LINE
-        val memberSeparator = if (inline) ", " else ",\n"
+        val memberSeparator = if (inline) COMMA_SEPARATOR else ",\n"
         val memberSuffix = if (!inline && spec.content.size > 1) "," else EMPTY_STRING
 
         writer.emit(ROUND_OPEN)

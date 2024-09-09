@@ -4,6 +4,7 @@ import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.Writeable
 import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.enum.EnumPropertySpec
+import net.theevilreaper.dartpoet.util.COMMA_SEPARATOR
 import net.theevilreaper.dartpoet.util.ROUND_CLOSE
 import net.theevilreaper.dartpoet.util.ROUND_OPEN
 
@@ -32,7 +33,7 @@ internal class EnumPropertyWriter : Writeable<EnumPropertySpec> {
             writer.emit(ROUND_OPEN)
             spec.parameters.forEachIndexed { index, codeBlock ->
                 if (index > 0) {
-                    writer.emit(", ")
+                    writer.emit(COMMA_SEPARATOR)
                 }
                 writer.emitCode(codeBlock, isConstantContext = false, ensureTrailingNewline = false)
             }

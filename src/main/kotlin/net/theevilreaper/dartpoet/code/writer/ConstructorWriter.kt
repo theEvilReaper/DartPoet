@@ -15,7 +15,8 @@ internal class ConstructorWriter : Writeable<ConstructorSpec>, DocumentationAppe
     override fun write(spec: ConstructorSpec, writer: CodeWriter) {
         emitDocumentation(spec.docs, writer)
         if (spec.modifiers.contains(DartModifier.CONST)) {
-            writer.emit("${DartModifier.CONST.identifier}·")
+            writer.emit(DartModifier.CONST.identifier)
+            writer.emitSpace()
         }
 
         writer.emit(spec.name)
@@ -34,7 +35,8 @@ internal class ConstructorWriter : Writeable<ConstructorSpec>, DocumentationAppe
             writer.unindent(2)
         } else {
             if (spec.initializer.isNotEmpty()) {
-                writer.emit(":·")
+                writer.emit(":")
+                writer.emitSpace()
                 writer.emitCode(spec.initializer.build(), ensureTrailingNewline = false)
                 writer.emit(SEMICOLON)
                 return

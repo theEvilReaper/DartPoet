@@ -26,10 +26,11 @@ internal class ExtensionWriter : Writeable<ExtensionSpec>, DocumentationAppender
      */
     override fun write(spec: ExtensionSpec, writer: CodeWriter) {
         emitDocumentation(spec.docs, writer)
-        writer.emitCode("%L", EXTENSION.identifier)
+        writer.emit(EXTENSION.identifier)
 
         if (spec.name != null) {
-            writer.emitCode("·%L", spec.name)
+            writer.emitSpace()
+            writer.emit(spec.name)
         }
 
         if (spec.hasGenericCast) {

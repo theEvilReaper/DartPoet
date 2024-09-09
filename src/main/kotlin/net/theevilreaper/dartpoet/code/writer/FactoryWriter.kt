@@ -16,7 +16,8 @@ internal class FactoryWriter : InitializerAppender<FactorySpec>, DocumentationAp
         emitDocumentation(spec.documentation, codeWriter)
         emitAnnotations(spec, codeWriter)
         if (spec.isConst) {
-            codeWriter.emitCode("%L·", DartModifier.CONST.identifier)
+            codeWriter.emit(DartModifier.CONST.identifier)
+            codeWriter.emitSpace()
         }
         codeWriter.emitCode("%L·%T", DartModifier.FACTORY.identifier, spec.typeName)
 

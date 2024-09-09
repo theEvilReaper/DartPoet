@@ -26,7 +26,8 @@ internal class ConstantPropertyWriter : Writeable<ConstantPropertySpec>, Initial
         writer.emit(modifierString)
 
         if (spec.typeName != null) {
-            writer.emitCode("%T·", spec.typeName)
+            writer.emitCode("%T", spec.typeName)
+            writer.emitSpace()
         }
 
         writer.emitCode("%L", StringHelper.ensureVariableNameWithPrivateModifier(spec.name, spec.isPrivate))

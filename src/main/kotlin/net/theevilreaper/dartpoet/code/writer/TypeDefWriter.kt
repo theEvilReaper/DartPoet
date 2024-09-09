@@ -26,9 +26,9 @@ class TypeDefWriter : Writeable<TypeDefSpec> {
      * @param writer the writer to append the data
      */
     override fun write(spec: TypeDefSpec, writer: CodeWriter) {
-        writer.emitCode("%L", DartModifier.TYPEDEF.identifier)
+        writer.emit(DartModifier.TYPEDEF.identifier)
         writer.emitSpace()
-        writer.emitCode("%L", spec.typeDefName)
+        writer.emit(spec.typeDefName)
         if (spec.typeCasts.isNotEmpty()) {
             val typeIterable: Iterable<TypeName> = spec.typeCasts.filterNotNull().asIterable()
             val typeCasts = StringHelper.concatData(typeIterable, separator = COMMA_SEPARATOR) { it.toString() }
@@ -41,7 +41,7 @@ class TypeDefWriter : Writeable<TypeDefSpec> {
 
         if (spec.name != null) {
             writer.emitSpace()
-            writer.emitCode("%L", spec.name)
+            writer.emit(spec.name)
         }
 
         val parameterData: ParameterData = ParameterData.fromTypeDef(spec)

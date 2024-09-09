@@ -87,7 +87,8 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
     private fun writeMethodAccessorDefinition(spec: FunctionSpec, writer: CodeWriter) {
         if (spec.modifiers.isNotEmpty()) {
             val keywords = StringHelper.concatData(data = spec.modifiers, separator = SPACE) { it.identifier }
-            writer.emitCode("%L·", keywords)
+            writer.emit(keywords)
+            writer.emitSpace()
         }
         val typeDefinition: CodeBlock = buildCodeBlock {
             when (spec.methodAccessorType!!) {
@@ -96,7 +97,8 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
             }
         }
         writer.emitCode(codeBlock = typeDefinition, ensureTrailingNewline = false)
-        writer.emitCode("·%L", spec.name)
+        writer.emitSpace()
+        writer.emit(spec.name)
         if (spec.hasGetterAccessor) {
             writer.emitSpace()
         }
@@ -134,7 +136,8 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
 
         when (spec.type) {
             FunctionType.STANDARD -> {
-                writer.emit("·{\n")
+                writer.emitSpace()
+                writer.emit("{\n")
                 writer.indent()
                 writeMethodBody(spec, writer)
                 writer.unindent()

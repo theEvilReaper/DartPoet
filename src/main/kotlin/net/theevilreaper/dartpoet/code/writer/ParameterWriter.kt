@@ -24,7 +24,7 @@ internal class ParameterWriter : Writeable<ParameterSpec>, InitializerAppender<P
         spec.annotations.emitAnnotations(writer, endWithNewLine = false)
 
         if (spec.parameterType == ParameterType.REQUIRED) {
-            writer.emitCode("%L", DartModifier.REQUIRED.identifier)
+            writer.emit(DartModifier.REQUIRED.identifier)
             writer.emitSpace()
         }
 
@@ -44,7 +44,9 @@ internal class ParameterWriter : Writeable<ParameterSpec>, InitializerAppender<P
         val initBlock = spec.initializer ?: CodeBlock.EMPTY
         if (initBlock.isEmpty()) return
         if (spec.isNamed && !spec.hasInitializer) return
-        writer.emit("·=·")
+        writer.emitSpace()
+        writer.emit("=")
+        writer.emitSpace()
         writer.emitCode(initBlock, isConstantContext)
     }
 }
