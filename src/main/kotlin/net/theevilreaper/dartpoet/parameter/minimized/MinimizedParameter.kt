@@ -29,7 +29,11 @@ class MinimizedParameter internal constructor(
     type: ParameterType,
     val self: Boolean = true,
     val initializer: CodeBlock? = null,
+    val nullable: Boolean = false,
 ): ParameterBase(name, type) {
+
+    val hasInitializer: Boolean
+        get() = initializer != null
 
     init {
         require(!(type == ParameterType. REQUIRED && initializer != null && initializer. hasStatements())) {

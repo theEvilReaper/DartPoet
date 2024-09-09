@@ -4,15 +4,16 @@ import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.code.buildCodeBlock
+import net.theevilreaper.dartpoet.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.directive.CastType
 import net.theevilreaper.dartpoet.directive.DirectiveFactory
 import net.theevilreaper.dartpoet.directive.DirectiveType
 import net.theevilreaper.dartpoet.function.FunctionSpec
-import net.theevilreaper.dartpoet.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.function.FunctionType
 import net.theevilreaper.dartpoet.function.MethodAccessorType
 import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.parameter.minimized.MinimizedParameter
 import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.type.ClassName
@@ -84,6 +85,14 @@ class DartFileTest {
             )
             .constructor(
                 ConstructorSpec.builder(className)
+                    .mini(
+                        MinimizedParameter.fromParameter(
+                            ParameterSpec.positional(
+                                apiClient.replaceFirstChar { it.lowercase() },
+                                apiClassName
+                            ).build()
+                        )
+                    )
                     .parameter(
                         ParameterSpec.positional(apiClient.replaceFirstChar { it.lowercase() }, apiClassName).build()
                     )
@@ -263,7 +272,11 @@ class DartFileTest {
             }
             .constructor(
                 ConstructorSpec.builder("TestModel")
-                    .parameter(ParameterSpec.positional("name").build())
+                    .mini(
+                        MinimizedParameter.fromParameter(
+                            ParameterSpec.positional("name").build()
+                        )
+                    )
                     .doc("Good comment")
                     .build()
             )

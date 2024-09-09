@@ -1,6 +1,7 @@
 package net.theevilreaper.dartpoet.util
 
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.parameter.minimized.MinimizedParameter
 import org.jetbrains.annotations.ApiStatus
 
 /**
@@ -22,6 +23,16 @@ internal object ParameterFilter {
         parameters: List<ParameterSpec>,
         crossinline predicate: (ParameterSpec) -> Boolean,
     ): List<ParameterSpec> {
+        return when (parameters.isEmpty()) {
+            true -> emptyList()
+            else -> parameters.filter(predicate).toImmutableList()
+        }
+    }
+
+    internal inline fun filterMini(
+        parameters: List<MinimizedParameter>,
+        crossinline predicate: (MinimizedParameter) -> Boolean,
+    ): List<MinimizedParameter> {
         return when (parameters.isEmpty()) {
             true -> emptyList()
             else -> parameters.filter(predicate).toImmutableList()

@@ -1,12 +1,13 @@
 package net.theevilreaper.dartpoet.util
 
 import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.emitMiniParameters
 import net.theevilreaper.dartpoet.code.emitParameters
 import net.theevilreaper.dartpoet.code.writer.ConstructorWriter
 import net.theevilreaper.dartpoet.code.writer.FunctionWriter
 import net.theevilreaper.dartpoet.code.writer.TypeDefWriter
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
-import net.theevilreaper.dartpoet.util.*
+import net.theevilreaper.dartpoet.parameter.minimized.MinimizedParameter
 import net.theevilreaper.dartpoet.util.parameter.ParameterData
 import org.jetbrains.annotations.ApiStatus
 
@@ -34,6 +35,13 @@ internal object ParameterHelper {
         return source.minus(parametersToRemove).toImmutableList()
     }
 
+    fun excludeMiniParameter(source: List<MinimizedParameter>, vararg params: List<MinimizedParameter>): List<MinimizedParameter> {
+        if (params.isEmpty()) return source.toImmutableList()
+
+        val parametersToRemove: Set<MinimizedParameter> = params.flatMap { it }.toSet()
+        return source.minus(parametersToRemove).toImmutableList()
+    }
+
     /**
      * Writes each parameter which is part of the [ParameterData] to the given [CodeWriter].
      * @param data the data to write
@@ -42,10 +50,9 @@ internal object ParameterHelper {
      * @param filterExcluded whether to filter the excluded parameters
      */
     fun writeParameters(
-        data: ParameterData,
+        data: ParameterData<ParameterSpec>,
         codeWriter: CodeWriter,
         indent: Boolean = false,
-        filterExcluded: Boolean = true
     ) {
         if (!data.hasParameters) {
             codeWriter.emit("()")
@@ -59,12 +66,41 @@ internal object ParameterHelper {
         }
 
         if (data.hasAdditionalParameters) {
-            emitRequiredAndNamedParameter(data, codeWriter, indent, filterExcluded)
+            emitRequiredAndNamedParameter(data, codeWriter, indent)
         }
 
         if (data.optionalAndDefault.isNotEmpty()) {
             codeWriter.emit("[")
             data.optionalAndDefault.emitParameters(codeWriter, forceNewLines = false)
+            codeWriter.emit("]")
+        }
+
+        codeWriter.emit(")")
+    }
+
+    fun writeMiniParameters(
+        data: ParameterData<MinimizedParameter>,
+        codeWriter: CodeWriter,
+        indent: Boolean = false,
+    ) {
+        if (!data.hasParameters) {
+            codeWriter.emit("()")
+            return
+        }
+        codeWriter.emit("(")
+        data.positionalParameters.emitMiniParameters(codeWriter, forceNewLines = false)
+
+        if (data.positionalParameters.isNotEmpty() && (data.hasAdditionalParameters || data.optionalAndDefault.isNotEmpty())) {
+            codeWriter.emit(", ")
+        }
+
+        if (data.hasAdditionalParameters) {
+            emitMiniRequiredAndNamedParameter(data, codeWriter, indent)
+        }
+
+        if (data.optionalAndDefault.isNotEmpty()) {
+            codeWriter.emit("[")
+            data.optionalAndDefault.emitMiniParameters(codeWriter, forceNewLines = false)
             codeWriter.emit("]")
         }
 
@@ -77,13 +113,11 @@ internal object ParameterHelper {
      * @param data the data to write
      * @param codeWriter the writer to append the data
      * @param indent whether to indent the data
-     * @param filterExcluded whether to filter the excluded parameters
      */
     private fun emitRequiredAndNamedParameter(
-        data: ParameterData,
+        data: ParameterData<ParameterSpec>,
         codeWriter: CodeWriter,
         indent: Boolean = false,
-        filterExcluded: Boolean = true
     ) {
         codeWriter.emit("$CURLY_OPEN")
 
@@ -94,6 +128,29 @@ internal object ParameterHelper {
 
         internalParameterWrite(data.requiredParameters, data.namedParameters.isNotEmpty(), codeWriter)
         internalParameterWrite(data.namedParameters, codeWriter = codeWriter)
+
+        if (indent) {
+            codeWriter.emit(NEW_LINE)
+            codeWriter.unindent()
+        }
+
+        codeWriter.emit("$CURLY_CLOSE")
+    }
+
+    private fun emitMiniRequiredAndNamedParameter(
+        data: ParameterData<MinimizedParameter>,
+        codeWriter: CodeWriter,
+        indent: Boolean = false,
+    ) {
+        codeWriter.emit("$CURLY_OPEN")
+
+        if (indent) {
+            codeWriter.emit(NEW_LINE)
+            codeWriter.indent()
+        }
+
+        internalMiniParameterWrite(data.requiredParameters, data.namedParameters.isNotEmpty(), codeWriter)
+        internalMiniParameterWrite(data.namedParameters, codeWriter = codeWriter)
 
         if (indent) {
             codeWriter.emit(NEW_LINE)
@@ -117,6 +174,19 @@ internal object ParameterHelper {
         if (parameters.isEmpty()) return
 
         parameters.emitParameters(codeWriter, forceNewLines = false)
+        if (trailingComma) {
+            codeWriter.emit(COMMA_SEPARATOR)
+        }
+    }
+
+    private fun internalMiniParameterWrite(
+        parameters: List<MinimizedParameter>,
+        trailingComma: Boolean = false,
+        codeWriter: CodeWriter
+    ) {
+        if (parameters.isEmpty()) return
+
+        parameters.emitMiniParameters(codeWriter, forceNewLines = false)
         if (trailingComma) {
             codeWriter.emit(COMMA_SEPARATOR)
         }

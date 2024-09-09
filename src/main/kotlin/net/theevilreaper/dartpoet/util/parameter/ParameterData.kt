@@ -5,6 +5,7 @@ import net.theevilreaper.dartpoet.constructor.factory.FactorySpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.parameter.minimized.MinimizedParameter
 
 /**
  * The [ParameterData] class is a record class that holds all necessary information about the parameters which are used in different specs.
@@ -13,11 +14,11 @@ import net.theevilreaper.dartpoet.parameter.ParameterSpec
  * @version 1.0.0
  * @author theEvilReaper
  */
-data class ParameterData internal constructor(
-    val positionalParameters: List<ParameterSpec>,
-    val namedParameters: List<ParameterSpec>,
-    val requiredParameters: List<ParameterSpec>,
-    val optionalAndDefault: List<ParameterSpec>,
+data class ParameterData<T>(
+    val positionalParameters: List<T>,
+    val namedParameters: List<T>,
+    val requiredParameters: List<T>,
+    val optionalAndDefault: List<T>,
     val hasParameters: Boolean,
     val hasAdditionalParameters: Boolean,
     val hasParametersWithDefaults: Boolean,
@@ -37,7 +38,7 @@ data class ParameterData internal constructor(
          * @return the created [ParameterData] instance
          */
         @JvmStatic
-        fun fromTypeDef(typeDefSpec: TypeDefSpec): ParameterData {
+        fun fromTypeDef(typeDefSpec: TypeDefSpec): ParameterData<ParameterSpec> {
             val positionalParameters = typeDefSpec.normalParameters
             val namedParameters = typeDefSpec.optionalNamed
             val requiredParameters = typeDefSpec.requiredParameters
@@ -59,7 +60,7 @@ data class ParameterData internal constructor(
          * @return the created [ParameterData] instance
          */
         @JvmStatic
-        fun fromFunction(functionSpec: FunctionSpec): ParameterData {
+        fun fromFunction(functionSpec: FunctionSpec): ParameterData<ParameterSpec> {
             val positionalParameters = functionSpec.normalParameters
             val namedParameters = functionSpec.optionalNamed
             val requiredParameters = functionSpec.requiredParameters
@@ -81,7 +82,7 @@ data class ParameterData internal constructor(
          * @return the created [ParameterData] instance
          */
         @JvmStatic
-        fun fromFactory(factorySpec: FactorySpec): ParameterData {
+        fun fromFactory(factorySpec: FactorySpec): ParameterData<ParameterSpec> {
             val positionalParameters = factorySpec.normalParameters
             val namedParameters = factorySpec.optionalNamed
             val requiredParameters = factorySpec.requiredParameters
@@ -103,19 +104,19 @@ data class ParameterData internal constructor(
          * @return the created [ParameterData] instance
          */
         @JvmStatic
-        fun fromConstructor(constructorSpec: ConstructorSpec): ParameterData {
-            val positionalParameters = constructorSpec.normalParameters
-            val namedParameters = constructorSpec.optionalNamed
-            val requiredParameters = constructorSpec.requiredParameters
-            val parametersWithDefaults = constructorSpec.parametersWithDefaults
+        fun fromConstructor(constructorSpec: ConstructorSpec): ParameterData<MinimizedParameter> {
+            val positionalParameters = constructorSpec.miniNormalParameters
+            val namedParameters = constructorSpec.miniOptionalNamed
+            val requiredParameters = constructorSpec.miniRequiredParameters
+            val parametersWithDefaults = constructorSpec.miniParametersWithDefaults
             return ParameterData(
                 positionalParameters,
                 namedParameters,
                 requiredParameters,
                 parametersWithDefaults,
-                constructorSpec.hasParameters,
-                constructorSpec.hasAdditionalParameters,
-                constructorSpec.parametersWithDefaults.isNotEmpty()
+                constructorSpec.hasMinis,
+                constructorSpec.hasMiniAdditionalParameters,
+                constructorSpec.miniParametersWithDefaults.isNotEmpty()
             )
         }
     }

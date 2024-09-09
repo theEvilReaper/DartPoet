@@ -7,6 +7,7 @@ import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.enum.EnumPropertySpec
 import net.theevilreaper.dartpoet.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.parameter.minimized.MinimizedParameter
 import net.theevilreaper.dartpoet.property.PropertySpec
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -103,9 +104,15 @@ class EnumClassTest {
                     .constructor(
                         ConstructorSpec.builder("NavigationEntry")
                             .modifier(DartModifier.CONST)
-                            .parameters(
-                                ParameterSpec.positional("name").build(),
-                                ParameterSpec.positional("route").build()
+                            .mini(
+                                MinimizedParameter.fromParameter(
+                                    ParameterSpec.positional("name").build()
+                                ),
+                            )
+                            .mini(
+                                MinimizedParameter.fromParameter(
+                                    ParameterSpec.positional("route").build()
+                                )
                             )
                             .build()
                     )

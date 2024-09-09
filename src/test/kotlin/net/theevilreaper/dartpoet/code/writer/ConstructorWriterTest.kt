@@ -5,6 +5,7 @@ import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.parameter.minimized.MinimizedParameter
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
@@ -14,11 +15,19 @@ class ConstructorWriterTest {
     @Test
     fun `test constructor write without any special parameter`() {
         val constructor = ConstructorSpec.builder("Car")
-            .parameters(
-                ParameterSpec.positional("maker").build(),
-                ParameterSpec.positional("model").build(),
-                ParameterSpec.positional("yearMade").build(),
-                ParameterSpec.positional("hasABS").build()
+            .minis(
+                MinimizedParameter.fromParameter(
+                    ParameterSpec.positional("maker").build(),
+                ),
+                MinimizedParameter.fromParameter(
+                    ParameterSpec.positional("model").build(),
+                ),
+                MinimizedParameter.fromParameter(
+                    ParameterSpec.positional("yearMade").build(),
+                ),
+                MinimizedParameter.fromParameter(
+                    ParameterSpec.positional("hasABS").build(),
+                )
             )
             .build()
         assertThat(constructor.toString()).isEqualTo(
@@ -31,10 +40,20 @@ class ConstructorWriterTest {
     @Test
     fun `test named constructor write without any special parameter`() {
         val constructor = ConstructorSpec.named("Car", "withoutABS")
-            .parameters(
-                ParameterSpec.positional("maker").build(),
-                ParameterSpec.positional("model").build(),
-                ParameterSpec.positional("yearMade").build(),
+            .mini(
+                MinimizedParameter.fromParameter(
+                    ParameterSpec.positional("maker").build(),
+                )
+            )
+            .mini(
+                MinimizedParameter.fromParameter(
+                    ParameterSpec.positional("model").build(),
+                )
+            )
+            .mini(
+                MinimizedParameter.fromParameter(
+                    ParameterSpec.positional("yearMade").build(),
+                )
             )
             .build()
         assertThat(constructor.toString()).isEqualTo(
@@ -47,10 +66,20 @@ class ConstructorWriterTest {
     @Test
     fun `test named constructor2 write without any special parameter`() {
         val constructor = ConstructorSpec.named("Car", "withoutABS")
-            .parameters(
-                ParameterSpec.positional("maker").build(),
-                ParameterSpec.positional("model").build(),
-                ParameterSpec.positional("yearMade").build(),
+            .mini(
+                MinimizedParameter.fromParameter(
+                    ParameterSpec.positional("maker").build(),
+                )
+            )
+            .mini(
+                MinimizedParameter.fromParameter(
+                    ParameterSpec.positional("model").build(),
+                )
+            )
+            .mini(
+                MinimizedParameter.fromParameter(
+                    ParameterSpec.positional("yearMade").build(),
+                )
             )
             .addCode(
                 CodeBlock.of(
@@ -69,10 +98,20 @@ class ConstructorWriterTest {
     fun `test const constructor without any parameter which has special properties`() {
         val constructor = ConstructorSpec.builder("Car")
             .modifier(DartModifier.CONST)
-            .parameters(
-                ParameterSpec.positional("maker").build(),
-                ParameterSpec.positional("model").build(),
-                ParameterSpec.positional("yearMade").build(),
+            .mini(
+                MinimizedParameter.fromParameter(
+                    ParameterSpec.positional("maker").build(),
+                )
+            )
+            .mini(
+                MinimizedParameter.fromParameter(
+                    ParameterSpec.positional("model").build(),
+                )
+            )
+            .mini(
+                MinimizedParameter.fromParameter(
+                    ParameterSpec.positional("yearMade").build(),
+                )
             )
             .build()
         assertThat(constructor.toString()).isEqualTo(
@@ -85,10 +124,16 @@ class ConstructorWriterTest {
     @Test
     fun `test constructor with required and named parameters`() {
         val constructor = ConstructorSpec.builder("Car")
-            .parameters(
-                ParameterSpec.required("maker").build(),
-                ParameterSpec.named("model").nullable(true).build(),
-                ParameterSpec.required("yearMade").build(),
+            .minis(
+                MinimizedParameter.fromParameter(
+                    ParameterSpec.positional("maker").build()
+                ),
+                MinimizedParameter.fromParameter(
+                    ParameterSpec.named("model").nullable(true).build(),
+                ),
+                MinimizedParameter.fromParameter(
+                    ParameterSpec.required("yearMade").build(),
+                )
             )
             .build()
         assertThat(constructor.toString()).isEqualTo(
@@ -101,10 +146,16 @@ class ConstructorWriterTest {
     @Test
     fun `test constructor with named and variable with initializer`() {
         val constructor = ConstructorSpec.builder("Item")
-            .parameters(
-                ParameterSpec.required("name").build(),
-                ParameterSpec.named("id").initializer("%L", 10L).build(),
-                ParameterSpec.required("amount").build()
+            .minis(
+                MinimizedParameter.fromParameter(
+                    ParameterSpec.required("name").build(),
+                ),
+                MinimizedParameter.fromParameter(
+                    ParameterSpec.named("id").initializer("%L", 10L).build(),
+                ),
+                MinimizedParameter.fromParameter(
+                    ParameterSpec.required("amount").build()
+                ),
             )
             .build()
         assertThat(constructor.toString()).isEqualTo(
@@ -118,8 +169,11 @@ class ConstructorWriterTest {
     fun `test constructor with documentation or comments`() {
         val constructor = ConstructorSpec.builder("Item")
             .doc("Creates a new item object")
-            .parameters(
-                ParameterSpec.positional("name").build())
+            .mini(
+                MinimizedParameter.fromParameter(
+                    ParameterSpec.positional("name").build()
+                )
+            )
             .build()
         assertThat(constructor.toString()).isEqualTo(
             """

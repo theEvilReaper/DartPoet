@@ -9,6 +9,7 @@ import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.parameter.minimized.MinimizedParameter
 import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.util.CURLY_CLOSE
@@ -112,6 +113,31 @@ internal fun List<ParameterSpec>.emitParameters(
     forceNewLines: Boolean = false,
     emitSpace: Boolean = true,
     emitBlock: (ParameterSpec) -> Unit = { it.write(codeWriter) },
+) = with(codeWriter) {
+    if (isEmpty()) return@with
+    val emitComma = size > 1
+    forEachIndexed { index, parameter ->
+        if (index > 0 && forceNewLines) {
+            emit(NEW_LINE)
+        }
+
+        emitBlock(parameter)
+        if (emitComma) {
+            if (index < size - 1) {
+                emit(",")
+            }
+            if (emitSpace && index < size - 1) {
+                emit(SPACE)
+            }
+        }
+    }
+}
+
+internal fun List<MinimizedParameter>.emitMiniParameters(
+    codeWriter: CodeWriter,
+    forceNewLines: Boolean = false,
+    emitSpace: Boolean = true,
+    emitBlock: (MinimizedParameter) -> Unit = { it.write(codeWriter) },
 ) = with(codeWriter) {
     if (isEmpty()) return@with
     val emitComma = size > 1

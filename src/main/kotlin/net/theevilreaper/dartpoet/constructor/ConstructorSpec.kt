@@ -32,13 +32,32 @@ class ConstructorSpec internal constructor(
     internal val parameters = builder.parameters.toImmutableList()
     internal val hasParameters = parameters.isNotEmpty()
 
-    internal val optionalNamed = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.NAMED && (it.isNullable || it.hasInitializer) }
-    internal val requiredParameters = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.REQUIRED }
-    internal val parametersWithDefaults = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.OPTIONAL }
-    internal val normalParameters = ParameterHelper.excludeParameters(parameters, optionalNamed, requiredParameters, parametersWithDefaults)
+    internal val optionalNamed =
+        ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.NAMED && (it.isNullable || it.hasInitializer) }
+    internal val requiredParameters =
+        ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.REQUIRED }
+    internal val parametersWithDefaults =
+        ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.OPTIONAL }
+    internal val normalParameters =
+        ParameterHelper.excludeParameters(parameters, optionalNamed, requiredParameters, parametersWithDefaults)
     internal val hasAdditionalParameters = requiredParameters.isNotEmpty() || optionalNamed.isNotEmpty()
 
     internal val docs = builder.docs.toImmutableList()
+
+    internal val miniParams = builder.miniParameter.toImmutableList()
+    internal val hasMinis = miniParams.isNotEmpty()
+    internal val miniOptionalNamed =
+        ParameterFilter.filterMini(miniParams) { it.type == ParameterType.NAMED && (it.hasInitializer) }
+    internal val miniRequiredParameters = ParameterFilter.filterMini(miniParams) { it.type == ParameterType.REQUIRED }
+    internal val miniParametersWithDefaults =
+        ParameterFilter.filterMini(miniParams) { it.type == ParameterType.OPTIONAL }
+    internal val miniNormalParameters = ParameterHelper.excludeMiniParameter(
+        miniParams,
+        miniOptionalNamed,
+        miniRequiredParameters,
+        miniParametersWithDefaults
+    )
+    internal val hasMiniAdditionalParameters = miniRequiredParameters.isNotEmpty() || miniOptionalNamed.isNotEmpty()
 
     /**
      * Calls the [ConstructorWriter] to write the given data with the structure of an constructor into a [CodeWriter]

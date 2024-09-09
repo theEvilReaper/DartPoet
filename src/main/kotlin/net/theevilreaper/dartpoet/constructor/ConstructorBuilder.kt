@@ -3,6 +3,7 @@ package net.theevilreaper.dartpoet.constructor
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.parameter.minimized.MinimizedParameter
 
 /**
  * The [ConstructorBuilder] allows the creation of a constructor for the programming language Dart.
@@ -25,6 +26,8 @@ class ConstructorBuilder internal constructor(
     internal val initializer: CodeBlock.Builder = CodeBlock.builder()
     internal val modifiers: MutableList<DartModifier> = mutableListOf(*modifiers)
     internal val docs: MutableList<CodeBlock> = mutableListOf()
+
+    internal val miniParameter: MutableList<MinimizedParameter> = mutableListOf()
 
     /**
      * Add a comment over for the extension class.
@@ -92,6 +95,14 @@ class ConstructorBuilder internal constructor(
      */
     fun parameter(parameterSpec: ParameterSpec) = apply {
         this.parameters += parameterSpec
+    }
+
+    fun mini(miniParameterSpec: MinimizedParameter) = apply {
+        this.miniParameter += miniParameterSpec
+    }
+
+    fun minis(vararg miniParameterSpec: MinimizedParameter) = apply {
+        this.miniParameter += miniParameterSpec
     }
 
     /**

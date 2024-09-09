@@ -5,6 +5,7 @@ import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.DocumentationAppender
 import net.theevilreaper.dartpoet.code.Writeable
 import net.theevilreaper.dartpoet.constructor.ConstructorSpec
+import net.theevilreaper.dartpoet.parameter.minimized.MinimizedParameter
 import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.util.NEW_LINE
 import net.theevilreaper.dartpoet.util.SEMICOLON
@@ -15,7 +16,8 @@ internal class ConstructorWriter : Writeable<ConstructorSpec>, DocumentationAppe
     override fun write(spec: ConstructorSpec, writer: CodeWriter) {
         emitDocumentation(spec.docs, writer)
         if (spec.modifiers.contains(DartModifier.CONST)) {
-            writer.emit("${DartModifier.CONST.identifier}·")
+            writer.emit(DartModifier.CONST.identifier)
+            writer.emitSpace()
         }
 
         writer.emit(spec.name)
@@ -24,8 +26,8 @@ internal class ConstructorWriter : Writeable<ConstructorSpec>, DocumentationAppe
             writer.emit(".${spec.named}")
         }
 
-        val parameterData: ParameterData = ParameterData.fromConstructor(spec)
-        ParameterHelper.writeParameters(parameterData, writer)
+        val parameterData: ParameterData<MinimizedParameter> = ParameterData.fromConstructor(spec)
+        ParameterHelper.writeMiniParameters(parameterData, writer)
 
         if (spec.isLambda) {
             writer.emit("·=>$NEW_LINE")
