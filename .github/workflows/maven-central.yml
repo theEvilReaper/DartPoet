@@ -18,8 +18,6 @@ on:
       - "Test PR"
     types:
       - completed
-  release:
-    types: [created]
 jobs:
   publish:
     runs-on: ubuntu-latest
