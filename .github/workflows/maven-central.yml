@@ -12,7 +12,6 @@ name: Publish package to the Maven Central Repository
 on:
   push:
     branches:
-      - main
       - develop
   workflow_run:
     workflows:
