@@ -1,0 +1,42 @@
+name: Release to Maven Central
+on:
+  push:
+    tags:
+      - '*'
+jobs:
+  build:
+    # Run on all label events (won't be duplicated) or all push events or on PR syncs not from the same repo
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v3
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          cache: gradle
+          java-version: 21
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: Clean Build
+        run: |
+          git config --global user.email "no-reply@github.com"
+          git config --global user.name "Github Actions"
+          ./gradlew jar
+      - name: Publish to Central via Tag
+        run: |
+          ./gradlew publish closeAndReleaseSonatypeStagingRepository -PforceSign=true
+        env:
+          TAG_VERSION: ${{ github.ref_name }}
+          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.PGP_SECRET }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.PGP_PASSPHRASE  }}

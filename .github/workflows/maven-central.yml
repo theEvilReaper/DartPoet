@@ -12,15 +12,12 @@ name: Publish package to the Maven Central Repository
 on:
   push:
     branches:
-      - main
       - develop
   workflow_run:
     workflows:
       - "Test PR"
     types:
       - completed
-  release:
-    types: [created]
 jobs:
   publish:
     runs-on: ubuntu-latest
