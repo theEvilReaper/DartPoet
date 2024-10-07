@@ -21,6 +21,7 @@ class EnumPropertySpec internal constructor(
     internal val parameters = builder.parameters.toImmutableList()
     internal val hasParameter = builder.parameters.isNotEmpty()
     internal val annotations = builder.annotations.toImmutableSet()
+    internal val useVariableName: Boolean = builder.useVariableName
 
     /**
      * Contains some checks for the variable.
@@ -28,8 +29,11 @@ class EnumPropertySpec internal constructor(
      */
     init {
         check(name.trim().isNotEmpty()) { "The name of a EnumProperty can't be empty" }
-    }
 
+        if (useVariableName && parameters.isEmpty()) {
+            throw IllegalStateException("The option 'useVariableName' can't be used without any parameters")
+        }
+    }
 
     internal fun write(codeWriter: CodeWriter) {
         WriterHelper.enumPropertyWriter.write(this, codeWriter)
@@ -50,6 +54,9 @@ class EnumPropertySpec internal constructor(
         builder.annotations.addAll(this.annotations)
         builder.genericValueCast = this.generic
         builder.parameters.addAll(this.parameters)
+        if (useVariableName) {
+            builder.useVariableName()
+        }
         return builder
     }
 

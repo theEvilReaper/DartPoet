@@ -21,6 +21,11 @@ class EnumPropertyBuilder(
     internal var genericValueCast: TypeName? = null
     internal val parameters: MutableList<CodeBlock> = mutableListOf()
     internal val annotations: MutableList<AnnotationSpec> = mutableListOf()
+    internal var useVariableName: Boolean = false
+
+    fun useVariableName() = apply {
+        useVariableName = !useVariableName
+    }
 
     /**
      * Adds a new [AnnotationSpec] instance to the property.

@@ -128,4 +128,60 @@ class EnumClassTest {
             """.trimIndent()
         )
     }
+
+    @Test
+    fun `test enum class with required parameters`() {
+        val enumClass = ClassSpec.enumClass("Vehicle")
+            .properties(
+                PropertySpec.builder("tires", Int::class)
+                    .modifier { DartModifier.FINAL }.build(),
+                PropertySpec.builder("passengers", Int::class)
+                    .modifier { DartModifier.FINAL }.build()
+
+            )
+            .enumProperty(
+                EnumPropertySpec.builder("car")
+                    .parameter("%L", 4)
+                    .parameter("%L", 6)
+                    .build()
+            )
+            .enumProperty(
+                EnumPropertySpec.builder("bus")
+                    .parameter("%L", 6)
+                    .parameter("%L", 80)
+                    .build()
+
+            )
+            .constructor(
+                ConstructorSpec
+                    .builder("Vehicle")
+                    .modifier(DartModifier.CONST)
+                    .parameter(
+                        ParameterSpec.required("tires").build()
+                    )
+                    .parameter(
+                        ParameterSpec.required("passengers").build()
+                    )
+                    .build()
+            )
+            .endWithNewLine(true)
+            .build()
+
+        assertThat(enumClass.toString()).isEqualTo(
+            """
+            enum Vehicle {
+            
+              car(tires: 4, passengers: 6),
+              bus(tires: 6, passengers: 80);
+            
+              final int tires;
+              final int passengers;
+            
+              const Vehicle({required this.tires, required this.passengers});
+            
+            }
+            
+            """.trimIndent()
+        )
+    }
 }
