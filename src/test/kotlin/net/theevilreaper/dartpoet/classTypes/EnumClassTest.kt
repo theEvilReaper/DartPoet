@@ -4,8 +4,9 @@ import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.DartFile
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.clazz.ClassSpec
-import net.theevilreaper.dartpoet.enum.EnumPropertySpec
+import net.theevilreaper.dartpoet.enum.EnumEntrySpec
 import net.theevilreaper.dartpoet.constructor.ConstructorSpec
+import net.theevilreaper.dartpoet.enum.parameter.EnumParameterSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
 import org.junit.jupiter.api.DisplayName
@@ -38,9 +39,9 @@ class EnumClassTest {
                 {
                     ClassSpec.enumClass("TestEnum")
                         .enumProperties(
-                            EnumPropertySpec.builder("test")
-                                .parameter("%C", "Test")
-                                .parameter("%L", "10")
+                            EnumEntrySpec.builder("test")
+                                .parameter(EnumParameterSpec.from("%C", "Test"))
+                                .parameter(EnumParameterSpec.from("%L", "10"))
                                 .build()
                         )
                         .property(PropertySpec.builder("name", String::class).build())
@@ -56,7 +57,7 @@ class EnumClassTest {
         )
     }
 
-    @ParameterizedTest(name = "Test cases for invalid enum definitions")
+    @ParameterizedTest(name = "Test cases for invalid enum definitions {index}")
     @MethodSource("invalidEnums")
     fun `test invalid enum creation`(classSpec: () -> Unit, message: String) {
         val exception = assertThrows<IllegalStateException> { classSpec() }
@@ -91,13 +92,21 @@ class EnumClassTest {
 
                     )
                     .enumProperties(
-                        EnumPropertySpec.builder("dashboard")
-                            .parameter("%C", "Dashboard")
-                            .parameter("%C", "/dashboard")
+                        EnumEntrySpec.builder("dashboard")
+                            .parameter {
+                                EnumParameterSpec.from("%C", "Dashboard")
+                            }
+                            .parameter {
+                                EnumParameterSpec.from("%C", "/dashboard")
+                            }
                             .build(),
-                        EnumPropertySpec.builder("build")
-                            .parameter("%C", "Build")
-                            .parameter("%C", "/build")
+                        EnumEntrySpec.builder("build")
+                            .parameter {
+                                EnumParameterSpec.from("%C", "Build")
+                            }
+                            .parameter {
+                                EnumParameterSpec.from("%C", "/build")
+                            }
                             .build()
                     )
                     .constructor(
@@ -140,15 +149,23 @@ class EnumClassTest {
 
             )
             .enumProperty(
-                EnumPropertySpec.builder("car")
-                    .parameter("%L", 4)
-                    .parameter("%L", 6)
+                EnumEntrySpec.builder("car")
+                    .parameter {
+                        EnumParameterSpec.required("%L", 4, variableRef = "tires")
+                    }
+                    .parameter {
+                        EnumParameterSpec.required("%L", 6, variableRef = "passengers")
+                    }
                     .build()
             )
             .enumProperty(
-                EnumPropertySpec.builder("bus")
-                    .parameter("%L", 6)
-                    .parameter("%L", 80)
+                EnumEntrySpec.builder("bus")
+                    .parameter {
+                        EnumParameterSpec.required("%L", 6, variableRef = "tires")
+                    }
+                    .parameter {
+                        EnumParameterSpec.required("%L", 80, variableRef = "passengers")
+                    }
                     .build()
 
             )
