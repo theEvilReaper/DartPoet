@@ -1,16 +1,17 @@
 package net.theevilreaper.dartpoet.enumeration.parameter
 
 import net.theevilreaper.dartpoet.enum.parameter.EnumParameterSpec
+import net.theevilreaper.dartpoet.util.EMPTY_STRING
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.junit.jupiter.api.Assertions.*
 
 class EnumParameterSpecTest {
 
     @Test
     fun `test enum parameter creation with empty code block`() {
         assertThrows<IllegalStateException>("The data block can't be empty") {
-            EnumParameterSpec.from("", "", false)
+            EnumParameterSpec.from(EMPTY_STRING, EMPTY_STRING, false)
         }
     }
 
@@ -24,7 +25,7 @@ class EnumParameterSpecTest {
     @Test
     fun `test enum parameter creation with missing variable reference`() {
         assertThrows<IllegalArgumentException>("The variable reference can't be null when the parameter is required") {
-            EnumParameterSpec.required("%L", "test", variableRef = "")
+            EnumParameterSpec.required("%L", "test", variableRef = EMPTY_STRING)
         }
     }
 
