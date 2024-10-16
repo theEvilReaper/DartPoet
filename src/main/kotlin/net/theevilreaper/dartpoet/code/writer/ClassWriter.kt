@@ -7,7 +7,7 @@ import net.theevilreaper.dartpoet.code.*
 import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.code.emitConstructors
 import net.theevilreaper.dartpoet.code.emitFunctions
-import net.theevilreaper.dartpoet.enum.EnumPropertySpec
+import net.theevilreaper.dartpoet.enum.EnumEntrySpec
 import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.util.CURLY_CLOSE
 import net.theevilreaper.dartpoet.util.CURLY_OPEN
@@ -50,9 +50,7 @@ internal class ClassWriter : Writeable<ClassSpec> {
         writer.indent()
 
         if (spec.isEnum) {
-            spec.enumPropertyStack.emit(writer) {
-                it.write(writer)
-            }
+            spec.enumPropertyStack.emit(writer)
 
             if (!spec.hasNoContent) {
                 writer.emit(SEMICOLON)
@@ -154,15 +152,16 @@ internal class ClassWriter : Writeable<ClassSpec> {
         writer.emitCode("%T·", spec.superClass)
     }
 
-    private fun List<EnumPropertySpec>.emit(
+    private fun List<EnumEntrySpec>.emit(
         codeWriter: CodeWriter,
-        emitBlock: (EnumPropertySpec) -> Unit = { it.write(codeWriter) }
+        emitBlock: (EnumEntrySpec) -> Unit = { it.write(codeWriter) }
     ) {
         if (isEmpty()) return
         forEachIndexed { index, enumPropertySpec ->
             emitBlock(enumPropertySpec)
             if (index < size - 1) {
-                codeWriter.emit(",$NEW_LINE")
+                codeWriter.emit(",")
+                codeWriter.emit(NEW_LINE)
             }
         }
     }
