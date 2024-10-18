@@ -4,14 +4,17 @@ import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
+import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asTypeName
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
-import kotlin.test.assertEquals
 
 @DisplayName("Test property writer")
 class PropertyWriterTest {
@@ -72,6 +75,17 @@ class PropertyWriterTest {
     }
 
     @Test
+    fun `test property which should not have double nullable marker`() {
+        val typeName: TypeName = String::class.asTypeName().copy(nullable = true)
+        assertNotNull(typeName)
+        assertTrue(typeName.isNullable)
+
+        val property: PropertySpec = PropertySpec.builder("test", typeName).nullable().build()
+        assertThat(property.toString()).isEqualTo("String? test;")
+        assertThat(property.toString()).isNotEqualTo("String?? test;")
+    }
+
+    @Test
     fun `write simple variable with one annotation`() {
         val property = PropertySpec.builder("age", Int::class)
             .annotation { AnnotationSpec.builder("jsonIgnore").build() }
@@ -113,5 +127,13 @@ class PropertyWriterTest {
             String? name;
             """.trimIndent()
         )
+    }
+
+    @Test
+    fun `test property which is nullable`() {
+        val property = PropertySpec.builder("name", String::class).nullable().build()
+        assertNotNull(property)
+        assertTrue(property.nullable)
+        assertThat(property.toString()).isEqualTo("String? name;")
     }
 }

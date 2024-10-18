@@ -3,6 +3,7 @@ package net.theevilreaper.dartpoet.code.writer
 import net.theevilreaper.dartpoet.code.*
 import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.property.PropertySpec
+import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.SEMICOLON
 import net.theevilreaper.dartpoet.util.SPACE
@@ -24,9 +25,7 @@ internal class PropertyWriter : Writeable<PropertySpec>, DocumentationAppender,
      */
     override fun write(spec: PropertySpec, writer: CodeWriter) {
         emitDocumentation(spec.docs, writer)
-        spec.annotations.emitAnnotations(writer) {
-            it.write(writer, inline = false)
-        }
+        spec.annotations.emitAnnotations(writer) { it.write(writer, inline = false) }
 
         val modifierString = StringHelper.concatData(
             spec.modifiers,
@@ -36,7 +35,10 @@ internal class PropertyWriter : Writeable<PropertySpec>, DocumentationAppender,
         writer.emit(modifierString)
 
         if (spec.type != null) {
-            writer.emitCode("%T", spec.type)
+            when (spec.canEmitNullable) {
+                true -> writer.emitCode("%T%L", spec.type, "?")
+                else -> writer.emitCode("%T", spec.type)
+            }
             writer.emitSpace()
         }
 

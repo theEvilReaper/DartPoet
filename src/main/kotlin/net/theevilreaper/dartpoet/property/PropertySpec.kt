@@ -27,6 +27,7 @@ class PropertySpec internal constructor(
 ) {
     internal var name = builder.name
     internal var type = builder.type
+    internal val nullable = builder.nullable
     internal var annotations: Set<AnnotationSpec> = builder.annotations.toImmutableSet()
     internal var initBlock = builder.initBlock
     internal var isPrivate = builder.modifiers.contains(DartModifier.PRIVATE)
@@ -44,10 +45,12 @@ class PropertySpec internal constructor(
             }
         }.filter { it != DartModifier.PRIVATE && it != DartModifier.PUBLIC }.toImmutableSet()
     internal val hasModifiers: Boolean = modifiers.isNotEmpty()
+    internal val canEmitNullable: Boolean = nullable && type != null && !type!!.isNullable
 
     init {
         require(name.trim().isNotEmpty()) { "The name of a property can't be empty" }
         require(!(builder.type == null && !isConst)) { "Only a const property can have no type" }
+        check(!(builder. type == null && nullable)) { "A nullable property needs a type" }
         require(!(isConst && this.initBlock.isEmpty())) { "A const variable needs an init block" }
     }
 
@@ -77,6 +80,7 @@ class PropertySpec internal constructor(
         builder.initBlock = this.initBlock
         builder.docs.addAll(this.docs)
         builder.modifiers.addAll(this.modifiers)
+        builder.nullable = nullable
         return builder
     }
 
