@@ -37,6 +37,9 @@ internal class PropertyWriter : Writeable<PropertySpec>, DocumentationAppender,
 
         if (spec.type != null) {
             writer.emitCode("%T", spec.type)
+            if (spec.nullable) {
+                writer.emit("?")
+            }
             writer.emitSpace()
         }
 
