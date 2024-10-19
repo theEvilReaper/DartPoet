@@ -4,6 +4,7 @@ import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.enum.EnumEntrySpec
+import net.theevilreaper.dartpoet.parameter.ParameterType
 import net.theevilreaper.dartpoet.util.COMMA_SEPARATOR
 import net.theevilreaper.dartpoet.util.ROUND_CLOSE
 import net.theevilreaper.dartpoet.util.ROUND_OPEN
@@ -23,10 +24,12 @@ import net.theevilreaper.dartpoet.util.ROUND_OPEN
  * @since 1.0.0
  * @author theEvilReaper
  */
-data class EnumParameterSpec(
+class EnumParameterSpec internal constructor(
     val dataBlock: CodeBlock,
-    val required: Boolean,
-    val variableRef: String? = null
+    val type: ParameterType = ParameterType.POSITIONAL,
+    val required: Boolean = false,
+    val variableRef: String? = null,
+    val nullable: Boolean = false
 ) {
     init {
         check(!dataBlock.isEmpty()) { "The data block can't be empty" }
@@ -67,12 +70,26 @@ data class EnumParameterSpec(
          * Creates a new [EnumParameterSpec] instance with the given [format] and [args].
          * @param format the format string
          * @param args the arguments for the format string
+         * @param variableRef the variable reference for the parameter
          * @return the created instance
          */
         @JvmStatic
-        fun from(format: String, vararg args: Any): EnumParameterSpec = EnumParameterSpec(
+        fun positional(format: String, vararg args: Any) = EnumParameterSpec(
             CodeBlock.of(format, *args),
-            false
+        )
+
+        /**
+         * Creates a new [EnumParameterSpec] instance with the given [format] and [args].
+         * @param format the format string
+         * @param args the arguments for the format string
+         * @param variableRef the variable reference for the parameter
+         * @return the created instance
+         */
+        @JvmStatic
+        fun named(format: String, vararg args: Any) = EnumParameterSpec(
+            CodeBlock.of(format, *args),
+            ParameterType.NAMED,
+            false,
         )
 
         /**
@@ -85,8 +102,37 @@ data class EnumParameterSpec(
         @JvmStatic
         fun required(format: String, vararg args: Any, variableRef: String) = EnumParameterSpec(
             CodeBlock.of(format, *args),
+            ParameterType.REQUIRED,
             true,
             variableRef
+        )
+
+        /**
+         * Creates a new [EnumParameterSpec] instance with the given [format] and [args].
+         * @param format the format string
+         * @param args the arguments for the format string
+         * @param variableRef the variable reference for the parameter
+         * @return the created instance
+         */
+        @JvmStatic
+        fun optional(format: String, vararg args: Any, variableRef: String) = EnumParameterSpec(
+            CodeBlock.of(format, *args),
+            ParameterType.OPTIONAL,
+            false,
+            variableRef,
+            nullable = true
+        )
+
+        /**
+         * Creates a new [EnumParameterSpec] instance with the given [format] and [args].
+         * @param format the format string
+         * @param args the arguments for the format string
+         * @return the created instance
+         */
+        @JvmStatic
+        @Deprecated("Use positional instead")
+        fun from(format: String, vararg args: Any): EnumParameterSpec = EnumParameterSpec(
+            CodeBlock.of(format, *args),
         )
     }
 }
