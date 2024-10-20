@@ -22,25 +22,26 @@ class EnumParameterExtensionTest {
     @Test
     fun `test single enum parameter write`() {
         val parameters: List<EnumParameterSpec> = listOf(
-            EnumParameterSpec.from("%C", "test"),
+            EnumParameterSpec.positional("%C", "test"),
         )
         assertEquals(1, parameters.size)
         parameters.emitEnumParameterSpecs(codeWriter)
         codeWriter.close()
         assertFalse(builder.isEmpty())
-        Truth.assertThat(builder.toString()).isEqualTo("('test')")
+        Truth.assertThat(builder.toString()).isEqualTo("'test'")
     }
 
     @Test
     fun `test multiple enum parameter write`() {
+        // This test doesn't rely on the sorting logic
         val parameters: List<EnumParameterSpec> = listOf(
             EnumParameterSpec.required("%L", "10", variableRef = "amount"),
-            EnumParameterSpec.from("%C", "test"),
+            EnumParameterSpec.positional("%C", "test"),
         )
         assertEquals(2, parameters.size)
         parameters.emitEnumParameterSpecs(codeWriter)
         codeWriter.close()
         assertFalse(builder.isEmpty())
-        Truth.assertThat(builder.toString()).isEqualTo("(amount: 10, 'test')")
+        Truth.assertThat(builder.toString()).isEqualTo("amount: 10, 'test'")
     }
 }
