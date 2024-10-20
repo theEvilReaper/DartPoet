@@ -21,14 +21,31 @@ internal class EnumEntryWriter : Writeable<EnumEntrySpec> {
      * @param writer the [CodeWriter] instance to apply the code
      */
     override fun write(spec: EnumEntrySpec, writer: CodeWriter) {
-        spec.annotations.emitAnnotations(codeWriter = writer, inLineAnnotations = false)
+        spec.annotations.emitAnnotations(writer, inLineAnnotations = false)
         writer.emit(spec.name)
         if (spec.hasGeneric) {
             writer.emitCode("<%T>", spec.generic!!)
         }
 
-        if (spec.hasParameter) {
-            spec.parameters.emitEnumParameterSpecs(codeWriter = writer)
+        if (!spec.hasParameters) return
+        writer.emit("(")
+        spec.normalParameters.emitEnumParameterSpecs(writer)
+        if (spec.normalParameters.isNotEmpty() && (spec.hasAdditionalParameters || spec.parametersWithDefaults.isNotEmpty())) {
+            writer.emit(", ")
         }
+
+        if (spec.hasAdditionalParameters) {
+            spec.requiredParameters.emitEnumParameterSpecs(writer)
+            if (spec.optionalNamed.isNotEmpty()) {
+                writer.emit(", ")
+            }
+            spec.optionalNamed.emitEnumParameterSpecs(writer)
+        }
+
+        if (spec.parametersWithDefaults.isNotEmpty()) {
+            spec.parametersWithDefaults.emitEnumParameterSpecs(writer)
+        }
+
+        writer.emit(")")
     }
 }
