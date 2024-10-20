@@ -147,12 +147,10 @@ fun List<EnumParameterSpec>.emitEnumParameterSpecs(
     emitBlock: (EnumParameterSpec) -> Unit = { it.write(codeWriter) }
 ) = with(codeWriter) {
     if (isEmpty()) return@with
-    codeWriter.emit(ROUND_OPEN)
     forEachIndexed { index, parameter ->
         if (index > 0) {
             emit(COMMA_SEPARATOR)
         }
         emitBlock(parameter)
     }
-    codeWriter.emit(ROUND_CLOSE)
 }
