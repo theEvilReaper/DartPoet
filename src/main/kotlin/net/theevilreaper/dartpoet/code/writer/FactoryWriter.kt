@@ -7,6 +7,7 @@ import net.theevilreaper.dartpoet.code.InitializerAppender
 import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.constructor.ConstructorDelegation
 import net.theevilreaper.dartpoet.constructor.factory.FactorySpec
+import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.util.ParameterHelper
 import net.theevilreaper.dartpoet.util.parameter.ParameterData
 
@@ -30,7 +31,7 @@ internal class FactoryWriter : InitializerAppender<FactorySpec>, DocumentationAp
             return
         }
 
-        val parameterData: ParameterData = ParameterData.fromFactory(spec)
+        val parameterData: ParameterData<ParameterSpec> = ParameterData.fromFactory(spec)
         ParameterHelper.writeParameters(parameterData, codeWriter, indent = true, filterExcluded = false)
 
         ConstructorDelegation.appendDelegation(spec.constructorDelegation, spec.initializerBlock, codeWriter)

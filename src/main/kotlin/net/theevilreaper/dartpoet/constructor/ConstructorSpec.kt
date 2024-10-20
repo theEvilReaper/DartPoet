@@ -32,9 +32,9 @@ class ConstructorSpec internal constructor(
     internal val parameters = builder.parameters.toImmutableList()
     internal val hasParameters = parameters.isNotEmpty()
 
-    internal val optionalNamed = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.NAMED && (it.isNullable || it.hasInitializer) }
-    internal val requiredParameters = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.REQUIRED }
-    internal val parametersWithDefaults = ParameterFilter.filterParameter(parameters) { it.parameterType == ParameterType.OPTIONAL }
+    internal val optionalNamed = ParameterFilter.filterParameter(parameters) { it.type == ParameterType.NAMED && (it.isNullable || it.hasInitializer) }
+    internal val requiredParameters = ParameterFilter.filterParameter(parameters) { it.type == ParameterType.REQUIRED }
+    internal val parametersWithDefaults = ParameterFilter.filterParameter(parameters) { it.type == ParameterType.OPTIONAL }
     internal val normalParameters = ParameterHelper.excludeParameters(parameters, optionalNamed, requiredParameters, parametersWithDefaults)
     internal val hasAdditionalParameters = requiredParameters.isNotEmpty() || optionalNamed.isNotEmpty()
 

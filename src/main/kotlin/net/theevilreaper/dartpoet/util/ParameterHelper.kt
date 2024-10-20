@@ -5,7 +5,6 @@ import net.theevilreaper.dartpoet.code.emitParameters
 import net.theevilreaper.dartpoet.code.writer.ConstructorWriter
 import net.theevilreaper.dartpoet.code.writer.FunctionWriter
 import net.theevilreaper.dartpoet.code.writer.TypeDefWriter
-import net.theevilreaper.dartpoet.enum.parameter.EnumParameterSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.util.parameter.ParameterData
 import org.jetbrains.annotations.ApiStatus
@@ -27,23 +26,10 @@ internal object ParameterHelper {
      * @param params the parameters to exclude
      * @return a new list without the given parameters
      */
-    fun excludeParameters(source: List<ParameterSpec>, vararg params: List<ParameterSpec>): List<ParameterSpec> {
+    fun <T : ParameterBase> excludeParameters(source: List<T>, vararg params: List<T>): List<T> {
         if (params.isEmpty()) return source.toImmutableList()
 
-        val parametersToRemove: Set<ParameterSpec> = params.flatMap { it }.toSet()
-        return source.minus(parametersToRemove).toImmutableList()
-    }
-
-    /**
-     * Excludes the given [ParameterSpec] from the source list.
-     * @param source the source list to exclude the parameters from
-     * @param params the parameters to exclude
-     * @return a new list without the given parameters
-     */
-    fun excludeEnumParameters(source: List<EnumParameterSpec>, vararg params: List<EnumParameterSpec>): List<EnumParameterSpec> {
-        if (params.isEmpty()) return source.toImmutableList()
-
-        val parametersToRemove: Set<EnumParameterSpec> = params.flatMap { it }.toSet()
+        val parametersToRemove: Set<T> = params.flatMap { it }.toSet()
         return source.minus(parametersToRemove).toImmutableList()
     }
 
@@ -55,7 +41,7 @@ internal object ParameterHelper {
      * @param filterExcluded whether to filter the excluded parameters
      */
     fun writeParameters(
-        data: ParameterData,
+        data: ParameterData<ParameterSpec>,
         codeWriter: CodeWriter,
         indent: Boolean = false,
         filterExcluded: Boolean = true
@@ -93,7 +79,7 @@ internal object ParameterHelper {
      * @param filterExcluded whether to filter the excluded parameters
      */
     private fun emitRequiredAndNamedParameter(
-        data: ParameterData,
+        data: ParameterData<ParameterSpec>,
         codeWriter: CodeWriter,
         indent: Boolean = false,
         filterExcluded: Boolean = true
