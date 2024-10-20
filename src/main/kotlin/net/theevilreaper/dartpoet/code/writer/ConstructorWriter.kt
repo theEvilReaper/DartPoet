@@ -5,6 +5,7 @@ import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.DocumentationAppender
 import net.theevilreaper.dartpoet.code.Writeable
 import net.theevilreaper.dartpoet.constructor.ConstructorSpec
+import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.util.NEW_LINE
 import net.theevilreaper.dartpoet.util.SEMICOLON
@@ -25,7 +26,7 @@ internal class ConstructorWriter : Writeable<ConstructorSpec>, DocumentationAppe
             writer.emit(".${spec.named}")
         }
 
-        val parameterData: ParameterData = ParameterData.fromConstructor(spec)
+        val parameterData: ParameterData<ParameterSpec> = ParameterData.fromConstructor(spec)
         ParameterHelper.writeParameters(parameterData, writer)
 
         if (spec.isLambda) {

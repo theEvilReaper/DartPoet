@@ -52,7 +52,7 @@ class ParameterSpecTest {
         val specAsBuilder = parameterSpec.toBuilder()
         assertNotNull(parameterSpec)
         assertEquals(parameterSpec.name, specAsBuilder.name)
-        assertEquals(parameterSpec.type, specAsBuilder.typeName)
+        assertEquals(parameterSpec.typeName, specAsBuilder.typeName)
         assertEquals(parameterSpec.isNullable, specAsBuilder.nullable)
         assertTrue { specAsBuilder.initializer!!.isNotEmpty() }
         assertContentEquals(parameterSpec.annotations, specAsBuilder.annotations)

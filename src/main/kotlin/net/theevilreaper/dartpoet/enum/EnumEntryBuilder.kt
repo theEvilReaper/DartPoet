@@ -2,25 +2,32 @@ package net.theevilreaper.dartpoet.enum
 
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
+import net.theevilreaper.dartpoet.enum.parameter.EnumParameterSpec
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asClassName
 import kotlin.reflect.KClass
 
 /**
- * Builder for creating instances of [EnumPropertySpec].
- * Contains methods to add parameter objects and set a generic cast to the property.
- * @param name the name for the property
+ * A builder class for constructing instances of [EnumEntrySpec].
+ * This builder provides methods to add annotations, parameters, and set a generic cast type for the enum entry.
+ *
+ * The class supports the addition of multiple annotations and parameters, as well as setting a generic type using
+ * either a [TypeName], [ClassName], or a [KClass]. Once all properties are set, it constructs an instance of [EnumEntrySpec].
+ *
+ * @param name The name of the enum entry being built.
+ *
  * @version 1.0.0
  * @since 1.0.0
+ *
  * @author theEvilReaper
  */
-class EnumPropertyBuilder(
+class EnumEntryBuilder(
     val name: String
 ) {
     internal var genericValueCast: TypeName? = null
-    internal val parameters: MutableList<CodeBlock> = mutableListOf()
     internal val annotations: MutableList<AnnotationSpec> = mutableListOf()
+    internal val parameters: MutableList<EnumParameterSpec> = mutableListOf()
 
     /**
      * Adds a new [AnnotationSpec] instance to the property.
@@ -42,21 +49,20 @@ class EnumPropertyBuilder(
 
     /**
      * Adds a new parameter to the enum property.
-     * @param format The format for the parameter
-     * @param args The arguments for the format
+     * @param parameter the parameter to add
      * @return the builder instance
      */
-    fun parameter(format: String, vararg args: Any) = apply {
-        parameter(CodeBlock.of(format, *args))
+    fun parameter(parameter: () -> EnumParameterSpec) = apply {
+        this.parameters += parameter()
     }
 
     /**
      * Add a new parameter as [CodeBlock] to the property.
-     * @param block the [CodeBlock] to add
+     * @param enumParameterSpec the parameter to add
      * @return the builder instance
      */
-    fun parameter(block: CodeBlock) = apply {
-        this.parameters += block
+    fun parameter(enumParameterSpec: EnumParameterSpec) = apply {
+        this.parameters += enumParameterSpec
     }
 
     /**
@@ -81,10 +87,8 @@ class EnumPropertyBuilder(
     fun generic(value: KClass<*>) = apply { this.genericValueCast = value.asClassName() }
 
     /**
-     * Creates a new instance from the [EnumPropertySpec] with the builder instance as parameter.
-     * @return a created instance from an [EnumPropertySpec]
+     * Creates a new instance from the [EnumEntrySpec] with the builder instance as parameter.
+     * @return a created instance from an [EnumEntrySpec]
      */
-    fun build(): EnumPropertySpec {
-        return EnumPropertySpec(this)
-    }
+    fun build(): EnumEntrySpec = EnumEntrySpec(this)
 }

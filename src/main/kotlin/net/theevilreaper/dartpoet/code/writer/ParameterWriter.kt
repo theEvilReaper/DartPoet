@@ -23,15 +23,15 @@ internal class ParameterWriter : Writeable<ParameterSpec>, InitializerAppender<P
     override fun write(spec: ParameterSpec, writer: CodeWriter) {
         spec.annotations.emitAnnotations(writer, endWithNewLine = false)
 
-        if (spec.parameterType == ParameterType.REQUIRED) {
+        if (spec.type == ParameterType.REQUIRED) {
             writer.emit(DartModifier.REQUIRED.identifier)
             writer.emitSpace()
         }
 
-        if (spec.type != null) {
-            writer.emitCode("%T", spec.type)
+        if (spec.typeName != null) {
+            writer.emitCode("%T", spec.typeName)
         }
-        val emitNullable = if (spec.isNullable && spec.type != null) "?·" else if (spec.type != null) "·" else EMPTY_STRING
+        val emitNullable = if (spec.isNullable && spec.typeName != null) "?·" else if (spec.typeName != null) "·" else EMPTY_STRING
         writer.emit(emitNullable)
         if (spec.hasNoTypeName) {
             writer.emit("this.")

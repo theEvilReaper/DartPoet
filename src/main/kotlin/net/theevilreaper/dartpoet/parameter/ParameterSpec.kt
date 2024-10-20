@@ -8,6 +8,7 @@ import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asClassName
 import net.theevilreaper.dartpoet.type.asTypeName
+import net.theevilreaper.dartpoet.util.ParameterBase
 import net.theevilreaper.dartpoet.util.toImmutableSet
 import kotlin.reflect.KClass
 
@@ -26,12 +27,11 @@ import kotlin.reflect.KClass
  */
 class ParameterSpec internal constructor(
     builder: ParameterBuilder
-) {
-    internal val parameterType: ParameterType = builder.type
+): ParameterBase(builder.type, builder.nullable) {
     internal val name = builder.name
-    internal val type = builder.typeName
+    internal val typeName = builder.typeName
     internal val isNamed = builder.named
-    internal val isNullable = builder.nullable
+    internal val isNullable = nullable
     internal val initializer = builder.initializer
     internal val annotations = builder.annotations.toImmutableSet()
     internal val hasInitializer = initializer != null && initializer.isNotEmpty()
@@ -66,7 +66,7 @@ class ParameterSpec internal constructor(
      * @return the created [ParameterBuilder] instance
      */
     fun toBuilder(): ParameterBuilder {
-        val builder = ParameterBuilder(this.name, this.parameterType, this.type)
+        val builder = ParameterBuilder(this.name, this.type, this.typeName)
         builder.named = isNamed
         builder.nullable = isNullable
         builder.annotations(*this.annotations.toTypedArray())
