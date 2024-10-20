@@ -6,8 +6,7 @@ import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.enum.EnumEntrySpec
 import net.theevilreaper.dartpoet.parameter.ParameterType
 import net.theevilreaper.dartpoet.util.COMMA_SEPARATOR
-import net.theevilreaper.dartpoet.util.ROUND_CLOSE
-import net.theevilreaper.dartpoet.util.ROUND_OPEN
+import net.theevilreaper.dartpoet.util.ParameterBase
 
 /**
  * The [EnumParameterSpec] represents the value entries which a [EnumEntrySpec] can have.
@@ -26,11 +25,11 @@ import net.theevilreaper.dartpoet.util.ROUND_OPEN
  */
 class EnumParameterSpec internal constructor(
     val dataBlock: CodeBlock,
-    val type: ParameterType = ParameterType.POSITIONAL,
+    type: ParameterType = ParameterType.POSITIONAL,
     val required: Boolean = false,
     val variableRef: String? = null,
-    val nullable: Boolean = false
-) {
+    nullable: Boolean = false
+): ParameterBase(type, nullable) {
     init {
         check(!dataBlock.isEmpty()) { "The data block can't be empty" }
         require(dataBlock.args.size <= 1) { "The data block can't have more than one argument" }
