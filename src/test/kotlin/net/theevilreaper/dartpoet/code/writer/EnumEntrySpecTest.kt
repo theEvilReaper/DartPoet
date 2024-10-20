@@ -11,7 +11,7 @@ import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
 
 @DisplayName("Test enum property writer")
-class EnumPropertyWriterTest {
+class EnumEntrySpecTest {
 
     companion object {
 
