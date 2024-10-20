@@ -7,6 +7,9 @@ import net.theevilreaper.dartpoet.code.writer.EnumEntryWriter
 import net.theevilreaper.dartpoet.util.toImmutableList
 import net.theevilreaper.dartpoet.util.toImmutableSet
 import net.theevilreaper.dartpoet.enum.parameter.EnumParameterSpec
+import net.theevilreaper.dartpoet.parameter.ParameterType
+import net.theevilreaper.dartpoet.util.ParameterFilter
+import net.theevilreaper.dartpoet.util.ParameterHelper
 
 /**
  * The [EnumEntrySpec] represents a single entry in an enum class.
@@ -22,9 +25,17 @@ class EnumEntrySpec internal constructor(
     internal val name = builder.name
     internal val generic = builder.genericValueCast
     internal val hasGeneric = builder.genericValueCast != null
-    internal val parameters = builder.parameters.toImmutableList()
-    internal val hasParameter = builder.parameters.isNotEmpty()
     internal val annotations = builder.annotations.toImmutableSet()
+
+    internal val parameters = builder.parameters.toImmutableList()
+    internal val hasParameters = parameters.isNotEmpty()
+
+    internal val optionalNamed = ParameterFilter.filterEnumParameter(parameters) { it.type == ParameterType.NAMED && it.nullable }
+    internal val requiredParameters = ParameterFilter.filterEnumParameter(parameters) { it.type == ParameterType.REQUIRED }
+    internal val parametersWithDefaults = ParameterFilter.filterEnumParameter(parameters) { it.type == ParameterType.OPTIONAL }
+    internal val normalParameters = ParameterHelper.excludeEnumParameters(parameters, optionalNamed, requiredParameters, parametersWithDefaults)
+    internal val hasAdditionalParameters = requiredParameters.isNotEmpty() || optionalNamed.isNotEmpty()
+
 
     /**
      * Contains some checks for the variable.
