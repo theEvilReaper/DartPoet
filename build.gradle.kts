@@ -26,7 +26,6 @@ dependencies {
 }
 
 tasks {
-
     test {
         useJUnitPlatform()
         testLogging {
