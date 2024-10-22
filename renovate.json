@@ -7,6 +7,9 @@
   "labels": [
     "renovate"
   ],
+  "commitMessagePrefix": "Update",
+  "commitMessageAction": "update",
+  "commitMessageTopic": "{{depName}} from {{currentVersion}} to v{{newVersion}}",
   "packageRules": [
     {
       "matchUpdateTypes": [
@@ -18,7 +21,6 @@
       "schedule": [
         "after 10pm and before 6:00am every day"
       ],
-      "commitMessage": "Update {{depName}} from {{currentVersion}} to {{newVersion}}",
       "ignoreTests": true
     },
     {
@@ -28,8 +30,7 @@
       "automerge": false,
       "schedule": [
         "before 6:00am every friday"
-      ],
-      "commitMessage": "Update {{depName}} from {{currentVersion}} to {{newVersion}}"
+      ]
     }
   ],
   "vulnerabilityAlerts": {
