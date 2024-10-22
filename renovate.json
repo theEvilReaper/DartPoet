@@ -8,7 +8,6 @@
     "renovate"
   ],
   "commitMessagePrefix": "Update",
-  "commitMessageAction": "update",
   "commitMessageTopic": "{{depName}} from {{currentVersion}} to v{{newVersion}}",
   "packageRules": [
     {
