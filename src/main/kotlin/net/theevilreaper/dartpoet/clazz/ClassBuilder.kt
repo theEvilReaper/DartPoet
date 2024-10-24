@@ -3,7 +3,7 @@ package net.theevilreaper.dartpoet.clazz
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.InheritKeyword
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
-import net.theevilreaper.dartpoet.enum.EnumPropertySpec
+import net.theevilreaper.dartpoet.enum.EnumEntrySpec
 import net.theevilreaper.dartpoet.constructor.ConstructorBase
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.meta.SpecData
@@ -35,7 +35,7 @@ class ClassBuilder internal constructor(
     internal val propertyStack: MutableList<PropertySpec> = mutableListOf()
     internal val genericCasts: MutableList<TypeName> = mutableListOf()
     internal val functionStack: MutableList<FunctionSpec> = mutableListOf()
-    internal val enumPropertyStack: MutableList<EnumPropertySpec> = mutableListOf()
+    internal val enumPropertyStack: MutableList<EnumEntrySpec> = mutableListOf()
     internal val constantStack: MutableSet<ConstantPropertySpec> = mutableSetOf()
     internal val typedefs: MutableList<TypeDefSpec> = mutableListOf()
     internal var superClass: TypeName? = null
@@ -75,19 +75,19 @@ class ClassBuilder internal constructor(
     }
 
     /**
-     * Add a [EnumPropertySpec] to the spec.
-     * @param enumPropertySpec the property to add
+     * Add a [EnumEntrySpec] to the spec.
+     * @param enumEntrySpec the property to add
      */
-    fun enumProperty(enumPropertySpec: EnumPropertySpec) = apply {
+    fun enumProperty(enumEntrySpec: EnumEntrySpec) = apply {
         require(classType == ClassType.ENUM) { "Only a enum class can have enum properties" }
-        this.enumPropertyStack += enumPropertySpec
+        this.enumPropertyStack += enumEntrySpec
     }
 
     /**
-     * Add an array of [EnumPropertySpec] to the spec.
+     * Add an array of [EnumEntrySpec] to the spec.
      * @param properties the properties to add
      */
-    fun enumProperties(vararg properties: EnumPropertySpec) = apply {
+    fun enumProperties(vararg properties: EnumEntrySpec) = apply {
         require(classType == ClassType.ENUM) { "Only a enum class can have enum properties" }
         this.enumPropertyStack += properties
     }

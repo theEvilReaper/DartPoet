@@ -25,7 +25,7 @@ internal object WriterHelper {
     internal val constantPropertyWriter by lazy { ConstantPropertyWriter() }
     internal val constructorWriter by lazy { ConstructorWriter() }
     internal val fileWriter by lazy { DartFileWriter() }
-    internal val enumPropertyWriter by lazy { EnumPropertyWriter() }
+    internal val enumEntryWriter by lazy { EnumEntryWriter() }
     internal val extensionWriter by lazy { ExtensionWriter() }
     internal val factoryWriter by lazy { FactoryWriter() }
     internal val functionWriter by lazy { FunctionWriter() }

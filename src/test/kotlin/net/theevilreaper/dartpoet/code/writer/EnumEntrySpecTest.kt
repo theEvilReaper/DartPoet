@@ -1,7 +1,8 @@
 package net.theevilreaper.dartpoet.code.writer
 
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
-import net.theevilreaper.dartpoet.enum.EnumPropertySpec
+import net.theevilreaper.dartpoet.enum.EnumEntrySpec
+import net.theevilreaper.dartpoet.enum.parameter.EnumParameterSpec
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.params.ParameterizedTest
@@ -10,30 +11,34 @@ import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
 
 @DisplayName("Test enum property writer")
-class EnumPropertyWriterTest {
+class EnumEntrySpecTest {
 
     companion object {
 
         @JvmStatic
         private fun properties() = Stream.of(
-            Arguments.of(EnumPropertySpec.builder("test").generic(String::class).build(), "test<String>"),
+            Arguments.of(EnumEntrySpec.builder("test").generic(String::class).build(), "test<String>"),
             Arguments.of(
-                EnumPropertySpec.builder("test")
-                    .parameter("%C", "/dash")
+                EnumEntrySpec.builder("test")
+                    .parameter(
+                        EnumParameterSpec.from("%C", "/dash")
+                    )
                     .build(),
                 "test('/dash')"
             ),
             Arguments.of(
-                EnumPropertySpec.builder("test")
-                    .parameter("%L", "10")
+                EnumEntrySpec.builder("test")
+                    .parameter(
+                        EnumParameterSpec.from("%L", "10")
+                    )
                     .build(),
                 "test(10)"
             ),
             Arguments.of(
-                EnumPropertySpec.builder("dashboard")
-                    .parameter("%C", "Dashboard")
-                    .parameter("%C", "/dashboard")
-                    .parameter("%L", "false")
+                EnumEntrySpec.builder("dashboard")
+                    .parameter(EnumParameterSpec.from("%C", "Dashboard"))
+                    .parameter(EnumParameterSpec.from("%C", "/dashboard"))
+                    .parameter(EnumParameterSpec.from("%L", "false"))
                     .build(),
                 "dashboard('Dashboard', '/dashboard', false)"
             ),
@@ -42,7 +47,7 @@ class EnumPropertyWriterTest {
         @JvmStatic
         private fun propertiesWithAnnotations() = Stream.of(
             Arguments.of(
-                EnumPropertySpec.builder("test")
+                EnumEntrySpec.builder("test")
                     .annotations(AnnotationSpec.builder("jsonIgnore").build()).build(),
                 """
                 @jsonIgnore
@@ -50,7 +55,7 @@ class EnumPropertyWriterTest {
                 """.trimIndent()
             ),
             Arguments.of(
-                EnumPropertySpec.builder("test")
+                EnumEntrySpec.builder("test")
                     .annotations(
                         AnnotationSpec.builder("jsonIgnore").build(),
                         AnnotationSpec.builder("JsonKey")
@@ -67,13 +72,13 @@ class EnumPropertyWriterTest {
 
     @ParameterizedTest
     @MethodSource("propertiesWithAnnotations")
-    fun `test property generation with annotations`(propertySpec: EnumPropertySpec, expected: String) {
+    fun `test property generation with annotations`(propertySpec: EnumEntrySpec, expected: String) {
         assertEquals(expected, propertySpec.toString())
     }
 
     @ParameterizedTest
     @MethodSource("properties")
-    fun `test property generation`(propertySpec: EnumPropertySpec, expected: String) {
+    fun `test property generation`(propertySpec: EnumEntrySpec, expected: String) {
         assertEquals(expected, propertySpec.toString())
     }
 }

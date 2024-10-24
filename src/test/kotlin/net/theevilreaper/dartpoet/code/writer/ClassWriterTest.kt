@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
 
-@DisplayName("Test class writer")
+@DisplayName(value = "Test the class writer")
 class ClassWriterTest {
 
     companion object {

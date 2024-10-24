@@ -1,7 +1,8 @@
 package net.theevilreaper.dartpoet.enumeration
 
 import com.google.common.truth.Truth
-import net.theevilreaper.dartpoet.enum.EnumPropertySpec
+import net.theevilreaper.dartpoet.enum.EnumEntrySpec
+import net.theevilreaper.dartpoet.enum.parameter.EnumParameterSpec
 import net.theevilreaper.dartpoet.type.ClassName
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -14,18 +15,18 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-@DisplayName("Test enum property spec creation")
-class EnumPropertySpecTest {
+@DisplayName("Test enum entry spec creation")
+class EnumEntrySpecTest {
 
     companion object {
 
         @JvmStatic
         private fun values() = Stream.of(
-            Arguments.of(EnumPropertySpec.builder("test").build(), "test"),
-            Arguments.of(EnumPropertySpec.builder("test").generic(String::class).build(), "test<String>"),
+            Arguments.of(EnumEntrySpec.builder("test").build(), "test"),
+            Arguments.of(EnumEntrySpec.builder("test").generic(String::class).build(), "test<String>"),
             Arguments.of(
-                EnumPropertySpec.builder("navigation")
-                    .parameter("%C", "/dashboard")
+                EnumEntrySpec.builder("navigation")
+                    .parameter(EnumParameterSpec.from("%C", "/dashboard"))
                     .build(),
                 "navigation('/dashboard')"
             )
@@ -33,29 +34,29 @@ class EnumPropertySpecTest {
 
         @JvmStatic
         private fun genericEnumProperties(): Stream<Arguments> = Stream.of(
-            Arguments.of(EnumPropertySpec.builder("test").generic(String::class).build(), "test<String>"),
-            Arguments.of(EnumPropertySpec.builder("test").generic(ClassName("E")).build(), "test<E>"),
+            Arguments.of(EnumEntrySpec.builder("test").generic(String::class).build(), "test<String>"),
+            Arguments.of(EnumEntrySpec.builder("test").generic(ClassName("E")).build(), "test<E>"),
         )
     }
 
     @ParameterizedTest
     @MethodSource("values")
-    fun `test enum property generation`(spec: EnumPropertySpec, excepted: String) {
+    fun `test enum property generation`(spec: EnumEntrySpec, excepted: String) {
         Truth.assertThat(spec.toString()).isEqualTo(excepted)
     }
 
     @ParameterizedTest
     @MethodSource("genericEnumProperties")
-    fun `test generic enum property generation`(spec: EnumPropertySpec, excepted: String) {
+    fun `test generic enum property generation`(spec: EnumEntrySpec, excepted: String) {
         Truth.assertThat(spec.toString()).isEqualTo(excepted)
     }
 
     @Test
     fun `test spec conversion to a builder`() {
-        val propertySpec = EnumPropertySpec
+        val propertySpec = EnumEntrySpec
             .builder("test")
             .generic(String::class)
-            .parameter("%C", "/dashboard")
+            .parameter(EnumParameterSpec.from("%C", "/dashboard"))
             .build()
         val specAsBuilder = propertySpec.toBuilder()
         assertNotNull(specAsBuilder)

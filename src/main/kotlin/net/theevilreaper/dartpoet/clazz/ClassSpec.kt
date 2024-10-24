@@ -9,7 +9,7 @@ import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.ClassWriter
-import net.theevilreaper.dartpoet.enum.EnumPropertySpec
+import net.theevilreaper.dartpoet.enum.EnumEntrySpec
 import net.theevilreaper.dartpoet.constructor.ConstructorBase
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
@@ -46,7 +46,7 @@ class ClassSpec internal constructor(
     internal val functions: Set<FunctionSpec> = builder.functionStack.toImmutableSet()
     internal val properties: Set<PropertySpec> = builder.propertyStack.toImmutableSet()
     internal val constructors: Set<ConstructorBase> = builder.constructorStack.toImmutableSet()
-    internal val enumPropertyStack: List<EnumPropertySpec> = builder.enumPropertyStack.toImmutableList()
+    internal val enumPropertyStack: List<EnumEntrySpec> = builder.enumPropertyStack.toImmutableList()
     internal val constantStack = builder.constantStack.toImmutableSet()
     internal val genericCasts: Set<TypeName> = builder.genericCasts.toImmutableSet()
     /**
