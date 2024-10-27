@@ -3,7 +3,6 @@ package net.theevilreaper.dartpoet.code.writer
 import net.theevilreaper.dartpoet.code.*
 import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.property.PropertySpec
-import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.SEMICOLON
 import net.theevilreaper.dartpoet.util.SPACE
