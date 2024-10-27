@@ -34,9 +34,8 @@ class ConstantPropertySpec(
     init {
         require(name.trim().isNotEmpty()) { "The name of a file constant can't be empty" }
         require(initializer.isNotEmpty()) { "The initializer can't be empty" }
-
-        if (this.modifiers.size == 1 && this.modifiers.first() == DartModifier.CONST && isPrivate) {
-            throw IllegalArgumentException("A file constant can't be private")
+        require(!(this. modifiers. size == 1 && this. modifiers. first() == DartModifier. CONST && isPrivate)) {
+            "A file constant can't be private"
         }
     }
 
