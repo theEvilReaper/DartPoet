@@ -26,7 +26,7 @@ class EnumEntrySpecTest {
             Arguments.of(EnumEntrySpec.builder("test").generic(String::class).build(), "test<String>"),
             Arguments.of(
                 EnumEntrySpec.builder("navigation")
-                    .parameter(EnumParameterSpec.from("%C", "/dashboard"))
+                    .parameter(EnumParameterSpec.positional("%C", "/dashboard"))
                     .build(),
                 "navigation('/dashboard')"
             )
@@ -56,7 +56,7 @@ class EnumEntrySpecTest {
         val propertySpec = EnumEntrySpec
             .builder("test")
             .generic(String::class)
-            .parameter(EnumParameterSpec.from("%C", "/dashboard"))
+            .parameter(EnumParameterSpec.positional("%C", "/dashboard"))
             .build()
         val specAsBuilder = propertySpec.toBuilder()
         assertNotNull(specAsBuilder)

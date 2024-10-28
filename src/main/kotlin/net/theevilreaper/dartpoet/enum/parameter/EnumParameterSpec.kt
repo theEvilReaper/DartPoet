@@ -121,18 +121,6 @@ class EnumParameterSpec internal constructor(
             variableRef,
             nullable = true
         )
-
-        /**
-         * Creates a new [EnumParameterSpec] instance with the given [format] and [args].
-         * @param format the format string
-         * @param args the arguments for the format string
-         * @return the created instance
-         */
-        @JvmStatic
-        @Deprecated("Use positional instead")
-        fun from(format: String, vararg args: Any): EnumParameterSpec = EnumParameterSpec(
-            CodeBlock.of(format, *args),
-        )
     }
 }
 
