@@ -11,7 +11,7 @@ class EnumParameterSpecTest {
     @Test
     fun `test enum parameter creation with empty code block`() {
         assertThrows<IllegalStateException>("The data block can't be empty") {
-            EnumParameterSpec.from(EMPTY_STRING, EMPTY_STRING, false)
+            EnumParameterSpec.positional(EMPTY_STRING, EMPTY_STRING, false)
         }
     }
 
@@ -31,7 +31,7 @@ class EnumParameterSpecTest {
 
     @Test
     fun `test enum parameter creation`() {
-        val parameter = EnumParameterSpec.from("%C", "test")
+        val parameter = EnumParameterSpec.positional("%C", "test")
         assertNotNull(parameter)
         assertNotNull(parameter.dataBlock)
         assertEquals(1, parameter.dataBlock.args.size)

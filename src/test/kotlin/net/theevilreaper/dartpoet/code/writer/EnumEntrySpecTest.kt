@@ -21,7 +21,7 @@ class EnumEntrySpecTest {
             Arguments.of(
                 EnumEntrySpec.builder("test")
                     .parameter(
-                        EnumParameterSpec.from("%C", "/dash")
+                        EnumParameterSpec.positional("%C", "/dash")
                     )
                     .build(),
                 "test('/dash')"
@@ -29,16 +29,16 @@ class EnumEntrySpecTest {
             Arguments.of(
                 EnumEntrySpec.builder("test")
                     .parameter(
-                        EnumParameterSpec.from("%L", "10")
+                        EnumParameterSpec.positional("%L", "10")
                     )
                     .build(),
                 "test(10)"
             ),
             Arguments.of(
                 EnumEntrySpec.builder("dashboard")
-                    .parameter(EnumParameterSpec.from("%C", "Dashboard"))
-                    .parameter(EnumParameterSpec.from("%C", "/dashboard"))
-                    .parameter(EnumParameterSpec.from("%L", "false"))
+                    .parameter(EnumParameterSpec.positional("%C", "Dashboard"))
+                    .parameter(EnumParameterSpec.positional("%C", "/dashboard"))
+                    .parameter(EnumParameterSpec.positional("%L", "false"))
                     .build(),
                 "dashboard('Dashboard', '/dashboard', false)"
             ),

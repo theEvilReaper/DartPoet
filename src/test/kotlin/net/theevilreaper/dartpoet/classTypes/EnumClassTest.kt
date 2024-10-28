@@ -40,8 +40,8 @@ class EnumClassTest {
                     ClassSpec.enumClass("TestEnum")
                         .enumProperties(
                             EnumEntrySpec.builder("test")
-                                .parameter(EnumParameterSpec.from("%C", "Test"))
-                                .parameter(EnumParameterSpec.from("%L", "10"))
+                                .parameter(EnumParameterSpec.positional("%C", "Test"))
+                                .parameter(EnumParameterSpec.positional("%L", "10"))
                                 .build()
                         )
                         .property(PropertySpec.builder("name", String::class).build())
@@ -94,18 +94,18 @@ class EnumClassTest {
                     .enumProperties(
                         EnumEntrySpec.builder("dashboard")
                             .parameter {
-                                EnumParameterSpec.from("%C", "Dashboard")
+                                EnumParameterSpec.positional("%C", "Dashboard")
                             }
                             .parameter {
-                                EnumParameterSpec.from("%C", "/dashboard")
+                                EnumParameterSpec.positional("%C", "/dashboard")
                             }
                             .build(),
                         EnumEntrySpec.builder("build")
                             .parameter {
-                                EnumParameterSpec.from("%C", "Build")
+                                EnumParameterSpec.positional("%C", "Build")
                             }
                             .parameter {
-                                EnumParameterSpec.from("%C", "/build")
+                                EnumParameterSpec.positional("%C", "/build")
                             }
                             .build()
                     )

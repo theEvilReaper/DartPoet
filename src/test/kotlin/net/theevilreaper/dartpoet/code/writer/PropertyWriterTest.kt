@@ -20,7 +20,6 @@ import java.util.stream.Stream
 class PropertyWriterTest {
 
     companion object {
-
         @JvmStatic
         private fun simpleProperties(): Stream<Arguments> = Stream.of(
             Arguments.of(PropertySpec.builder("id", Int::class).build(), "int id;"),
