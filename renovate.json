@@ -7,8 +7,6 @@
   "labels": [
     "renovate"
   ],
-  "commitMessagePrefix": "Update",
-  "commitMessageTopic": "{{depName}} from {{currentVersion}} to v{{newVersion}}",
   "packageRules": [
     {
       "matchUpdateTypes": [
