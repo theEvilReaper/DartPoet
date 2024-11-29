@@ -11,7 +11,7 @@ dependencyResolutionManagement {
             library("jetbrains.annotations", "org.jetbrains", "annotations").version("26.0.1")
             plugin("changelog", "org.jetbrains.changelog").version("2.2.1")
             plugin("dokka", "org.jetbrains.dokka").version("1.9.20")
-            plugin("kotlin.jvm", "org.jetbrains.kotlin.jvm").version("2.0.21")
+            plugin("kotlin.jvm", "org.jetbrains.kotlin.jvm").version("2.1.0")
         }
     }
 }
