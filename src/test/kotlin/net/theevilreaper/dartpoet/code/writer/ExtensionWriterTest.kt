@@ -37,9 +37,9 @@ class ExtensionWriterTest {
                     .doc("This is a first line of documentation")
                     .build(),
                 """
-                /// This is a first line of documentation
-                extension StringExt on String {}
-                """.trimIndent()
+                |/// This is a first line of documentation
+                |extension StringExt on String {}
+                """.trimMargin()
             ),
             Arguments.of(
                 ExtensionSpec.builder("StringExt", String::class)
@@ -47,10 +47,10 @@ class ExtensionWriterTest {
                     .doc("Second line of comment")
                     .build(),
                 """
-                /// This is a first line of documentation
-                /// Second line of comment
-                extension StringExt on String {}
-                """.trimIndent()
+                |/// This is a first line of documentation
+                |/// Second line of comment
+                |extension StringExt on String {}
+                """.trimMargin()
             ),
         )
 
@@ -106,12 +106,12 @@ class ExtensionWriterTest {
 
         assertThat(extension.toString()).isEqualTo(
             """
-            extension TestExtension on String {
-              bool hasSize() {
-                return this.length > 2;
-              }
-            }
-            """.trimIndent()
+            |extension TestExtension on String {
+            |  bool hasSize() {
+            |    return this.length > 2;
+            |  }
+            |}
+            """.trimMargin()
         )
     }
 }

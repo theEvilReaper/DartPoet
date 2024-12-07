@@ -21,10 +21,10 @@ class FactoryWriterTest {
             .build()
         Truth.assertThat(privateFactoryConstructor.toString()).isEqualTo(
             """
-            factory $constructorName() {
-              return _instance;
-            }
-            """.trimIndent()
+            |factory $constructorName() {
+            |  return _instance;
+            |}
+            """.trimMargin()
         )
     }
 
@@ -41,11 +41,11 @@ class FactoryWriterTest {
             .build()
         Truth.assertThat(privateFactoryConstructor.toString()).isEqualTo(
             """
-            @Deprecated('Use the instance instead')
-            factory $constructorName() {
-              return _instance;
-            }
-            """.trimIndent()
+            |@Deprecated('Use the instance instead')
+            |factory $constructorName() {
+            |  return _instance;
+            |}
+            """.trimMargin()
         )
     }
 
@@ -58,10 +58,10 @@ class FactoryWriterTest {
             .build()
         Truth.assertThat(constructor.toString()).isEqualTo(
             """
-            factory $loggerClass(String name) {
-              return $loggerClass(name);
-            }
-            """.trimIndent()
+            |factory $loggerClass(String name) {
+            |  return $loggerClass(name);
+            |}
+            """.trimMargin()
         )
     }
 
@@ -81,10 +81,10 @@ class FactoryWriterTest {
             .build()
         Truth.assertThat(constructor.toString()).isEqualTo(
             """
-            factory $loggerClass.fromName(Map<String, Object> json) {
-              return $loggerClass($jsonKey['name'].toString());
-            }
-            """.trimIndent()
+            |factory $loggerClass.fromName(Map<String, Object> json) {
+            |  return $loggerClass($jsonKey['name'].toString());
+            |}
+            """.trimMargin()
         )
     }
 }

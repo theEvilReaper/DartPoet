@@ -60,14 +60,14 @@ class DartFileTest {
             .build()
         assertThat(libClass.toString()).isEqualTo(
             """
-            library testLib;
-            
-            import 'dart:html';
-            import 'dart:math' as math;
-            
-            typedef JsonMap = Map<String, dynamic>;
-            
-            """.trimIndent()
+            |library testLib;
+            |
+            |import 'dart:html';
+            |import 'dart:math' as math;
+            |
+            |typedef JsonMap = Map<String, dynamic>;
+            |
+            """.trimMargin()
         )
     }
 
@@ -125,27 +125,27 @@ class DartFileTest {
             .build()
         assertThat(file.toString()).isEqualTo(
             """
-            part of testLibrary;
-            
-            class DefectApi {
-            
-              final ApiClient apiClient;
-            
-              DefectApi(ApiClient apiClient): apiClient = apiClient;
-           
-              Future<DefectDTO> getByID(int id) async {
-                final queryParams = <String, dynamic>{};
-                final baseUri = Uri.parse(apiClient.baseUrl);
-                final uri = baseUri.replace(queryParameters: queryParameters, path: '${"$"}{baseUri.path}/defect/${"$"}id/');
-                return await apiClient.dio.getUri<JsonMap>(
-                  uri,
-                ).then((response) {
-                  return DefectDTO.from(response.data!);
-                });
-  
-              }
-            }
-            """.trimIndent()
+            |part of testLibrary;
+            |
+            |class DefectApi {
+            |
+            |  final ApiClient apiClient;
+            |
+            |  DefectApi(ApiClient apiClient): apiClient = apiClient;
+            |
+            |  Future<DefectDTO> getByID(int id) async {
+            |    final queryParams = <String, dynamic>{};
+            |    final baseUri = Uri.parse(apiClient.baseUrl);
+            |    final uri = baseUri.replace(queryParameters: queryParameters, path: '${"$"}{baseUri.path}/defect/${"$"}id/');
+            |    return await apiClient.dio.getUri<JsonMap>(
+            |      uri,
+            |    ).then((response) {
+            |      return DefectDTO.from(response.data!);
+            |    });
+            |
+            |  }
+            |}
+            """.trimMargin()
         )
     }
 
@@ -194,15 +194,15 @@ class DartFileTest {
             .build()
         assertThat(modelClass.toString()).isEqualTo(
             """
-            abstract class $name implements Built<$name, ${name}Builder> {
-            
-              static Serializer<$name> get serializer => _$${name}Serializer;
-            
-              static $name fromJson(dynamic json) => $serializer.deserialize(json);
-            
-              dynamic toJson() => $serializer.serialize(this);
-            }
-            """.trimIndent()
+            |abstract class $name implements Built<$name, ${name}Builder> {
+            |
+            |  static Serializer<$name> get serializer => _$${name}Serializer;
+            |
+            |  static $name fromJson(dynamic json) => $serializer.deserialize(json);
+            |
+            |  dynamic toJson() => $serializer.serialize(this);
+            |}
+            """.trimMargin()
         )
     }
 
@@ -223,15 +223,15 @@ class DartFileTest {
             .build()
         assertThat(classFile.toString()).isEqualTo(
             """
-            import 'dart:html';
-            
-            const typeLive = 1;
-            const typeTest = 10;
-            const typeDev = 100;
-            
-            @freezed
-            class Environment {}
-            """.trimIndent()
+            |import 'dart:html';
+            |
+            |const typeLive = 1;
+            |const typeTest = 10;
+            |const typeDev = 100;
+            |
+            |@freezed
+            |class Environment {}
+            """.trimMargin()
         )
     }
 
@@ -246,10 +246,10 @@ class DartFileTest {
             .build()
         assertThat(clazz.toString()).isEqualTo(
             """
-            /// Hallo
-            /// This is a [Test]
-            class Test {}
-            """.trimIndent()
+            |/// Hallo
+            |/// This is a [Test]
+            |class Test {}
+            """.trimMargin()
         )
     }
 
@@ -286,22 +286,22 @@ class DartFileTest {
 
         assertThat(file.toString()).isEqualTo(
             """
-            /// Class documentation is good
-            /// And its working
-            class TestModel {
-            
-              /// Property comment
-              String name;
-            
-              /// Good comment
-              TestModel(this.name);
-            
-              /// Returns the given name from the object
-              String getName() {
-                return name;
-              }
-            }
-            """.trimIndent()
+            |/// Class documentation is good
+            |/// And its working
+            |class TestModel {
+            |
+            |  /// Property comment
+            |  String name;
+            |
+            |  /// Good comment
+            |  TestModel(this.name);
+            |
+            |  /// Returns the given name from the object
+            |  String getName() {
+            |    return name;
+            |  }
+            |}
+            """.trimMargin()
         )
     }
 }

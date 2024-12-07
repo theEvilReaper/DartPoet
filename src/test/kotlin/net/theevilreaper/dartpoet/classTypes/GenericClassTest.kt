@@ -48,16 +48,16 @@ class GenericClassTest {
             .build()
         Truth.assertThat(genericClass.toString()).isEqualTo(
             """
-            class TestClass<T, List<E>> {
-            
-              T argument;
-              List<E> list;
-            
-              void add(E element) {
-                list.add(element);
-              }
-            }
-            """.trimIndent()
+            |class TestClass<T, List<E>> {
+            |
+            |  T argument;
+            |  List<E> list;
+            |
+            |  void add(E element) {
+            |    list.add(element);
+            |  }
+            |}
+            """.trimMargin()
         )
     }
 }

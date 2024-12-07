@@ -50,9 +50,9 @@ class EnumEntrySpecTest {
                 EnumEntrySpec.builder("test")
                     .annotations(AnnotationSpec.builder("jsonIgnore").build()).build(),
                 """
-                @jsonIgnore
-                test
-                """.trimIndent()
+                |@jsonIgnore
+                |test
+                """.trimMargin()
             ),
             Arguments.of(
                 EnumEntrySpec.builder("test")
@@ -62,10 +62,10 @@ class EnumEntrySpecTest {
                             .content("name: %C", "test").build()
                     ).build(),
                 """
-                @jsonIgnore
-                @JsonKey(name: 'test')
-                test
-                """.trimIndent()
+                |@jsonIgnore
+                |@JsonKey(name: 'test')
+                |test
+                """.trimMargin()
             )
         )
     }

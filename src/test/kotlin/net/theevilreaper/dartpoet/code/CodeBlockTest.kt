@@ -28,10 +28,10 @@ class CodeBlockTest {
             .build()
         assertThat(block.toString().trim()).isEqualTo(
             """
-            if (value == null) {
-              return null;
-            }
-            """.trimIndent()
+            |if (value == null) {
+            |  return null;
+            |}
+            """.trimMargin()
         )
     }
 }

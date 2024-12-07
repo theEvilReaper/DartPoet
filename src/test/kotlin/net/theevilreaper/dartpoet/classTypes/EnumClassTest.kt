@@ -123,18 +123,18 @@ class EnumClassTest {
             .build()
         assertThat(enumClass.toString()).isEqualTo(
             """
-            enum NavigationEntry {
-            
-              dashboard('Dashboard', '/dashboard'),
-              build('Build', '/build');
-            
-              final String name;
-              final String route;
-            
-              const NavigationEntry(this.name, this.route);
-            
-            }
-            """.trimIndent()
+            |enum NavigationEntry {
+            |
+            |  dashboard('Dashboard', '/dashboard'),
+            |  build('Build', '/build');
+            |
+            |  final String name;
+            |  final String route;
+            |
+            |  const NavigationEntry(this.name, this.route);
+            |
+            |}
+            """.trimMargin()
         )
     }
 
@@ -186,19 +186,19 @@ class EnumClassTest {
 
         assertThat(enumClass.toString()).isEqualTo(
             """
-            enum Vehicle {
-            
-              car(tires: 4, passengers: 6),
-              bus(tires: 6, passengers: 80);
-            
-              final int tires;
-              final int passengers;
-            
-              const Vehicle({required this.tires, required this.passengers});
-            
-            }
-            
-            """.trimIndent()
+            |enum Vehicle {
+            |
+            |  car(tires: 4, passengers: 6),
+            |  bus(tires: 6, passengers: 80);
+            |
+            |  final int tires;
+            |  final int passengers;
+            |
+            |  const Vehicle({required this.tires, required this.passengers});
+            |
+            |}
+            |
+            """.trimMargin()
         )
     }
 }

@@ -37,5 +37,4 @@ class StringHelperTest {
         assertEquals("_$name", result)
         assertEquals(name, StringHelper.ensureVariableNameWithPrivateModifier(name, false))
     }
-
 }

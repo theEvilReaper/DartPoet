@@ -92,9 +92,9 @@ class PropertyWriterTest {
             .build()
         assertThat(property.toString()).isEqualTo(
             """
-            @jsonIgnore
-            int age = 12;
-            """.trimIndent()
+            |@jsonIgnore
+            |int age = 12;
+            """.trimMargin()
         )
     }
 
@@ -109,9 +109,9 @@ class PropertyWriterTest {
             .build()
         assertThat(property.toString()).isEqualTo(
             """
-            @JsonKey(name: 'description')
-            String? description;
-            """.trimIndent()
+            |@JsonKey(name: 'description')
+            |String? description;
+            """.trimMargin()
         )
     }
 
@@ -122,9 +122,9 @@ class PropertyWriterTest {
             .build()
         assertThat(property.toString()).isEqualTo(
             """
-            /// Represents the name from something
-            String? name;
-            """.trimIndent()
+            |/// Represents the name from something
+            |String? name;
+            """.trimMargin()
         )
     }
 

@@ -53,22 +53,22 @@ class DartFileImportTest {
             .build()
         assertThat(dartFile.toString()).isEqualTo(
             """
-            import 'dart:io';
-            import 'dart:math';
-            
-            import 'package:async_redux/async_redux.dart';
-            import 'package:model/sound_model.dart';
-            
-            class TestAction extends ReduxAction<AppState> {
-            
-              @override
-              Future<AppState> reduce() async {
-                var models = [];
-                return state.copyWith(sounds: models);
-              }
-            }
-            
-            """.trimIndent()
+            |import 'dart:io';
+            |import 'dart:math';
+            |
+            |import 'package:async_redux/async_redux.dart';
+            |import 'package:model/sound_model.dart';
+            |
+            |class TestAction extends ReduxAction<AppState> {
+            |
+            |  @override
+            |  Future<AppState> reduce() async {
+            |    var models = [];
+            |    return state.copyWith(sounds: models);
+            |  }
+            |}
+            |
+            """.trimMargin()
         )
     }
 
@@ -93,18 +93,18 @@ class DartFileImportTest {
             .build()
         assertThat(classFile.toString()).isEqualTo(
             """
-            import 'dart:io';
-            
-            import 'package:door.dart';
-            
-            export 'garden.dart' show garden;
-            
-            part 'house_part.dart';
-            
-            @immutable
-            class House {}
-            
-            """.trimIndent()
+            |import 'dart:io';
+            |
+            |import 'package:door.dart';
+            |
+            |export 'garden.dart' show garden;
+            |
+            |part 'house_part.dart';
+            |
+            |@immutable
+            |class House {}
+            |
+            """.trimMargin()
         )
     }
 }
