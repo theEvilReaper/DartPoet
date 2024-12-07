@@ -94,10 +94,10 @@ class FunctionWriterTest {
 
         assertThat(method.toString()).isEqualTo(
             """
-            String getName() {
-              return 'test';
-            }
-            """.trimIndent()
+            |String getName() {
+            |  return 'test';
+            |}
+            """.trimMargin()
         )
     }
 
@@ -111,10 +111,10 @@ class FunctionWriterTest {
         writer.close()
         assertThat(method.toString()).isEqualTo(
             """
-            String _name() {
-              return 'Tobi';
-            }
-            """.trimIndent()
+            |String _name() {
+            |  return 'Tobi';
+            |}
+            """.trimMargin()
         )
     }
 
@@ -125,10 +125,10 @@ class FunctionWriterTest {
             .addCode("return %L;", 10).build()
         assertThat(method.toString()).isEqualTo(
             """
-            int? getId() {
-              return 10;
-            }
-            """.trimIndent()
+            |int? getId() {
+            |  return 10;
+            |}
+            """.trimMargin()
         )
     }
 
@@ -140,10 +140,10 @@ class FunctionWriterTest {
             .build()
         assertThat(method.toString()).isEqualTo(
             """
-            int? getValue() {
-              return 1;
-            }
-            """.trimIndent()
+            |int? getValue() {
+            |  return 1;
+            |}
+            """.trimMargin()
         )
     }
 
@@ -163,10 +163,10 @@ class FunctionWriterTest {
             .build()
         assertThat(method.toString()).isEqualTo(
             """
-            Future<String> getNameById(int id) async {
-              return 'Thomas';
-            }
-            """.trimIndent()
+            |Future<String> getNameById(int id) async {
+            |  return 'Thomas';
+            |}
+            """.trimMargin()
         )
     }
 
@@ -196,10 +196,10 @@ class FunctionWriterTest {
             .build()
         assertThat(function.toString()).isEqualTo(
             """
-            set value(int value) {
-              _value = value;
-            }
-            """.trimIndent()
+            |set value(int value) {
+            |  _value = value;
+            |}
+            """.trimMargin()
         )
     }
 
@@ -224,12 +224,12 @@ class FunctionWriterTest {
             .build()
         assertThat(function.toString()).isEqualTo(
             """
-            /// Returns the name from an object
-            /// For generation tests it returns 'Test'
-            String getName() {
-              return 'Test';
-            }
-            """.trimIndent()
+            |/// Returns the name from an object
+            |/// For generation tests it returns 'Test'
+            |String getName() {
+            |  return 'Test';
+            |}
+            """.trimMargin()
         )
     }
 

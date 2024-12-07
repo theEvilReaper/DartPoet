@@ -27,14 +27,14 @@ class AbstractClassTest {
 
         assertThat(abstractClass.toString()).isEqualTo(
             """
-            abstract class DatabaseHandler {
-            
-              TestModel getByID(int id);
-            
-              void test();
-            }
-            
-            """.trimIndent()
+            |abstract class DatabaseHandler {
+            |
+            |  TestModel getByID(int id);
+            |
+            |  void test();
+            |}
+            |
+            """.trimMargin()
         )
     }
 
@@ -48,12 +48,12 @@ class AbstractClassTest {
             .build()
         assertThat(abstractClass.toString()).isEqualTo(
             """
-            @abc
-            abstract class Test {
-            
-              void test();
-            }
-            """.trimIndent()
+            |@abc
+            |abstract class Test {
+            |
+            |  void test();
+            |}
+            """.trimMargin()
         )
     }
 }

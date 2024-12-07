@@ -29,9 +29,9 @@ class ClassWriterTest {
             Arguments.of(
                 ClassSpec.abstractClass("DatabaseHandler").endWithNewLine(true).build(),
                 """
-                abstract class DatabaseHandler {}
-                
-                """.trimIndent()
+                |abstract class DatabaseHandler {}
+                |
+                """.trimMargin()
             )
         )
     }
@@ -56,13 +56,13 @@ class ClassWriterTest {
             .build()
         assertThat(clazz.toString()).isEqualTo(
             """
-            class TestClass {
-            
-              static const String test = 'Test';
-              static const int maxId = 100;
-            
-            }
-            """.trimIndent()
+            |class TestClass {
+            |
+            |  static const String test = 'Test';
+            |  static const int maxId = 100;
+            |
+            |}
+            """.trimMargin()
         )
     }
 }
