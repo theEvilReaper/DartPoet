@@ -32,7 +32,7 @@ internal class FactoryWriter : InitializerAppender<FactorySpec>, DocumentationAp
         }
 
         val parameterData: ParameterData<ParameterSpec> = ParameterData.fromFactory(spec)
-        ParameterHelper.writeParameters(parameterData, codeWriter, indent = true, filterExcluded = false)
+        ParameterHelper.writeParameters(parameterData, codeWriter, indent = true)
 
         ConstructorDelegation.appendDelegation(spec.constructorDelegation, spec.initializerBlock, codeWriter)
     }

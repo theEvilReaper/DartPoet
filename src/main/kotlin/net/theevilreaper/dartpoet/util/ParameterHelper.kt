@@ -44,7 +44,6 @@ internal object ParameterHelper {
         data: ParameterData<ParameterSpec>,
         codeWriter: CodeWriter,
         indent: Boolean = false,
-        filterExcluded: Boolean = true
     ) {
         if (!data.hasParameters) {
             codeWriter.emit("()")
@@ -58,7 +57,7 @@ internal object ParameterHelper {
         }
 
         if (data.hasAdditionalParameters) {
-            emitRequiredAndNamedParameter(data, codeWriter, indent, filterExcluded)
+            emitRequiredAndNamedParameter(data, codeWriter, indent)
         }
 
         if (data.optionalAndDefault.isNotEmpty()) {
@@ -76,13 +75,11 @@ internal object ParameterHelper {
      * @param data the data to write
      * @param codeWriter the writer to append the data
      * @param indent whether to indent the data
-     * @param filterExcluded whether to filter the excluded parameters
      */
     private fun emitRequiredAndNamedParameter(
         data: ParameterData<ParameterSpec>,
         codeWriter: CodeWriter,
         indent: Boolean = false,
-        filterExcluded: Boolean = true
     ) {
         codeWriter.emit("$CURLY_OPEN")
 
