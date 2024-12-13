@@ -11,8 +11,19 @@ import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.util.ParameterHelper
 import net.theevilreaper.dartpoet.util.parameter.ParameterData
 
+/**
+ * Writes the factory to the given [CodeWriter].
+ *
+ * @author theEvilReaper
+ * @since 1.0.0
+ */
 internal class FactoryWriter : InitializerAppender<FactorySpec>, DocumentationAppender {
 
+    /**
+     * Writes the given data from a [FactorySpec] to the [CodeWriter].
+     * @param spec the factory spec
+     * @param codeWriter the code writer
+     */
     fun write(spec: FactorySpec, codeWriter: CodeWriter) {
         emitDocumentation(spec.documentation, codeWriter)
         emitAnnotations(spec, codeWriter)
@@ -37,11 +48,21 @@ internal class FactoryWriter : InitializerAppender<FactorySpec>, DocumentationAp
         ConstructorDelegation.appendDelegation(spec.constructorDelegation, spec.initializerBlock, codeWriter)
     }
 
+    /**
+     * Emits the annotations for the factory.
+     * @param spec the factory spec
+     * @param codeWriter the code writer
+     */
     private fun emitAnnotations(spec: FactorySpec, codeWriter: CodeWriter) {
         if (spec.annotations.isEmpty()) return
         spec.annotations.emitAnnotations(codeWriter)
     }
 
+    /**
+     * Writes a simple constructor without any parameters.
+     * @param spec the factory spec
+     * @param codeWriter the code writer
+     */
     private fun writeSimpleConstructor(spec: FactorySpec, codeWriter: CodeWriter) {
         codeWriter.emit("()")
         ConstructorDelegation.appendDelegation(spec.constructorDelegation, spec.initializerBlock, codeWriter)
