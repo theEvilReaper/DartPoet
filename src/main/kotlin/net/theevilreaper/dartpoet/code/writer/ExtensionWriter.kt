@@ -41,7 +41,7 @@ internal class ExtensionWriter : Writeable<ExtensionSpec>, DocumentationAppender
 
         // Handles the case when an extension class has no content.
         if (spec.hasNoContent) {
-            writer.emit("{}")
+            writer.emitEmptyCurlyBrackets()
             return;
         }
 
