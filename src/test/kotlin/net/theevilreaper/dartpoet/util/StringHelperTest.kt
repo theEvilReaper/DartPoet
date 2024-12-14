@@ -6,9 +6,21 @@ import net.theevilreaper.dartpoet.type.TypeName
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 
 @DisplayName("Test each method from the StringHelper utility class")
 class StringHelperTest {
+
+    @ParameterizedTest(name = "Test if the given variable name {0} is invalid")
+    @ValueSource(strings = ["", " "])
+    fun `test if empty variable name throws exception`(input: String) {
+        assertThrowsExactly<IllegalArgumentException>(
+            IllegalArgumentException::class.java,
+            { StringHelper.ensureVariableNameWithPrivateModifier(input, true) },
+            "The name parameter can't be empty"
+        )
+    }
 
     @Test
     fun `test modifier concatenation`() {
