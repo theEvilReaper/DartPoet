@@ -100,7 +100,3 @@ fun isIndent(input: String): Boolean {
 private fun testStringForPattern(input: String, pattern: Regex): Boolean {
     return input.isNotEmpty() && input.matches(pattern)
 }
-
-fun formatLowerCamelCase(input: String): String {
-    return input.replaceFirstChar { it.lowercase() }
-}

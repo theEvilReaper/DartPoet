@@ -19,8 +19,6 @@
 package net.theevilreaper.dartpoet.util
 
 import java.util.Collections
-import kotlin.collections.ArrayList
-import kotlin.collections.LinkedHashSet
 
 internal fun <T> Collection<T>.toImmutableList(): List<T> =
     Collections.unmodifiableList(ArrayList(this))
@@ -30,8 +28,6 @@ internal fun <T> Collection<T>.toImmutableSet(): Set<T> =
 
 internal fun <T> T.isOneOf(t1: T, t2: T, t3: T? = null, t4: T? = null, t5: T? = null, t6: T? = null) =
     this == t1 || this == t2 || this == t3 || this == t4 || this == t5 || this == t6
-
-internal fun <T> Collection<T>.containsAnyOf(vararg t: T) = t.any(this::contains)
 
 // see https://docs.oracle.com/javase/specs/jls/se7/html/jls-3.html#jls-3.10.6
 internal fun characterLiteralWithoutSingleQuotes(c: Char) = when {
@@ -120,15 +116,11 @@ internal fun stringLiteralWithQuotes(
 // https://github.com/JetBrains/kotlin/blob/master/compiler/frontend.java/src/org/jetbrains/kotlin/resolve/jvm/checkers/JvmSimpleNameBacktickChecker.kt
 private val ILLEGAL_CHARACTERS_TO_ESCAPE = setOf('.', ';', '[', ']', '/', '<', '>', ':', '\\')
 
-
 private const val ALLOWED_CHARACTER = '$'
-
 private const val UNDERSCORE_CHARACTER = '_'
 
 internal val String.isKeyword get() = this in "KEYWORDS"
-
 internal val String.hasAllowedCharacters get() = this.any { it == ALLOWED_CHARACTER }
-
 internal val String.allCharactersAreUnderscore get() = this.all { it == UNDERSCORE_CHARACTER }
 
 private fun String.failIfEscapeInvalid() {
