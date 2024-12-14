@@ -25,7 +25,6 @@ import net.theevilreaper.dartpoet.DartFile
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.util.NEW_LINE
-import net.theevilreaper.dartpoet.util.escapeCharacterLiterals
 import net.theevilreaper.dartpoet.util.stringLiteralWithQuotes
 import java.io.Closeable
 
@@ -222,30 +221,12 @@ class CodeWriter(
                 "⇥" -> indent()
                 "⇤" -> unindent()
                 "«" -> {
-                    check(statementLine == -1) {
-                        """
-            |Can't open a new statement until the current statement is closed (opening « followed
-            |by another « without a closing »).
-            |Current code block:
-            |- Format parts: ${codeBlock.formatParts.map(::escapeCharacterLiterals)}
-            |- Arguments: ${codeBlock.args}
-            |
-            """.trimMargin()
-                    }
+                    CodeWriterCheck.ensureStatementNotAlreadyOpen(statementLine, codeBlock)
                     statementLine = 0
                 }
 
                 "»" -> {
-                    check(statementLine != -1) {
-                        """
-            |Can't close a statement that hasn't been opened (closing » is not preceded by an
-            |opening «).
-            |Current code block:
-            |- Format parts: ${codeBlock.formatParts.map(::escapeCharacterLiterals)}
-            |- Arguments: ${codeBlock.args}
-            |
-            """.trimMargin()
-                    }
+                    CodeWriterCheck.ensureStatementIsOpenBeforeClosing(statementLine, codeBlock)
                     if (statementLine > 0) {
                         unindent(2) // End a multi-line statement. Decrease the indentation level.
                     }
@@ -286,7 +267,8 @@ class CodeWriter(
      */
     fun emit(s: String, nonWrapping: Boolean = false) = apply {
         var first = true
-        for (line in s.split('\n')) {
+        val lines: List<String> = s.split('\n')
+        for (line in lines) {
             // Emit a newline character. Make sure blank lines in KDoc & comments look good.
             if (!first) {
                 if (comment && trailingNewline) {
