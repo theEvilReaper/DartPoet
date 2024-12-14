@@ -46,7 +46,7 @@ internal object ParameterHelper {
         indent: Boolean = false,
     ) {
         if (!data.hasParameters) {
-            codeWriter.emit("()")
+            codeWriter.emitEmptyRoundBrackets()
             return
         }
         codeWriter.emit("(")

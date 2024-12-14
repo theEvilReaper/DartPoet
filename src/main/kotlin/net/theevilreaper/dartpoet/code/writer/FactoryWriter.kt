@@ -64,7 +64,7 @@ internal class FactoryWriter : InitializerAppender<FactorySpec>, DocumentationAp
      * @param codeWriter the code writer
      */
     private fun writeSimpleConstructor(spec: FactorySpec, codeWriter: CodeWriter) {
-        codeWriter.emit("()")
+        codeWriter.emitEmptyRoundBrackets()
         ConstructorDelegation.appendDelegation(spec.constructorDelegation, spec.initializerBlock, codeWriter)
     }
 }

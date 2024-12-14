@@ -21,6 +21,7 @@
  */
 package net.theevilreaper.dartpoet.code
 
+import net.theevilreaper.dartpoet.DartFile
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.util.NEW_LINE
@@ -28,6 +29,11 @@ import net.theevilreaper.dartpoet.util.escapeCharacterLiterals
 import net.theevilreaper.dartpoet.util.stringLiteralWithQuotes
 import java.io.Closeable
 
+/**
+ * Converts a given [CodeBlock] into a string representation.
+ * @param builderAction the action to perform on the writer
+ * @return the block as string
+ */
 internal inline fun buildCodeString(builderAction: CodeWriter.() -> Unit): String {
     val stringBuilder = StringBuilder()
     CodeWriter(stringBuilder, columnLimit = Integer.MAX_VALUE).use {
@@ -36,6 +42,12 @@ internal inline fun buildCodeString(builderAction: CodeWriter.() -> Unit): Strin
     return stringBuilder.toString()
 }
 
+/**
+ * Converts a given [CodeBlock] into a string representation.
+ * @param codeWriter the writer to write the code to
+ * @param builderAction the action to perform on the writer
+ * @return the block as string
+ */
 internal fun buildCodeString(
     codeWriter: CodeWriter,
     builderAction: CodeWriter.() -> Unit,
@@ -43,6 +55,16 @@ internal fun buildCodeString(
     val stringBuilder = StringBuilder()
     codeWriter.emitInto(stringBuilder, builderAction)
     return stringBuilder.toString()
+}
+
+internal val emptyRoundBlock = buildCodeString {
+    emitCode("%L", ROUND_OPEN)
+    emitCode("%L", ROUND_CLOSE)
+}
+
+internal val emptyCurlyBlock = buildCodeString {
+    emitCode("%L", CURLY_OPEN)
+    emitCode("%L", CURLY_CLOSE)
 }
 
 /**
@@ -66,16 +88,32 @@ class CodeWriter(
      */
     private var statementLine = -1
 
+    /**
+     * Increases the current indentation level by a given amount.
+     * The default value is 1.
+     * @param levels the amount of levels to increase
+     * @return the instance from the writer
+     */
     fun indent(levels: Int = 1) = apply {
         indentLevel += levels
     }
 
+    /**
+     * Decreases the current indentation level by a given amount.
+     * The default value is 1.
+     * @param levels the amount of levels to decrease
+     * @return the instance from the writer
+     */
     fun unindent(levels: Int = 1) = apply {
         require(indentLevel - levels >= 0) { "cannot unindent $levels from $indentLevel" }
         indentLevel -= levels
     }
 
-    fun emitDoc(codeBlock: CodeBlock) {
+    /**
+     * Emits a [CodeBlock] which contains documentation data to the given [Appendable].
+     * @return the instance from the writer
+     */
+    fun emitDoc(codeBlock: CodeBlock) = apply {
         trailingNewline = true // Force the '///' prefix for the documentation.
         comment = true
         try {
@@ -86,9 +124,39 @@ class CodeWriter(
         }
     }
 
+    /**
+     * Emits a [String] which contains data to the given [Appendable].
+     * The method wraps the given [String] into a [CodeBlock] and emits it.
+     * @return the instance from the writer
+     */
     fun emitCode(s: String) = emitCode(CodeBlock.of(s))
 
+    /**
+     * Emits a specific format with the given arguments to the [Appendable].
+     * The method wraps the given format and arguments into a [CodeBlock] and emits it.
+     * @return the instance from the writer
+     * @param format the format to use
+     * @param args the arguments to use
+     */
     fun emitCode(format: String, vararg args: Any?) = emitCode(CodeBlock.of(format, *args))
+
+    /**
+     * Emits an empty block which contains round brackets.
+     *
+     * **Note:** This method will emit `()` without any more content.
+     */
+    fun emitEmptyRoundBrackets() {
+        emitCode(emptyRoundBlock)
+    }
+
+    /**
+     * Emits an empty curly block.
+     *
+     * **Note:** This method will emit `()` without any more content.
+     */
+    fun emitEmptyCurlyBrackets() {
+        emitCode(emptyCurlyBlock)
+    }
 
     fun emitCode(
         codeBlock: CodeBlock,
@@ -119,6 +187,7 @@ class CodeWriter(
                         emit(literal, nonWrapping = true)
                     }
                 }
+
                 "%P" -> {
                     val string = codeBlock.args[a++]?.let { arg ->
                         if (arg is CodeBlock) {
@@ -141,12 +210,14 @@ class CodeWriter(
                     val updated: String = "'" + literal.replace("\"", "") + "'"
 
                     emit(updated, nonWrapping = true)
-                   // emit(literal.replace("\"", "'"), nonWrapping = true)
+                    // emit(literal.replace("\"", "'"), nonWrapping = true)
                 }
+
                 "%T" -> {
                     var typeName = codeBlock.args[a++] as TypeName
                     typeName.emit(this)
                 }
+
                 "%%" -> emit("%")
                 "⇥" -> indent()
                 "⇤" -> unindent()
@@ -180,6 +251,7 @@ class CodeWriter(
                     }
                     statementLine = -1
                 }
+
                 else -> {
                     emit(part)
                 }
