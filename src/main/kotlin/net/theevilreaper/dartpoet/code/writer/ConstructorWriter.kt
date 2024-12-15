@@ -30,7 +30,8 @@ internal class ConstructorWriter : Writeable<ConstructorSpec>, DocumentationAppe
         ParameterHelper.writeParameters(parameterData, writer)
 
         if (spec.isLambda) {
-            writer.emit("·=>$NEW_LINE")
+            writer.emitSpace()
+            writer.emit("=>$NEW_LINE")
             writer.indent(2)
             writer.emitCode(spec.initializer.build(), ensureTrailingNewline = true)
             writer.unindent(2)

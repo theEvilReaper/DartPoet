@@ -5,6 +5,7 @@ import net.theevilreaper.dartpoet.code.Writeable
 import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.enum.EnumEntrySpec
 import net.theevilreaper.dartpoet.enum.parameter.emitEnumParameterSpecs
+import net.theevilreaper.dartpoet.util.COMMA_SEPARATOR
 
 /**
  * The class contains the logic to transform a [EnumEntrySpec] into code.
@@ -31,13 +32,13 @@ internal class EnumEntryWriter : Writeable<EnumEntrySpec> {
         writer.emit("(")
         spec.normalParameters.emitEnumParameterSpecs(writer)
         if (spec.normalParameters.isNotEmpty() && (spec.hasAdditionalParameters || spec.parametersWithDefaults.isNotEmpty())) {
-            writer.emit(", ")
+            writer.emit(COMMA_SEPARATOR)
         }
 
         if (spec.hasAdditionalParameters) {
             spec.requiredParameters.emitEnumParameterSpecs(writer)
             if (spec.optionalNamed.isNotEmpty()) {
-                writer.emit(", ")
+                writer.emit(COMMA_SEPARATOR)
             }
             spec.optionalNamed.emitEnumParameterSpecs(writer)
         }
