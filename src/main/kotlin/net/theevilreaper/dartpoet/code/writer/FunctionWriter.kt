@@ -21,6 +21,10 @@ import net.theevilreaper.dartpoet.util.toImmutableSet
 import java.util.concurrent.Future
 
 /**
+ * The [FunctionWriter] contains the logic to write a [FunctionSpec] to a [Appendable].
+ * It tries to recreate the structure of a method in the programming language Dart.
+ *
+ * **Note**: It is possible that the layout can contain a wrong format sometimes.
  * @version 1.0.0
  * @since 1.0.0
  * @author theEvilReaper
@@ -41,10 +45,7 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
         }
 
         val writeableModifiers = spec.modifiers.filter { it != PRIVATE && it != PUBLIC }.toImmutableSet()
-        val postFix: String = when (writeableModifiers.isNotEmpty()) {
-            true -> SPACE
-            else -> EMPTY_STRING
-        }
+        val postFix: String = getPostFix { writeableModifiers.isNotEmpty() }
         val modifierString = writeableModifiers.joinToString(separator = SPACE, postfix = postFix) { it.identifier }
 
         writer.emit(modifierString)
@@ -69,6 +70,21 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
             writer.emit(ASYNC.identifier)
         }
         writeBody(spec, writer)
+    }
+
+    /**
+     * Returns the postfix [String] based on a given boolean predicate.
+     * If the predicate returns true it will return [SPACE] otherwise an [EMPTY_STRING].
+     * **Note** This method is a internal method which is only used in this class
+     * @param predicate the predicate which is used to determine the postfix
+     * @return the determined postfix [String]
+     */
+    private inline fun getPostFix(crossinline predicate: () -> Boolean): String {
+        return when (predicate()) {
+            true -> SPACE
+            else -> EMPTY_STRING
+        }
+
     }
 
     /**
@@ -128,6 +144,11 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
         }
     }
 
+    /**
+     * Writes the body of a given [FunctionSpec] to a [CodeWriter].
+     * @param spec the spec to write
+     * @param writer the writer to write the body
+     */
     private fun writeBody(spec: FunctionSpec, writer: CodeWriter) {
         if (spec.body.isEmpty()) {
             writer.emit(SEMICOLON)
@@ -153,6 +174,11 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
         }
     }
 
+    /**
+     * Triggers the method body write for a given [FunctionSpec].
+     * @param spec the spec to write
+     * @param writer the writer to write the body
+     */
     private fun writeMethodBody(spec: FunctionSpec, writer: CodeWriter) {
         writer.emitCode(spec.body, ensureTrailingNewline = false)
     }
