@@ -100,7 +100,7 @@ internal class ClassWriter : Writeable<ClassSpec> {
      */
     private fun writeGenericArguments(spec: ClassSpec, writer: CodeWriter) {
         when (spec.genericCasts.isEmpty()) {
-            true -> writer.emit("·")
+            true -> writer.emitSpace()
             false -> {
                 val joinedGenerics = StringHelper.concatData(
                     spec.genericCasts,
@@ -108,7 +108,8 @@ internal class ClassWriter : Writeable<ClassSpec> {
                     separator = COMMA_SEPARATOR,
                     postfix = GREATER_THAN_SIGN
                 ) { it.toString() }
-                writer.emitCode("%L·", joinedGenerics)
+                writer.emitCode("%L", joinedGenerics)
+                writer.emitSpace()
             }
         }
     }
@@ -142,14 +143,18 @@ internal class ClassWriter : Writeable<ClassSpec> {
             ClassType.ABSTRACT -> "${CLASS.identifier}·"
             else -> EMPTY_STRING
         }
-        writer.emitCode("%L·", spec.classType.keyword)
+        writer.emitCode("%L", spec.classType.keyword)
+        writer.emitSpace()
         writer.emitCode("%L%L%L", abstractPart, privateModifier, spec.name)
     }
 
     private fun writeInheritance(spec: ClassSpec, writer: CodeWriter) {
         if (spec.superClass == null) return
-        writer.emit("${spec.inheritKeyWord!!.identifier}·")
-        writer.emitCode("%T·", spec.superClass)
+        writer.emitCode("%L", spec.inheritKeyWord!!.identifier)
+        writer.emitSpace()
+        writer.emitCode("%T", spec.superClass)
+        writer.emitSpace()
+
     }
 
     private fun List<EnumEntrySpec>.emit(
