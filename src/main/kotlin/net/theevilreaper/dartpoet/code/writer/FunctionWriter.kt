@@ -13,7 +13,6 @@ import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameter
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
-import net.theevilreaper.dartpoet.util.NEW_LINE
 import net.theevilreaper.dartpoet.util.SEMICOLON
 import net.theevilreaper.dartpoet.util.SPACE
 import net.theevilreaper.dartpoet.util.parameter.ParameterData
@@ -34,10 +33,7 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
     override fun write(spec: FunctionSpec, writer: CodeWriter) {
         emitDocumentation(spec.docs, writer)
 
-        if (spec.annotation.isNotEmpty()) {
-            spec.annotation.forEach { it.write(writer) }
-            writer.emit(NEW_LINE)
-        }
+        spec.annotation.emitAnnotations(codeWriter = writer)
 
         if (spec.hasMethodAccessorType) {
             this.writeMethodAccessorDefinition(spec, writer)
@@ -84,7 +80,6 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
             true -> SPACE
             else -> EMPTY_STRING
         }
-
     }
 
     /**
