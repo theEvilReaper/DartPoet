@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.ValueSource
 @DisplayName("Test some functionalities from the CodeWriter class")
 class CodeWriterTest {
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "Test invalid space usage with amount {0}")
     @ValueSource(ints = [0, -1])
     fun `test invalid space usage`(amount: Int) {
         assertThrows<IllegalStateException>("The amount of spaces must be greater than 0") {
