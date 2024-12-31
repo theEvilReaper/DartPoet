@@ -33,7 +33,7 @@ class TypeDefWriter : Writeable<TypeDefSpec> {
         if (spec.typeCasts.isNotEmpty()) {
             val typeIterable: Iterable<TypeName> = spec.typeCasts.filterNotNull().asIterable()
             val typeCasts = StringHelper.concatData(typeIterable, separator = COMMA_SEPARATOR) { it.toString() }
-            writer.emitCode("<%L>", typeCasts)
+            writer.emitGenericBlock("%L", typeCasts)
         }
         writer.emitSpace()
         writer.emit("=")
