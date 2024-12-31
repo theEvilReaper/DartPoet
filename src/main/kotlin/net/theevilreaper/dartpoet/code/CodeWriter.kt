@@ -157,6 +157,23 @@ class CodeWriter(
         emitCode(emptyCurlyBlock)
     }
 
+    /**
+     * Emits a generic block with the given format and arguments.
+     * The method will emit the given format with the arguments wrapped in `<>`.
+     * @param format the format to use
+     * @param args the arguments to use
+     * @return the instance from the writer
+     */
+    fun emitGenericBlock(format: String, vararg args: Any?) = apply {
+        if (format.isEmpty() && args.isEmpty()) {
+            emitCode("<>")
+        } else {
+            emitCode("<")
+            emitCode(format, *args)
+            emitCode(">")
+        }
+    }
+
     fun emitCode(
         codeBlock: CodeBlock,
         isConstantContext: Boolean = false,
