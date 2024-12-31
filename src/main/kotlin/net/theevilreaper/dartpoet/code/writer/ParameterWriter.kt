@@ -40,6 +40,11 @@ internal class ParameterWriter : Writeable<ParameterSpec>, InitializerAppender<P
         writeInitBlock(spec, writer)
     }
 
+    /**
+     * Writes the initializer block for the given [ParameterSpec].
+     * @param spec the spec to write
+     * @param writer the writer to append the data
+     */
     override fun writeInitBlock(spec: ParameterSpec, writer: CodeWriter, isConstantContext: Boolean) {
         val initBlock = spec.initializer ?: CodeBlock.EMPTY
         if (initBlock.isEmpty()) return
