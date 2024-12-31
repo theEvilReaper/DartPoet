@@ -56,7 +56,7 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
         }
 
         if (spec.typeCast != null) {
-            writer.emitCode("<%T>", spec.typeCast)
+            writer.emitGenericBlock("%T", spec.typeCast)
         }
 
         val parameterData = ParameterData.fromFunction(spec)

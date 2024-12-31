@@ -25,7 +25,7 @@ internal class EnumEntryWriter : Writeable<EnumEntrySpec> {
         spec.annotations.emitAnnotations(writer, inLineAnnotations = false)
         writer.emit(spec.name)
         if (spec.hasGeneric) {
-            writer.emitCode("<%T>", spec.generic!!)
+            writer.emitGenericBlock("%T", spec.generic!!)
         }
 
         if (!spec.hasParameters) return
