@@ -10,7 +10,7 @@ dependencyResolutionManagement {
             library("junit.params", "org.junit.jupiter", "junit-jupiter-params").versionRef("junit")
             library("jetbrains.annotations", "org.jetbrains", "annotations").version("26.0.2")
             plugin("changelog", "org.jetbrains.changelog").version("2.2.1")
-            plugin("dokka", "org.jetbrains.dokka").version("1.9.20")
+            plugin("dokka", "org.jetbrains.dokka").version("2.0.0")
             plugin("kotlin.jvm", "org.jetbrains.kotlin.jvm").version("2.1.10")
         }
     }
