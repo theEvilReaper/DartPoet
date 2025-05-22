@@ -92,10 +92,9 @@ class DartFile internal constructor(
             """.trimIndent()
         }
 
-        val fileName = if (name.endsWith(DART_FILE_ENDING)) {
-            name
-        } else {
-            "$name$DART_FILE_ENDING"
+        val fileName: String = when(name.endsWith(DART_FILE_ENDING)) {
+            true -> name
+            false -> "$name$DART_FILE_ENDING"
         }
 
         val outPutPath = path.resolve(fileName)
@@ -130,8 +129,6 @@ class DartFile internal constructor(
          * @return the created instance from the [DartFileBuilder] instance
          */
         @JvmStatic
-        fun builder(name: String): DartFileBuilder {
-            return DartFileBuilder(name)
-        }
+        fun builder(name: String): DartFileBuilder =  DartFileBuilder(name)
     }
 }
