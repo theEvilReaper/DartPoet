@@ -18,10 +18,9 @@ repositories {
 
 dependencies {
     compileOnly(libs.jetbrains.annotations)
-    testImplementation(kotlin("test"))
     testImplementation(libs.google.truth)
-    testImplementation(libs.junit.api)
-    testImplementation(libs.junit.params)
+    testImplementation(libs.bundles.junit)
+    testImplementation(kotlin("test"))
     testRuntimeOnly(libs.junit.engine)
 }
 
