@@ -36,6 +36,7 @@ class DartFileTest {
         val specAsBuilder = dartFileSpec.toBuilder()
         assertEquals(dartFileSpec.name, specAsBuilder.name)
         assertEquals(dartFileSpec.indent, specAsBuilder.indent)
+        assertEquals(dartFileSpec.annotations.size, specAsBuilder.annotations.size)
         assertContentEquals(dartFileSpec.annotations, specAsBuilder.annotations)
     }
 
