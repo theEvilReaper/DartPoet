@@ -28,6 +28,11 @@ internal class ParameterWriter : Writeable<ParameterSpec>, InitializerAppender<P
             writer.emitSpace()
         }
 
+        if (spec.coVariant) {
+            writer.emit(DartModifier.CO_VARIANT.identifier)
+            writer.emitSpace()
+        }
+
         if (spec.typeName != null) {
             writer.emitCode("%T", spec.typeName)
         }

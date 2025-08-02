@@ -26,6 +26,7 @@ class ParameterBuilder internal constructor(
     internal val annotations: MutableList<AnnotationSpec> = mutableListOf()
     internal var named: Boolean = false
     internal var nullable: Boolean = false
+    internal var coVariant: Boolean = false
     internal var initializer: CodeBlock? = null
 
     /**
@@ -54,6 +55,15 @@ class ParameterBuilder internal constructor(
      */
     fun nullable(nullable: Boolean) = apply {
         this.nullable = nullable
+    }
+
+    /**
+     * Updates the indication value if a parameter should adds the `coVariant` modifier.
+     * @param coVariant true if the parameter should be co-variant, false otherwise
+     * @return the current [ParameterBuilder] instance
+     */
+    fun coVariant(coVariant: Boolean) = apply {
+        this.coVariant = coVariant
     }
 
     /**

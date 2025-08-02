@@ -34,6 +34,7 @@ class ParameterSpec internal constructor(
     internal val isNullable = nullable
     internal val initializer = builder.initializer
     internal val annotations = builder.annotations.toImmutableSet()
+    internal val coVariant = builder.coVariant
     internal val hasInitializer = initializer != null && initializer.isNotEmpty()
     internal val hasNoTypeName: Boolean = builder.typeName == null
 

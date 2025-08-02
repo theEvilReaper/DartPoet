@@ -28,7 +28,9 @@ enum class DartModifier(
     TYPEDEF("typedef", ModifierTarget.TYPEDEF),
     DYNAMIC("dynamic", ModifierTarget.PARAMETER),
     REQUIRED("required", ModifierTarget.PARAMETER),
-    VOID("void", ModifierTarget.INTERFACE, ModifierTarget.FUNCTION);
+    VOID("void", ModifierTarget.INTERFACE, ModifierTarget.FUNCTION),
+    CO_VARIANT("covariant", ModifierTarget.PARAMETER)
+    ;
 
     /**
      * Checks if an [ModifierTarget] is present in a specific [DartModifier].
