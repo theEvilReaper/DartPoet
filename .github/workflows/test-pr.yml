@@ -16,7 +16,7 @@ jobs:
           distribution: temurin
           java-version: 21
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v5
       - name: Build with ${{ matrix.os }}
         run: |
           git config --global user.email "no-reply@github.com"
