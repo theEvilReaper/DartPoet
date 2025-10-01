@@ -3,7 +3,7 @@ rootProject.name = "DartPoet"
 dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
-            version("junit", "5.13.4")
+            version("junit", "6.0.0")
             version("google.truth", "1.4.5")
             version("kotlin", "2.2.20")
             version("jetbrains.annotations", "26.0.2-1")
