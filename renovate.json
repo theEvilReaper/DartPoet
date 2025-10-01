@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base"
+    "config:recommended"
   ],
   "rebaseWhen": "conflicted",
   "labels": [
@@ -12,14 +12,7 @@
       "matchUpdateTypes": [
         "patch"
       ],
-      "automerge": true,
-      "automergeType": "branch",
-      "groupName": "patch",
-      "schedule": [
-        "after 10pm and before 6:00am every day"
-      ],
-      "ignoreTests": true,
-      "commitMessage": "Update {{depName}} from {{currentVersion}} to {{newVersion}}"
+      "automerge": true
     },
     {
       "matchUpdateTypes": [
@@ -28,8 +21,7 @@
       "automerge": false,
       "schedule": [
         "before 6:00am every friday"
-      ],
-      "commitMessage": "Update {{depName}} from {{currentVersion}} to {{newVersion}}"
+      ]
     }
   ],
   "vulnerabilityAlerts": {
