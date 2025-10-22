@@ -1,31 +1,14 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended"
+    "config:recommended",
+    ":automergePatch",
+    ":timezone(Europe/Berlin)",
+    "schedule:officeHours",
+    "schedule:automergeOfficeHours",
+    ":semanticCommits",
+    ":label(renovate)",
+    ":enableVulnerabilityAlerts"
   ],
-  "rebaseWhen": "conflicted",
-  "labels": [
-    "renovate"
-  ],
-  "packageRules": [
-    {
-      "matchUpdateTypes": [
-        "patch"
-      ],
-      "automerge": true
-    },
-    {
-      "matchUpdateTypes": [
-        "minor"
-      ],
-      "automerge": false,
-      "schedule": [
-        "before 6:00am every friday"
-      ]
-    }
-  ],
-  "vulnerabilityAlerts": {
-    "labels": ["Component::security"],
-    "automerge": true
-  }
+  "rebaseWhen": "conflicted"
 }
