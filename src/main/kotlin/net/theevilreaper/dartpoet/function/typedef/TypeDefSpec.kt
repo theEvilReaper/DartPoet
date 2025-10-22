@@ -46,7 +46,6 @@ class TypeDefSpec(
             require(name.trim().isNotEmpty()) { "The function name of a typedef can't be empty" }
         }
 
-       // ParameterChecker.checkRequiredPositional(normalParameters2)
         ParameterChecker.checkOptionalParameters(parametersWithDefaults)
     }
 
