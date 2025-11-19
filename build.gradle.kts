@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "net.theevilreaper.dartpoet"
-version = System.getenv("TAG_VERSION") ?: "0.0.1-SNAPSHOT"
+version = System.getenv("TAG_VERSION") ?: "0.1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -77,7 +77,7 @@ changelog {
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
-            from(components["kotlin"])
+            from(components["java"])
             groupId = "net.theevilreaper"
             artifactId = "dartpoet"
             version = rootProject.version.toString()
