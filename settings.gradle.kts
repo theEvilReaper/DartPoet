@@ -8,7 +8,7 @@ dependencyResolutionManagement {
             version("kotlin", "2.2.21")
             version("jetbrains.annotations", "26.0.2-1")
             version("changelog", "2.4.0")
-            version("dokka", "2.0.0")
+            version("dokka", "2.1.0")
 
             library("jetbrains.annotations", "org.jetbrains", "annotations").versionRef("jetbrains.annotations")
             library("google.truth", "com.google.truth", "truth").versionRef("google.truth")
