@@ -7,10 +7,10 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.changelog)
     alias(libs.plugins.dokka)
-    id("com.gradleup.nmcp.aggregation").version("1.2.1")
+    id("com.vanniktech.maven.publish") version "0.35.0"
 }
 
-group = "net.theevilreaper.dartpoet"
+group = "net.theevilreaper"
 version = System.getenv("TAG_VERSION") ?: "0.1.0-SNAPSHOT"
 
 repositories {
@@ -39,29 +39,6 @@ tasks {
     }
 }
 
-val sourceJar by tasks.register<Jar>("kotlinJar") {
-    description = "Creates a JAR archive containing all source files"
-    group = JavaBasePlugin.BUILD_TASK_NAME
-    from(sourceSets.main.get().allSource)
-    archiveClassifier.set("sources")
-}
-
-val dokkaJavadocJar by tasks.register<Jar>("dokkaHtmlJar") {
-    description = "Generates the documentation in the HTML format"
-    group = JavaBasePlugin.DOCUMENTATION_GROUP
-    dependsOn(rootProject.tasks.dokkaHtml)
-    from(rootProject.tasks.dokkaHtml.flatMap { it.outputDirectory })
-    archiveClassifier.set("html-docs")
-}
-
-val dokkaHtmlJar by tasks.register<Jar>("dokkaJavadocJar") {
-    description = "Generates documentation in Javadoc format"
-    group = JavaBasePlugin.DOCUMENTATION_GROUP
-    dependsOn(rootProject.tasks.dokkaJavadoc)
-    from(rootProject.tasks.dokkaJavadoc.flatMap { it.outputDirectory })
-    archiveClassifier.set("javadoc")
-}
-
 kotlin {
     jvmToolchain(21)
 }
@@ -74,64 +51,53 @@ changelog {
     groups.set(listOf("Added", "Changed", "Deprecated", "Removed", "Fixed", "Security"))
 }
 
-publishing {
-    publications {
-        create<MavenPublication>("mavenJava") {
-            from(components["java"])
-            groupId = "net.theevilreaper"
-            artifactId = "dartpoet"
-            version = rootProject.version.toString()
-            pom {
-                name.set("DartPoet")
-                description.set("A Kotlin API which allows the generation of code for dart")
-                url.set("https://github.com/theEvilReaper/DartPoet")
-                licenses {
-                    license {
-                        name.set("AGPL-3.0")
-                        url.set("https://github.com/theEvilReaper/DartPoet/blob/develop/LICENSE")
-                    }
-                }
-                issueManagement {
-                    system.set("Github")
-                    url.set("https://github.com/theEvilReaper/DartPoet/issues")
-                }
-                developers {
-                    developer {
-                        id.set("themeinerlp")
-                        name.set("Phillipp Glanz")
-                        email.set("p.glanz@madfix.me")
-                    }
-                    developer {
-                        id.set("theEvilReaper")
-                        name.set("Steffen Wonning")
-                        email.set("steffenwx@gmail.com")
-                    }
-                }
-                scm {
-                    connection.set("scm:git@github.com:theEvilReaper/DartPoet.git")
-                    developerConnection.set("scm:git@github.com:theEvilReaper/DartPoet.git")
-                    url.set("https://github.com/theEvilReaper/DartPoet")
-                }
+//nmcpAggregation {
+//    centralPortal {
+//        username = System.getenv("OSSRH_USERNAME")
+//        password = System.getenv("OSSRH_PASSWORD")
+//        publishingType = "MANUAL"
+//    }
+//
+//    // Publish all projects that apply the 'maven-publish' plugin
+//    publishAllProjectsProbablyBreakingProjectIsolation()
+//}
+mavenPublishing {
+    publishToMavenCentral(automaticRelease = true)
+
+    signAllPublications()
+    coordinates(group.toString(), "dartpoet", version.toString())
+
+
+    pom {
+        name.set("DartPoet")
+        description.set("A Kotlin API which allows the generation of code for dart")
+        url.set("https://github.com/theEvilReaper/DartPoet")
+        licenses {
+            license {
+                name.set("AGPL-3.0")
+                url.set("https://github.com/theEvilReaper/DartPoet/blob/develop/LICENSE")
             }
         }
+        issueManagement {
+            system.set("Github")
+            url.set("https://github.com/theEvilReaper/DartPoet/issues")
+        }
+        developers {
+            developer {
+                id.set("themeinerlp")
+                name.set("Phillipp Glanz")
+                email.set("p.glanz@madfix.me")
+            }
+            developer {
+                id.set("theEvilReaper")
+                name.set("Steffen Wonning")
+                email.set("steffenwx@gmail.com")
+            }
+        }
+        scm {
+            connection.set("scm:git@github.com:theEvilReaper/DartPoet.git")
+            developerConnection.set("scm:git@github.com:theEvilReaper/DartPoet.git")
+            url.set("https://github.com/theEvilReaper/DartPoet")
+        }
     }
-}
-
-nmcpAggregation {
-    centralPortal {
-        username = System.getenv("OSSRH_USERNAME")
-        password = System.getenv("OSSRH_PASSWORD")
-        publishingType = "MANUAL"
-    }
-
-    // Publish all projects that apply the 'maven-publish' plugin
-    publishAllProjectsProbablyBreakingProjectIsolation()
-}
-
-
-signing {
-    val signingKey: String? by project
-    val signingPassword: String? by project
-    useInMemoryPgpKeys(signingKey, signingPassword)
-    sign(publishing.publications["mavenJava"])
 }

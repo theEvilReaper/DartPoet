@@ -36,7 +36,7 @@ jobs:
           ./gradlew publish publishAggregationToCentralPortal -PforceSign=true
         env:
           TAG_VERSION: ${{ github.ref_name }}
-          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.PGP_SECRET }}
-          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.PGP_PASSPHRASE  }}
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.OSSRH_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.OSSRH_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.PGP_SECRET }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.PGP_PASSPHRASE  }}
