@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.changelog)
     alias(libs.plugins.dokka)
+    id("com.gradleup.nmcp.aggregation").version("1.2.1")
 }
 
 group = "net.theevilreaper.dartpoet"
@@ -114,17 +115,17 @@ publishing {
             }
         }
     }
-    repositories {
-        maven {
-            val releasesRepoUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-            val snapshotsRepoUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
-            url = if (version.toString().endsWith("SNAPSHOT")) uri(snapshotsRepoUrl) else uri(releasesRepoUrl)
-            credentials {
-                username = System.getenv("OSSRH_USERNAME")
-                password = System.getenv("OSSRH_PASSWORD")
-            }
-        }
+}
+
+nmcpAggregation {
+    centralPortal {
+        username = System.getenv("OSSRH_USERNAME")
+        password = System.getenv("OSSRH_PASSWORD")
+        publishingType = "AUTOMATIC"
     }
+
+    // Publish all projects that apply the 'maven-publish' plugin
+    publishAllProjectsProbablyBreakingProjectIsolation()
 }
 
 signing {

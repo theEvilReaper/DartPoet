@@ -33,7 +33,7 @@ jobs:
           ./gradlew jar
       - name: Publish to Central via Tag
         run: |
-          ./gradlew publish closeAndReleaseSonatypeStagingRepository -PforceSign=true
+          ./gradlew publish publishAggregationToCentralPortal -PforceSign=true
         env:
           TAG_VERSION: ${{ github.ref_name }}
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
