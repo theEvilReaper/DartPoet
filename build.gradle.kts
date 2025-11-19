@@ -76,13 +76,10 @@ changelog {
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
-            from(components.findByName("java"))
-            groupId = "dev.themeinerlp"
+            from(components["kotlin"])
+            groupId = "net.theevilreaper"
             artifactId = "dartpoet"
             version = rootProject.version.toString()
-            artifact(dokkaJavadocJar)
-            artifact(dokkaHtmlJar)
-            artifact(sourceJar)
             pom {
                 name.set("DartPoet")
                 description.set("A Kotlin API which allows the generation of code for dart")
