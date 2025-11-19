@@ -33,7 +33,7 @@ jobs:
           ./gradlew jar
       - name: Publish to Central via Tag
         run: |
-          ./gradlew publish publishAggregationToCentralPortal -PforceSign=true
+          ./gradlew publish publishToMavenCentral -PforceSign=true
         env:
           TAG_VERSION: ${{ github.ref_name }}
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.OSSRH_USERNAME }}
