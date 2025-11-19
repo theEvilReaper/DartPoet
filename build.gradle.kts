@@ -121,7 +121,7 @@ nmcpAggregation {
     centralPortal {
         username = System.getenv("OSSRH_USERNAME")
         password = System.getenv("OSSRH_PASSWORD")
-        publishingType = "AUTOMATIC"
+        publishingType = "MANUAL"
     }
 
     // Publish all projects that apply the 'maven-publish' plugin
