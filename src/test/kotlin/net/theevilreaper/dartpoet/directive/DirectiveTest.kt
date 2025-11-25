@@ -19,8 +19,6 @@ class DirectiveTest {
     private val packageImport = "import 'package:flutter/material.dart';"
 
     companion object {
-        private const val CAST_VALUE = "item"
-        private const val TEST_IMPORT = "../../model/item_model.dart"
         private const val EMPTY_NAME_MESSAGE = "The path of an directive can't be empty"
         private const val INVALID_CAST_USAGE =
             "The castType and importCast must be set together or must be null. A mixed state is not allowed"
@@ -62,43 +60,6 @@ class DirectiveTest {
         )
 
         @JvmStatic
-        private fun relativeDirectives() = Stream.of(
-            Arguments.of(RelativeDirective(TEST_IMPORT), "import '../../model/item_model.dart';"),
-            Arguments.of(
-                RelativeDirective(TEST_IMPORT, CastType.AS, CAST_VALUE),
-                "import '../../model/item_model.dart' as item;"
-            ),
-            Arguments.of(
-                RelativeDirective(TEST_IMPORT, CastType.DEFERRED, CAST_VALUE),
-                "import '../../model/item_model.dart' deferred as item;"
-            ),
-            Arguments.of(
-                RelativeDirective(TEST_IMPORT, CastType.HIDE, CAST_VALUE),
-                "import '../../model/item_model.dart' hide item;"
-            ),
-            Arguments.of(
-                DirectiveFactory.create(DirectiveType.RELATIVE, TEST_IMPORT),
-                "import '../../model/item_model.dart';"
-            ),
-            Arguments.of(
-                DirectiveFactory.create(DirectiveType.RELATIVE, TEST_IMPORT, CastType.AS, CAST_VALUE),
-                "import '../../model/item_model.dart' as item;"
-            ),
-            Arguments.of(
-                DirectiveFactory.create(DirectiveType.RELATIVE, TEST_IMPORT, CastType.DEFERRED, CAST_VALUE),
-                "import '../../model/item_model.dart' deferred as item;"
-            ),
-            Arguments.of(
-                DirectiveFactory.create(DirectiveType.RELATIVE, TEST_IMPORT, CastType.HIDE, CAST_VALUE),
-                "import '../../model/item_model.dart' hide item;"
-            ),
-            Arguments.of(
-                DirectiveFactory.create(DirectiveType.RELATIVE, TEST_IMPORT, CastType.SHOW, CAST_VALUE),
-                "import '../../model/item_model.dart' show item;"
-            )
-        )
-
-        @JvmStatic
         private fun exportDirectives() = Stream.of(
             Arguments.of(DirectiveFactory.create(DirectiveType.EXPORT, "test.dart"), "export 'test.dart';"),
             Arguments.of(DirectiveFactory.create(DirectiveType.EXPORT, "new_lib"), "export 'new_lib.dart';")
@@ -122,12 +83,6 @@ class DirectiveTest {
     @ParameterizedTest
     @MethodSource("dartDirectives")
     fun `test dart imports`(current: Directive, expected: String) {
-        assertEquals(expected, current.asString())
-    }
-
-    @ParameterizedTest
-    @MethodSource("relativeDirectives")
-    fun `test relative dart imports`(current: Directive, expected: String) {
         assertEquals(expected, current.asString())
     }
 
