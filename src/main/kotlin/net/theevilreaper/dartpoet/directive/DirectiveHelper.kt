@@ -3,6 +3,7 @@ package net.theevilreaper.dartpoet.directive
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.directive.impl.DartDirective
+import net.theevilreaper.dartpoet.directive.impl.RelativeDirective
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.SEMICOLON
 
@@ -23,6 +24,7 @@ internal object DirectiveHelper {
     private const val IMPORT_KEY: String = "import"
     private const val EXPORT_KEY: String = "export"
     private const val PART_KEY: String = "part"
+    private const val RELATIVE_DOTS: String = "../"
 
     /**
      * Writes a given [Directive] implementation to a [CodeWriter] instance.
@@ -49,6 +51,7 @@ internal object DirectiveHelper {
 
         val path = when (directive.type()) {
             DirectiveType.IMPORT -> updateImportBegin(directive.getPathWithEnding())
+            DirectiveType.RELATIVE -> updateRelativeImportBegin(directive as RelativeDirective)
             else -> directive.getPathWithEnding()
         }
 
@@ -110,6 +113,18 @@ internal object DirectiveHelper {
         return when (path.startsWith("dart:")) {
             true -> path
             false -> "package:$path"
+        }
+    }
+
+    /**
+     * Adds the relative indication dots (../) to an import when the type is [DirectiveType.RELATIVE].
+     * @param path the path which contains the import statement part
+     * @return the input with a indication dots as prefix
+     */
+    private fun updateRelativeImportBegin(directive: RelativeDirective): String {
+        return when (directive.depth == 1) {
+            true -> "$RELATIVE_DOTS${directive.getRawPath()}"
+            false -> "${RELATIVE_DOTS.repeat(directive.depth)}${directive.getRawPath()}"
         }
     }
 }
