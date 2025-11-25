@@ -23,7 +23,8 @@ import java.nio.file.Files
 import java.nio.file.Path
 
 class DartFile internal constructor(
-    builder: DartFileBuilder
+    builder: DartFileBuilder,
+    val maxDepth: Int = DEFAULT_MAX_DEPTH
 ) {
     internal val name: String = builder.name
     internal val indent: String = builder.indent
@@ -97,8 +98,15 @@ class DartFile internal constructor(
             false -> "$name$DART_FILE_ENDING"
         }
 
-        val outPutPath = path.resolve(fileName)
-        OutputStreamWriter(Files.newOutputStream(outPutPath), Charsets.UTF_8)
+        PathValidation.validateFileName(fileName)
+
+        val pathToWrite = path.resolve(fileName).normalize()
+
+        require(pathToWrite.startsWith(path.toAbsolutePath().normalize())) {
+            "Resolved file path '$pathToWrite' would be outside target directory '$path'"
+        }
+
+        OutputStreamWriter(Files.newOutputStream(pathToWrite), Charsets.UTF_8)
             .use { writer -> write(writer) }
     }
 
