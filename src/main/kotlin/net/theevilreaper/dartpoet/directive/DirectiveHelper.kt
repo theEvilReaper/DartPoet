@@ -3,6 +3,7 @@ package net.theevilreaper.dartpoet.directive
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.directive.impl.DartDirective
+import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.SEMICOLON
 
 /**
