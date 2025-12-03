@@ -52,11 +52,27 @@ object DirectiveFactory {
         return create(directive, path, false, castType, importCast)
     }
 
+    /**
+     * Creates a new instance from a [LibraryDirective].
+     * @param path the path to the file
+     * @param partOf the flag to check if the library is part of another library
+     * @return the created [LibraryDirective] instance
+     */
     @Throws(IllegalStateException::class)
     fun createLib(
         path: String,
         partOf: Boolean = false,
     ) = create(DirectiveType.LIBRARY, path, partOf, null, null)
+
+    /**
+     * Creates a new instance from a [PackageDirective].
+     * @param path the path to the file
+     * @return the created [PackageDirective] instance
+     */
+    @Throws(IllegalStateException::class)
+    fun createPackage(
+        path: String,
+    ) = create(DirectiveType.PACKAGE, path, false, null, null)
 
     /**
      * Creates a new instance from a [Directive] implementation depends on the given [DirectiveType].
@@ -81,5 +97,6 @@ object DirectiveFactory {
         DirectiveType.PART -> PartDirective(path)
         DirectiveType.LIBRARY -> LibraryDirective(path, partOf)
         DirectiveType.EXPORT -> ExportDirective(path, castType, importCast)
+        DirectiveType.PACKAGE -> PackageDirective(path, castType, importCast)
     }
 }

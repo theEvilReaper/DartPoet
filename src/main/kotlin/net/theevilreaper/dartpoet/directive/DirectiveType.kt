@@ -1,6 +1,5 @@
 package net.theevilreaper.dartpoet.directive
 
-
 /**
  * The [DirectiveType] enum represents the different types of directives.
  * @since 1.0.0
@@ -12,5 +11,6 @@ enum class DirectiveType {
     RELATIVE,
     PART,
     LIBRARY,
-    EXPORT
+    EXPORT,
+    PACKAGE
 }
