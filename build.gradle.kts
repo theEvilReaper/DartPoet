@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.changelog)
     alias(libs.plugins.dokka)
-    id("com.vanniktech.maven.publish") version "0.35.0"
+    alias(libs.plugins.maven.publish)
 }
 
 group = "net.theevilreaper"
@@ -51,16 +51,6 @@ changelog {
     groups.set(listOf("Added", "Changed", "Deprecated", "Removed", "Fixed", "Security"))
 }
 
-//nmcpAggregation {
-//    centralPortal {
-//        username = System.getenv("OSSRH_USERNAME")
-//        password = System.getenv("OSSRH_PASSWORD")
-//        publishingType = "MANUAL"
-//    }
-//
-//    // Publish all projects that apply the 'maven-publish' plugin
-//    publishAllProjectsProbablyBreakingProjectIsolation()
-//}
 mavenPublishing {
     publishToMavenCentral(automaticRelease = true)
 
