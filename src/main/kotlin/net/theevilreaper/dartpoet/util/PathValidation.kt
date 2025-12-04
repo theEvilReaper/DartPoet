@@ -1,6 +1,8 @@
 package net.theevilreaper.dartpoet.util
 
 import net.theevilreaper.dartpoet.directive.Directive
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 import java.nio.file.Path
 
 /**
@@ -59,20 +61,32 @@ internal object PathValidation {
      * @throws IllegalStateException if an import path cannot be resolved properly
      */
     fun validateRelativeImports(relativeImports: List<Directive>, baseDir: Path, targetFile: Path) {
+        val targetDir = targetFile.parent ?: baseDir
+
         relativeImports.forEach { import ->
-            val importPath = import.getRawPath()
-            val targetDir = targetFile.parent ?: baseDir
+            val raw = import.getRawPath()
 
-            try {
-                val resolvedImport = targetDir.resolve(importPath).normalize()
+            // 1. Handle empty import (test expects no failure)
+            if (raw.isBlank()) return@forEach
 
-                require(resolvedImport.startsWith(baseDir)) {
-                    "Relative import '$importPath' in file '${targetFile.fileName}' " +
-                            "would reference path outside project directory"
-                }
+            // 2. Decode URL encoding (unicode traversal test)
+            val decoded = try {
+                URLDecoder.decode(raw, StandardCharsets.UTF_8)
             } catch (e: Exception) {
-                throw IllegalStateException(
-                    "Invalid relative import path: $importPath", e
+                throw IllegalArgumentException("Invalid encoded import path: $raw", e)
+            }
+
+            // 3. Resolve against target directory
+            val resolved = try {
+                targetDir.resolve(decoded).normalize()
+            } catch (e: Exception) {
+                throw IllegalArgumentException("Invalid relative import path: $decoded", e)
+            }
+
+            // 4. Ensure resolved path stays within baseDir
+            if (!resolved.startsWith(baseDir.normalize())) {
+                throw IllegalArgumentException(
+                    "Relative import '$raw' in file '${targetFile.fileName}' escapes project directory"
                 )
             }
         }

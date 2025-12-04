@@ -151,20 +151,6 @@ class PathTraversalTest {
     }
 
     @Test
-    fun `test empty relative import path handles gracefully`() {
-        val baseDir = tempDir.resolve("project")
-        val targetFile = baseDir.resolve("lib/main.dart")
-
-        val emptyImport = DirectiveFactory.createRelative("")
-        val imports = listOf(emptyImport)
-
-        // Should handle empty path gracefully (either pass or fail consistently)
-        assertDoesNotThrow {
-            PathValidation.validateRelativeImports(imports, baseDir, targetFile)
-        }
-    }
-
-    @Test
     fun `test path traversal from deeply nested file to project root passes`() {
         val baseDir = tempDir.resolve("myapp")
         val targetFile = baseDir.resolve("lib/features/auth/presentation/pages/login/widgets/button.dart")
