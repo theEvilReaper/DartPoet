@@ -68,6 +68,15 @@ class RelativeDirectiveTest {
                 1
             )
         )
+
+        @JvmStatic
+        private fun invalidPrefixPatterns() = Stream.of(
+            Arguments.of("./item_model.dart", 1, "import '../item_model.dart';"),
+            Arguments.of(".../item_model.dart", 1, "import '../item_model.dart';"),
+            Arguments.of("..../item_model.dart", 2, "import '../../item_model.dart';"),
+            Arguments.of("../item_model.dart", 1, "import '../item_model.dart';"), // already valid
+            Arguments.of("../../item_model.dart", 1, "import '../../item_model.dart';"), // keeps existing
+        )
     }
 
     @ParameterizedTest(name = "test relative directives without the factory")
@@ -86,6 +95,17 @@ class RelativeDirectiveTest {
         assertEquals(expected, currentImportString)
         val prefixCount = countRelativeSegments(currentImportString)
         assertEquals(depth, prefixCount, "There should be exactly two dot prefix")
+    }
+
+    @ParameterizedTest(name = "Sanitize invalid prefix: {0} with depth {1}")
+    @MethodSource("invalidPrefixPatterns")
+    fun `test sanitization of invalid relative prefixes`(
+        input: String,
+        depth: Int,
+        expected: String
+    ) {
+        val relativeImport = RelativeDirective(input, depth = depth)
+        assertEquals(expected, relativeImport.asString())
     }
 
     @Test
