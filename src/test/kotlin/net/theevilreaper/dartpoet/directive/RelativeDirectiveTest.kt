@@ -12,7 +12,6 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.regex.Pattern
 import java.util.stream.Stream
-import kotlin.test.assertNotEquals
 
 class RelativeDirectiveTest {
 
@@ -21,45 +20,72 @@ class RelativeDirectiveTest {
 
     companion object {
 
-        private const val TEST_IMPORT = "../model/item_model.dart"
+        private const val TEST_IMPORT = "model/item_model.dart"
         private const val CAST_VALUE = "item"
 
         @JvmStatic
         private fun relativeDirectives() = Stream.of(
-            Arguments.of(RelativeDirective(TEST_IMPORT), "import '../../model/item_model.dart';"),
+            Arguments.of(RelativeDirective(TEST_IMPORT, depth = 2), "import '../../model/item_model.dart';"),
             Arguments.of(
-                RelativeDirective(TEST_IMPORT, CastType.AS, CAST_VALUE),
+                RelativeDirective(TEST_IMPORT, CastType.AS, CAST_VALUE, depth = 2),
                 "import '../../model/item_model.dart' as item;"
             ),
             Arguments.of(
-                RelativeDirective(TEST_IMPORT, CastType.DEFERRED, CAST_VALUE),
+                RelativeDirective(TEST_IMPORT, CastType.DEFERRED, CAST_VALUE, depth = 2),
                 "import '../../model/item_model.dart' deferred as item;"
             ),
             Arguments.of(
-                RelativeDirective(TEST_IMPORT, CastType.HIDE, CAST_VALUE),
+                RelativeDirective(TEST_IMPORT, CastType.HIDE, CAST_VALUE, depth = 2),
                 "import '../../model/item_model.dart' hide item;"
             ),
+        )
+
+        @JvmStatic
+        private fun relativeDirectivesWithFactoryCalls() = Stream.of(
             Arguments.of(
-                DirectiveFactory.create(DirectiveType.RELATIVE, TEST_IMPORT),
-                "import '../../model/item_model.dart';"
+                DirectiveFactory.createRelative( TEST_IMPORT, depth = 2),
+                "import '../../model/item_model.dart';",
+                2
             ),
             Arguments.of(
-                DirectiveFactory.create(DirectiveType.RELATIVE, TEST_IMPORT, CastType.AS, CAST_VALUE),
-                "import '../../model/item_model.dart' as item;"
+                DirectiveFactory.createRelative(TEST_IMPORT, CastType.AS, CAST_VALUE, depth = 2),
+                "import '../../model/item_model.dart' as item;",
+                2
             ),
             Arguments.of(
-                DirectiveFactory.create(DirectiveType.RELATIVE, TEST_IMPORT, CastType.DEFERRED, CAST_VALUE),
-                "import '../../model/item_model.dart' deferred as item;"
+                DirectiveFactory.createRelative(TEST_IMPORT, CastType.DEFERRED, CAST_VALUE, depth = 2),
+                "import '../../model/item_model.dart' deferred as item;",
+                2
             ),
             Arguments.of(
-                DirectiveFactory.create(DirectiveType.RELATIVE, TEST_IMPORT, CastType.HIDE, CAST_VALUE),
-                "import '../../model/item_model.dart' hide item;"
+                DirectiveFactory.createRelative(TEST_IMPORT, CastType.HIDE, CAST_VALUE),
+                "import '../model/item_model.dart' hide item;",
+                1
             ),
             Arguments.of(
-                DirectiveFactory.create(DirectiveType.RELATIVE, TEST_IMPORT, CastType.SHOW, CAST_VALUE),
-                "import '../../model/item_model.dart' show item;"
+                DirectiveFactory.createRelative(TEST_IMPORT, CastType.SHOW, CAST_VALUE),
+                "import '../model/item_model.dart' show item;",
+                1
             )
         )
+    }
+
+    @ParameterizedTest(name = "test relative directives without the factory")
+    @MethodSource("relativeDirectives")
+    fun `test relative dart imports with a depth of two`(current: Directive, expected: String) {
+        val currentImportString = current.asString()
+        assertEquals(expected, currentImportString)
+        val prefixCount = countRelativeSegments(currentImportString)
+        assertEquals(2, prefixCount, "There should be exactly two dot prefix")
+    }
+
+    @ParameterizedTest(name = "test relative directives with the factory with depth {2}")
+    @MethodSource("relativeDirectivesWithFactoryCalls")
+    fun `test relative imports with the factory and variable depth`(current: Directive, expected: String, depth: Int) {
+        val currentImportString = current.asString()
+        assertEquals(expected, currentImportString)
+        val prefixCount = countRelativeSegments(currentImportString)
+        assertEquals(depth, prefixCount, "There should be exactly two dot prefix")
     }
 
     @Test
@@ -101,22 +127,12 @@ class RelativeDirectiveTest {
 
     @Test
     fun `test relative import with prefix dots`() {
-        //TODO: It should not add ../ when the string already contains some
         val relativeImport = RelativeDirective("../$testRelativePath")
         assertNotNull(relativeImport)
         assertEquals(1, relativeImport.depth)
 
         val importAsString = relativeImport.asString()
-        assertNotEquals("import '../$testRelativePath';", importAsString)
-    }
-
-    @ParameterizedTest
-    @MethodSource("relativeDirectives")
-    fun `test relative dart imports`(current: Directive, expected: String) {
-        val currentImportString = current.asString()
-        assertEquals(expected, currentImportString)
-        val prefixCount = countRelativeSegments(currentImportString)
-        assertEquals(2, prefixCount, "There should be exactly two dot prefix")
+        assertEquals("import '../$testRelativePath';", importAsString)
     }
 
     /**
