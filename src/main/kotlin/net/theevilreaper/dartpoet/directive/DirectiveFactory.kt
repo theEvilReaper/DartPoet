@@ -1,6 +1,7 @@
 package net.theevilreaper.dartpoet.directive
 
 import net.theevilreaper.dartpoet.directive.impl.*
+import net.theevilreaper.dartpoet.util.DEFAULT_MAX_DEPTH
 
 /**
  * The [DirectiveFactory] should be used to create a new instance of different [Directive] implementations.
@@ -73,6 +74,23 @@ object DirectiveFactory {
     fun createPackage(
         path: String,
     ) = create(DirectiveType.PACKAGE, path, false, null, null)
+
+    /**
+     * Creates a new instance from a [RelativeDirective].
+     * @param path the path to the file (can already contain ../ prefix)
+     * @param castType the [CastType] to use
+     * @param importCast the import cast to use
+     * @param depth the depth of the relative import (how many ../ to add if not already present)
+     * @return the created [RelativeDirective] instance
+     */
+    fun createRelative(
+        path: String,
+        castType: CastType? = null,
+        importCast: String? = null,
+        depth: Int = DEFAULT_MAX_DEPTH
+    ): RelativeDirective {
+        return RelativeDirective(path, castType, importCast, depth)
+    }
 
     /**
      * Creates a new instance from a [Directive] implementation depends on the given [DirectiveType].

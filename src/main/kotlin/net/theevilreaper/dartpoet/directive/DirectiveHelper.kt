@@ -3,6 +3,7 @@ package net.theevilreaper.dartpoet.directive
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.directive.impl.DartDirective
+import net.theevilreaper.dartpoet.directive.impl.RelativeDirective
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.SEMICOLON
 
@@ -23,6 +24,7 @@ internal object DirectiveHelper {
     private const val IMPORT_KEY: String = "import"
     private const val EXPORT_KEY: String = "export"
     private const val PART_KEY: String = "part"
+    private const val RELATIVE_DOTS: String = "../"
 
     /**
      * Writes a given [Directive] implementation to a [CodeWriter] instance.
@@ -49,6 +51,7 @@ internal object DirectiveHelper {
 
         val path = when (directive.type()) {
             DirectiveType.IMPORT -> updateImportBegin(directive.getPathWithEnding())
+            DirectiveType.RELATIVE -> updateRelativeImportBegin(directive as RelativeDirective)
             else -> directive.getPathWithEnding()
         }
 
@@ -110,6 +113,27 @@ internal object DirectiveHelper {
         return when (path.startsWith("dart:")) {
             true -> path
             false -> "package:$path"
+        }
+    }
+
+    /**
+     * Adds the relative indication dots (../) to an import when the type is [DirectiveType.RELATIVE].
+     * @param directive the directive to get the path from it
+     * @return the input with an indication dots as prefix
+     */
+    private fun updateRelativeImportBegin(directive: RelativeDirective): String {
+        val rawPath = directive.getRawPath()
+
+        // If path already has ../, return as-is (user already provided the dots)
+        if (rawPath.startsWith("../")) {
+            return rawPath
+        }
+
+        // Otherwise add based on depth
+        return when (directive.depth) {
+            0 -> rawPath // No prefix needed
+            1 -> "$RELATIVE_DOTS$rawPath"
+            else -> "${RELATIVE_DOTS.repeat(directive.depth)}$rawPath"
         }
     }
 }
