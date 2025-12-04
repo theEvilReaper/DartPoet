@@ -106,6 +106,11 @@ class DartFile internal constructor(
             "Resolved file path '$pathToWrite' would be outside target directory '$path'"
         }
 
+        if (relativeImports.isNotEmpty()) {
+            val normalizedPath = path.toAbsolutePath().normalize()
+            PathValidation.validateRelativeImports(relativeImports, normalizedPath, pathToWrite)
+        }
+
         OutputStreamWriter(Files.newOutputStream(pathToWrite), Charsets.UTF_8)
             .use { writer -> write(writer) }
     }
