@@ -18,14 +18,11 @@ class RelativeDirective internal constructor(
     private val castType: CastType? = null,
     private val importCast: String? = null,
     val depth: Int = DEFAULT_MAX_DEPTH,
-) : BaseDirective(DirectiveType.RELATIVE, path) {
+) : BaseDirective(DirectiveType.RELATIVE, sanitizePath(path)) {
 
     init {
         require(depth >= 0) { "The depth of a relative import can't be negative" }
-        if (importCast != null) {
-            check(importCast.trim().isNotEmpty()) { "The importCast can't be empty" }
-        }
-        check(!((castType != null && importCast == null) || (castType == null && importCast != null))) {
+        check((castType == null) == (importCast == null)) {
             "The castType and importCast must be set together or must be null. A mixed state is not allowed"
         }
     }
@@ -36,5 +33,24 @@ class RelativeDirective internal constructor(
      */
     override fun write(writer: CodeWriter) {
         DirectiveHelper.writeDirective(writer, this, importCast, castType)
+    }
+
+    companion object {
+        private val VALID_RELATIVE_PATTERN = Regex("^(\\.\\./)+.*")
+        private val INVALID_RELATIVE_PATTERN = Regex("^(\\.|\\.{3,})/")
+
+        /**
+         * Sanitizes the given path by removing invalid relative path patterns.
+         * Valid patterns like ../ are kept as-is, while invalid patterns like ./ or .../ are removed.
+         * @param path the path to sanitize
+         * @return the sanitized path
+         */
+        private fun sanitizePath(path: String): String {
+            // If already valid relative path (starts with ../), return as-is
+            if (VALID_RELATIVE_PATTERN.matches(path)) {
+                return path
+            }
+            return path.replace(INVALID_RELATIVE_PATTERN, "")
+        }
     }
 }
