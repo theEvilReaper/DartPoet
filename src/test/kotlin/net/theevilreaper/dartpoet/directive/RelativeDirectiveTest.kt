@@ -5,13 +5,14 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrowsExactly
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.regex.Pattern
 import java.util.stream.Stream
-import kotlin.test.assertTrue
+import kotlin.test.assertNotEquals
 
 class RelativeDirectiveTest {
 
@@ -96,6 +97,17 @@ class RelativeDirectiveTest {
 
         val prefixCount = countRelativeSegments(importAsString)
         assertEquals(4, prefixCount, "There should be exactly two dot prefix")
+    }
+
+    @Test
+    fun `test relative import with prefix dots`() {
+        //TODO: It should not add ../ when the string already contains some
+        val relativeImport = RelativeDirective("../$testRelativePath")
+        assertNotNull(relativeImport)
+        assertEquals(1, relativeImport.depth)
+
+        val importAsString = relativeImport.asString()
+        assertNotEquals("import '../$testRelativePath';", importAsString)
     }
 
     @ParameterizedTest
