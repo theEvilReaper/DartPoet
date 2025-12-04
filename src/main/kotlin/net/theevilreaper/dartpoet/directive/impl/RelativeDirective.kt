@@ -6,6 +6,9 @@ import net.theevilreaper.dartpoet.directive.CastType
 import net.theevilreaper.dartpoet.directive.DirectiveHelper
 import net.theevilreaper.dartpoet.directive.DirectiveType
 import net.theevilreaper.dartpoet.util.DEFAULT_MAX_DEPTH
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
+
 
 /**
  * This implementation represents a relative directive from dart.
@@ -22,6 +25,10 @@ class RelativeDirective internal constructor(
 
     init {
         require(depth >= 0) { "The depth of a relative import can't be negative" }
+
+        val decoded: String? = URLDecoder.decode(path, StandardCharsets.UTF_8)
+        require(path == decoded) { "The path $path contains invalid characters" }
+
         check((castType == null) == (importCast == null)) {
             "The castType and importCast must be set together or must be null. A mixed state is not allowed"
         }

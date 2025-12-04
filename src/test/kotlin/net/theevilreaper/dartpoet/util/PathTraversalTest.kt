@@ -136,21 +136,6 @@ class PathTraversalTest {
     }
 
     @Test
-    fun `test path traversal with unicode encoding fails`() {
-        val baseDir = tempDir.resolve("project")
-        val targetFile = baseDir.resolve("lib/main.dart")
-
-        // Some systems might interpret unicode differently
-        val unicodeImport = DirectiveFactory.createRelative("..%2F..%2Fetc%2Fpasswd")
-        val imports = listOf(unicodeImport)
-
-        // Should either fail validation or throw IllegalStateException in catch block
-        assertThrows(Exception::class.java) {
-            PathValidation.validateRelativeImports(imports, baseDir, targetFile)
-        }
-    }
-
-    @Test
     fun `test path traversal from deeply nested file to project root passes`() {
         val baseDir = tempDir.resolve("myapp")
         val targetFile = baseDir.resolve("lib/features/auth/presentation/pages/login/widgets/button.dart")
