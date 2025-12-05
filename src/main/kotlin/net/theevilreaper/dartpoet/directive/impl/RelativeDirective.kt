@@ -9,7 +9,6 @@ import net.theevilreaper.dartpoet.util.DEFAULT_MAX_DEPTH
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 
-
 /**
  * This implementation represents a relative directive from dart.
  * The difference to other directive variants is that the path starts with \../.
