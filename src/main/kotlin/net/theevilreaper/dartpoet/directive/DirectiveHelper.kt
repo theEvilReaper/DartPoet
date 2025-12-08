@@ -118,12 +118,12 @@ internal object DirectiveHelper {
     /**
      * Adds the relative indication dots (../) to an import when the type is [DirectiveType.RELATIVE].
      * @param directive the directive to get the path from it
-     * @return the input with an indication dots as prefix
+     * @return the input with an indication dot as a prefix
      */
     private fun updateRelativeImportBegin(directive: RelativeDirective): String {
         val rawPath = directive.getRawPath()
 
-        // If path already has ../, return as-is (user already provided the dots)
+        // If a path already has ../, return as-is (user already provided the dots)
         if (rawPath.startsWith("../")) {
             return rawPath
         }

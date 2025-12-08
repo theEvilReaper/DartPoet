@@ -109,6 +109,14 @@ class RelativeDirectiveTest {
     }
 
     @Test
+    fun `test path with unicode encoding`() {
+        val message = assertThrowsExactly(IllegalArgumentException::class.java) {
+            DirectiveFactory.createRelative("..%2F..%2Fetc%2Fpasswd")
+        }.message
+        assertEquals("The path ..%2F..%2Fetc%2Fpasswd contains invalid characters", message)
+    }
+
+    @Test
     fun `test relative import with invalid depth`() {
         assertThrowsExactly(
             IllegalArgumentException::class.java,
