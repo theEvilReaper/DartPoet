@@ -20,6 +20,10 @@
 
 package net.theevilreaper.dartpoet.code
 
+import net.theevilreaper.dartpoet.function.FunctionSpec
+import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
+import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asTypeName
 import net.theevilreaper.dartpoet.util.*
@@ -373,11 +377,12 @@ class CodeBlock private constructor(
 
         private fun argToName(o: Any?) = when (o) {
             is CharSequence -> o.toString()
-            /*   is ParameterSpec -> o.name
-      is PropertySpec -> o.name
-      is FunSpec -> o.name
-      is TypeSpec -> o.name!!
-      is MemberName -> o.simpleName*/
+            is ParameterSpec -> o.name
+            is PropertySpec -> o.name
+            is FunctionSpec -> o.name
+            is TypeDefSpec -> requireNotNull(o.name) {
+                "TypeDefSpec must have a non-null name to be used with %N placeholder"
+            }
             else -> throw IllegalArgumentException("expected name but was $o")
         }
 
