@@ -20,6 +20,8 @@
 
 package net.theevilreaper.dartpoet.code
 
+import net.theevilreaper.dartpoet.clazz.ClassSpec
+import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
@@ -38,18 +40,17 @@ import kotlin.reflect.KClass
 
 /**
  * A fragment of a .kt file, potentially containing declarations, statements, and documentation.
- * Code blocks are not necessarily well-formed Kotlin code, and are not validated. This class
- * assumes kotlinc will check correctness later!
+ * Code blocks are not necessarily well-formed Dart code, and are not validated.
  *
  * Code blocks support placeholders like [java.text.Format]. This class primarily uses a percent
  * sign `%` but has its own set of permitted placeholders:
  *
  *  * `%L` emits a *literal* value with no escaping. Arguments for literals may be strings,
- *    primitives, [type declarations][TypeSpec], [annotations][AnnotationSpec] and even other code
+ *    primitives, [type declarations][ClassSpec], [annotations][AnnotationSpec] and even other code
  *    blocks.
  *  * `%N` emits a *name*, using name collision avoidance where necessary. Arguments for names may
  *    be strings (actually any [character sequence][CharSequence]), [parameters][ParameterSpec],
- *    [properties][PropertySpec], [functions][FunSpec], and [types][TypeSpec].
+ *    [properties][PropertySpec], [functions][FunctionSpec], [typeDefs][TypeDefSpec] and [types][ClassSpec].
  *  * `%S` escapes the value as a *string*, wraps it with double quotes, and emits that. For
  *    example, `6" sandwich` is emitted `"6\" sandwich"`. `%S` will also escape all dollar signs
  *    (`$`), use `%P` for string templates.
@@ -58,7 +59,7 @@ import kotlin.reflect.KClass
  *  * `%T` emits a *type* reference. Types will be imported if possible. Arguments for types may be
  *    [classes][Class].
  *  * `%M` emits a *member* reference. A member is either a function or a property. If the member is
- *    importable, e.g. it's a top-level function or a property declared inside an object, the import
+ *    importable, e.g, it's a top-level function or a property declared inside an object, the import
  *    will be resolved if possible. Arguments for members must be of type [MemberName].
  *  * `%%` emits a percent sign.
  *  * `·` emits a space that never wraps. KotlinPoet prefers to wrap lines longer than 100 columns.
@@ -117,15 +118,13 @@ class CodeBlock private constructor(
 
         // We found a prefix. Prepare the suffix as a result.
         val resultFormatParts = ArrayList<String>()
-        firstFormatPart?.let {
-            resultFormatParts.add(it)
-        }
-        for (i in prefix.formatParts.size until formatParts.size) {
+        firstFormatPart?.let { resultFormatParts.add(it) }
+        for (i in prefix.formatParts.size..<formatParts.size) {
             resultFormatParts.add(formatParts[i])
         }
 
         val resultArgs = ArrayList<Any?>()
-        for (i in prefix.args.size until args.size) {
+        for (i in prefix.args.size..<args.size) {
             resultArgs.add(args[i])
         }
 
@@ -358,7 +357,7 @@ class CodeBlock private constructor(
                 'N' -> this.args += argToName(arg).escapeIfNecessary()
                 'L' -> this.args += argToLiteral(arg)
                 'S' -> this.args += argToString(arg)
-                'P' -> this.args += if (arg is CodeBlock) arg else argToString(arg)
+                'P' -> this.args += arg as? CodeBlock ?: argToString(arg)
                 'M' -> this.args += arg
                 'C' -> this.args += argToString(arg)
                 'T' -> this.args += argToType(arg)
@@ -380,6 +379,7 @@ class CodeBlock private constructor(
             is ParameterSpec -> o.name
             is PropertySpec -> o.name
             is FunctionSpec -> o.name
+            is ClassSpec -> o.name
             is TypeDefSpec -> requireNotNull(o.name) {
                 "TypeDefSpec must have a non-null name to be used with %N placeholder"
             }
