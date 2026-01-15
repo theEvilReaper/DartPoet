@@ -230,10 +230,10 @@ class CodeWriter(
                 }
 
                 "%T" -> {
-                    var typeName = codeBlock.args[a++] as TypeName
+                    val typeName = codeBlock.args[a++] as TypeName
                     typeName.emit(this)
                 }
-
+                "%N" -> emit(codeBlock.args[a++] as String)
                 "%%" -> emit("%")
                 "⇥" -> indent()
                 "⇤" -> unindent()
