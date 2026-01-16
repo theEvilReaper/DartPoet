@@ -46,7 +46,7 @@ class DartFileTest {
             .type(
                 ClassSpec.anonymousClassBuilder()
                     .typedef(
-                        TypeDefSpec.builder("JsonMap")
+                        TypeDefSpec.alias("JsonMap")
                             .returns(Map::class.parameterizedBy(String::class.asTypeName(), DYNAMIC))
                             .build()
 
