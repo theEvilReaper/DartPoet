@@ -4,15 +4,9 @@ import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.FunctionWriter
-import net.theevilreaper.dartpoet.parameter.ParameterChecker
-import net.theevilreaper.dartpoet.parameter.ParameterType
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asTypeName
-import net.theevilreaper.dartpoet.util.ParameterFilter
-import net.theevilreaper.dartpoet.util.ParameterHelper
-import net.theevilreaper.dartpoet.util.toImmutableList
-import kotlin.reflect.KClass
 
 /**
  * The class models a typedef from dart into a structure which can be used to generate and organize such methods.
@@ -20,33 +14,20 @@ import kotlin.reflect.KClass
  * @param builder the builder instance to retrieve the data from
  * @see <a href="https://dart.dev/language/typedefs">Dart Typedefs</a>.
  */
-class TypeDefSpec(
-    val builder: TypeDefBuilder
+open class TypeDefSpec(
+    val builder: TypeDefBuilder<*>
 ) {
+    internal val name = builder.typeName
     internal val typeDefName = builder.typeDefName
-    internal val name = builder.name
+    internal val typeName = builder.typeName
     internal val typeCasts = builder.typeCasts
     internal val returnType = builder.returnType ?: Void::class.asTypeName()
 
-    internal val parameters = builder.parameters.toImmutableList()
-
-    internal val optionalNamed = ParameterFilter.filterParameter(parameters) { it.type == ParameterType.NAMED && (it.isNullable || it.hasInitializer) }
-    internal val requiredParameters = ParameterFilter.filterParameter(parameters) { it.type == ParameterType.REQUIRED }
-    internal val parametersWithDefaults = ParameterFilter.filterParameter(parameters) { it.type == ParameterType.OPTIONAL }
-    internal val normalParameters = ParameterHelper.excludeParameters(parameters, optionalNamed, requiredParameters, parametersWithDefaults)
-
-    internal val hasParameters = parameters.isNotEmpty()
-    internal val hasAdditionalParameters = requiredParameters.isNotEmpty() || optionalNamed.isNotEmpty()
     /**
      * Performs some checks to avoid invalid data.
      */
     init {
         require(typeDefName.trim().isNotEmpty()) { "The name of a typedef can't be empty" }
-        if (name != null) {
-            require(name.trim().isNotEmpty()) { "The function name of a typedef can't be empty" }
-        }
-
-        ParameterChecker.checkOptionalParameters(parametersWithDefaults)
     }
 
     /**
@@ -68,11 +49,9 @@ class TypeDefSpec(
      * This is useful if you want to modify an existing spec object.
      * @return the created builder
      */
-    fun toBuilder(): TypeDefBuilder {
-        val newBuilder = TypeDefBuilder(this.typeDefName, *this.typeCasts)
-        newBuilder.name = this.name
+    open fun toBuilder(): TypeDefBuilder<*> {
+        val newBuilder = TypeDefBuilder(this.typeDefName, this.typeName, *this.typeCasts)
         newBuilder.returnType = this.returnType
-        newBuilder.parameters.addAll(this.parameters)
         return newBuilder
     }
 
@@ -81,52 +60,24 @@ class TypeDefSpec(
      */
     companion object {
 
-        /**
-         * Static method to create a new instance from the [TypeDefBuilder].
-         * @param typeDefName the name of the typedef
-         * @return the created instance
-         */
         @JvmStatic
-        fun builder(typeDefName: String): TypeDefBuilder = TypeDefBuilder(typeDefName)
+        fun alias(name: String): TypeDefBuilder<*> = TypeDefBuilder(name)
 
-        /**
-         * Static method to create a new instance from the [TypeDefBuilder].
-         * @param typeDefName the name of the typedef
-         * @param typeCasts the type cast for the typedef as [TypeName]
-         * @return the created instance
-         */
         @JvmStatic
-        fun builder(typeDefName: String, vararg typeCasts: TypeName): TypeDefBuilder =
-            TypeDefBuilder(typeDefName, *typeCasts)
+        fun alias(name: String, typeName: TypeName): TypeDefBuilder<*> = TypeDefBuilder(name, typeName)
 
-        /**
-         * Static method to create a new instance from the [TypeDefBuilder].
-         * @param typeDefName the name of the typedef
-         * @param typeCasts the type cast for the typedef as [Class]
-         * @return the created instance
-         */
         @JvmStatic
-        fun builder(typeDefName: String, vararg typeCasts: ClassName): TypeDefBuilder =
-            TypeDefBuilder(typeDefName, *typeCasts)
+        fun alias(name: String, typeName: String): TypeDefBuilder<*> = TypeDefBuilder(name, ClassName(typeName))
 
-        /**
-         * Static method to create a new instance from the [TypeDefBuilder].
-         * @param typeDefName the name of the typedef
-         * @param typeCasts the type cast for the typedef as [Class]
-         * @return the created instance
-         */
         @JvmStatic
-        fun builder(typeDefName: String, vararg typeCasts: Class<*>): TypeDefBuilder =
-            TypeDefBuilder(typeDefName, *typeCasts.map { it.asTypeName() }.toTypedArray())
+        fun alias(name: String, typeName: String, vararg typeCasts: TypeName): TypeDefBuilder<*> =
+            FunctionTypeDefBuilder(name, ClassName(typeName), typeCasts = typeCasts)
 
-        /**
-         * Static method to create a new instance from the [TypeDefBuilder].
-         * @param typeDefName the name of the typedef
-         * @param typeCasts the type cast for the typedef as [KClass]
-         * @return the created instance
-         */
         @JvmStatic
-        fun builder(typeDefName: String, vararg typeCasts: KClass<*>): TypeDefBuilder =
-            TypeDefBuilder(typeDefName, *typeCasts.map { it.asTypeName() }.toTypedArray())
+        fun function(name: String): TypeDefBuilder<*> = FunctionTypeDefBuilder(name)
+
+        @JvmStatic
+        fun function(name: String, vararg typeCasts: TypeName): FunctionTypeDefBuilder =
+            FunctionTypeDefBuilder(name, typeCasts = typeCasts)
     }
 }

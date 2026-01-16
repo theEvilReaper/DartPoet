@@ -1,9 +1,9 @@
 package net.theevilreaper.dartpoet.function.typedef
 
-import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asTypeName
+import java.util.function.Function
 import kotlin.reflect.KClass
 
 /**
@@ -13,14 +13,14 @@ import kotlin.reflect.KClass
  * @param typeDefName the name of the type definition.
  * @param typeCasts optional array of type-cast for the type definition.
  */
-class TypeDefBuilder internal constructor(
+open class TypeDefBuilder<T : TypeDefBuilder<T>>  internal constructor(
     val typeDefName: String,
-    vararg val typeCasts: TypeName? = emptyArray()
+    val typeName: TypeName = Function::class.asTypeName(),
+    vararg val typeCasts: TypeName? = emptyArray(),
 ) {
-    /**
-     * The name of the type definition.
-     */
-    var name: String? = null
+
+    @Suppress("UNCHECKED_CAST")
+    protected fun self(): T = this as T
 
     /**
      * The return type of the type definition.
@@ -28,47 +28,12 @@ class TypeDefBuilder internal constructor(
     var returnType: TypeName? = null
 
     /**
-     * List of parameters associated with the type definition.
-     */
-    val parameters: MutableList<ParameterSpec> = mutableListOf()
-
-    /**
-     * Sets the name of the type definition.
-     *
-     * @param name the name of the type definition.
-     * @return the current instance of [TypeDefBuilder].
-     */
-    fun name(name: String) = apply {
-        this.name = name
-    }
-
-    /**
-     * Adds a parameter to the list of parameters.
-     *
-     * @param parameterSpec the parameter specification.
-     * @return the current instance of [TypeDefBuilder].
-     */
-    fun parameter(parameterSpec: ParameterSpec) = apply {
-        this.parameters += parameterSpec
-    }
-
-    /**
-     * Adds multiple parameters to the list of parameters.
-     *
-     * @param parameterSpecs the parameter specifications.
-     * @return the current instance of [TypeDefBuilder].
-     */
-    fun parameters(vararg parameterSpecs: ParameterSpec) = apply {
-        this.parameters += parameterSpecs
-    }
-
-    /**
      * Sets the return type of the type definition.
      *
      * @param typeName the return type as a [TypeName].
      * @return the current instance of [TypeDefBuilder].
      */
-    fun returns(typeName: TypeName) = apply {
+    fun returns(typeName: TypeName): T = self().apply {
         this.returnType = typeName
     }
 
@@ -78,7 +43,7 @@ class TypeDefBuilder internal constructor(
      * @param typeName the return type as a [ClassName].
      * @return the current instance of [TypeDefBuilder].
      */
-    fun returns(typeName: ClassName) = apply {
+    fun returns(typeName: ClassName): T = self().apply {
         this.returnType = typeName
     }
 
@@ -88,7 +53,7 @@ class TypeDefBuilder internal constructor(
      * @param typeName the return type as a [KClass].
      * @return the current instance of [TypeDefBuilder].
      */
-    fun returns(typeName: KClass<*>) = apply {
+    fun returns(typeName: KClass<*>) = self().apply {
         this.returnType = typeName.asTypeName()
     }
 
@@ -97,7 +62,7 @@ class TypeDefBuilder internal constructor(
      *
      * @return an instance of [TypeDefSpec].
      */
-    fun build(): TypeDefSpec {
+    open fun build(): TypeDefSpec {
         return TypeDefSpec(this)
     }
 }
