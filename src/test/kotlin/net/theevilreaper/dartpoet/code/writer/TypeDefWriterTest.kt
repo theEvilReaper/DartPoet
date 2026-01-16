@@ -24,18 +24,17 @@ class TypeDefWriterTest {
         @JvmStatic
         private fun typeDefs(): Stream<Arguments> = Stream.of(
             Arguments.of(
-                TypeDefSpec.builder("ValueUpdate", genericClassName)
+                TypeDefSpec.function("ValueUpdate", genericClassName)
                     .parameter(
                         ParameterSpec.positional("value", genericClassName)
                             .nullable(true)
                             .build()
                     )
-                    .name("Function")
                     .build(),
                 "typedef ValueUpdate<E> = void Function(E? value);"
             ),
             Arguments.of(
-                TypeDefSpec.builder("json")
+                TypeDefSpec.alias("json", )
                     .returns(Map::class.parameterizedBy(String::class.asTypeName(), DYNAMIC))
                     .build(),
                 "typedef json = Map<String, dynamic>;"
@@ -45,11 +44,10 @@ class TypeDefWriterTest {
         @JvmStatic
         private fun multipleCastArguments(): Stream<Arguments> = Stream.of(
             Arguments.of(
-                TypeDefSpec.builder(
+                TypeDefSpec.function(
                     "DoubleValueUpdate",
                     genericClassName, secondGenericClassName
                 )
-                    .name("Function")
                     .parameters(
                         ParameterSpec.positional("first", genericClassName)
                             .nullable(true)
@@ -62,9 +60,8 @@ class TypeDefWriterTest {
                 "typedef DoubleValueUpdate<E, T> = void Function(E? first, T? second);"
             ),
             Arguments.of(
-                TypeDefSpec.builder("Compare", genericClassName, secondGenericClassName)
+                TypeDefSpec.function("Compare", genericClassName, secondGenericClassName)
                     .returns(Int::class)
-                    .name("Function")
                     .parameters(
                         ParameterSpec.positional("a", genericClassName)
                             .build(),
@@ -79,8 +76,7 @@ class TypeDefWriterTest {
         @JvmStatic
         private fun differentParameterTypes(): Stream<Arguments> = Stream.of(
             Arguments.of(
-                TypeDefSpec.builder("ValueUpdate", genericClassName)
-                    .name("Function")
+                TypeDefSpec.function("ValueUpdate", genericClassName)
                     .returns(genericClassName)
                     .parameters(
                         ParameterSpec.positional("value", String::class)
@@ -94,8 +90,7 @@ class TypeDefWriterTest {
                 "typedef ValueUpdate<E> = E Function(String value, [E? data = null]);"
             ),
             Arguments.of(
-                TypeDefSpec.builder("ValueUpdate", genericClassName)
-                    .name("Function")
+                TypeDefSpec.function("ValueUpdate", genericClassName)
                     .returns(genericClassName)
                     .parameters(
                         ParameterSpec.positional("map", Map::class.parameterizedBy(String::class, Int::class))
@@ -109,8 +104,7 @@ class TypeDefWriterTest {
                 "typedef ValueUpdate<E> = E Function(Map<String, int> map, [E? data = null]);"
             ),
             Arguments.of(
-                TypeDefSpec.builder("ValueUpdate", genericClassName)
-                    .name("Function")
+                TypeDefSpec.function("ValueUpdate", genericClassName)
                     .returns(genericClassName)
                     .parameters(
                         ParameterSpec.positional("list", List::class.parameterizedBy(String::class))
@@ -122,8 +116,7 @@ class TypeDefWriterTest {
                 "typedef ValueUpdate<E> = E Function(List<String> list, {required E data});"
             ),
             Arguments.of(
-                TypeDefSpec.builder("ValueUpdate", genericClassName)
-                    .name("Function")
+                TypeDefSpec.function("ValueUpdate", genericClassName)
                     .returns(genericClassName)
                     .parameters(
                         ParameterSpec.positional("data", genericClassName)
