@@ -16,7 +16,7 @@ import net.theevilreaper.dartpoet.util.toImmutableList
 class FunctionTypeDefSpec(
     builder: FunctionTypeDefBuilder
 ) : AbstractTypeDef<FunctionTypeDefBuilder>(
-    builder.name, builder.typeName, builder.typeCasts.toList()
+    builder.type
 ) {
     internal val returnType: TypeName = builder.returnType
 
@@ -50,7 +50,7 @@ class FunctionTypeDefSpec(
     }
 
     override fun toBuilder(): FunctionTypeDefBuilder {
-        val newBuilder = FunctionTypeDefBuilder(this.name, this.type, this.typeCasts)
+        val newBuilder = FunctionTypeDefBuilder(this.type)
         newBuilder.returnType = this.returnType
         newBuilder.parameters.addAll(this.parameters)
         return newBuilder

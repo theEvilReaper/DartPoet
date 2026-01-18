@@ -1,18 +1,15 @@
 package net.theevilreaper.dartpoet.function.typedef.function
 
 import net.theevilreaper.dartpoet.function.typedef.AbstractTypeDef
-import net.theevilreaper.dartpoet.function.typedef.alias.TypeDefBuilder
+import net.theevilreaper.dartpoet.function.typedef.alias.AliasTypeDefBuilder
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asTypeName
-import java.util.function.Function
 import kotlin.reflect.KClass
 
 class FunctionTypeDefBuilder(
-    val name: String,
-    val typeName: TypeName = Function::class.asTypeName(),
-    val typeCasts: List<TypeName> = emptyList()
+    val type: TypeName,
 ) {
 
     /**
@@ -29,7 +26,7 @@ class FunctionTypeDefBuilder(
      * Sets the return type of the type definition.
      *
      * @param typeName the return type as a [TypeName].
-     * @return the current instance of [TypeDefBuilder].
+     * @return the current instance of [AliasTypeDefBuilder].
      */
     fun returns(typeName: TypeName) = apply {
         this.returnType = typeName
@@ -39,7 +36,7 @@ class FunctionTypeDefBuilder(
      * Sets the return type of the type definition.
      *
      * @param typeName the return type as a [ClassName].
-     * @return the current instance of [TypeDefBuilder].
+     * @return the current instance of [AliasTypeDefBuilder].
      */
     fun returns(typeName: ClassName) = apply {
         this.returnType = typeName
@@ -49,7 +46,7 @@ class FunctionTypeDefBuilder(
      * Sets the return type of the type definition using a [KClass].
      *
      * @param typeName the return type as a [KClass].
-     * @return the current instance of [TypeDefBuilder].
+     * @return the current instance of [AliasTypeDefBuilder].
      */
     fun returns(typeName: KClass<*>) = apply {
         this.returnType = typeName.asTypeName()
@@ -59,7 +56,7 @@ class FunctionTypeDefBuilder(
      * Adds a parameter to the list of parameters.
      *
      * @param parameterSpec the parameter specification.
-     * @return the current instance of [TypeDefBuilder].
+     * @return the current instance of [AliasTypeDefBuilder].
      */
     fun parameter(parameterSpec: ParameterSpec) = apply {
         this.parameters += parameterSpec
@@ -69,7 +66,7 @@ class FunctionTypeDefBuilder(
      * Adds multiple parameters to the list of parameters.
      *
      * @param parameterSpecs the parameter specifications.
-     * @return the current instance of [TypeDefBuilder].
+     * @return the current instance of [AliasTypeDefBuilder].
      */
     fun parameters(vararg parameterSpecs: ParameterSpec) = apply {
         this.parameters += parameterSpecs

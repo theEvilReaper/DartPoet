@@ -17,25 +17,12 @@ import net.theevilreaper.dartpoet.type.TypeName
  * [TypeDefWriter] via the [write] function.
  *
  * @param T the concrete builder type used to recreate or modify this typedef
- * @property name the name of the typedef
- * @property type the base type of the typedef
- * @property typeCasts the generic type parameters of the typedef
+ * @property type the type of the typedef
  *
  * @author theEvilReaper
  * @since 1.0.0
  */
-abstract class AbstractTypeDef<T>(
-    val name: String,
-    val type: TypeName,
-    val typeCasts: List<TypeName>,
-) {
-
-    /**
-     * Performs some checks to avoid invalid data.
-     */
-    init {
-        require(name.trim().isNotEmpty()) { "The name of a typedef can't be empty" }
-    }
+abstract class AbstractTypeDef<T> internal constructor(val type: TypeName) {
 
     /**
      * Trigger the writing process from the [TypeDefWriter] to write the spec into dart code.
