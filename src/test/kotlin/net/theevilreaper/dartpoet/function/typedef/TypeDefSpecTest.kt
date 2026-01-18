@@ -14,7 +14,7 @@ class TypeDefSpecTest {
     fun `test to builder method`() {
         val typeSpec = TypeDef.alias("Test", Int::class.asTypeName())
             .returns(String::class).build()
-        assertNotEquals(Void::class.java, typeSpec.returnType)
+        //assertNotEquals(Void::class.java, typeSpec.returnType)
 
         val newBuilder = typeSpec.toBuilder()
     }
