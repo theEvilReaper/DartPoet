@@ -1,8 +1,9 @@
 package net.theevilreaper.dartpoet.code.writer
 
 import com.google.common.truth.Truth
+import net.theevilreaper.dartpoet.function.typedef.AbstractTypeDef
 import net.theevilreaper.dartpoet.function.typedef.TypeDef
-import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
+import net.theevilreaper.dartpoet.function.typedef.alias.TypeDefSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.DYNAMIC
@@ -136,19 +137,19 @@ class TypeDefWriterTest {
 
     @ParameterizedTest
     @MethodSource("typeDefs")
-    fun `test typedef write`(typeDef: TypeDefSpec, expected: String) {
+    fun `test typedef write`(typeDef: AbstractTypeDef<*>, expected: String) {
         Truth.assertThat(typeDef.toString()).isEqualTo(expected)
     }
 
     @ParameterizedTest
     @MethodSource("multipleCastArguments")
-    fun `test typedef write with multiple casts`(typeDef: TypeDefSpec, expected: String) {
+    fun `test typedef write with multiple casts`(typeDef: AbstractTypeDef<*>, expected: String) {
         Truth.assertThat(typeDef.toString()).isEqualTo(expected)
     }
 
     @ParameterizedTest
     @MethodSource("differentParameterTypes")
-    fun `test typedef write with different parameter types`(typeDef: TypeDefSpec, expected: String) {
+    fun `test typedef write with different parameter types`(typeDef: AbstractTypeDef<*>, expected: String) {
         Truth.assertThat(typeDef.toString()).isEqualTo(expected)
     }
 }
