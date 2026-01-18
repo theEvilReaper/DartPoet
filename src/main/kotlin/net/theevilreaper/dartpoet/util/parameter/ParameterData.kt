@@ -5,8 +5,8 @@ import net.theevilreaper.dartpoet.constructor.factory.FactorySpec
 import net.theevilreaper.dartpoet.enum.EnumEntrySpec
 import net.theevilreaper.dartpoet.enum.parameter.EnumParameterSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
-import net.theevilreaper.dartpoet.function.typedef.FunctionTypeDefSpec
-import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
+import net.theevilreaper.dartpoet.function.typedef.alias.TypeDefSpec
+import net.theevilreaper.dartpoet.function.typedef.function.FunctionTypeDefSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.util.ParameterBase
 

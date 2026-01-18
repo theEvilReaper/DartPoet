@@ -6,7 +6,7 @@ import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.directive.Directive
-import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
+import net.theevilreaper.dartpoet.function.typedef.alias.TypeDefSpec
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.util.DEFAULT_INDENT
