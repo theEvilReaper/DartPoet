@@ -9,7 +9,7 @@ class FunctionTypeDefBuilder(
     typeDefName: String,
     typeName: TypeName = Function::class.asTypeName(),
     vararg typeCasts: TypeName? = emptyArray(),
-): TypeDefBuilder<FunctionTypeDefBuilder>(typeDefName, typeName, *typeCasts) {
+) : TypeDefBuilder<FunctionTypeDefBuilder>(typeDefName, typeName, *typeCasts) {
 
     /**
      * List of parameters associated with the type definition.
@@ -36,7 +36,9 @@ class FunctionTypeDefBuilder(
         this.parameters += parameterSpecs
     }
 
-    override fun build(): TypeDefSpec {
-        return FunctionTypeDefSpec(this)
-    }
+    /**
+     * Creates a new [TypeDefSpec] object using the settings and data defined in the associated builder.
+     * @return the created [TypeDefSpec] object.
+     */
+    override fun build(): TypeDefSpec = FunctionTypeDefSpec(this)
 }

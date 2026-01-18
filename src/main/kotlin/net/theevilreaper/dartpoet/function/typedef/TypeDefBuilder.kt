@@ -25,7 +25,7 @@ open class TypeDefBuilder<T : TypeDefBuilder<T>>  internal constructor(
     /**
      * The return type of the type definition.
      */
-    var returnType: TypeName? = null
+    var returnType: TypeName = Void::class.asTypeName()
 
     /**
      * Sets the return type of the type definition.
