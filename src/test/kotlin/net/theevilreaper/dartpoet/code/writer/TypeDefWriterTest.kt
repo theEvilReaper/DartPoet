@@ -1,6 +1,7 @@
 package net.theevilreaper.dartpoet.code.writer
 
 import com.google.common.truth.Truth
+import net.theevilreaper.dartpoet.function.typedef.TypeDef
 import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.ClassName
@@ -24,7 +25,7 @@ class TypeDefWriterTest {
         @JvmStatic
         private fun typeDefs(): Stream<Arguments> = Stream.of(
             Arguments.of(
-                TypeDefSpec.function("ValueUpdate", genericClassName)
+                TypeDef.function("ValueUpdate", genericClassName)
                     .parameter(
                         ParameterSpec.positional("value", genericClassName)
                             .nullable(true)
@@ -34,7 +35,7 @@ class TypeDefWriterTest {
                 "typedef ValueUpdate<E> = void Function(E? value);"
             ),
             Arguments.of(
-                TypeDefSpec.alias("json", )
+                TypeDef.alias("json")
                     .returns(Map::class.parameterizedBy(String::class.asTypeName(), DYNAMIC))
                     .build(),
                 "typedef json = Map<String, dynamic>;"
@@ -44,7 +45,7 @@ class TypeDefWriterTest {
         @JvmStatic
         private fun multipleCastArguments(): Stream<Arguments> = Stream.of(
             Arguments.of(
-                TypeDefSpec.function(
+                TypeDef.function(
                     "DoubleValueUpdate",
                     genericClassName, secondGenericClassName
                 )
@@ -60,7 +61,7 @@ class TypeDefWriterTest {
                 "typedef DoubleValueUpdate<E, T> = void Function(E? first, T? second);"
             ),
             Arguments.of(
-                TypeDefSpec.function("Compare", genericClassName, secondGenericClassName)
+                TypeDef.function("Compare", genericClassName, secondGenericClassName)
                     .returns(Int::class)
                     .parameters(
                         ParameterSpec.positional("a", genericClassName)
@@ -76,7 +77,7 @@ class TypeDefWriterTest {
         @JvmStatic
         private fun differentParameterTypes(): Stream<Arguments> = Stream.of(
             Arguments.of(
-                TypeDefSpec.function("ValueUpdate", genericClassName)
+                TypeDef.function("ValueUpdate", genericClassName)
                     .returns(genericClassName)
                     .parameters(
                         ParameterSpec.positional("value", String::class)
@@ -90,7 +91,7 @@ class TypeDefWriterTest {
                 "typedef ValueUpdate<E> = E Function(String value, [E? data = null]);"
             ),
             Arguments.of(
-                TypeDefSpec.function("ValueUpdate", genericClassName)
+                TypeDef.function("ValueUpdate", genericClassName)
                     .returns(genericClassName)
                     .parameters(
                         ParameterSpec.positional("map", Map::class.parameterizedBy(String::class, Int::class))
@@ -104,7 +105,7 @@ class TypeDefWriterTest {
                 "typedef ValueUpdate<E> = E Function(Map<String, int> map, [E? data = null]);"
             ),
             Arguments.of(
-                TypeDefSpec.function("ValueUpdate", genericClassName)
+                TypeDef.function("ValueUpdate", genericClassName)
                     .returns(genericClassName)
                     .parameters(
                         ParameterSpec.positional("list", List::class.parameterizedBy(String::class))
@@ -116,7 +117,7 @@ class TypeDefWriterTest {
                 "typedef ValueUpdate<E> = E Function(List<String> list, {required E data});"
             ),
             Arguments.of(
-                TypeDefSpec.function("ValueUpdate", genericClassName)
+                TypeDef.function("ValueUpdate", genericClassName)
                     .returns(genericClassName)
                     .parameters(
                         ParameterSpec.positional("data", genericClassName)

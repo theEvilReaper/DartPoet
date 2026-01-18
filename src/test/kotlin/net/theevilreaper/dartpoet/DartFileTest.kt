@@ -11,6 +11,7 @@ import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.function.FunctionType
 import net.theevilreaper.dartpoet.function.MethodAccessorType
+import net.theevilreaper.dartpoet.function.typedef.TypeDef
 import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
@@ -46,7 +47,7 @@ class DartFileTest {
             .type(
                 ClassSpec.anonymousClassBuilder()
                     .typedef(
-                        TypeDefSpec.alias("JsonMap")
+                        TypeDef.alias("JsonMap")
                             .returns(Map::class.parameterizedBy(String::class.asTypeName(), DYNAMIC))
                             .build()
 
