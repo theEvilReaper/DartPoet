@@ -4,9 +4,6 @@ import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.FunctionWriter
-import net.theevilreaper.dartpoet.type.ClassName
-import net.theevilreaper.dartpoet.type.TypeName
-import net.theevilreaper.dartpoet.type.asTypeName
 
 /**
  * The class models a typedef from dart into a structure which can be used to generate and organize such methods.
@@ -14,14 +11,14 @@ import net.theevilreaper.dartpoet.type.asTypeName
  * @param builder the builder instance to retrieve the data from
  * @see <a href="https://dart.dev/language/typedefs">Dart Typedefs</a>.
  */
-open class TypeDefSpec(
+open class TypeDefSpec internal constructor(
     val builder: TypeDefBuilder<*>
 ) {
     internal val name = builder.typeName
     internal val typeDefName = builder.typeDefName
     internal val typeName = builder.typeName
     internal val typeCasts = builder.typeCasts
-    internal val returnType = builder.returnType ?: Void::class.asTypeName()
+    internal val returnType = builder.returnType
 
     /**
      * Performs some checks to avoid invalid data.
@@ -53,31 +50,5 @@ open class TypeDefSpec(
         val newBuilder = TypeDefBuilder(this.typeDefName, this.typeName, *this.typeCasts)
         newBuilder.returnType = this.returnType
         return newBuilder
-    }
-
-    /**
-     * The companion object contains some helper methods to create a new instance of a [TypeDefSpec].
-     */
-    companion object {
-
-        @JvmStatic
-        fun alias(name: String): TypeDefBuilder<*> = TypeDefBuilder(name)
-
-        @JvmStatic
-        fun alias(name: String, typeName: TypeName): TypeDefBuilder<*> = TypeDefBuilder(name, typeName)
-
-        @JvmStatic
-        fun alias(name: String, typeName: String): TypeDefBuilder<*> = TypeDefBuilder(name, ClassName(typeName))
-
-        @JvmStatic
-        fun alias(name: String, typeName: String, vararg typeCasts: TypeName): TypeDefBuilder<*> =
-            FunctionTypeDefBuilder(name, ClassName(typeName), typeCasts = typeCasts)
-
-        @JvmStatic
-        fun function(name: String): TypeDefBuilder<*> = FunctionTypeDefBuilder(name)
-
-        @JvmStatic
-        fun function(name: String, vararg typeCasts: TypeName): FunctionTypeDefBuilder =
-            FunctionTypeDefBuilder(name, typeCasts = typeCasts)
     }
 }
