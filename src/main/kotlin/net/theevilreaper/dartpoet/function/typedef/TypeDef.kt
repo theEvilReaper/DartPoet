@@ -1,12 +1,13 @@
 package net.theevilreaper.dartpoet.function.typedef
 
-import net.theevilreaper.dartpoet.function.typedef.alias.TypeDefBuilder
+import net.theevilreaper.dartpoet.function.typedef.alias.AliasTypeDefBuilder
 import net.theevilreaper.dartpoet.function.typedef.function.FunctionTypeDefBuilder
 import net.theevilreaper.dartpoet.type.ClassName
+import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
 import net.theevilreaper.dartpoet.type.TypeName
 
 /**
- * THe [TypeDef] is a factory class to create different instance of a [net.theevilreaper.dartpoet.function.typedef.alias.TypeDefBuilder] to create type def declerations
+ * The [TypeDef] is a factory class to create different instance of a [AliasTypeDefBuilder] to create type def declarations
  *
  * @since 1.0.0
  * @author theEvilReaper
@@ -14,47 +15,24 @@ import net.theevilreaper.dartpoet.type.TypeName
 object TypeDef {
 
     /**
-     * Creates a new [net.theevilreaper.dartpoet.function.typedef.alias.TypeDefBuilder] for defining an alias typedef with the given name.
+     * Creates a new [AliasTypeDefBuilder] for defining an alias typedef with the given name.
      *
      * @param name the name of the typedef
-     * @return a new [net.theevilreaper.dartpoet.function.typedef.alias.TypeDefBuilder] instance
+     * @return a new [AliasTypeDefBuilder] instance
      */
-    fun alias(name: String): TypeDefBuilder = TypeDefBuilder(name)
+    fun alias(name: String): AliasTypeDefBuilder = AliasTypeDefBuilder(ClassName(name))
 
     /**
-     * Creates a new [TypeDefBuilder] for defining an alias typedef with the given type.
+     * Creates a new [AliasTypeDefBuilder] for defining an alias typedef with type parameters.
      *
      * @param name the name of the typedef
-     * @param typeName the aliased type
-     * @return a new [TypeDefBuilder] instance
-     */
-    fun alias(name: String, typeName: TypeName): TypeDefBuilder =
-        TypeDefBuilder(name, typeName)
-
-    /**
-     * Creates a new [TypeDefBuilder] for defining an alias typedef with the given type name.
-     *
-     * @param name the name of the typedef
-     * @param typeName the aliased type as a string
-     * @return a new [TypeDefBuilder] instance
-     */
-    fun alias(name: String, typeName: String): TypeDefBuilder =
-        TypeDefBuilder(name, ClassName(typeName))
-
-    /**
-     * Creates a new [TypeDefBuilder] for defining an alias typedef with type parameters.
-     *
-     * @param name the name of the typedef
-     * @param typeName the aliased type as a string
      * @param typeCasts the generic type parameters of the typedef
-     * @return a new [TypeDefBuilder] instance
+     * @return a new [AliasTypeDefBuilder] instance
      */
     fun alias(
-        name: String,
-        typeName: String,
-        vararg typeCasts: TypeName
-    ): TypeDefBuilder =
-        TypeDefBuilder(name, ClassName(typeName), typeCasts = typeCasts.toList())
+        typeName: TypeName
+    ): AliasTypeDefBuilder =
+        AliasTypeDefBuilder(typeName)
 
     /**
      * Creates a new [FunctionTypeDefBuilder] for defining a function typedef with the given name.
@@ -63,7 +41,7 @@ object TypeDef {
      * @return a new [FunctionTypeDefBuilder] instance
      */
     fun function(name: String): FunctionTypeDefBuilder =
-        FunctionTypeDefBuilder(name)
+        FunctionTypeDefBuilder(ClassName(name))
 
     /**
      * Creates a new [FunctionTypeDefBuilder] for defining a function typedef with type parameters.
@@ -76,5 +54,16 @@ object TypeDef {
         name: String,
         vararg typeCasts: TypeName
     ): FunctionTypeDefBuilder =
-        FunctionTypeDefBuilder(name, typeCasts = typeCasts.toList())
+        FunctionTypeDefBuilder(ClassName(name).parameterizedBy(*typeCasts))
+
+    /**
+     * Creates a new [FunctionTypeDefBuilder] for defining a function typedef with type parameters.
+     *
+     * @param typeName the type of the function typedef
+     * @return a new [FunctionTypeDefBuilder] instance
+     */
+    fun function(
+        typeName: TypeName
+    ): FunctionTypeDefBuilder =
+        FunctionTypeDefBuilder(typeName)
 }

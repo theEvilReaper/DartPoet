@@ -9,11 +9,11 @@ import net.theevilreaper.dartpoet.util.SEMICOLON
  * For more details visit the documentation from dart
  * @param builder the builder instance to retrieve the data from
  * @see <a href="https://dart.dev/language/typedefs">Dart Typedefs</a>.
- */
-class TypeDefSpec internal constructor(
-    val builder: TypeDefBuilder
-): AbstractTypeDef<TypeDefBuilder>(
-    builder.typeDefName, builder.typeName, builder.typeCasts.toList()
+ **/
+class AliasTypeDefSpec internal constructor(
+    val builder: AliasTypeDefBuilder
+): AbstractTypeDef<AliasTypeDefBuilder>(
+    builder.name,
 ) {
     internal val returnType = builder.returnType
 
@@ -27,12 +27,12 @@ class TypeDefSpec internal constructor(
     }
 
     /**
-     * Converts a given instance of a [TypeDefSpec] into a [TypeDefBuilder].
+     * Converts a given instance of a [AliasTypeDefSpec] into a [AliasTypeDefBuilder].
      * This is useful if you want to modify an existing spec object.
      * @return the created builder
      */
-    override fun toBuilder(): TypeDefBuilder {
-        val newBuilder = TypeDefBuilder(this.name, this.type, this.typeCasts)
+    override fun toBuilder(): AliasTypeDefBuilder {
+        val newBuilder = AliasTypeDefBuilder(this.type)
         newBuilder.returnType = this.returnType
         return newBuilder
     }
