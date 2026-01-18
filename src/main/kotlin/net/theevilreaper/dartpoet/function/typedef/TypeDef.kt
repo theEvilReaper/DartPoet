@@ -1,10 +1,12 @@
 package net.theevilreaper.dartpoet.function.typedef
 
+import net.theevilreaper.dartpoet.function.typedef.alias.TypeDefBuilder
+import net.theevilreaper.dartpoet.function.typedef.function.FunctionTypeDefBuilder
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
 
 /**
- * THe [TypeDef] is a factory class to create different instance of a [TypeDefBuilder] to create type def declerations
+ * THe [TypeDef] is a factory class to create different instance of a [net.theevilreaper.dartpoet.function.typedef.alias.TypeDefBuilder] to create type def declerations
  *
  * @since 1.0.0
  * @author theEvilReaper
@@ -12,12 +14,12 @@ import net.theevilreaper.dartpoet.type.TypeName
 object TypeDef {
 
     /**
-     * Creates a new [TypeDefBuilder] for defining an alias typedef with the given name.
+     * Creates a new [net.theevilreaper.dartpoet.function.typedef.alias.TypeDefBuilder] for defining an alias typedef with the given name.
      *
      * @param name the name of the typedef
-     * @return a new [TypeDefBuilder] instance
+     * @return a new [net.theevilreaper.dartpoet.function.typedef.alias.TypeDefBuilder] instance
      */
-    fun alias(name: String): TypeDefBuilder<*> = TypeDefBuilder(name)
+    fun alias(name: String): TypeDefBuilder = TypeDefBuilder(name)
 
     /**
      * Creates a new [TypeDefBuilder] for defining an alias typedef with the given type.
@@ -26,7 +28,7 @@ object TypeDef {
      * @param typeName the aliased type
      * @return a new [TypeDefBuilder] instance
      */
-    fun alias(name: String, typeName: TypeName): TypeDefBuilder<*> =
+    fun alias(name: String, typeName: TypeName): TypeDefBuilder =
         TypeDefBuilder(name, typeName)
 
     /**
@@ -36,7 +38,7 @@ object TypeDef {
      * @param typeName the aliased type as a string
      * @return a new [TypeDefBuilder] instance
      */
-    fun alias(name: String, typeName: String): TypeDefBuilder<*> =
+    fun alias(name: String, typeName: String): TypeDefBuilder =
         TypeDefBuilder(name, ClassName(typeName))
 
     /**
@@ -51,8 +53,8 @@ object TypeDef {
         name: String,
         typeName: String,
         vararg typeCasts: TypeName
-    ): TypeDefBuilder<*> =
-        TypeDefBuilder(name, ClassName(typeName), typeCasts = typeCasts)
+    ): TypeDefBuilder =
+        TypeDefBuilder(name, ClassName(typeName), typeCasts = typeCasts.toList())
 
     /**
      * Creates a new [FunctionTypeDefBuilder] for defining a function typedef with the given name.
@@ -60,7 +62,7 @@ object TypeDef {
      * @param name the name of the typedef
      * @return a new [FunctionTypeDefBuilder] instance
      */
-    fun function(name: String): TypeDefBuilder<*> =
+    fun function(name: String): FunctionTypeDefBuilder =
         FunctionTypeDefBuilder(name)
 
     /**
@@ -74,5 +76,5 @@ object TypeDef {
         name: String,
         vararg typeCasts: TypeName
     ): FunctionTypeDefBuilder =
-        FunctionTypeDefBuilder(name, typeCasts = typeCasts)
+        FunctionTypeDefBuilder(name, typeCasts = typeCasts.toList())
 }

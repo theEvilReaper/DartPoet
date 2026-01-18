@@ -1,5 +1,6 @@
-package net.theevilreaper.dartpoet.function.typedef
+package net.theevilreaper.dartpoet.function.typedef.alias
 
+import net.theevilreaper.dartpoet.function.typedef.AbstractTypeDef
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asTypeName
@@ -13,14 +14,11 @@ import kotlin.reflect.KClass
  * @param typeDefName the name of the type definition.
  * @param typeCasts optional array of type-cast for the type definition.
  */
-open class TypeDefBuilder<T : TypeDefBuilder<T>>  internal constructor(
+open class TypeDefBuilder internal constructor(
     val typeDefName: String,
     val typeName: TypeName = Function::class.asTypeName(),
-    vararg val typeCasts: TypeName? = emptyArray(),
+    val typeCasts: List<TypeName> = emptyList(),
 ) {
-
-    @Suppress("UNCHECKED_CAST")
-    protected fun self(): T = this as T
 
     /**
      * The return type of the type definition.
@@ -33,7 +31,7 @@ open class TypeDefBuilder<T : TypeDefBuilder<T>>  internal constructor(
      * @param typeName the return type as a [TypeName].
      * @return the current instance of [TypeDefBuilder].
      */
-    fun returns(typeName: TypeName): T = self().apply {
+    fun returns(typeName: TypeName) = apply {
         this.returnType = typeName
     }
 
@@ -43,7 +41,7 @@ open class TypeDefBuilder<T : TypeDefBuilder<T>>  internal constructor(
      * @param typeName the return type as a [ClassName].
      * @return the current instance of [TypeDefBuilder].
      */
-    fun returns(typeName: ClassName): T = self().apply {
+    fun returns(typeName: ClassName) = apply {
         this.returnType = typeName
     }
 
@@ -53,7 +51,7 @@ open class TypeDefBuilder<T : TypeDefBuilder<T>>  internal constructor(
      * @param typeName the return type as a [KClass].
      * @return the current instance of [TypeDefBuilder].
      */
-    fun returns(typeName: KClass<*>) = self().apply {
+    fun returns(typeName: KClass<*>) = apply {
         this.returnType = typeName.asTypeName()
     }
 
@@ -62,7 +60,5 @@ open class TypeDefBuilder<T : TypeDefBuilder<T>>  internal constructor(
      *
      * @return an instance of [TypeDefSpec].
      */
-    open fun build(): TypeDefSpec {
-        return TypeDefSpec(this)
-    }
+    open fun build(): AbstractTypeDef<*> = TypeDefSpec(this)
 }
