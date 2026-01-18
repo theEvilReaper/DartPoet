@@ -6,7 +6,7 @@ import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.directive.Directive
-import net.theevilreaper.dartpoet.function.typedef.alias.TypeDefSpec
+import net.theevilreaper.dartpoet.function.typedef.alias.AliasTypeDefSpec
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.util.DEFAULT_INDENT
@@ -21,7 +21,7 @@ class DartFileBuilder(
     internal val annotations: MutableList<AnnotationSpec> = mutableListOf()
     internal val extensionStack: MutableList<ExtensionSpec> = mutableListOf()
     internal val constants: MutableSet<ConstantPropertySpec> = mutableSetOf()
-    internal val typeDefs: MutableList<TypeDefSpec> = mutableListOf()
+    internal val typeDefs: MutableList<AliasTypeDefSpec> = mutableListOf()
     internal var indent = DEFAULT_INDENT
 
     /**
@@ -78,7 +78,7 @@ class DartFileBuilder(
      * @param typeDef the type definition to add
      * @return the current instance of [DartFileBuilder]
      */
-    fun typeDef(typeDef: TypeDefSpec) = apply {
+    fun typeDef(typeDef: AliasTypeDefSpec) = apply {
         this.typeDefs += typeDef
     }
 
@@ -87,7 +87,7 @@ class DartFileBuilder(
      * @param typeDef the type definitions to add
      * @return the current instance of [DartFileBuilder]
      */
-    fun typeDef(vararg typeDef: TypeDefSpec) = apply {
+    fun typeDef(vararg typeDef: AliasTypeDefSpec) = apply {
         this.typeDefs += typeDef
     }
 

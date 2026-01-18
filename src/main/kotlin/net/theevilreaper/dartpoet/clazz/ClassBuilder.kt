@@ -10,7 +10,7 @@ import net.theevilreaper.dartpoet.meta.SpecData
 import net.theevilreaper.dartpoet.meta.SpecMethods
 import net.theevilreaper.dartpoet.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.function.typedef.AbstractTypeDef
-import net.theevilreaper.dartpoet.function.typedef.alias.TypeDefSpec
+import net.theevilreaper.dartpoet.function.typedef.alias.AliasTypeDefSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.type.ClassName
@@ -60,7 +60,7 @@ class ClassBuilder internal constructor(
     }
 
     /**
-     * Add a [TypeDefSpec] to the spec.
+     * Add a [AliasTypeDefSpec] to the spec.
      * @param typeDefSpec the typedef to add
      */
     fun typedef(typeDefSpec: AbstractTypeDef<*>) = apply {
@@ -68,7 +68,7 @@ class ClassBuilder internal constructor(
     }
 
     /**
-     * Add an array of [TypeDefSpec] to the spec.
+     * Add an array of [AliasTypeDefSpec] to the spec.
      * @param typeDefSpec the typedefs to add
      */
     fun typedef(vararg typeDefSpec: AbstractTypeDef<*>) = apply {

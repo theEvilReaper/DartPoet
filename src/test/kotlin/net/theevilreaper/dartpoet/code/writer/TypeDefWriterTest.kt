@@ -3,7 +3,6 @@ package net.theevilreaper.dartpoet.code.writer
 import com.google.common.truth.Truth
 import net.theevilreaper.dartpoet.function.typedef.AbstractTypeDef
 import net.theevilreaper.dartpoet.function.typedef.TypeDef
-import net.theevilreaper.dartpoet.function.typedef.alias.TypeDefSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.DYNAMIC

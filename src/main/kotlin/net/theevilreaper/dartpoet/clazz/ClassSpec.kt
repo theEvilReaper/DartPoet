@@ -13,7 +13,6 @@ import net.theevilreaper.dartpoet.enum.EnumEntrySpec
 import net.theevilreaper.dartpoet.constructor.ConstructorBase
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.typedef.AbstractTypeDef
-import net.theevilreaper.dartpoet.function.typedef.alias.TypeDefSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.util.toImmutableList
