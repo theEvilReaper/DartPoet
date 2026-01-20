@@ -21,9 +21,8 @@
 package net.theevilreaper.dartpoet.code
 
 import net.theevilreaper.dartpoet.clazz.ClassSpec
-import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
-import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
+import net.theevilreaper.dartpoet.function.typedef.AbstractTypeDef
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.type.TypeName
@@ -40,7 +39,7 @@ import kotlin.reflect.KClass
 
 /**
  * A fragment of a .kt file, potentially containing declarations, statements, and documentation.
- * Code blocks are not necessarily well-formed Dart code, and are not validated.
+ * Code blocks are not necessarily well-formed Dart code and are not validated.
  *
  * Code blocks support placeholders like [java.text.Format]. This class primarily uses a percent
  * sign `%` but has its own set of permitted placeholders:
@@ -380,9 +379,7 @@ class CodeBlock private constructor(
             is PropertySpec -> o.name
             is FunctionSpec -> o.name
             is ClassSpec -> o.name
-            is TypeDefSpec -> requireNotNull(o.name) {
-                "TypeDefSpec must have a non-null name to be used with %N placeholder"
-            }
+            is AbstractTypeDef<*> -> o.type.getRawData()
             else -> throw IllegalArgumentException("expected name but was $o")
         }
 
