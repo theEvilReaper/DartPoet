@@ -2,10 +2,12 @@ package net.theevilreaper.dartpoet.code
 
 import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.function.FunctionSpec
+import net.theevilreaper.dartpoet.function.typedef.TypeDef
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
+import org.junit.jupiter.api.assertThrows
 
 /**
  * Dedicated test class which contains only test cases from a [CodeBlock] which uses the %N placeholder
@@ -15,6 +17,17 @@ import org.junit.jupiter.api.assertNotNull
  * @author theEvilReaper
  */
 class CodeBlockNameArgumentTest {
+
+    @Test
+    fun `test object which is not supported`() {
+        val exception = assertThrows<IllegalArgumentException> {
+            CodeBlock.builder()
+                .add("%N", Any())
+        }
+        assertNotNull(exception)
+        assertNotNull(exception.message)
+        assertTrue { exception.message!!.contains("expected name but was java.lang.Object") }
+    }
 
     @Test
     fun `test CharSequence usage`() {
@@ -51,5 +64,61 @@ class CodeBlockNameArgumentTest {
         val codeBlockString = codeBlock.toString()
         assertNotNull(codeBlockString, "The content from the CodeBlock should not be null")
         assertThat(codeBlockString).isEqualTo("test()")
+    }
+
+    @Test
+    fun `test alias typesepc usage`() {
+        val typeDef = TypeDef.alias("StringList")
+            .returns(List::class)
+            .build()
+        val function = FunctionSpec.builder("stringListUsage")
+            .returns(List::class)
+            .addCode(
+                buildCodeBlock {
+                    addStatement("%N a = ['Test1', 'Test2', 'Test3'];", typeDef)
+                    add("return a;")
+                }
+            )
+            .build()
+
+        assertThat(function.toString()).isEqualTo(
+            """
+            |List stringListUsage() {
+            |  StringList a = ['Test1', 'Test2', 'Test3'];
+            |  return a;
+            |}
+        """.trimMargin()
+        )
+    }
+
+    @Test
+    fun `test function typspec usage`() {
+        val typeDef = TypeDef.function("IntTaker")
+            .returns(Int::class)
+            .parameters(
+                ParameterSpec.positional("a", Int::class).build(),
+            )
+            .build()
+        val function = FunctionSpec.builder("intUsage")
+            .returns(Int::class)
+            .parameters(
+                ParameterSpec.positional("a", Int::class).build()
+            )
+            .addCode(
+                buildCodeBlock {
+                    addStatement("%N a = (x) => x + 5;", typeDef)
+                    add("return a(%L);", "10")
+                }
+            )
+            .build()
+
+        assertThat(function.toString()).isEqualTo(
+            """
+            |int intUsage(int a) {
+            |  IntTaker a = (x) => x + 5;
+            |  return a(10);
+            |}
+        """.trimMargin()
+        )
     }
 }
