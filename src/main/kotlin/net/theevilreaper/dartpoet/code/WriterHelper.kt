@@ -1,8 +1,8 @@
 package net.theevilreaper.dartpoet.code
 
 import net.theevilreaper.dartpoet.code.writer.*
+import net.theevilreaper.dartpoet.code.writer.typedef.TypeDefWriter
 import org.jetbrains.annotations.ApiStatus.Internal
-import org.jetbrains.annotations.ApiStatus.NonExtendable
 
 /**
  * A helper class that holds references to writer implementations.
@@ -17,7 +17,6 @@ import org.jetbrains.annotations.ApiStatus.NonExtendable
  * author theEvilReaper
  */
 @Internal
-@NonExtendable
 internal object WriterHelper {
 
     internal val annotationWriter by lazy { AnnotationWriter() }

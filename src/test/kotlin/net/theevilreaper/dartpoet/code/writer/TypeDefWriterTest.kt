@@ -1,7 +1,8 @@
 package net.theevilreaper.dartpoet.code.writer
 
 import com.google.common.truth.Truth
-import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
+import net.theevilreaper.dartpoet.function.typedef.AbstractTypeDef
+import net.theevilreaper.dartpoet.function.typedef.TypeDef
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.DYNAMIC
@@ -24,18 +25,17 @@ class TypeDefWriterTest {
         @JvmStatic
         private fun typeDefs(): Stream<Arguments> = Stream.of(
             Arguments.of(
-                TypeDefSpec.builder("ValueUpdate", genericClassName)
+                TypeDef.function("ValueUpdate", genericClassName)
                     .parameter(
                         ParameterSpec.positional("value", genericClassName)
                             .nullable(true)
                             .build()
                     )
-                    .name("Function")
                     .build(),
                 "typedef ValueUpdate<E> = void Function(E? value);"
             ),
             Arguments.of(
-                TypeDefSpec.builder("json")
+                TypeDef.alias("json")
                     .returns(Map::class.parameterizedBy(String::class.asTypeName(), DYNAMIC))
                     .build(),
                 "typedef json = Map<String, dynamic>;"
@@ -45,11 +45,10 @@ class TypeDefWriterTest {
         @JvmStatic
         private fun multipleCastArguments(): Stream<Arguments> = Stream.of(
             Arguments.of(
-                TypeDefSpec.builder(
+                TypeDef.function(
                     "DoubleValueUpdate",
                     genericClassName, secondGenericClassName
                 )
-                    .name("Function")
                     .parameters(
                         ParameterSpec.positional("first", genericClassName)
                             .nullable(true)
@@ -62,9 +61,8 @@ class TypeDefWriterTest {
                 "typedef DoubleValueUpdate<E, T> = void Function(E? first, T? second);"
             ),
             Arguments.of(
-                TypeDefSpec.builder("Compare", genericClassName, secondGenericClassName)
+                TypeDef.function("Compare", genericClassName, secondGenericClassName)
                     .returns(Int::class)
-                    .name("Function")
                     .parameters(
                         ParameterSpec.positional("a", genericClassName)
                             .build(),
@@ -79,8 +77,7 @@ class TypeDefWriterTest {
         @JvmStatic
         private fun differentParameterTypes(): Stream<Arguments> = Stream.of(
             Arguments.of(
-                TypeDefSpec.builder("ValueUpdate", genericClassName)
-                    .name("Function")
+                TypeDef.function("ValueUpdate", genericClassName)
                     .returns(genericClassName)
                     .parameters(
                         ParameterSpec.positional("value", String::class)
@@ -94,8 +91,7 @@ class TypeDefWriterTest {
                 "typedef ValueUpdate<E> = E Function(String value, [E? data = null]);"
             ),
             Arguments.of(
-                TypeDefSpec.builder("ValueUpdate", genericClassName)
-                    .name("Function")
+                TypeDef.function("ValueUpdate", genericClassName)
                     .returns(genericClassName)
                     .parameters(
                         ParameterSpec.positional("map", Map::class.parameterizedBy(String::class, Int::class))
@@ -109,8 +105,7 @@ class TypeDefWriterTest {
                 "typedef ValueUpdate<E> = E Function(Map<String, int> map, [E? data = null]);"
             ),
             Arguments.of(
-                TypeDefSpec.builder("ValueUpdate", genericClassName)
-                    .name("Function")
+                TypeDef.function("ValueUpdate", genericClassName)
                     .returns(genericClassName)
                     .parameters(
                         ParameterSpec.positional("list", List::class.parameterizedBy(String::class))
@@ -122,8 +117,7 @@ class TypeDefWriterTest {
                 "typedef ValueUpdate<E> = E Function(List<String> list, {required E data});"
             ),
             Arguments.of(
-                TypeDefSpec.builder("ValueUpdate", genericClassName)
-                    .name("Function")
+                TypeDef.function("ValueUpdate", genericClassName)
                     .returns(genericClassName)
                     .parameters(
                         ParameterSpec.positional("data", genericClassName)
@@ -142,19 +136,19 @@ class TypeDefWriterTest {
 
     @ParameterizedTest
     @MethodSource("typeDefs")
-    fun `test typedef write`(typeDef: TypeDefSpec, expected: String) {
+    fun `test typedef write`(typeDef: AbstractTypeDef<*>, expected: String) {
         Truth.assertThat(typeDef.toString()).isEqualTo(expected)
     }
 
     @ParameterizedTest
     @MethodSource("multipleCastArguments")
-    fun `test typedef write with multiple casts`(typeDef: TypeDefSpec, expected: String) {
+    fun `test typedef write with multiple casts`(typeDef: AbstractTypeDef<*>, expected: String) {
         Truth.assertThat(typeDef.toString()).isEqualTo(expected)
     }
 
     @ParameterizedTest
     @MethodSource("differentParameterTypes")
-    fun `test typedef write with different parameter types`(typeDef: TypeDefSpec, expected: String) {
+    fun `test typedef write with different parameter types`(typeDef: AbstractTypeDef<*>, expected: String) {
         Truth.assertThat(typeDef.toString()).isEqualTo(expected)
     }
 }

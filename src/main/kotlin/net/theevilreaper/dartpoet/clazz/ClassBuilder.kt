@@ -9,7 +9,8 @@ import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.meta.SpecData
 import net.theevilreaper.dartpoet.meta.SpecMethods
 import net.theevilreaper.dartpoet.constructor.ConstructorSpec
-import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
+import net.theevilreaper.dartpoet.function.typedef.AbstractTypeDef
+import net.theevilreaper.dartpoet.function.typedef.alias.AliasTypeDefSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.type.ClassName
@@ -37,7 +38,7 @@ class ClassBuilder internal constructor(
     internal val functionStack: MutableList<FunctionSpec> = mutableListOf()
     internal val enumPropertyStack: MutableList<EnumEntrySpec> = mutableListOf()
     internal val constantStack: MutableSet<ConstantPropertySpec> = mutableSetOf()
-    internal val typedefs: MutableList<TypeDefSpec> = mutableListOf()
+    internal val typedefs: MutableList<AbstractTypeDef<*>> = mutableListOf()
     internal var superClass: TypeName? = null
     internal var inheritKeyWord: InheritKeyword? = null
     internal var endWithNewLine = false
@@ -59,18 +60,18 @@ class ClassBuilder internal constructor(
     }
 
     /**
-     * Add a [TypeDefSpec] to the spec.
+     * Add a [AliasTypeDefSpec] to the spec.
      * @param typeDefSpec the typedef to add
      */
-    fun typedef(typeDefSpec: TypeDefSpec) = apply {
+    fun typedef(typeDefSpec: AbstractTypeDef<*>) = apply {
         this.typedefs += typeDefSpec
     }
 
     /**
-     * Add an array of [TypeDefSpec] to the spec.
+     * Add an array of [AliasTypeDefSpec] to the spec.
      * @param typeDefSpec the typedefs to add
      */
-    fun typedef(vararg typeDefSpec: TypeDefSpec) = apply {
+    fun typedef(vararg typeDefSpec: AbstractTypeDef<*>) = apply {
         this.typedefs += typeDefSpec
     }
 

@@ -5,7 +5,7 @@ import net.theevilreaper.dartpoet.constructor.factory.FactorySpec
 import net.theevilreaper.dartpoet.enum.EnumEntrySpec
 import net.theevilreaper.dartpoet.enum.parameter.EnumParameterSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
-import net.theevilreaper.dartpoet.function.typedef.TypeDefSpec
+import net.theevilreaper.dartpoet.function.typedef.function.FunctionTypeDefSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.util.ParameterBase
 
@@ -35,12 +35,12 @@ internal open class ParameterData<T : ParameterBase> internal constructor(
     companion object {
 
         /**
-         * Creates a new [ParameterData] instance from the given [TypeDefSpec].
+         * Creates a new [ParameterData] instance from the given [FunctionTypeDefSpec].
          * @param typeDefSpec the spec to create the data from
          * @return the created [ParameterData] instance
          */
         @JvmStatic
-        fun fromTypeDef(typeDefSpec: TypeDefSpec): ParameterData<ParameterSpec> {
+        fun fromTypeDef(typeDefSpec: FunctionTypeDefSpec): ParameterData<ParameterSpec> {
             val positionalParameters = typeDefSpec.normalParameters
             val namedParameters = typeDefSpec.optionalNamed
             val requiredParameters = typeDefSpec.requiredParameters

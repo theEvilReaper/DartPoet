@@ -4,7 +4,7 @@ import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.emitParameters
 import net.theevilreaper.dartpoet.code.writer.ConstructorWriter
 import net.theevilreaper.dartpoet.code.writer.FunctionWriter
-import net.theevilreaper.dartpoet.code.writer.TypeDefWriter
+import net.theevilreaper.dartpoet.code.writer.typedef.TypeDefWriter
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.util.parameter.ParameterData
 import org.jetbrains.annotations.ApiStatus
@@ -38,7 +38,7 @@ internal object ParameterHelper {
      * @param data the data to write
      * @param codeWriter the writer to append the data
      * @param indent if the generated code should be indented
-     * @param filterExcluded whether to filter the excluded parameters
+     * @param filter    Excluded whether to filter the excluded parameters
      */
     fun writeParameters(
         data: ParameterData<ParameterSpec>,
