@@ -1,9 +1,11 @@
 package net.theevilreaper.dartpoet.code
 
 import com.google.common.truth.Truth.assertThat
+import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.typedef.TypeDef
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.property.PropertySpec
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
@@ -30,7 +32,7 @@ class CodeBlockNameArgumentTest {
     }
 
     @Test
-    fun `test CharSequence usage`() {
+    fun `test char sequence usage`() {
         val codeBlock = CodeBlock.builder()
             .add("%N", "Test")
             .build()
@@ -43,7 +45,7 @@ class CodeBlockNameArgumentTest {
     }
 
     @Test
-    fun `test ParameterSpec usage`() {
+    fun `test parameter spec usage`() {
         val parameterSpec = ParameterSpec.named("test", String::class).build()
         val codeBlock = CodeBlock.builder()
             .add("%N = %C", parameterSpec, "Test")
@@ -55,7 +57,19 @@ class CodeBlockNameArgumentTest {
     }
 
     @Test
-    fun `test FunctionSpec usage`() {
+    fun `test property spec usage`() {
+        val property: PropertySpec = PropertySpec.builder("test", String::class).build()
+        val codeBlock = CodeBlock.builder()
+            .add("%N = %C", property, "Test")
+            .build()
+        assertFalse(codeBlock.formatParts.isEmpty(), "The formats parts should be not empty")
+        val codeBlockString = codeBlock.toString()
+        assertNotNull(codeBlockString, "The content from the CodeBlock should not be null")
+        assertThat(codeBlockString).isEqualTo("test = 'Test'")
+    }
+
+    @Test
+    fun `test function spec usage`() {
         val function = FunctionSpec.builder("test").build()
         val codeBlock = CodeBlock.builder()
             .add("%N()", function)
@@ -67,7 +81,18 @@ class CodeBlockNameArgumentTest {
     }
 
     @Test
-    fun `test alias typesepc usage`() {
+    fun `test class spec usage`() {
+        val clazz = ClassSpec.builder("TestClass").build()
+        val codeBlock = CodeBlock.builder()
+            .add("%N()", clazz)
+            .build()
+        assertFalse(codeBlock.formatParts.isEmpty(), "The formats parts should be not empty")
+        val codeBlockString = codeBlock.toString()
+        assertThat(codeBlockString).isEqualTo("TestClass()")
+    }
+
+    @Test
+    fun `test alias type spec usage`() {
         val typeDef = TypeDef.alias("StringList")
             .returns(List::class)
             .build()
@@ -92,7 +117,7 @@ class CodeBlockNameArgumentTest {
     }
 
     @Test
-    fun `test function typspec usage`() {
+    fun `test function type spec usage`() {
         val typeDef = TypeDef.function("IntTaker")
             .returns(Int::class)
             .parameters(
