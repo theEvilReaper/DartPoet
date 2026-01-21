@@ -8,12 +8,10 @@ import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.writer.FunctionWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
-import net.theevilreaper.dartpoet.parameter.ParameterType
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asTypeName
 import net.theevilreaper.dartpoet.util.*
-import net.theevilreaper.dartpoet.util.toImmutableList
 import net.theevilreaper.dartpoet.parameter.ParameterContext
 import net.theevilreaper.dartpoet.util.toImmutableSet
 import java.lang.reflect.Type

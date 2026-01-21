@@ -4,13 +4,9 @@ import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.EnumEntryWriter
-import net.theevilreaper.dartpoet.util.toImmutableList
 import net.theevilreaper.dartpoet.util.toImmutableSet
 import net.theevilreaper.dartpoet.parameter.ParameterContext
 import net.theevilreaper.dartpoet.enum.parameter.EnumParameterSpec
-import net.theevilreaper.dartpoet.parameter.ParameterType
-import net.theevilreaper.dartpoet.util.ParameterFilter.filterParameter
-import net.theevilreaper.dartpoet.util.ParameterHelper.excludeParameters
 
 /**
  * The [EnumEntrySpec] represents a single entry in an enum class.
