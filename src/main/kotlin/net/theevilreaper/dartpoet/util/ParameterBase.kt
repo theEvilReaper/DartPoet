@@ -18,4 +18,11 @@ import net.theevilreaper.dartpoet.parameter.ParameterType
 open class ParameterBase(
     val type: ParameterType,
     val nullable: Boolean
-)
+) {
+    /**
+     * Checks if the parameter has an initializer.
+     * By default, it is false.
+     */
+    open val hasInitializer: Boolean
+        get() = false
+}
