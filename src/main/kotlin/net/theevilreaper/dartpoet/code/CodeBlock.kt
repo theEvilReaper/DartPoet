@@ -373,6 +373,17 @@ class CodeBlock private constructor(
             else -> throw IllegalArgumentException("expected type but was $o")
         }
 
+        /**
+         * Converts the given argument into a name representation for the `%N` placeholder.
+         *
+         * This method extracts a valid name from different supported argument types.
+         * It is used during code generation to resolve name placeholders in a
+         * type-safe way.
+         *
+         * @param o the argument to convert into a name
+         * @return the resolved name as a [String]
+         * @throws IllegalArgumentException if the argument type is not supported
+         */
         private fun argToName(o: Any?) = when (o) {
             is CharSequence -> o.toString()
             is ParameterSpec -> o.name
@@ -486,7 +497,7 @@ class CodeBlock private constructor(
         internal val Char.isSingleCharNoArgPlaceholder get() = isOneOf('⇥', '⇤', '«', '»')
         internal val String.isPlaceholder
             get() = (length == 1 && first().isSingleCharNoArgPlaceholder) ||
-                (length == 2 && first().isMultiCharNoArgPlaceholder)
+                    (length == 2 && first().isMultiCharNoArgPlaceholder)
 
         internal fun String.nextPotentialPlaceholderPosition(startIndex: Int) =
             indexOfAny(charArrayOf('%', '«', '»', '⇥', '⇤'), startIndex)
