@@ -20,6 +20,7 @@ class GenericClassTest {
         val tClass = ClassName("T")
         val eClass = ClassName("E")
         val listClass: ParameterizedTypeName = List::class.parameterizedBy(eClass)
+        val positionalParameter = ParameterSpec.positional("element", eClass).build()
         val genericClass: ClassSpec = ClassSpec.builder("TestClass")
             .generic(tClass)
             .generic(listClass)
@@ -33,16 +34,9 @@ class GenericClassTest {
             )
             .function(
                 FunctionSpec.builder("add")
-                    .parameters(
-                        ParameterSpec.positional("element", eClass)
-                            .build()
-                    )
+                    .parameter(positionalParameter)
                     .returns(Void::class)
-                    .addCode(
-                        buildCodeBlock {
-                            add("list.add(element);")
-                        }
-                    )
+                    .addCode("list.add(%N);", positionalParameter)
                     .build()
             )
             .build()
