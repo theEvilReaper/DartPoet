@@ -8,12 +8,11 @@ import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.writer.FunctionWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
-import net.theevilreaper.dartpoet.parameter.ParameterType
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asTypeName
 import net.theevilreaper.dartpoet.util.*
-import net.theevilreaper.dartpoet.util.toImmutableList
+import net.theevilreaper.dartpoet.parameter.ParameterContext
 import net.theevilreaper.dartpoet.util.toImmutableSet
 import java.lang.reflect.Type
 import kotlin.reflect.KClass
@@ -28,7 +27,7 @@ import kotlin.reflect.KClass
  */
 class FunctionSpec internal constructor(
     builder: FunctionBuilder
-) {
+) : ParameterContext<ParameterSpec> by ParameterContext(builder.parameters) {
     internal val name = builder.name
     internal val returnType: TypeName = builder.returnType
     internal val type: FunctionType = builder.type
@@ -39,15 +38,6 @@ class FunctionSpec internal constructor(
     internal val modifiers: Set<DartModifier> = builder.specData.modifiers.also {
         hasAllowedModifiers(it, ALLOWED_FUNCTION_MODIFIERS, "function")
     }.filter { it != DartModifier.PRIVATE && it != DartModifier.PUBLIC }.toImmutableSet()
-
-    private val parameters: List<ParameterSpec> = builder.parameters.toImmutableList()
-    internal val hasParameters = parameters.isNotEmpty()
-
-    internal val optionalNamed = ParameterFilter.filterParameter(parameters) { it.type == ParameterType.NAMED && (it.isNullable || it.hasInitializer) }
-    internal val requiredParameters = ParameterFilter.filterParameter(parameters) { it.type == ParameterType.REQUIRED }
-    internal val parametersWithDefaults = ParameterFilter.filterParameter(parameters) { it.type == ParameterType.OPTIONAL }
-    internal val normalParameters = ParameterHelper.excludeParameters(parameters, optionalNamed, requiredParameters, parametersWithDefaults)
-    internal val hasAdditionalParameters = requiredParameters.isNotEmpty() || optionalNamed.isNotEmpty()
 
     internal val isPrivate = builder.specData.modifiers.remove(DartModifier.PRIVATE)
     internal val typeCast = builder.typeCast

@@ -4,11 +4,10 @@ import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.ConstructorWriter
-import net.theevilreaper.dartpoet.parameter.ParameterType
-import net.theevilreaper.dartpoet.util.ParameterFilter
-import net.theevilreaper.dartpoet.util.ParameterHelper
 import net.theevilreaper.dartpoet.util.toImmutableList
 import net.theevilreaper.dartpoet.util.toImmutableSet
+import net.theevilreaper.dartpoet.parameter.ParameterContext
+import net.theevilreaper.dartpoet.parameter.ParameterSpec
 
 /**
  * The [ConstructorSpec] holds all information about a constructor in Dart.
@@ -21,22 +20,13 @@ import net.theevilreaper.dartpoet.util.toImmutableSet
  */
 class ConstructorSpec internal constructor(
     builder: ConstructorBuilder
-) : ConstructorBase {
+) : ConstructorBase, ParameterContext<ParameterSpec> by ParameterContext(builder.parameters) {
     internal val name = builder.name
     internal val named = builder.named
     internal val isNamed = named.orEmpty().trim().isNotEmpty()
     internal val isLambda = builder.lambda
     internal val initializer = builder.initializer
     internal val modifiers = builder.modifiers.toImmutableSet()
-
-    internal val parameters = builder.parameters.toImmutableList()
-    internal val hasParameters = parameters.isNotEmpty()
-
-    internal val optionalNamed = ParameterFilter.filterParameter(parameters) { it.type == ParameterType.NAMED && (it.isNullable || it.hasInitializer) }
-    internal val requiredParameters = ParameterFilter.filterParameter(parameters) { it.type == ParameterType.REQUIRED }
-    internal val parametersWithDefaults = ParameterFilter.filterParameter(parameters) { it.type == ParameterType.OPTIONAL }
-    internal val normalParameters = ParameterHelper.excludeParameters(parameters, optionalNamed, requiredParameters, parametersWithDefaults)
-    internal val hasAdditionalParameters = requiredParameters.isNotEmpty() || optionalNamed.isNotEmpty()
 
     internal val docs = builder.docs.toImmutableList()
 
