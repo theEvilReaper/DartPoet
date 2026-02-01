@@ -33,7 +33,7 @@ Maven:
 ```xml
 
 <dependency>
-    <groupId>dev.themeinerlp</groupId>
+    <groupId>net.theevilreaper</groupId>
     <artifactId>dartpoet</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 </dependency>
@@ -42,7 +42,7 @@ Maven:
 Gradle:
 
 ```kotlin
-implementation("dev.themeinerlp:dartpoet:0.0.1-SNAPSHOT")
+implementation("net.theevilreaper:dartpoet:0.0.1-SNAPSHOT")
 ```
 
 ## Contributing
