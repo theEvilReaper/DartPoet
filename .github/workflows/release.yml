@@ -1,28 +1,53 @@
-name: Release to Maven Central
-on:
+name: Release
+"on":
   push:
-    tags:
-      - '*'
+    branches:
+      - main
+      - next
+      - beta
+      - alpha
+      - "*.x"
+
+permissions:
+  contents: read # for checkout
 
 jobs:
   release:
+    name: Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
+      id-token: write # to enable use of OIDC for npm provenance
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - name: Set up Java
-        uses: actions/setup-java@v5.2.0
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "lts/*"
+      - name: Validate Gradle Wrapper
+        uses: gradle/actions/wrapper-validation@v5
+      - name: Setup Java
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: 25
+          java-version: 24
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
-      - name: Build
-        run: ./gradlew jar
-      - name: Publish to Maven Central
-        run: ./gradlew publish publishToMavenCentral -PforceSign=true
+      - name: Install dependencies
+        run: pnpm clean-install
+      - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
+        run: pnpm audit signatures
+      - name: Release
         env:
-          TAG_VERSION: ${{ github.ref_name }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.OSSRH_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.OSSRH_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.PGP_SECRET }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.PGP_PASSPHRASE }}
+        run: npx semantic-release
