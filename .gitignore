@@ -89,3 +89,6 @@ Temporary Items
 ## VsCode
 
 .vscode
+
+### Nodejs
+node_modules/
