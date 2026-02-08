@@ -5,17 +5,14 @@ plugins {
     `maven-publish`
     `java-library`
     alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.changelog)
     alias(libs.plugins.dokka)
     alias(libs.plugins.maven.publish)
 }
 
 group = "net.theevilreaper"
-version = System.getenv("TAG_VERSION") ?: "0.1.0-SNAPSHOT"
+version = "999.0.0-SNAPSHOT"
 
-repositories {
-    mavenCentral()
-}
+
 
 dependencies {
     compileOnly(libs.jetbrains.annotations)
@@ -42,15 +39,6 @@ tasks {
 kotlin {
     jvmToolchain(25)
 }
-
-changelog {
-    path.set("${project.projectDir}/CHANGELOG.md")
-    itemPrefix.set("-")
-    keepUnreleasedSection.set(true)
-    unreleasedTerm.set("[Unreleased]")
-    groups.set(listOf("Added", "Changed", "Deprecated", "Removed", "Fixed", "Security"))
-}
-
 mavenPublishing {
     publishToMavenCentral(automaticRelease = true)
 
