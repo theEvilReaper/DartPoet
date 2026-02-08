@@ -1,6 +1,11 @@
 rootProject.name = "DartPoet"
 
 dependencyResolutionManagement {
+
+    repositories {
+        mavenCentral()
+    }
+
     versionCatalogs {
         create("libs") {
             version("junit", "6.0.2")
