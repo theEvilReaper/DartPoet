@@ -1,0 +1,32 @@
+{
+    "plugins": [
+      [
+        "@semantic-release/commit-analyzer",
+        {
+          "preset": "conventionalcommits"
+        }
+      ],
+      [
+        "@semantic-release/exec",
+        {
+          "verifyConditionsCmd": "./gradlew check",
+          "publishCmd": "./gradlew -Pversion=${nextRelease.version} publishAndReleaseToMavenCentral"
+        }
+      ],
+      [
+        "@semantic-release/changelog",
+        {
+          "changelogFile": "CHANGELOG.md"
+        }
+      ],
+      [
+        "@semantic-release/git",
+        {
+          "assets": ["CHANGELOG.md"]
+        }
+      ],
+      "@semantic-release/git",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/github"
+    ]
+  }
