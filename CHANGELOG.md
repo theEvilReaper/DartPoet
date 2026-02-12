@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/theEvilReaper/DartPoet/compare/v1.0.0...v1.0.1) (2026-02-12)
+
+
+### Bug Fixes
+
+* **maven:** Update Maven coordinates for DartPoet ([b973236](https://github.com/theEvilReaper/DartPoet/commit/b97323625908374aa7235dce2f3aa05be5c88de1))
+
 # 1.0.0 (2026-02-08)
 
 
