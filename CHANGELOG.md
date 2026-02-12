@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/theEvilReaper/DartPoet/compare/v1.0.1...v1.0.2) (2026-02-12)
+
+
+### Bug Fixes
+
+* **maven:** Improve publishing ([f593091](https://github.com/theEvilReaper/DartPoet/commit/f5930915a4a37d3320453cd28c29537e524e6779))
+
 ## [1.0.1](https://github.com/theEvilReaper/DartPoet/compare/v1.0.0...v1.0.1) (2026-02-12)
 
 
