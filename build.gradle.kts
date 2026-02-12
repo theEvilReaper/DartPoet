@@ -43,7 +43,7 @@ mavenPublishing {
     publishToMavenCentral(automaticRelease = true)
 
     signAllPublications()
-    coordinates(group.toString(), "dartpoet", version.toString())
+    coordinates("net.theevilreaper", "dartpoet", version.toString())
 
 
     pom {
