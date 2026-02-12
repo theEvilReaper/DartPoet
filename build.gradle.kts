@@ -40,7 +40,7 @@ kotlin {
     jvmToolchain(25)
 }
 mavenPublishing {
-    publishToMavenCentral(automaticRelease = true)
+    publishToMavenCentral()
 
     signAllPublications()
     coordinates("net.theevilreaper", "dartpoet", version.toString())
