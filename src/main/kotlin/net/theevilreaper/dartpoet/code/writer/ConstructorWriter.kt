@@ -44,7 +44,7 @@ internal class ConstructorWriter : Writeable<ConstructorSpec>, DocumentationAppe
             writer.emitCode(".%L", spec.named)
         }
 
-        val parameterData: ParameterData<ParameterSpec> = ParameterData.fromConstructor(spec)
+        val parameterData: ParameterData<ParameterSpec> = ParameterData.of(spec)
         ParameterHelper.writeParameters(parameterData, writer)
 
         val initializerBlock: CodeBlock = spec.initializer.build()

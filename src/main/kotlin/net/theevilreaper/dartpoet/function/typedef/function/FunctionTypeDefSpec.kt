@@ -26,7 +26,7 @@ class FunctionTypeDefSpec(
         writer.emitCode("%T", returnType)
         writer.emitSpace()
         writer.emitCode("%T", Function::class.asTypeName())
-        val parameterData: ParameterData<ParameterSpec> = ParameterData.fromTypeDef(this)
+        val parameterData: ParameterData<ParameterSpec> = ParameterData.of(this)
 
         if (parameterData.hasParameters) {
             ParameterHelper.writeParameters(parameterData, writer, indent = parameterData.requiredParameters.size > 1)
@@ -34,6 +34,11 @@ class FunctionTypeDefSpec(
         writer.emitCode(SEMICOLON)
     }
 
+    /**
+     * Creates a new [FunctionTypeDefBuilder] based on this [FunctionTypeDefSpec].
+     * @return the created builder
+     * @see FunctionTypeDefBuilder
+     */
     override fun toBuilder(): FunctionTypeDefBuilder {
         val newBuilder = FunctionTypeDefBuilder(this.type)
         newBuilder.returnType = this.returnType

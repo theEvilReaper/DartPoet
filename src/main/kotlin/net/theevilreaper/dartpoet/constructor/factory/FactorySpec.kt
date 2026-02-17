@@ -8,40 +8,35 @@ import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.FactoryWriter
 import net.theevilreaper.dartpoet.constructor.ConstructorBase
 import net.theevilreaper.dartpoet.constructor.ConstructorDelegation
+import net.theevilreaper.dartpoet.parameter.ParameterContext
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.parameter.ParameterType
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
-import net.theevilreaper.dartpoet.util.ParameterFilter
+import net.theevilreaper.dartpoet.util.ParameterBase
 import net.theevilreaper.dartpoet.util.ParameterHelper
 import net.theevilreaper.dartpoet.util.toImmutableList
 import net.theevilreaper.dartpoet.util.toImmutableSet
 
 /**
  * The [FactorySpec] represents the factory construct from the language Dart.
- * The language allows the definition of factory constructors which works like a normal constructor but with a
+ * The language allows the definition of factory constructors which work like a normal constructor but with a
  * different syntax.
+ *
+ * @since 1.0.0
+ * @author theEvilReaper
  */
 class FactorySpec(
     builder: FactoryBuilder,
-) : ConstructorBase {
+) : ConstructorBase, ParameterContext<ParameterSpec> by FactoryParameterContext(builder.parameters.toImmutableList()) {
     val typeName: TypeName = builder.typeName
     val isConst: Boolean = builder.const
     val annotations: Set<AnnotationSpec> = builder.annotations.toImmutableSet()
     val documentation: CodeBlock = builder.documentation.build()
-    val parameters: List<ParameterSpec> = builder.parameters.toImmutableList()
     val initializerBlock: CodeBlock = builder.initializerBlock.build()
     val named: String? = builder.namedString
     val hasNamedData = named.orEmpty().trim().isNotEmpty()
     val constructorDelegation: ConstructorDelegation = builder.delegation
-    internal val hasParameters = parameters.isNotEmpty()
-
-    internal val optionalNamed = ParameterFilter.filterParameter(parameters) { it.type == ParameterType.NAMED }
-    internal val requiredParameters = ParameterFilter.filterParameter(parameters) { it.type == ParameterType.REQUIRED }
-    internal val parametersWithDefaults = ParameterFilter.filterParameter(parameters) { it.type == ParameterType.OPTIONAL }
-    internal val normalParameters = ParameterHelper.excludeParameters(parameters, optionalNamed, requiredParameters, parametersWithDefaults)
-    internal val hasAdditionalParameters = requiredParameters.isNotEmpty() || optionalNamed.isNotEmpty()
-
 
     /**
      * Performs some checks on the spec object.
@@ -119,5 +114,47 @@ class FactorySpec(
          */
         @JvmStatic
         fun constBuilder(className: ClassName) = FactoryBuilder(className, true)
+
+        /**
+         * Creates a new instance of [ParameterContext] from the given list of parameters.
+         * @param parameters the list of parameters to analyze
+         */
+        operator fun <T : ParameterBase> invoke(parameters: List<T>): ParameterContext<T> =
+            FactoryParameterContext(parameters)
+    }
+
+    /**
+     * Internal implementation of the [ParameterContext] interface for factory constructors.
+     * @param T the type of the parameter, must extend [ParameterBase]
+     * @param parameters the list of parameters to analyze
+     * @author theEvilReaper
+     * @since 1.0.0
+     * @version 1.0.0
+     */
+    private class FactoryParameterContext<T : ParameterBase>(parameters: List<T>) : ParameterContext<T> {
+        override val parameters = parameters.toImmutableList()
+
+        override val optionalNamed = this.parameters.filter {
+            it.type == ParameterType.NAMED
+        }.toImmutableList()
+
+        override val requiredParameters = this.parameters.filter {
+            it.type == ParameterType.REQUIRED
+        }.toImmutableList()
+
+        override val parametersWithDefaults = this.parameters.filter {
+            it.type == ParameterType.OPTIONAL
+        }.toImmutableList()
+
+        override val normalParameters: List<T> = ParameterHelper.excludeParameters(
+            this.parameters,
+            optionalNamed,
+            requiredParameters,
+            parametersWithDefaults
+        )
+
+        override val hasParameters = this.parameters.isNotEmpty()
+
+        override val hasAdditionalParameters = requiredParameters.isNotEmpty() || optionalNamed.isNotEmpty()
     }
 }
