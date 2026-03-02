@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/theEvilReaper/DartPoet/compare/v1.0.3...v1.0.4) (2026-03-02)
+
+
+### Bug Fixes
+
+* **deps:** update dependency org.jetbrains:annotations to v26.1.0 ([#222](https://github.com/theEvilReaper/DartPoet/issues/222)) ([ad2436b](https://github.com/theEvilReaper/DartPoet/commit/ad2436b358ba64fb95433e34b15ac2d44ff0fdb2))
+
 ## [1.0.3](https://github.com/theEvilReaper/DartPoet/compare/v1.0.2...v1.0.3) (2026-02-16)
 
 
