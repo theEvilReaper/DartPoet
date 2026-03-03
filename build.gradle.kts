@@ -9,9 +9,6 @@ plugins {
     alias(libs.plugins.maven.publish)
 }
 
-group = "net.theevilreaper"
-version = "999.0.0-SNAPSHOT"
-
 
 
 dependencies {
@@ -50,7 +47,7 @@ publishing {
                 }
             }
             name = "OneLiteFeatherRepository"
-            url = if (project.version.toString().contains("SNAPSHOT")) {
+            url = if (rootProject.version.toString().contains("SNAPSHOT")) {
                 uri("https://repo.onelitefeather.dev/onelitefeather-snapshots")
             } else {
                 uri("https://repo.onelitefeather.dev/onelitefeather-releases")
@@ -61,7 +58,7 @@ publishing {
 mavenPublishing {
 
     signAllPublications()
-    coordinates("net.theevilreaper", "dartpoet", version.toString())
+    coordinates("net.theevilreaper", "dartpoet", rootProject.toString())
 
 
     pom {
