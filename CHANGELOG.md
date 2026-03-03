@@ -1,3 +1,10 @@
+## [1.0.7](https://github.com/theEvilReaper/DartPoet/compare/v1.0.6...v1.0.7) (2026-03-03)
+
+
+### Bug Fixes
+
+* **ci:** Retrigger build ([af466e6](https://github.com/theEvilReaper/DartPoet/commit/af466e64c7ce6fc0fdd446a626a724a1b03da28e))
+
 ## [1.0.6](https://github.com/theEvilReaper/DartPoet/compare/v1.0.5...v1.0.6) (2026-03-03)
 
 
