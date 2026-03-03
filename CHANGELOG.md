@@ -1,3 +1,10 @@
+## [1.0.6](https://github.com/theEvilReaper/DartPoet/compare/v1.0.5...v1.0.6) (2026-03-03)
+
+
+### Bug Fixes
+
+* **build:** update Gradle publish command in release configuration ([0eca4e9](https://github.com/theEvilReaper/DartPoet/commit/0eca4e9ef8ae491097913639c0e407f824760a6f))
+
 ## [1.0.5](https://github.com/theEvilReaper/DartPoet/compare/v1.0.4...v1.0.5) (2026-03-03)
 
 
