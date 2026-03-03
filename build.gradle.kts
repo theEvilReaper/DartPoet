@@ -58,7 +58,7 @@ publishing {
 mavenPublishing {
 
     signAllPublications()
-    coordinates("net.theevilreaper", "dartpoet", rootProject.toString())
+    coordinates("net.theevilreaper", "dartpoet", rootProject.version.toString())
 
 
     pom {
