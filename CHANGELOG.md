@@ -1,3 +1,10 @@
+## [1.0.5](https://github.com/theEvilReaper/DartPoet/compare/v1.0.4...v1.0.5) (2026-03-03)
+
+
+### Bug Fixes
+
+* **build:** add custom Maven publishing configuration ([4b608e3](https://github.com/theEvilReaper/DartPoet/commit/4b608e38d087557054b6d9da6e93f1281fc7d91b))
+
 ## [1.0.4](https://github.com/theEvilReaper/DartPoet/compare/v1.0.3...v1.0.4) (2026-03-02)
 
 
