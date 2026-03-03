@@ -1,3 +1,10 @@
+## [1.0.9](https://github.com/theEvilReaper/DartPoet/compare/v1.0.8...v1.0.9) (2026-03-03)
+
+
+### Bug Fixes
+
+* **build:** use project version for Maven coordinates ([2484f59](https://github.com/theEvilReaper/DartPoet/commit/2484f593b93ec47ac5ff37765f08ac91dcb0da9e))
+
 ## [1.0.8](https://github.com/theEvilReaper/DartPoet/compare/v1.0.7...v1.0.8) (2026-03-03)
 
 
