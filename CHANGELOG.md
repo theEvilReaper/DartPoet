@@ -1,3 +1,10 @@
+## [1.0.8](https://github.com/theEvilReaper/DartPoet/compare/v1.0.7...v1.0.8) (2026-03-03)
+
+
+### Bug Fixes
+
+* **build:** move group and version definitions to gradle.properties and adjust Maven publishing configuration ([8f67f70](https://github.com/theEvilReaper/DartPoet/commit/8f67f7095599b6a1b06e8fbbf8c3dfb19487833b))
+
 ## [1.0.7](https://github.com/theEvilReaper/DartPoet/compare/v1.0.6...v1.0.7) (2026-03-03)
 
 
