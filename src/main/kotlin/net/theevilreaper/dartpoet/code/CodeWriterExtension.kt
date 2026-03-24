@@ -23,7 +23,6 @@ internal val SPECIAL_CHARACTERS = " \n·".toCharArray()
 internal val UNSAFE_LINE_START = Regex("\\s*[-+].*")
 
 fun String.withOpenBrackets(): String {
-
     for (i in length - 1 downTo 0) {
         if (this[i] == CURLY_OPEN) {
             return "$this$NEW_LINE"
@@ -37,7 +36,6 @@ fun String.withOpenBrackets(): String {
 val Char.isSingleCharNoArgPlaceholder get() = this in NO_ARG_PLACEHOLDERS
 val Char.isMultiCharNoArgPlaceholder get() = this == '%'
 
-
 internal val String.isPlaceholder
     get() = (length == 1 && first().isSingleCharNoArgPlaceholder) ||
             (length == 2 && first().isMultiCharNoArgPlaceholder)
@@ -49,17 +47,13 @@ internal fun Set<FunctionSpec>.emitFunctions(
     codeWriter: CodeWriter,
     emitBlock: (FunctionSpec) -> Unit = { it.write(codeWriter) },
 ) = with(codeWriter) {
-    if (isNotEmpty()) {
-        val newLines = size > 1
-        forEachIndexed { index, functionSpec ->
-            if (index > 0) {
-                emit(NEW_LINE)
-            }
-            emitBlock(functionSpec)
-            if (newLines && index < size - 1) {
-                emit(NEW_LINE)
-            }
-        }
+    if (isEmpty()) return@with
+    val emitNewLines = size > 1
+
+    forEachIndexed { index, functionSpec ->
+        if (index > 0) emit(NEW_LINE)
+        emitBlock(functionSpec)
+        if (emitNewLines && index < size - 1) emit(NEW_LINE)
     }
 }
 
@@ -70,40 +64,30 @@ internal fun Set<AnnotationSpec>.emitAnnotations(
     emitBlock: (AnnotationSpec) -> Unit = { it.write(codeWriter) },
 ) = with(codeWriter) {
     if (isEmpty()) return@with
+
     forEachIndexed { index, annotation ->
-        if (index > 0) {
-            codeWriter.emit(if (inLineAnnotations) EMPTY_STRING else NEW_LINE)
-        }
+        if (index > 0) emit(if (inLineAnnotations) EMPTY_STRING else NEW_LINE)
         emitBlock(annotation)
     }
 
-    when {
-        endWithNewLine -> emit(NEW_LINE)
-        else -> emit(SPACE)
-    }
+    emit(if (endWithNewLine) NEW_LINE else SPACE)
 }
 
 internal fun Set<ConstructorBase>.emitConstructors(
     codeWriter: CodeWriter,
     leadingNewLine: Boolean = false,
     emitBlock: (ConstructorBase) -> Unit = {
-        if (it is ConstructorSpec) {
-            (it.write(codeWriter))
-        } else if (it is FactorySpec) {
-            (it.write(codeWriter))
-        }
+        if (it is ConstructorSpec) it.write(codeWriter)
+        else if (it is FactorySpec) it.write(codeWriter)
     },
-) {
-    if (isEmpty()) return
-    if (leadingNewLine) {
-        codeWriter.emit(NEW_LINE)
-    }
+) = with(codeWriter) {
+    if (isEmpty()) return@with
+    if (leadingNewLine) emit(NEW_LINE)
+
     forEachIndexed { index, constructorBase ->
-        if (index > 0) {
-            codeWriter.emit(NEW_LINE)
-        }
+        if (index > 0) emit(NEW_LINE)
         emitBlock(constructorBase)
-        codeWriter.emit(NEW_LINE)
+        emit(NEW_LINE)
     }
 }
 
@@ -114,20 +98,15 @@ internal fun List<ParameterSpec>.emitParameters(
     emitBlock: (ParameterSpec) -> Unit = { it.write(codeWriter) },
 ) = with(codeWriter) {
     if (isEmpty()) return@with
-    val emitComma = size > 1
-    forEachIndexed { index, parameter ->
-        if (index > 0 && forceNewLines) {
-            emit(NEW_LINE)
-        }
 
+    forEachIndexed { index, parameter ->
+        if (index > 0 && forceNewLines) emit(NEW_LINE)
         emitBlock(parameter)
-        if (emitComma) {
-            if (index < size - 1) {
-                emit(",")
-            }
-            if (emitSpace && index < size - 1) {
-                emit(SPACE)
-            }
+
+        val hasNext = index < size - 1
+        if (hasNext) {
+            emit(",")
+            if (emitSpace) emit(SPACE)
         }
     }
 }
@@ -140,16 +119,12 @@ internal fun List<ExtensionSpec>.emitExtensions(
     if (isEmpty()) return@with
     val emitNewLines = size > 1 || forceNewLines
 
-    forEachIndexed { index, parameter ->
-        if (index > 0 && emitNewLines) {
-            emit(NEW_LINE)
-        }
-        emitBlock(parameter)
+    forEachIndexed { index, extension ->
+        if (index > 0 && emitNewLines) emit(NEW_LINE)
+        emitBlock(extension)
     }
 
-    if (emitNewLines) {
-        codeWriter.emit(NEW_LINE)
-    }
+    if (emitNewLines) emit(NEW_LINE)
 }
 
 internal fun <T : Directive> List<T>.writeImports(
@@ -158,21 +133,17 @@ internal fun <T : Directive> List<T>.writeImports(
     emitBlock: (T) -> String = { it.asString() },
 ) {
     if (isEmpty()) return
-    if (newLineAtBegin) {
-        writer.emit(NEW_LINE)
-    }
-    forEachIndexed { index, import ->
-        if (index > 0) {
-            writer.emit(NEW_LINE)
-        }
+    if (newLineAtBegin) writer.emit(NEW_LINE)
 
+    forEachIndexed { index, import ->
+        if (index > 0) writer.emit(NEW_LINE)
         writer.emit(emitBlock(import))
     }
 
     writer.emit(NEW_LINE)
 }
 
-fun Set<ConstantPropertySpec>.emitConstants(
+internal fun Set<ConstantPropertySpec>.emitConstants(
     codeWriter: CodeWriter,
     emitBlock: (ConstantPropertySpec) -> Unit = { it.write(codeWriter) },
 ) = with(codeWriter) {
@@ -180,29 +151,29 @@ fun Set<ConstantPropertySpec>.emitConstants(
     val emitNewLines = size > 1
 
     forEachIndexed { index, property ->
-        if (index > 0) {
-            emit(if (emitNewLines) NEW_LINE else EMPTY_STRING)
-        }
+        if (index > 0 && emitNewLines) emit(NEW_LINE)
         emitBlock(property)
     }
+
     emit(NEW_LINE)
 }
 
-fun List<AbstractTypeDef<*>>.emitTypeDefs(
+internal fun List<AbstractTypeDef<*>>.emitTypeDefs(
     codeWriter: CodeWriter,
     emitBlock: (AbstractTypeDef<*>) -> Unit = { it.write(codeWriter) },
 ) = with(codeWriter) {
+    if (isEmpty()) return@with
     val emitNewLines = size > 1
-    forEachIndexed { index, typeDefSpec ->
-        if (index > 0 && emitNewLines) {
-            emit(NEW_LINE)
-        }
-        emitBlock(typeDefSpec)
+
+    forEachIndexed { index, typeDef ->
+        if (index > 0 && emitNewLines) emit(NEW_LINE)
+        emitBlock(typeDef)
     }
+
     emit(NEW_LINE)
 }
 
-fun Set<PropertySpec>.emitProperties(
+internal fun Set<PropertySpec>.emitProperties(
     codeWriter: CodeWriter,
     forceNewLines: Boolean = false,
     emitBlock: (PropertySpec) -> Unit = { it.write(codeWriter) },
@@ -211,10 +182,9 @@ fun Set<PropertySpec>.emitProperties(
     val emitNewLines = size > 1 || forceNewLines
 
     forEachIndexed { index, property ->
-        if (index > 0) {
-            emit(if (emitNewLines) NEW_LINE else EMPTY_STRING)
-        }
+        if (index > 0 && emitNewLines) emit(NEW_LINE)
         emitBlock(property)
     }
+
     emit(NEW_LINE)
 }
