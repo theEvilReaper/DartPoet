@@ -94,7 +94,7 @@ class LineWrapper(
     /** Emit `s` leaving spaces as-is. */
     fun appendNonWrapping(s: String) {
         check(!closed) { "closed" }
-        require(!s.contains(NEW_LINE))
+        require(!s.contains(NEW_LINE)) { "appendNonWrapping does not support newline characters" }
         segments[segments.size - 1] += s
     }
 
@@ -149,7 +149,7 @@ class LineWrapper(
         // If this is a wrapped line we need a newline and an indent.
         if (startIndex > 0) {
             out.appendLine()
-            for (i in 0 until indentLevel) {
+            repeat(indentLevel) {
                 out.append(indent)
             }
             out.append(linePrefix)

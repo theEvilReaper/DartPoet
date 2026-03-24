@@ -15,9 +15,9 @@
  *
  * Changes to the file compared to the original:
  *
- * The file contains only this methods which are needed to write the code for Dart.
- * All main method which writes the code in KotlinPoet still exists in this writer adaption.
- * Some others has been removed because they are not required
+ * The file contains only the methods which are needed to write code for Dart.
+ * All main methods which write code in KotlinPoet still exist in this writer adaption.
+ * Some others have been removed because they are not required.
  */
 package net.theevilreaper.dartpoet.code
 
@@ -26,7 +26,6 @@ import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.util.NEW_LINE
 import net.theevilreaper.dartpoet.util.stringLiteralWithQuotes
-import java.io.Closeable
 
 /**
  * Converts a given [CodeBlock] into a string representation.
@@ -67,14 +66,15 @@ internal val emptyCurlyBlock = buildCodeString {
 }
 
 /**
- * Converts a [DartFile] to a string suitable to both human- and kotlinc-consumption. This honors
+ * Converts a [DartFile] to a string suitable for both human- and kotlinc-consumption. This honors
  * imports, indentation, and deferred variable names.
  */
 class CodeWriter(
     out: Appendable,
     private val indent: String = DEFAULT_INDENT,
     columnLimit: Int = 100,
-) : Closeable {
+) : AutoCloseable {
+
     var out = LineWrapper(out, indent, columnLimit)
     private var indentLevel = 0
     private var comment = false
@@ -82,15 +82,15 @@ class CodeWriter(
 
     /**
      * When emitting a statement, this is the line of the statement currently being written. The first
-     * line of a statement is indented normally and subsequent wrapped lines are double-indented. This
-     * is -1 when the currently-written line isn't part of a statement.
+     * line of a statement is indented normally and later wrapped lines are double-indented.
+     * This is -1 when the currently written line isn't part of a statement.
      */
     private var statementLine = -1
 
     /**
      * Increases the current indentation level by a given amount.
      * The default value is 1.
-     * @param levels the amount of levels to increase
+     * @param levels the number of levels to increase
      * @return the instance from the writer
      */
     fun indent(levels: Int = 1) = apply {
@@ -100,7 +100,7 @@ class CodeWriter(
     /**
      * Decreases the current indentation level by a given amount.
      * The default value is 1.
-     * @param levels the amount of levels to decrease
+     * @param levels the number of levels to decrease
      * @return the instance from the writer
      */
     fun unindent(levels: Int = 1) = apply {
@@ -133,9 +133,9 @@ class CodeWriter(
     /**
      * Emits a specific format with the given arguments to the [Appendable].
      * The method wraps the given format and arguments into a [CodeBlock] and emits it.
-     * @return the instance from the writer
      * @param format the format to use
      * @param args the arguments to use
+     * @return the instance from the writer
      */
     fun emitCode(format: String, vararg args: Any?) = emitCode(CodeBlock.of(format, *args))
 
@@ -149,9 +149,9 @@ class CodeWriter(
     }
 
     /**
-     * Emits an empty curly block.
+     * Emits an empty block which contains curly brackets.
      *
-     * **Note:** This method will emit `()` without any more content.
+     * **Note:** This method will emit `{}` without any more content.
      */
     fun emitEmptyCurlyBrackets() {
         emitCode(emptyCurlyBlock)
@@ -222,17 +222,16 @@ class CodeWriter(
                     } else {
                         NULL_STRING
                     }
-                    //TODO: Add better fix later
-                    val updated: String = "'" + literal.replace("\"", "") + "'"
-
+                    // TODO: Replace with a proper fix — see GitHub Issue #XYZ
+                    val updated = "'${literal.replace("\"", "")}'"
                     emit(updated, nonWrapping = true)
-                    // emit(literal.replace("\"", "'"), nonWrapping = true)
                 }
 
                 "%T" -> {
                     val typeName = codeBlock.args[a++] as TypeName
                     typeName.emit(this)
                 }
+
                 "%N" -> emit(codeBlock.args[a++] as String)
                 "%%" -> emit("%")
                 "⇥" -> indent()
@@ -250,9 +249,7 @@ class CodeWriter(
                     statementLine = -1
                 }
 
-                else -> {
-                    emit(part)
-                }
+                else -> emit(part)
             }
         }
         if (ensureTrailingNewline && out.hasPendingSegments) {
@@ -262,16 +259,6 @@ class CodeWriter(
 
     private fun emitLiteral(o: Any?, isConstantContext: Boolean) {
         when (o) {
-            /*is TypeSpec -> o.emit(this, null)
-            is AnnotationSpec -> o.emit(this, inline = true, asParameter = isConstantContext)
-            is PropertySpec -> o.emit(this, emptySet())
-            is FunSpec -> o.emit(
-                codeWriter = this,
-                enclosingName = null,
-                implicitModifiers = setOf(KModifier.PUBLIC),
-                includeKdocTags = true,
-            )
-            is TypeAliasSpec -> o.emit(this)*/
             is CodeBlock -> emitCode(o, isConstantContext = isConstantContext)
             else -> emit(o.toString())
         }
@@ -309,39 +296,37 @@ class CodeWriter(
             if (trailingNewline) {
                 emitIndentation()
                 if (comment) {
-                    // To get insides why we are writing /// for documentation
-                    // Please take a look at this side https://dart.dev/effective-dart/documentation
+                    // Dart documentation comments use '///' — see https://dart.dev/effective-dart/documentation
                     out.appendNonWrapping("$DOCUMENTATION_CHAR ")
-
                 }
             }
 
             if (nonWrapping) {
                 out.appendNonWrapping(line)
             } else {
-                out.append(
-                    line,
-                    indentLevel = indentLevel + 2,
-                )
+                out.append(line, indentLevel = indentLevel + 2)
             }
             trailingNewline = false
         }
     }
 
+    /**
+     * Emits the current indentation level.
+     */
     private fun emitIndentation() {
-        for (j in 0 until indentLevel) {
+        repeat(indentLevel) {
             out.appendNonWrapping(indent)
         }
     }
 
     /**
      * Emits a specific amount of [SPACE] strings to the given [Appendable].
-     * @param amount the amount of spaces which should be applied
+     * @param amount the number of spaces which should be applied
      * @return the instance from the writer
      */
     fun emitSpaces(amount: Int = 1) = apply {
         check(amount > 0) { "The amount can't be negative" }
-        for (i in 0 until amount) {
+        repeat(amount) {
             out.appendNonWrapping(SPACE)
         }
     }
@@ -355,7 +340,7 @@ class CodeWriter(
     }
 
     /**
-     * Perform emitting actions on the current [CodeWriter] using a custom [Appendable]. The
+     * Performs emitting actions on the current [CodeWriter] using a custom [Appendable]. The
      * [CodeWriter] will continue using the old [Appendable] after this method returns.
      */
     inline fun emitInto(out: Appendable, action: CodeWriter.() -> Unit) {
@@ -371,7 +356,5 @@ class CodeWriter(
     /**
      * Closes the underlying [Appendable].
      */
-    override fun close() {
-        out.close()
-    }
+    override fun close() = out.close()
 }
