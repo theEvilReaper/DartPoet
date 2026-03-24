@@ -34,4 +34,43 @@ class CodeBlockTest {
             """.trimMargin()
         )
     }
+
+    @DisplayName("Test that the %S placeholder escapes dollar signs with double quotes")
+    @Test
+    fun `test percent s escapes dollar sign with double quotes`() {
+        val block = CodeBlock.builder()
+            .addStatement("%S", "costs \$5")
+            .build()
+        assertThat(block.toString().trim()).isEqualTo(
+            """
+        |"costs \$5"
+        """.trimMargin()
+        )
+    }
+
+    @DisplayName("Test that the %C placeholder escapes dollar signs with single quotes")
+    @Test
+    fun `test percent c escapes dollar sign with single quotes`() {
+        val block = CodeBlock.builder()
+            .addStatement("%C", "costs \$5")
+            .build()
+        assertThat(block.toString().trim()).isEqualTo(
+            """
+        |'costs \$5'
+        """.trimMargin()
+        )
+    }
+
+    @DisplayName("Test that the %P placeholder does not escape dollar signs")
+    @Test
+    fun `test percent p keeps dollar sign for string interpolation`() {
+        val block = CodeBlock.builder()
+            .addStatement("%P", "Hello \$name")
+            .build()
+        assertThat(block.toString().trim()).isEqualTo(
+            """
+        |'Hello ${'$'}name'
+        """.trimMargin()
+        )
+    }
 }
