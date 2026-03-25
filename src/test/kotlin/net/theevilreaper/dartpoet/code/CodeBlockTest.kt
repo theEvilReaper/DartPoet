@@ -73,4 +73,12 @@ class CodeBlockTest {
         """.trimMargin()
         )
     }
+
+    @Test
+    fun `test percent c escapes single quote characters`() {
+        val block = CodeBlock.builder()
+            .add("%C", "'")
+            .build()
+        assertThat(block.toString().trim()).isEqualTo("'\\''")
+    }
 }
