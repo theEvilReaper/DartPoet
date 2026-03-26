@@ -25,7 +25,6 @@ import net.theevilreaper.dartpoet.DartFile
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.util.NEW_LINE
-import net.theevilreaper.dartpoet.util.stringLiteralWithQuotes
 
 /**
  * Converts a given [CodeBlock] into a string representation.
@@ -174,6 +173,26 @@ class CodeWriter(
         }
     }
 
+    /**
+     * Emits the given [codeBlock] to the underlying [Appendable].
+     *
+     * Supports the following format placeholders:
+     * - `%L` — emits the argument as a literal value
+     * - `%S` — emits the argument as a Dart string literal with double quotes (`"`), escaping `$`
+     * - `%C` — emits the argument as a Dart string literal with single quotes (`'`), escaping `$`
+     * - `%P` — emits the argument as a Dart string literal with single quotes (`'`), keeping `$` for string interpolation
+     * - `%T` — emits the argument as a [TypeName]
+     * - `%N` — emits the argument as a plain name (no escaping)
+     * - `%%` — emits a literal `%`
+     * - `⇥` — increases the indentation level
+     * - `⇤` — decreases the indentation level
+     * - `«` — opens a statement
+     * - `»` — closes a statement
+     *
+     * @param codeBlock the [CodeBlock] to emit
+     * @param isConstantContext whether the code is emitted in a constant context. Defaults to `false`
+     * @param ensureTrailingNewline whether to append a newline if there are pending segments. Defaults to `false`
+     */
     fun emitCode(
         codeBlock: CodeBlock,
         isConstantContext: Boolean = false,
@@ -184,79 +203,58 @@ class CodeWriter(
         while (partIterator.hasNext()) {
             when (val part = partIterator.next()) {
                 "%L" -> emitLiteral(codeBlock.args[a++], isConstantContext)
-                "%S", "%C" -> {
-                    val string = codeBlock.args[a++] as String?
-                    // Emit null as a literal null: no quotes.
-                    val literal = if (string != null) {
-                        stringLiteralWithQuotes(
-                            string,
-                            isInsideRawString = false,
-                            isConstantContext = isConstantContext,
-                        )
-                    } else {
-                        NULL_STRING
-                    }
-
-                    if (part == "%C") {
-                        emit(literal.replace("\"", "'"), nonWrapping = true)
-                    } else {
-                        emit(literal, nonWrapping = true)
-                    }
-                }
-
+                "%S" -> emitStringArg(codeBlock.args[a++] as String?, quoteChar = '"')
+                "%C" -> emitStringArg(codeBlock.args[a++] as String?)
                 "%P" -> {
                     val string = codeBlock.args[a++]?.let { arg ->
-                        if (arg is CodeBlock) {
-                            arg.toString(this@CodeWriter)
-                        } else {
-                            arg as String?
-                        }
+                        if (arg is CodeBlock) arg.toString(this@CodeWriter) else arg as String?
                     }
-                    // Emit null as a literal null: no quotes.
-                    val literal = if (string != null) {
-                        stringLiteralWithQuotes(
-                            string,
-                            isInsideRawString = true,
-                            isConstantContext = isConstantContext,
-                        )
-                    } else {
-                        NULL_STRING
-                    }
-                    // TODO: Replace with a proper fix — see GitHub Issue #XYZ
-                    val updated = "'${literal.replace("\"", "")}'"
-                    emit(updated, nonWrapping = true)
+                    emitStringArg(string, escapeDollar = false)
                 }
 
-                "%T" -> {
-                    val typeName = codeBlock.args[a++] as TypeName
-                    typeName.emit(this)
-                }
-
+                "%T" -> (codeBlock.args[a++] as TypeName).emit(this)
                 "%N" -> emit(codeBlock.args[a++] as String)
                 "%%" -> emit("%")
                 "⇥" -> indent()
                 "⇤" -> unindent()
-                "«" -> {
-                    CodeWriterCheck.ensureStatementNotAlreadyOpen(statementLine, codeBlock)
-                    statementLine = 0
-                }
-
-                "»" -> {
-                    CodeWriterCheck.ensureStatementIsOpenBeforeClosing(statementLine, codeBlock)
-                    if (statementLine > 0) {
-                        unindent(2) // End a multi-line statement. Decrease the indentation level.
-                    }
-                    statementLine = -1
-                }
-
+                "«" -> openStatement(codeBlock)
+                "»" -> closeStatement(codeBlock)
                 else -> emit(part)
             }
         }
-        if (ensureTrailingNewline && out.hasPendingSegments) {
-            emit(NEW_LINE)
-        }
+        if (ensureTrailingNewline && out.hasPendingSegments) emit(NEW_LINE)
     }
 
+    /**
+     * Emits a Dart string literal for the given [string] argument.
+     *
+     * If [string] is `null`, emits [NULL_STRING] instead.
+     *
+     * @param string the string value to emit, or `null`
+     * @param quoteChar the quote character to use. Defaults to `'`
+     * @param escapeDollar whether to escape `$` signs. Set to `false` for string interpolation. Defaults to `true`
+     */
+    private fun emitStringArg(
+        string: String?,
+        quoteChar: Char = '\'',
+        escapeDollar: Boolean = true,
+    ) {
+        val stringArgument = when (string != null) {
+            true -> dartStringLiteral(string, quoteChar, escapeDollar)
+            false -> NULL_STRING
+        }
+        emit(stringArgument, nonWrapping = true)
+    }
+
+    /**
+     * Emits a literal value to the underlying [Appendable].
+     *
+     * If [o] is a [CodeBlock], it is emitted recursively via [emitCode].
+     * Otherwise, the value is converted to a string via [toString] and emitted as-is.
+     *
+     * @param o the value to emit, or `null`
+     * @param isConstantContext whether the value is emitted in a constant context
+     */
     private fun emitLiteral(o: Any?, isConstantContext: Boolean) {
         when (o) {
             is CodeBlock -> emitCode(o, isConstantContext = isConstantContext)
@@ -265,49 +263,100 @@ class CodeWriter(
     }
 
     /**
+     * Opens a new statement in the current code block.
+     *
+     * Ensures that no statement is already open before proceeding.
+     * Sets the internal statement line counter to `0` to mark the beginning of a statement.
+     *
+     * @param codeBlock the [CodeBlock] currently being emitted, used for error reporting
+     * @throws IllegalStateException if a statement is already open
+     */
+    private fun openStatement(codeBlock: CodeBlock) {
+        CodeWriterCheck.ensureStatementNotAlreadyOpen(statementLine, codeBlock)
+        statementLine = 0
+    }
+
+    /**
+     * Closes the currently open statement in the current code block.
+     *
+     * If the statement spans multiple lines, the indentation level is decreased by 2.
+     * Resets the internal statement line counter to `-1` to mark the end of a statement.
+     *
+     * @param codeBlock the [CodeBlock] currently being emitted, used for error reporting
+     * @throws IllegalStateException if no statement is currently open
+     */
+    private fun closeStatement(codeBlock: CodeBlock) {
+        CodeWriterCheck.ensureStatementIsOpenBeforeClosing(statementLine, codeBlock)
+        if (statementLine > 0) unindent(2)
+        statementLine = -1
+    }
+
+    /**
      * Emits `s` with indentation as required. It's important that all code that writes to
      * [CodeWriter.out] does it through here, since we emit indentation lazily in order to avoid
      * unnecessary trailing whitespace.
+     *
+     * @param s the string to emit
+     * @param nonWrapping whether to emit the string without line wrapping. Defaults to `false`
      */
     fun emit(s: String, nonWrapping: Boolean = false) = apply {
         var first = true
-        val lines: List<String> = s.split('\n')
-        for (line in lines) {
-            // Emit a newline character. Make sure blank lines in KDoc & comments look good.
-            if (!first) {
-                if (comment && trailingNewline) {
-                    emitIndentation()
-                    out.appendNonWrapping(DOCUMENTATION_CHAR)
-                }
-                out.newline()
-                trailingNewline = true
-                if (statementLine != -1) {
-                    if (statementLine == 0) {
-                        indent(2) // Begin multiple-line statement. Increase the indentation level.
-                    }
-                    statementLine++
-                }
-            }
-
+        for (line in s.split('\n')) {
+            if (!first) emitNewline()
             first = false
-            if (line.isEmpty()) continue // Don't indent empty lines.
-
-            // Emit indentation and comment prefix if necessary.
-            if (trailingNewline) {
-                emitIndentation()
-                if (comment) {
-                    // Dart documentation comments use '///' — see https://dart.dev/effective-dart/documentation
-                    out.appendNonWrapping("$DOCUMENTATION_CHAR ")
-                }
-            }
-
-            if (nonWrapping) {
-                out.appendNonWrapping(line)
-            } else {
-                out.append(line, indentLevel = indentLevel + 2)
-            }
-            trailingNewline = false
+            if (line.isEmpty()) continue
+            emitLine(line, nonWrapping)
         }
+    }
+
+    /**
+     * Emits a newline to the underlying [Appendable].
+     *
+     * If the current line is part of a comment and has a trailing newline, the indentation
+     * and the [DOCUMENTATION_CHAR] are emitted before the newline.
+     *
+     * If a statement is currently open, the indentation level is increased by 2 when the
+     * first newline of the statement is emitted.
+     */
+    private fun emitNewline() {
+        if (comment && trailingNewline) {
+            emitIndentation()
+            out.appendNonWrapping(DOCUMENTATION_CHAR)
+        }
+        out.newline()
+        trailingNewline = true
+        if (statementLine != -1) {
+            if (statementLine == 0) indent(2)
+            statementLine++
+        }
+    }
+
+    /**
+     * Emits a single line to the underlying [Appendable].
+     *
+     * If [trailingNewline] is `true`, the indentation is emitted before the line.
+     * When inside a comment block, the [DOCUMENTATION_CHAR] prefix is also prepended.
+     *
+     * If [nonWrapping] is `true`, the line is appended without any line wrapping.
+     * Otherwise, the line is appended with the current indentation level taken into account.
+     *
+     * @param line the line to emit
+     * @param nonWrapping whether to emit the line without line wrapping
+     */
+    private fun emitLine(line: String, nonWrapping: Boolean) {
+        if (trailingNewline) {
+            emitIndentation()
+            if (comment) {
+                // Dart documentation comments use '///' — see https://dart.dev/effective-dart/documentation
+                out.appendNonWrapping("$DOCUMENTATION_CHAR ")
+            }
+        }
+        if (nonWrapping) {
+            out.appendNonWrapping(line)
+        } else {
+            out.append(line, indentLevel = indentLevel + 2)
+        }
+        trailingNewline = false
     }
 
     /**

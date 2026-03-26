@@ -112,6 +112,32 @@ internal fun stringLiteralWithQuotes(
     }
 }
 
+internal fun dartStringLiteral(
+    value: String,
+    quoteChar: Char = '\'',
+    escapeDollar: Boolean = true,
+): String {
+    val quote = quoteChar.toString()
+    val tripleQuote = quote.repeat(3)
+
+    if ('\n' in value) {
+        return "$tripleQuote${value.replace(quote, "\\$quote")}$tripleQuote"
+    }
+
+    val escaped = buildString {
+        for (c in value) {
+            when (c) {
+                quoteChar -> append("\\$quoteChar")
+                '\\' -> append("\\\\")
+                '$' -> if (escapeDollar) append("\\$") else append(c)
+                '\t' -> append("\\t")
+                '\r' -> append("\\r")
+                else -> append(c)
+            }
+        }
+    }
+    return "$quote$escaped$quote"
+}
 
 // https://github.com/JetBrains/kotlin/blob/master/compiler/frontend.java/src/org/jetbrains/kotlin/resolve/jvm/checkers/JvmSimpleNameBacktickChecker.kt
 private val ILLEGAL_CHARACTERS_TO_ESCAPE = setOf('.', ';', '[', ']', '/', '<', '>', ':', '\\')
