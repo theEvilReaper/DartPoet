@@ -51,67 +51,6 @@ private val Char.isIsoControl: Boolean
         return this in '\u0000'..'\u001F' || this in '\u007F'..'\u009F'
     }
 
-internal fun stringLiteralWithQuotes(
-    value: String,
-    isInsideRawString: Boolean = false,
-    isConstantContext: Boolean = false,
-): String {
-    if (!isConstantContext && '\n' in value) {
-        val result = StringBuilder(value.length + 32)
-        result.append("\"\"\"\n|")
-        var i = 0
-        while (i < value.length) {
-            val c = value[i]
-            if (value.regionMatches(i, "\"\"\"", 0, 3)) {
-                // Don't inadvertently end the raw string too early
-                result.append("\"\"\${'\"'}")
-                i += 2
-            } else if (c == '\n') {
-                // Add a '|' after newlines. This pipe will be removed by trimMargin().
-                result.append("\n|")
-            } else if (c == '$' && !isInsideRawString) {
-                // Escape '$' symbols with ${'$'}.
-                result.append("\${\'\$\'}")
-            } else {
-                result.append(c)
-            }
-            i++
-        }
-        // If the last-emitted character wasn't a margin '|', add a blank line. This will get removed
-        // by trimMargin().
-        if (!value.endsWith("\n")) result.append("\n")
-        result.append("\"\"\".trimMargin()")
-        return result.toString()
-    } else {
-        val result = StringBuilder(value.length + 32)
-        // using pre-formatted strings allows us to get away with not escaping symbols that would
-        // normally require escaping, e.g. "foo ${"bar"} baz"
-        if (isInsideRawString) result.append("\"\"\"") else result.append('"')
-        for (c in value) {
-            // Trivial case: single quote must not be escaped.
-            if (c == '\'') {
-                result.append("'")
-                continue
-            }
-            // Trivial case: double quotes must be escaped.
-            if (c == '\"' && !isInsideRawString) {
-                result.append("\\\"")
-                continue
-            }
-            // Trivial case: $ signs must be escaped.
-            if (c == '$' && !isInsideRawString) {
-                result.append("\${\'\$\'}")
-                continue
-            }
-            // Default case: just let character literal do its work.
-            result.append(if (isInsideRawString) c else characterLiteralWithoutSingleQuotes(c))
-            // Need to append indent after linefeed?
-        }
-        if (isInsideRawString) result.append("\"\"\"") else result.append('"')
-        return result.toString()
-    }
-}
-
 internal fun dartStringLiteral(
     value: String,
     quoteChar: Char = '\'',
