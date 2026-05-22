@@ -1,3 +1,10 @@
+## [1.0.11](https://github.com/theEvilReaper/DartPoet/compare/v1.0.10...v1.0.11) (2026-05-22)
+
+
+### Bug Fixes
+
+* **deps:** update junit-framework monorepo to v6.1.0 ([#239](https://github.com/theEvilReaper/DartPoet/issues/239)) ([8933739](https://github.com/theEvilReaper/DartPoet/commit/89337395dad7645e32c323bebb3c1bc22c3bf161))
+
 ## [1.0.10](https://github.com/theEvilReaper/DartPoet/compare/v1.0.9...v1.0.10) (2026-03-26)
 
 
