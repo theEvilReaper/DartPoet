@@ -10,7 +10,7 @@ dependencyResolutionManagement {
         create("libs") {
             version("junit", "6.1.0")
             version("google.truth", "1.4.5")
-            version("kotlin", "2.3.21")
+            version("kotlin", "2.4.0")
             version("jetbrains.annotations", "26.1.0")
             version("changelog", "2.5.0")
             version("dokka", "2.2.0")
