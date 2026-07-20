@@ -10,13 +10,13 @@ enum class DartModifier(
     private vararg val modifiers: ModifierTarget
 ) {
     PUBLIC("", ModifierTarget.CLASS, ModifierTarget.PROPERTY, ModifierTarget.FUNCTION),
-    PRIVATE("_", ModifierTarget.FUNCTION, ModifierTarget.PROPERTY),
+    PRIVATE("_", ModifierTarget.CLASS, ModifierTarget.FUNCTION, ModifierTarget.PROPERTY),
     STATIC("static", ModifierTarget.FUNCTION, ModifierTarget.PROPERTY),
     LATE("late", ModifierTarget.PROPERTY),
-    FINAL("final", ModifierTarget.PROPERTY),
+    FINAL("final", ModifierTarget.CLASS, ModifierTarget.PARAMETER, ModifierTarget.PROPERTY),
     WITH("with", ModifierTarget.CLASS),
     ASYNC("async", ModifierTarget.FUNCTION),
-    CONST("const", ModifierTarget.PROPERTY),
+    CONST("const", ModifierTarget.FUNCTION, ModifierTarget.PROPERTY),
     EXTENSION("extension", ModifierTarget.CLASS),
     ENUM("enum", ModifierTarget.CLASS),
     MIXIN("mixin", ModifierTarget.CLASS),
@@ -28,8 +28,8 @@ enum class DartModifier(
     TYPEDEF("typedef", ModifierTarget.TYPEDEF),
     DYNAMIC("dynamic", ModifierTarget.PARAMETER),
     REQUIRED("required", ModifierTarget.PARAMETER),
-    VOID("void", ModifierTarget.INTERFACE, ModifierTarget.FUNCTION),
-    CO_VARIANT("covariant", ModifierTarget.PARAMETER)
+    VOID("void", ModifierTarget.FUNCTION),
+    CO_VARIANT("covariant", ModifierTarget.PARAMETER, ModifierTarget.PROPERTY)
     ;
 
     /**

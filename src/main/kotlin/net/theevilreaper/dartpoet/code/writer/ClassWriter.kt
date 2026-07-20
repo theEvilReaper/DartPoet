@@ -1,5 +1,6 @@
 package net.theevilreaper.dartpoet.code.writer
 
+import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.DartModifier.*
 import net.theevilreaper.dartpoet.clazz.ClassType
 import net.theevilreaper.dartpoet.clazz.ClassSpec
@@ -135,17 +136,42 @@ internal class ClassWriter : Writeable<ClassSpec> {
      */
     private fun writeClassHeader(spec: ClassSpec, writer: CodeWriter) {
         if (spec.classType == ClassType.LIBRARY) return
-        val privateModifier: String = when (spec.modifiers.contains(PRIVATE)) {
+        val privateModifier: String = getPrivateModifier(spec)
+        val finalModifier = getFinalModifierString(spec.modifiers)
+
+        val headerPrefix = when (spec.classType) {
+            ClassType.ABSTRACT -> "${ABSTRACT.identifier} $finalModifier${CLASS.identifier}"
+            ClassType.CLASS -> "$finalModifier${CLASS.identifier}"
+            else -> "$finalModifier${spec.classType.keyword}"
+        }
+
+        writer.emitCode("%L", headerPrefix)
+        writer.emitSpace()
+        writer.emitCode("%L%L", privateModifier, spec.name)
+    }
+
+    /**
+     * Returns the private modifier string based on the given [ClassSpec].
+     * @param spec the class spec
+     * @return the private modifier string
+     */
+    private fun getPrivateModifier(spec: ClassSpec): String =
+        when (spec.modifiers.contains(PRIVATE) && !spec.name.startsWith(PRIVATE.identifier)) {
             true -> PRIVATE.identifier
             false -> EMPTY_STRING
         }
-        val abstractPart: String = when (spec.classType) {
-            ClassType.ABSTRACT -> "${CLASS.identifier}·"
-            else -> EMPTY_STRING
+
+    /**
+     * Returns the final modifier string based on the given [Set] of [DartModifier].
+     * @param modifiers the set of modifiers
+     * @return the final modifier string
+     */
+    private fun getFinalModifierString(modifiers: Set<DartModifier>): String {
+        return if (modifiers.contains(FINAL)) {
+            "${FINAL.identifier} "
+        } else {
+            EMPTY_STRING
         }
-        writer.emitCode("%L", spec.classType.keyword)
-        writer.emitSpace()
-        writer.emitCode("%L%L%L", abstractPart, privateModifier, spec.name)
     }
 
     private fun writeInheritance(spec: ClassSpec, writer: CodeWriter) {
