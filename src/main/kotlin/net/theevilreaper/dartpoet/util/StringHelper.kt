@@ -37,7 +37,7 @@ internal object StringHelper {
      */
     fun ensureVariableNameWithPrivateModifier(name: String, withPrivate: Boolean): String {
         require(name.trim().isNotEmpty()) { "The name parameter can't be empty" }
-        return when (withPrivate) {
+        return when (withPrivate && !name.startsWith(DartModifier.PRIVATE.identifier)) {
             true -> "${DartModifier.PRIVATE.identifier}$name"
             false -> name
         }
