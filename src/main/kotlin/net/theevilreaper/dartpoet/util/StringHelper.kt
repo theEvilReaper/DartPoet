@@ -5,7 +5,7 @@ import net.theevilreaper.dartpoet.DartModifier
 /**
  * Utility class for string operations which are used to generate code parts.
  * @since 1.0.0
- * @version 1.0.0
+ * @version 1.1.0
  * @author theEvilReaper
  */
 internal object StringHelper {
@@ -41,5 +41,20 @@ internal object StringHelper {
             true -> "${DartModifier.PRIVATE.identifier}$name"
             false -> name
         }
+    }
+
+    /**
+     * Generates a concated string of each [DartModifier] which is present in the [Iterable].
+     * @param modifiers which should be combined into a single string
+     * @param includeTrailingSpace if true, adds a trailing space if modifiers are present
+     * @return the formatted string of modifiers
+     */
+    fun createModifierString(modifiers: Iterable<DartModifier>, includeTrailingSpace: Boolean = true): String {
+        val hasModifiers = modifiers.iterator().hasNext()
+        return concatData(
+            data = modifiers,
+            separator = SPACE,
+            postfix = if (hasModifiers && includeTrailingSpace) SPACE else EMPTY_STRING
+        ) { it.identifier }
     }
 }
