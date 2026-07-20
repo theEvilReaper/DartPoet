@@ -1,3 +1,10 @@
+## [1.0.14](https://github.com/theEvilReaper/DartPoet/compare/v1.0.13...v1.0.14) (2026-07-20)
+
+
+### Bug Fixes
+
+* improve private modifier handling ([#254](https://github.com/theEvilReaper/DartPoet/issues/254)) ([27f6029](https://github.com/theEvilReaper/DartPoet/commit/27f6029829fe98be3ab045295b41749440b69dc1))
+
 ## [1.0.13](https://github.com/theEvilReaper/DartPoet/compare/v1.0.12...v1.0.13) (2026-07-14)
 
 
