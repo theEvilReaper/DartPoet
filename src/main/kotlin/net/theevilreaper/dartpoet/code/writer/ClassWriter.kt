@@ -23,7 +23,6 @@ import net.theevilreaper.dartpoet.util.SEMICOLON
  */
 internal class ClassWriter : Writeable<ClassSpec> {
 
-    //TODO: Improve new lines after each generated code part block
     override fun write(spec: ClassSpec, writer: CodeWriter) {
         if (spec.isAnonymous) {
             writeAnonymousClass(spec, writer)

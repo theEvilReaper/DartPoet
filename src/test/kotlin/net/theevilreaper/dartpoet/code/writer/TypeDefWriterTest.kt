@@ -123,7 +123,7 @@ class TypeDefWriterTest {
                         ParameterSpec.positional("data", genericClassName)
                             .build(), //Positional aka nen normaler Param ohne spezielle Eigenschaften
                         ParameterSpec.named("a", String::class).nullable(true).build(),  // Named optional
-                        ParameterSpec.required("b", String::class).build(), //TODO: named required
+                        ParameterSpec.required("b", String::class).build(),
                         ParameterSpec.named("c", Int::class)
                             .initializer("%L", "10")
                             .build() // Named optional weil nullable oder default
