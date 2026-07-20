@@ -1,5 +1,6 @@
 package net.theevilreaper.dartpoet.code.writer
 
+import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.DartModifier.*
 import net.theevilreaper.dartpoet.clazz.ClassType
 import net.theevilreaper.dartpoet.clazz.ClassSpec
@@ -135,7 +136,7 @@ internal class ClassWriter : Writeable<ClassSpec> {
      */
     private fun writeClassHeader(spec: ClassSpec, writer: CodeWriter) {
         if (spec.classType == ClassType.LIBRARY) return
-        val privateModifier: String = when (spec.modifiers.contains(PRIVATE)) {
+        val privateModifier: String = when (spec.modifiers.contains(PRIVATE) && !spec.name.startsWith(PRIVATE.identifier)) {
             true -> PRIVATE.identifier
             false -> EMPTY_STRING
         }
@@ -143,9 +144,19 @@ internal class ClassWriter : Writeable<ClassSpec> {
             ClassType.ABSTRACT -> "${CLASS.identifier}·"
             else -> EMPTY_STRING
         }
-        writer.emitCode("%L", spec.classType.keyword)
+        val finalModifier = getFinalModifierString(spec.modifiers)
+        
+        writer.emitCode("%L%L", finalModifier, spec.classType.keyword)
         writer.emitSpace()
         writer.emitCode("%L%L%L", abstractPart, privateModifier, spec.name)
+    }
+
+    private fun getFinalModifierString(modifiers: Set<DartModifier>): String {
+        return if (modifiers.contains(FINAL)) {
+            "${FINAL.identifier} "
+        } else {
+            EMPTY_STRING
+        }
     }
 
     private fun writeInheritance(spec: ClassSpec, writer: CodeWriter) {
