@@ -53,7 +53,7 @@ class PropertyWriterTest {
                 "int age = 12;"
             ),
             Arguments.of(
-                PropertySpec.builder("_privateModifier", String::class)
+                PropertySpec.builder("_privatModifier", String::class)
                     .modifier { DartModifier.PRIVATE }
                     .build(),
                 "String _privatModifier;"
