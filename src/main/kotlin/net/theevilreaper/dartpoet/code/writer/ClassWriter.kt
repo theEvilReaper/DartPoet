@@ -135,8 +135,7 @@ internal class ClassWriter : Writeable<ClassSpec> {
      */
     private fun writeClassHeader(spec: ClassSpec, writer: CodeWriter) {
         if (spec.classType == ClassType.LIBRARY) return
-        val privateModifier: String = getPrivateModifier(spec)
-        val finalModifier = getFinalModifierString(spec.modifiers)
+        val finalModifier = StringHelper.createModifierString(spec.modifiers.filter { it == FINAL })
 
         val headerPrefix = when (spec.classType) {
             ClassType.ABSTRACT -> "${ABSTRACT.identifier} $finalModifier${CLASS.identifier}"
@@ -146,32 +145,10 @@ internal class ClassWriter : Writeable<ClassSpec> {
 
         writer.emitCode("%L", headerPrefix)
         writer.emitSpace()
-        writer.emitCode("%L%L", privateModifier, spec.name)
+        writer.emit(StringHelper.ensureVariableNameWithPrivateModifier(spec.name, spec.modifiers.contains(PRIVATE)))
     }
 
-    /**
-     * Returns the private modifier string based on the given [ClassSpec].
-     * @param spec the class spec
-     * @return the private modifier string
-     */
-    private fun getPrivateModifier(spec: ClassSpec): String =
-        when (spec.modifiers.contains(PRIVATE) && !spec.name.startsWith(PRIVATE.identifier)) {
-            true -> PRIVATE.identifier
-            false -> EMPTY_STRING
-        }
 
-    /**
-     * Returns the final modifier string based on the given [Set] of [DartModifier].
-     * @param modifiers the set of modifiers
-     * @return the final modifier string
-     */
-    private fun getFinalModifierString(modifiers: Set<DartModifier>): String {
-        return if (modifiers.contains(FINAL)) {
-            "${FINAL.identifier} "
-        } else {
-            EMPTY_STRING
-        }
-    }
 
     private fun writeInheritance(spec: ClassSpec, writer: CodeWriter) {
         if (spec.superClass == null) return

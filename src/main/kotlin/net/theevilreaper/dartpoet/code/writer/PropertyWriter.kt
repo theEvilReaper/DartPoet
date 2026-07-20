@@ -26,11 +26,7 @@ internal class PropertyWriter : Writeable<PropertySpec>, DocumentationAppender,
         emitDocumentation(spec.docs, writer)
         spec.annotations.emitAnnotations(writer) { it.write(writer, inline = false) }
 
-        val modifierString = StringHelper.concatData(
-            spec.modifiers,
-            separator = SPACE,
-            postfix = if (spec.hasModifiers) SPACE else EMPTY_STRING
-        ) { it.identifier }
+        val modifierString = StringHelper.createModifierString(spec.modifiers)
         writer.emit(modifierString)
 
         if (spec.type != null) {

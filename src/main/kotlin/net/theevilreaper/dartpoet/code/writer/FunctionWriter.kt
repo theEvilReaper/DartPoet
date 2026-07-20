@@ -41,8 +41,7 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
         }
 
         val writeableModifiers = spec.modifiers.filter { it != PRIVATE && it != PUBLIC }.toImmutableSet()
-        val postFix: String = getPostFix { writeableModifiers.isNotEmpty() }
-        val modifierString = writeableModifiers.joinToString(separator = SPACE, postfix = postFix) { it.identifier }
+        val modifierString = StringHelper.createModifierString(writeableModifiers)
 
         writer.emit(modifierString)
 
@@ -50,10 +49,7 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
         val parameterizedReturnType: TypeName = parameterizedReturnType(spec) ?: spec.returnType
         writer.emitCode("%T", parameterizedReturnType)
         writer.emitSpace()
-        when (spec.isPrivate) {
-            true -> writer.emitCode("%L%L", PRIVATE.identifier, spec.name)
-            false -> writer.emit(spec.name)
-        }
+        writer.emit(StringHelper.ensureVariableNameWithPrivateModifier(spec.name, spec.isPrivate))
 
         if (spec.typeCast != null) {
             writer.emitGenericBlock("%T", spec.typeCast)
