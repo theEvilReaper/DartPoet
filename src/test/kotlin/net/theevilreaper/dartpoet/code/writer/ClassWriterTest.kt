@@ -3,6 +3,7 @@ package net.theevilreaper.dartpoet.code.writer
 import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
+import net.theevilreaper.dartpoet.DartModifier
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -25,6 +26,14 @@ class ClassWriterTest {
                 class Model {}
                 
                 """.trimIndent()
+            ),
+            Arguments.of(
+                ClassSpec.builder("PrivateClass").modifier { DartModifier.PRIVATE }.build(),
+                "class _PrivateClass {}"
+            ),
+            Arguments.of(
+                ClassSpec.builder("_AlreadyPrivate").modifier { DartModifier.PRIVATE }.build(),
+                "class _AlreadyPrivate {}"
             ),
             Arguments.of(
                 ClassSpec.abstractClass("DatabaseHandler").endWithNewLine(true).build(),

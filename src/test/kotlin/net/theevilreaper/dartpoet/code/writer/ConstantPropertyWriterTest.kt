@@ -79,6 +79,24 @@ class ConstantPropertyWriterTest {
                         .private(true)
                         .build()
                 }
+            ),
+            Arguments.of(
+                "static const int _value = 1;",
+                {
+                    ConstantPropertySpec.classConst("value", Int::class)
+                        .initWith("%L", "1")
+                        .private(true)
+                        .build()
+                }
+            ),
+            Arguments.of(
+                "static const int _alreadyPrivate = 1;",
+                {
+                    ConstantPropertySpec.classConst("_alreadyPrivate", Int::class)
+                        .initWith("%L", "1")
+                        .private(true)
+                        .build()
+                }
             )
         )
     }
