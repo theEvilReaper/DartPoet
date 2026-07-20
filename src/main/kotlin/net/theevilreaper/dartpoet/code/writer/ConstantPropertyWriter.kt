@@ -3,6 +3,7 @@ package net.theevilreaper.dartpoet.code.writer
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.InitializerAppender
 import net.theevilreaper.dartpoet.code.Writeable
+import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.util.SEMICOLON
 import net.theevilreaper.dartpoet.util.SPACE
@@ -22,7 +23,8 @@ internal class ConstantPropertyWriter : Writeable<ConstantPropertySpec>, Initial
      * @param writer the instance from the [CodeWriter] to append the data
      **/
     override fun write(spec: ConstantPropertySpec, writer: CodeWriter) {
-        val modifierString = StringHelper.concatData(spec.modifiers, separator = SPACE, postfix = SPACE) { it.identifier }
+        val writeableModifiers = spec.modifiers.filter { it != DartModifier.PRIVATE && it != DartModifier.PUBLIC }
+        val modifierString = StringHelper.concatData(writeableModifiers, separator = SPACE, postfix = SPACE) { it.identifier }
         writer.emit(modifierString)
 
         if (spec.typeName != null) {
