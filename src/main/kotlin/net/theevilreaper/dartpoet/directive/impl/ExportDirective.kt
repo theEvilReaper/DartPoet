@@ -23,12 +23,7 @@ class ExportDirective internal constructor(
             "The following cast types are not allowed for an export directive: [${Companion.invalidCastType.joinToString()}]"
         }
 
-        if (importCast != null) {
-            check(importCast.trim().isNotEmpty()) { "The importCast can't be empty" }
-        }
-        check(!((castType != null && importCast == null) || (castType == null && importCast != null))) {
-            "The castType and importCast must be set together or must be null. A mixed state is not allowed"
-        }
+        DirectiveHelper.validateCast(importCast, castType)
     }
 
     /**

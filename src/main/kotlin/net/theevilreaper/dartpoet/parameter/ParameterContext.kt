@@ -12,7 +12,6 @@ import net.theevilreaper.dartpoet.util.toImmutableList
  * This helps to reduce boilerplate code across different use cases which share the same parameter categorization logic.
  * For the future it's easier to implement new logic without breaking other cases.
  * @param T the type of the parameter, must extend [ParameterBase].
- * @param parameters the list of parameters to analyze.
  *
  * @since 1.0.0
  * @author theEvilReaper
@@ -46,30 +45,10 @@ interface ParameterContext<T : ParameterBase> {
  * @author theEvilReaper
  * @since 1.0.0
  */
-private class StandardParameterContext<T : ParameterBase>(parameters: List<T>) : ParameterContext<T> {
-
-    override val parameters = parameters.toImmutableList()
+private class StandardParameterContext<T : ParameterBase>(parameters: List<T>) : AbstractParameterContext<T>(parameters) {
 
     override val optionalNamed = this.parameters.filter {
         it.type == ParameterType.NAMED && (it.nullable || it.hasInitializer)
     }.toImmutableList()
 
-    override val requiredParameters = this.parameters.filter {
-        it.type == ParameterType.REQUIRED
-    }.toImmutableList()
-
-    override val parametersWithDefaults = this.parameters.filter {
-        it.type == ParameterType.OPTIONAL
-    }.toImmutableList()
-
-    override val normalParameters: List<T> = ParameterHelper.excludeParameters(
-        this.parameters,
-        optionalNamed,
-        requiredParameters,
-        parametersWithDefaults
-    )
-
-    override val hasParameters = this.parameters.isNotEmpty()
-
-    override val hasAdditionalParameters = requiredParameters.isNotEmpty() || optionalNamed.isNotEmpty()
 }

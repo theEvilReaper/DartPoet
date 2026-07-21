@@ -49,4 +49,20 @@ class StringHelperTest {
         assertEquals("_$name", result)
         assertEquals(name, StringHelper.ensureVariableNameWithPrivateModifier(name, false))
     }
+
+    @Test
+    fun `test create modifier string`() {
+        val modifiers = setOf(DartModifier.FINAL, DartModifier.CONST)
+        
+        // With trailing space
+        val withSpace = StringHelper.createModifierString(modifiers, includeTrailingSpace = true)
+        assertEquals("final const ", withSpace)
+        
+        // Without trailing space
+        val withoutSpace = StringHelper.createModifierString(modifiers, includeTrailingSpace = false)
+        assertEquals("final const", withoutSpace)
+
+        // Empty modifiers
+        assertEquals(EMPTY_STRING, StringHelper.createModifierString(emptySet(), includeTrailingSpace = true))
+    }
 }

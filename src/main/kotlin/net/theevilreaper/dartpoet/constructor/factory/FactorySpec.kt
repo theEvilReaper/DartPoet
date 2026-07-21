@@ -8,6 +8,7 @@ import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.FactoryWriter
 import net.theevilreaper.dartpoet.constructor.ConstructorBase
 import net.theevilreaper.dartpoet.constructor.ConstructorDelegation
+import net.theevilreaper.dartpoet.parameter.AbstractParameterContext
 import net.theevilreaper.dartpoet.parameter.ParameterContext
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.parameter.ParameterType
@@ -131,30 +132,10 @@ class FactorySpec(
      * @since 1.0.0
      * @version 1.0.0
      */
-    private class FactoryParameterContext<T : ParameterBase>(parameters: List<T>) : ParameterContext<T> {
-        override val parameters = parameters.toImmutableList()
+    private class FactoryParameterContext<T : ParameterBase>(parameters: List<T>) : AbstractParameterContext<T>(parameters) {
 
         override val optionalNamed = this.parameters.filter {
             it.type == ParameterType.NAMED
         }.toImmutableList()
-
-        override val requiredParameters = this.parameters.filter {
-            it.type == ParameterType.REQUIRED
-        }.toImmutableList()
-
-        override val parametersWithDefaults = this.parameters.filter {
-            it.type == ParameterType.OPTIONAL
-        }.toImmutableList()
-
-        override val normalParameters: List<T> = ParameterHelper.excludeParameters(
-            this.parameters,
-            optionalNamed,
-            requiredParameters,
-            parametersWithDefaults
-        )
-
-        override val hasParameters = this.parameters.isNotEmpty()
-
-        override val hasAdditionalParameters = requiredParameters.isNotEmpty() || optionalNamed.isNotEmpty()
     }
 }

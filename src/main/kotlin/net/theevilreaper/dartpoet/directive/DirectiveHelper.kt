@@ -26,6 +26,21 @@ internal object DirectiveHelper {
     private const val RELATIVE_DOTS: String = "../"
 
     /**
+     * Validates that the provided cast type and import cast are valid for an import or export directive.
+     * @param importCast the cast string
+     * @param castType the cast type
+     */
+    internal fun validateCast(importCast: String?, castType: CastType?) {
+        if (importCast != null) {
+            check(importCast.trim().isNotEmpty()) { "The importCast can't be empty" }
+        }
+
+        check(!((castType != null && importCast == null) || (castType == null && importCast != null))) {
+            "The castType and importCast must be set together or must be null. A mixed state is not allowed"
+        }
+    }
+
+    /**
      * Writes a given [Directive] implementation to a [CodeWriter] instance.
      * This method raises an [UnsupportedOperationException] if the directive is a library or part directive.
      * @param writer the [CodeWriter] instance to append the directive
