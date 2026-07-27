@@ -5,8 +5,16 @@ import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 /**
  * The file contains some common used [ClassName] instances which are used in the library.
  * It contains only the primitive types which are supported by Dart.
- * @since 1.0.0
+ * @since 1.1.0
  */
+
+// Represents the void type in Dart
+@JvmField
+val VOID: ClassName = ClassName("void")
+
+// Represents the Object type in Dart
+@JvmField
+val OBJECT: ClassName = ClassName("Object")
 
 // Represents the boolean type in Dart
 @JvmField
