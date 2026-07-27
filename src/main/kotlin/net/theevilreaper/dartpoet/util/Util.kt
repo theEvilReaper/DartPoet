@@ -78,45 +78,31 @@ internal fun dartStringLiteral(
     return "$quote$escaped$quote"
 }
 
-// https://github.com/JetBrains/kotlin/blob/master/compiler/frontend.java/src/org/jetbrains/kotlin/resolve/jvm/checkers/JvmSimpleNameBacktickChecker.kt
-private val ILLEGAL_CHARACTERS_TO_ESCAPE = setOf('.', ';', '[', ']', '/', '<', '>', ':', '\\')
+private val DART_KEYWORDS = setOf(
+    "abstract", "as", "assert", "async", "await", "base", "break", "case", "catch", "class",
+    "const", "continue", "covariant", "default", "deferred", "do", "dynamic", "else", "enum",
+    "export", "extends", "extension", "external", "factory", "false", "final", "finally", "for",
+    "Function", "get", "hide", "if", "implements", "import", "in", "interface", "is", "late",
+    "library", "mixin", "new", "null", "on", "operator", "part", "required", "rethrow", "return",
+    "sealed", "set", "show", "static", "super", "switch", "sync", "this", "throw", "true", "try",
+    "typedef", "var", "void", "when", "while", "with", "yield"
+)
 
-private const val ALLOWED_CHARACTER = '$'
-private const val UNDERSCORE_CHARACTER = '_'
+internal val String.isKeyword get() = this in DART_KEYWORDS
 
-internal val String.isKeyword get() = this in "KEYWORDS"
-internal val String.hasAllowedCharacters get() = this.any { it == ALLOWED_CHARACTER }
-internal val String.allCharactersAreUnderscore get() = this.all { it == UNDERSCORE_CHARACTER }
-
-private fun String.failIfEscapeInvalid() {
-    require(!any { it in ILLEGAL_CHARACTERS_TO_ESCAPE }) {
-        "Can't escape identifier $this because it contains illegal characters: " +
-            ILLEGAL_CHARACTERS_TO_ESCAPE.intersect(this.toSet()).joinToString("")
+internal fun String.escapeIfNecessary(validate: Boolean = true): String {
+    if (validate) {
+        require(!isKeyword) { "The given name '$this' is a Dart keyword and cannot be used as an identifier." }
+        require(isValidDartIdentifier()) { "The given name '$this' is not a valid Dart identifier." }
     }
+    return this
 }
 
-internal fun String.escapeIfNecessary(validate: Boolean = true): String = escapeIfNotJavaIdentifier()
-    .escapeIfKeyword()
-    .escapeIfHasAllowedCharacters()
-    .escapeIfAllCharactersAreUnderscore()
-    .apply { if (validate) failIfEscapeInvalid() }
-
-private fun String.escapeIfKeyword() = if (isKeyword) "`$this`" else this
-
-private fun String.escapeIfHasAllowedCharacters() = if (hasAllowedCharacters) "`$this`" else this
-
-private fun String.escapeIfAllCharactersAreUnderscore() = if (allCharactersAreUnderscore) "`$this`" else this
-
-private fun String.escapeIfNotJavaIdentifier(): String {
-    return if ((
-            !Character.isJavaIdentifierStart(first()) ||
-                drop(1).any { !Character.isJavaIdentifierPart(it) }
-            )
-    ) {
-        "`$this`".replace(' ', '·')
-    } else {
-        this
-    }
+private fun String.isValidDartIdentifier(): Boolean {
+    if (isEmpty()) return false
+    val first = first()
+    if (!first.isLetter() && first != '_' && first != '$') return false
+    return drop(1).all { it.isLetterOrDigit() || it == '_' || it == '$' }
 }
 
 internal fun String.escapeSegmentsIfNecessary(delimiter: Char = '.') = split(delimiter)
