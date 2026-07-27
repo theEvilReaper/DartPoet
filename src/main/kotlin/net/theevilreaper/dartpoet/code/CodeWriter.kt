@@ -16,7 +16,7 @@
  * Changes to the file compared to the original:
  *
  * The file contains only the methods which are needed to write code for Dart.
- * All main methods which write code in KotlinPoet still exist in this writer adaption.
+ * All main methods which write code for DartPoet exist in this writer adaption.
  * Some others have been removed because they are not required.
  */
 package net.theevilreaper.dartpoet.code

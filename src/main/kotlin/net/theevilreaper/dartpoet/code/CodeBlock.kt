@@ -38,10 +38,10 @@ import java.text.DecimalFormatSymbols
 import kotlin.reflect.KClass
 
 /**
- * A fragment of a .kt file, potentially containing declarations, statements, and documentation.
+ * A fragment of a .dart file, potentially containing declarations, statements, and documentation.
  * Code blocks are not necessarily well-formed Dart code and are not validated.
  *
- * Code blocks support placeholders like [java.text.Format]. This class primarily uses a percent
+ * Code blocks support string formatting placeholders. This class primarily uses a percent
  * sign `%` but has its own set of permitted placeholders:
  *
  *  * `%L` emits a *literal* value with no escaping. Arguments for literals may be strings,
@@ -57,13 +57,8 @@ import kotlin.reflect.KClass
  *    templates. If the string contains dollar signs that should be escaped - use `%S`.
  *  * `%T` emits a *type* reference. Types will be imported if possible. Arguments for types may be
  *    [classes][Class].
- *  * `%M` emits a *member* reference. A member is either a function or a property. If the member is
- *    importable, e.g, it's a top-level function or a property declared inside an object, the import
- *    will be resolved if possible. Arguments for members must be of type [MemberName].
  *  * `%%` emits a percent sign.
- *  * `·` emits a space that never wraps. KotlinPoet prefers to wrap lines longer than 100 columns.
- *    It does this by replacing normal spaces with a newline and indent. Note that spaces in strings
- *    are never wrapped.
+ *  * `·` emits a space that never wraps.
  *  * `⇥` increases the indentation level.
  *  * `⇤` decreases the indentation level.
  *  * `«` begins a statement. For multiline statements, every line after the first line is
@@ -151,7 +146,7 @@ class CodeBlock private constructor(
 
     /**
      * Returns a copy of the code block with selected format parts replaced, similar to
-     * [java.lang.String.replaceAll].
+     * [String.replace].
      *
      * **Warning!** This method leaves the arguments list unchanged. Take care when replacing
      * placeholders with arguments, such as `%L`, as it can result in a code block, where
@@ -199,9 +194,9 @@ class CodeBlock private constructor(
          * character. Argument names consist of characters in `a-z, A-Z, 0-9, and _` and must start
          * with a lowercase character.
          *
-         * For example, to refer to the type [java.lang.Integer] with the argument name `clazz` use a
+         * For example, to refer to the type `int` with the argument name `clazz` use a
          * format string containing `%clazz:T` and include the key `clazz` with value
-         * `java.lang.Integer.class` in the argument map.
+         * `TypeNames.INTEGER` in the argument map.
          */
         fun addNamed(format: String, arguments: Map<String, *>): Builder = apply {
             var p = 0
@@ -357,7 +352,6 @@ class CodeBlock private constructor(
                 'L' -> this.args += argToLiteral(arg)
                 'S' -> this.args += argToString(arg)
                 'P' -> this.args += arg as? CodeBlock ?: argToString(arg)
-                'M' -> this.args += arg
                 'C' -> this.args += argToString(arg)
                 'T' -> this.args += argToType(arg)
                 else -> throw IllegalArgumentException(
