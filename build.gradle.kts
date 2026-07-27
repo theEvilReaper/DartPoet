@@ -9,7 +9,7 @@ plugins {
     alias(libs.plugins.maven.publish)
 }
 
-
+version = "1.0.15" //x-release-please-version
 
 dependencies {
     compileOnly(libs.jetbrains.annotations)
