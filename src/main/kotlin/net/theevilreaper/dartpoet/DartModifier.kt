@@ -1,9 +1,9 @@
 package net.theevilreaper.dartpoet
 
 /**
- * The enum contains all modifiers which are exists in the programming language dart.
+ * The enum contains all modifiers that exist in the programming language dart.
  * @author theEvilReaper
- * @since 1.0.0
+ * @since 1.1.0
  */
 enum class DartModifier(
     internal val identifier: String,
@@ -26,10 +26,11 @@ enum class DartModifier(
     LIBRARY("library", ModifierTarget.CLASS),
     ON("on", ModifierTarget.CLASS),
     TYPEDEF("typedef", ModifierTarget.TYPEDEF),
-    DYNAMIC("dynamic", ModifierTarget.PARAMETER),
     REQUIRED("required", ModifierTarget.PARAMETER),
-    VOID("void", ModifierTarget.FUNCTION),
-    CO_VARIANT("covariant", ModifierTarget.PARAMETER, ModifierTarget.PROPERTY)
+    CO_VARIANT("covariant", ModifierTarget.PARAMETER, ModifierTarget.PROPERTY),
+    SEALED("sealed", ModifierTarget.CLASS),
+    BASE("base", ModifierTarget.CLASS),
+    INTERFACE("interface", ModifierTarget.CLASS)
     ;
 
     /**
