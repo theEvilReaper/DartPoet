@@ -1,6 +1,5 @@
 package net.theevilreaper.dartpoet.type
 
-import net.theevilreaper.dartpoet.DartModifier
 import org.jetbrains.annotations.ApiStatus
 
 /**
@@ -9,10 +8,10 @@ import org.jetbrains.annotations.ApiStatus
  *
  * @constructor Creates an instance of [DynamicClassName]
  * @author theEvilReaper
- * @since 1.0.0
+ * @since 1.0.1
  */
 @ApiStatus.Internal
-internal class DynamicClassName : ClassName(DartModifier.DYNAMIC.identifier) {
+internal class DynamicClassName : ClassName("dynamic") {
 
     /**
      * This method is overridden from the superclass and throws an [IllegalAccessException] with a message
