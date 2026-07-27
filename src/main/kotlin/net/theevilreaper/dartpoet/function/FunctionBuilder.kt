@@ -8,6 +8,7 @@ import net.theevilreaper.dartpoet.meta.SpecMethods
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
+import net.theevilreaper.dartpoet.type.VOID
 import net.theevilreaper.dartpoet.type.asClassName
 import net.theevilreaper.dartpoet.type.asTypeName
 import net.theevilreaper.dartpoet.util.NO_PARAMETER_TYPE
@@ -22,7 +23,7 @@ import kotlin.reflect.KClass
  */
 class FunctionBuilder internal constructor(
     val name: String,
-    var returnType: TypeName = Void::class.asTypeName()
+    var returnType: TypeName = VOID
 ) : SpecMethods<FunctionBuilder> {
     internal val specData: SpecData = SpecData()
     internal val parameters: MutableList<ParameterSpec> = mutableListOf()
