@@ -1,3 +1,10 @@
+## [1.0.15](https://github.com/theEvilReaper/DartPoet/compare/v1.0.14...v1.0.15) (2026-07-27)
+
+
+### Bug Fixes
+
+* **code:** remove java doc syntax ([10f5c6b](https://github.com/theEvilReaper/DartPoet/commit/10f5c6b2dda7eaabe36a51bac2ddb0e7cd691ca4))
+
 ## [1.0.14](https://github.com/theEvilReaper/DartPoet/compare/v1.0.13...v1.0.14) (2026-07-20)
 
 
