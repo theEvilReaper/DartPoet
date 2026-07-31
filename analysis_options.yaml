@@ -1,0 +1,12 @@
+# Config for `dart analyze` when it runs over the generated Dart analyzer verification
+# corpus (build/dart-analyze-corpus, see the dartAnalyzeCorpus Gradle task and
+# src/test/kotlin/net/theevilreaper/dartpoet/verify). This is a Kotlin project, not a
+# Dart package - this file exists only because `dart analyze` discovers config by walking
+# up from the analyzed directory, and this repo root is the nearest ancestor.
+analyzer:
+  errors:
+    # Each corpus file is a single, isolated top-level declaration - not real library code
+    # that references it elsewhere. That makes "unused_element" a false positive here
+    # (e.g. a generated private class with nothing else in the file to reference it)
+    # rather than a signal about DartPoet's output.
+    unused_element: ignore
