@@ -2,7 +2,6 @@ package net.theevilreaper.dartpoet.clazz
 
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.DartModifier.CLASS
-import net.theevilreaper.dartpoet.DartModifier.WITH
 import net.theevilreaper.dartpoet.InheritKeyword
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeWriter
@@ -17,6 +16,7 @@ import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.util.toImmutableList
 import net.theevilreaper.dartpoet.util.toImmutableSet
+import net.theevilreaper.dartpoet.util.EXCLUSIVE_CLASS_MODIFIERS
 
 /**
  * A [ClassBuilder] describes the actual content of the class.
@@ -41,7 +41,6 @@ class ClassSpec internal constructor(
     internal val isLibrary: Boolean = builder.classType == ClassType.LIBRARY
     internal val superClass: TypeName? = builder.superClass
     internal val inheritKeyWord: InheritKeyword? = builder.inheritKeyWord
-    internal val classModifiers: Set<DartModifier> = modifiers.filter { it != WITH }.toImmutableSet()
     internal val typeDefs: List<AbstractTypeDef<*>> = builder.typedefs.toImmutableList()
     internal val functions: Set<FunctionSpec> = builder.functionStack.toImmutableSet()
     internal val properties: Set<PropertySpec> = builder.propertyStack.toImmutableSet()
@@ -67,6 +66,16 @@ class ClassSpec internal constructor(
 
             enumPropertyStack.forEach {
                 check(it.parameters.size == propertiesSize) { "The entries from the enum property must have the same size" }
+            }
+        }
+
+        if (classType == ClassType.CLASS || classType == ClassType.ABSTRACT) {
+            val exclusiveModifiers = modifiers.intersect(EXCLUSIVE_CLASS_MODIFIERS)
+            check(exclusiveModifiers.size <= 1) {
+                "A class can only have one of these modifiers at the same time: $EXCLUSIVE_CLASS_MODIFIERS, but got: $exclusiveModifiers"
+            }
+            check(!(isAbstract && DartModifier.SEALED in modifiers)) {
+                "A sealed class can't be combined with the abstract modifier because sealed classes are implicitly abstract"
             }
         }
     }

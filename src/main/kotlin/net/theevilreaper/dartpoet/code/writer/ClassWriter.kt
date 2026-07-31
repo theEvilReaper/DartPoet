@@ -1,6 +1,5 @@
 package net.theevilreaper.dartpoet.code.writer
 
-import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.DartModifier.*
 import net.theevilreaper.dartpoet.clazz.ClassType
 import net.theevilreaper.dartpoet.clazz.ClassSpec
@@ -135,12 +134,15 @@ internal class ClassWriter : Writeable<ClassSpec> {
      */
     private fun writeClassHeader(spec: ClassSpec, writer: CodeWriter) {
         if (spec.classType == ClassType.LIBRARY) return
-        val finalModifier = StringHelper.createModifierString(spec.modifiers.filter { it == FINAL })
+        val exclusiveModifier = when (spec.classType) {
+            ClassType.CLASS, ClassType.ABSTRACT -> StringHelper.createModifierString(spec.modifiers.filter { it in EXCLUSIVE_CLASS_MODIFIERS })
+            else -> EMPTY_STRING
+        }
 
         val headerPrefix = when (spec.classType) {
-            ClassType.ABSTRACT -> "${ABSTRACT.identifier} $finalModifier${CLASS.identifier}"
-            ClassType.CLASS -> "$finalModifier${CLASS.identifier}"
-            else -> "$finalModifier${spec.classType.keyword}"
+            ClassType.ABSTRACT -> "${ABSTRACT.identifier} $exclusiveModifier${CLASS.identifier}"
+            ClassType.CLASS -> "$exclusiveModifier${CLASS.identifier}"
+            else -> "$exclusiveModifier${spec.classType.keyword}"
         }
 
         writer.emitCode("%L", headerPrefix)
