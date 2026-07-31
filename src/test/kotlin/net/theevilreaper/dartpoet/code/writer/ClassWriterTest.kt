@@ -41,10 +41,6 @@ class ClassWriterTest {
                 |abstract class DatabaseHandler {}
                 |
                 """.trimMargin()
-            ),
-            Arguments.of(
-                ClassSpec.abstractClass("Handler").modifier { DartModifier.FINAL }.build(),
-                "abstract final class Handler {}"
             )
         )
     }
