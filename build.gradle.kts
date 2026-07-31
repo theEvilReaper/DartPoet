@@ -68,7 +68,7 @@ mavenPublishing {
         licenses {
             license {
                 name.set("AGPL-3.0")
-                url.set("https://github.com/theEvilReaper/DartPoet/blob/develop/LICENSE")
+                url.set("https://github.com/theEvilReaper/DartPoet/blob/main/LICENSE")
             }
         }
         issueManagement {
