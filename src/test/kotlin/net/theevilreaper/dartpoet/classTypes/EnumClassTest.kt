@@ -1,6 +1,5 @@
 package net.theevilreaper.dartpoet.classTypes
 
-import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.DartFile
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.clazz.ClassSpec
@@ -9,6 +8,7 @@ import net.theevilreaper.dartpoet.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.enum.parameter.EnumParameterSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
+import net.theevilreaper.dartpoet.verify.verifyDartOutput
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -121,7 +121,7 @@ class EnumClassTest {
                     .build()
             )
             .build()
-        assertThat(enumClass.toString()).isEqualTo(
+        enumClass.verifyDartOutput(
             """
             |enum NavigationEntry {
             |
@@ -184,7 +184,7 @@ class EnumClassTest {
             .endWithNewLine(true)
             .build()
 
-        assertThat(enumClass.toString()).isEqualTo(
+        enumClass.verifyDartOutput(
             """
             |enum Vehicle {
             |

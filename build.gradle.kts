@@ -15,6 +15,7 @@ dependencies {
     compileOnly(libs.jetbrains.annotations)
     testImplementation(libs.google.truth)
     testImplementation(libs.bundles.junit)
+    testImplementation(libs.junit.platform.launcher)
     testImplementation(kotlin("test"))
     testRuntimeOnly(libs.junit.engine)
 }
@@ -30,6 +31,22 @@ tasks {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_25)
         }
+    }
+
+    /**
+     * Runs `dart analyze` over the generated corpus in `build/dart-analyze-corpus`.
+     *
+     * The corpus is collected from calls to `verifyDartOutput(expected)` during the
+     * test run (see `DartAnalyzeCorpus.kt`).
+     *
+     * This task is intentionally kept separate from `test`, `build`, and `check`
+     * because it requires a Dart SDK to be available on `PATH`. CI executes it
+     * explicitly after installing the Dart SDK (see `.github/workflows/dart-analyze.yml`).
+     */
+    register<Exec>("dartAnalyzeCorpus") {
+        description = "Runs `dart analyze` over the generated corpus in `build/dart-analyze-corpus`"
+        dependsOn(test)
+        commandLine("dart", "analyze", "build/dart-analyze-corpus")
     }
 }
 

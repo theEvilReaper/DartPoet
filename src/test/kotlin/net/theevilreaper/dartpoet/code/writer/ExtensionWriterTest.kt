@@ -6,6 +6,7 @@ import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
+import net.theevilreaper.dartpoet.verify.DartAnalyzeCase
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -71,6 +72,7 @@ class ExtensionWriterTest {
         )
     }
 
+    @DartAnalyzeCase
     @ParameterizedTest
     @MethodSource("basicExtensions")
     fun `test basic extension`(extensionSpec: ExtensionSpec, expected: String) {

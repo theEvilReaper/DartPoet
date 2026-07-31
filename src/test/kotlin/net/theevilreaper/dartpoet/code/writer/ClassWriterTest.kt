@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.DartModifier
+import net.theevilreaper.dartpoet.verify.DartAnalyzeCase
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -45,6 +46,7 @@ class ClassWriterTest {
         )
     }
 
+    @DartAnalyzeCase
     @ParameterizedTest
     @MethodSource("simpleClasses")
     fun `test simple classes`(classSpec: ClassSpec, expected: String) {
