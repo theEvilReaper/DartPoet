@@ -34,11 +34,39 @@ Note that no matter how you contribute, your participation is governed by our
 Fork the project, make a change, and send a pull request!
 
 Make sure you read and follow the instructions in the [pull request template](.github/pull_request_template.md). And
-note
-that all participation in this project (including code submissions) is
+note that all participation in this project (including code submissions) is
 governed by our [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Submit bug reports or feature requests
 
 Just use the GitHub issue tracker to submit your bug reports and feature
-requests. 
+requests.
+
+## Running tests
+
+```bash
+./gradlew test
+```
+
+### Dart analyzer verification
+
+DartPoet generates Dart source code, which means a test can pass while still producing invalid Dart code. Comparing the
+generated output against an expected string only verifies the textual representation, not whether the generated code can
+be compiled.
+
+To catch these cases, `./gradlew dartAnalyzeCorpus` collects representative generated snippets and runs `dart analyze`
+on them using a real Dart toolchain. This task requires a Dart SDK available on `PATH` and is intentionally kept
+separate from`test`/`build`/`check`. CI executes this verification for every pull request.
+
+To include generated output from a test in the analyzer corpus:
+
+- `@ParameterizedTest` with the generated spec provided as a method argument, add `@DartAnalyzeCase`. No further changes
+  are required.
+- Plain `@Test` with the spec created as a local variable, replace the usual
+  `assertThat(spec.toString()).isEqualTo(expected)` with
+  `spec.verifyDartOutput(expected)`.
+
+Both annotations and helpers are located in`net.theevilreaper.dartpoet.verify`.
+
+Not every test should be included in the corpus. Only opt in tests whose generated output represents realistic usage
+scenarios.
