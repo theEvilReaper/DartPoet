@@ -34,6 +34,7 @@ internal val ALLOWED_PROPERTY_MODIFIERS =
     setOf(DartModifier.PRIVATE, DartModifier.FINAL, DartModifier.LATE, DartModifier.STATIC, DartModifier.CONST, DartModifier.CO_VARIANT)
 internal val ALLOWED_CLASS_CONST_MODIFIERS = setOf(DartModifier.CONST)
 internal val ALLOWED_CONST_MODIFIERS = setOf(DartModifier.STATIC, DartModifier.CONST)
+internal val EXCLUSIVE_CLASS_MODIFIERS = setOf(DartModifier.BASE, DartModifier.INTERFACE, DartModifier.FINAL, DartModifier.SEALED)
 
 //RegEx
 private val namePattern: Regex = Regex("^[a-z]+(?:_[a-z]+)*\$")
