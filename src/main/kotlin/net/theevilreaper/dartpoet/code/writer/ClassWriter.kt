@@ -31,6 +31,7 @@ internal class ClassWriter : Writeable<ClassSpec> {
         spec.annotations.emitAnnotations(writer, inLineAnnotations = false)
         writeClassHeader(spec, writer)
         writeGenericArguments(spec, writer)
+        writeInheritance(spec, writer)
         //Only write {} when the class contains now content
         if (spec.hasNoContent) {
             writer.emit("$CURLY_OPEN$CURLY_CLOSE")
@@ -41,8 +42,6 @@ internal class ClassWriter : Writeable<ClassSpec> {
 
             return
         }
-
-        writeInheritance(spec, writer)
 
         writer.emit("{$NEW_LINE")
         writer.emit(NEW_LINE)
@@ -153,12 +152,28 @@ internal class ClassWriter : Writeable<ClassSpec> {
 
 
     private fun writeInheritance(spec: ClassSpec, writer: CodeWriter) {
-        if (spec.superClass == null) return
-        writer.emitCode("%L", spec.inheritKeyWord!!.identifier)
-        writer.emitSpace()
-        writer.emitCode("%T", spec.superClass)
-        writer.emitSpace()
+        if (spec.superClass != null) {
+            writer.emitCode("%L", "extends")
+            writer.emitSpace()
+            writer.emitCode("%T", spec.superClass)
+            writer.emitSpace()
+        }
 
+        if (spec.mixins.isNotEmpty()) {
+            writer.emitCode("%L", "with")
+            writer.emitSpace()
+            val joinedMixins = StringHelper.concatData(spec.mixins, separator = COMMA_SEPARATOR) { it.toString() }
+            writer.emitCode("%L", joinedMixins)
+            writer.emitSpace()
+        }
+
+        if (spec.interfaces.isNotEmpty()) {
+            writer.emitCode("%L", "implements")
+            writer.emitSpace()
+            val joinedInterfaces = StringHelper.concatData(spec.interfaces, separator = COMMA_SEPARATOR) { it.toString() }
+            writer.emitCode("%L", joinedInterfaces)
+            writer.emitSpace()
+        }
     }
 
     private fun List<EnumEntrySpec>.emit(
