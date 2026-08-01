@@ -2,7 +2,6 @@ package net.theevilreaper.dartpoet.constructor
 
 import com.google.common.truth.Truth
 import net.theevilreaper.dartpoet.DartFile
-import net.theevilreaper.dartpoet.InheritKeyword
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.directive.DirectiveFactory
@@ -32,7 +31,7 @@ class FactoryFileTest {
         val versionModelClass = ClassName(versionModel)
         val freezedMixing = ClassName("_${'$'}$versionModel")
         val versionFreezedClass = ClassSpec.builder(versionModel)
-            .superClass(freezedMixing, InheritKeyword.MIXIN)
+            .withMixins(freezedMixing)
             .annotation { AnnotationSpec.builder("freezed").build() }
             .constructor {
                 FactorySpec.constBuilder(versionModelClass)

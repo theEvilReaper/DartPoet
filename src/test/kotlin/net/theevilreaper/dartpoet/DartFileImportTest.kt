@@ -31,7 +31,7 @@ class DartFileImportTest {
             .type(
                 ClassSpec.builder("TestAction")
                     .endWithNewLine(true)
-                    .superClass(reduxAction, InheritKeyword.EXTENDS)
+                    .superClass(reduxAction)
                     .function(
                         FunctionSpec.builder("reduce")
                             .annotations(
