@@ -149,27 +149,39 @@ class ClassBuilder internal constructor(
 
     /**
      * Add one or more interfaces to implement via Dart's `implements` clause.
+     *
+     * Named `implementsTypes` at the JVM level via [JvmName] because `implements` is a
+     * reserved keyword in Java and would otherwise be uncallable from Java sources.
      * @param interfaces the interface types to add
      * @return the given instance of an [ClassBuilder]
      */
+    @JvmName("implementsTypes")
     fun implements(vararg interfaces: TypeName) = apply {
         this.interfaces += interfaces
     }
 
     /**
      * Add one or more interfaces to implement via Dart's `implements` clause.
+     *
+     * Named `implementsTypes` at the JVM level via [JvmName] because `implements` is a
+     * reserved keyword in Java and would otherwise be uncallable from Java sources.
      * @param interfaces the interface types to add
      * @return the given instance of an [ClassBuilder]
      */
+    @JvmName("implementsTypes")
     fun implements(vararg interfaces: Type) = apply {
         this.interfaces += interfaces.map { it.asTypeName() }
     }
 
     /**
      * Add one or more interfaces to implement via Dart's `implements` clause.
+     *
+     * Named `implementsTypes` at the JVM level via [JvmName] because `implements` is a
+     * reserved keyword in Java and would otherwise be uncallable from Java sources.
      * @param interfaces the interface types to add
      * @return the given instance of an [ClassBuilder]
      */
+    @JvmName("implementsTypes")
     fun implements(vararg interfaces: KClass<*>) = apply {
         this.interfaces += interfaces.map { it.asTypeName() }
     }
