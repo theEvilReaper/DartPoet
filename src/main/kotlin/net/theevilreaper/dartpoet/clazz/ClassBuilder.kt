@@ -1,7 +1,6 @@
 package net.theevilreaper.dartpoet.clazz
 
 import net.theevilreaper.dartpoet.DartModifier
-import net.theevilreaper.dartpoet.InheritKeyword
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.enum.EnumEntrySpec
 import net.theevilreaper.dartpoet.constructor.ConstructorBase
@@ -40,7 +39,8 @@ class ClassBuilder internal constructor(
     internal val constantStack: MutableSet<ConstantPropertySpec> = mutableSetOf()
     internal val typedefs: MutableList<AbstractTypeDef<*>> = mutableListOf()
     internal var superClass: TypeName? = null
-    internal var inheritKeyWord: InheritKeyword? = null
+    internal val mixins: MutableList<TypeName> = mutableListOf()
+    internal val interfaces: MutableList<TypeName> = mutableListOf()
     internal var endWithNewLine = false
 
     /**
@@ -94,36 +94,84 @@ class ClassBuilder internal constructor(
     }
 
     /**
-     * Set the class from which the generated class should inherit.
+     * Set the class from which the generated class should `extend`.
      * @param superClass the name from the super class as [TypeName]
-     * @param inheritKeyword the keyword to use for the inheritance
      * @return the given instance of an [ClassBuilder]
      */
-    fun superClass(superClass: TypeName, inheritKeyword: InheritKeyword) = apply {
+    fun superClass(superClass: TypeName) = apply {
         this.superClass = superClass
-        inheritKeyWord = inheritKeyword
     }
 
     /**
-     * Set the class from which the generated class should inherit.
+     * Set the class from which the generated class should `extend`.
      * @param superClass the name from the super class as [Type]
-     * @param inheritKeyword the keyword to use for the inheritance
      * @return the given instance of an [ClassBuilder]
      */
-    fun superClass(superClass: Type, inheritKeyword: InheritKeyword) = apply {
+    fun superClass(superClass: Type) = apply {
         this.superClass = superClass.asTypeName()
-        inheritKeyWord = inheritKeyword
     }
 
     /**
-     * Set the class from which the generated class should inherit.
+     * Set the class from which the generated class should `extend`.
      * @param superClass the name from the super class as [KClass]
-     * @param inheritKeyword the keyword to use for the inheritance
      * @return the given instance of an [ClassBuilder]
      */
-    fun superClass(superClass: KClass<*>, inheritKeyword: InheritKeyword) = apply {
+    fun superClass(superClass: KClass<*>) = apply {
         this.superClass = superClass.asTypeName()
-        inheritKeyWord = inheritKeyword
+    }
+
+    /**
+     * Add one or more mixins to apply to the class via Dart's `with` clause.
+     * @param mixins the mixin types to add
+     * @return the given instance of an [ClassBuilder]
+     */
+    fun withMixins(vararg mixins: TypeName) = apply {
+        this.mixins += mixins
+    }
+
+    /**
+     * Add one or more mixins to apply to the class via Dart's `with` clause.
+     * @param mixins the mixin types to add
+     * @return the given instance of an [ClassBuilder]
+     */
+    fun withMixins(vararg mixins: Type) = apply {
+        this.mixins += mixins.map { it.asTypeName() }
+    }
+
+    /**
+     * Add one or more mixins to apply to the class via Dart's `with` clause.
+     * @param mixins the mixin types to add
+     * @return the given instance of an [ClassBuilder]
+     */
+    fun withMixins(vararg mixins: KClass<*>) = apply {
+        this.mixins += mixins.map { it.asTypeName() }
+    }
+
+    /**
+     * Add one or more interfaces to implement via Dart's `implements` clause.
+     * @param interfaces the interface types to add
+     * @return the given instance of an [ClassBuilder]
+     */
+    fun implements(vararg interfaces: TypeName) = apply {
+        this.interfaces += interfaces
+    }
+
+    /**
+     * Add one or more interfaces to implement via Dart's `implements` clause.
+     * @param interfaces the interface types to add
+     * @return the given instance of an [ClassBuilder]
+     */
+    fun implements(vararg interfaces: Type) = apply {
+        this.interfaces += interfaces.map { it.asTypeName() }
+    }
+
+    /**
+     * Add one or more interfaces to implement via Dart's `implements` clause.
+     * @param interfaces the interface types to add
+     * @return the given instance of an [ClassBuilder]
+     */
+    fun implements(vararg interfaces: KClass<*>) = apply {
+        this.interfaces += interfaces.map { it.asTypeName() }
     }
 
     /**

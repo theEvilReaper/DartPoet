@@ -10,3 +10,12 @@ analyzer:
     # (e.g. a generated private class with nothing else in the file to reference it)
     # rather than a signal about DartPoet's output.
     unused_element: ignore
+    # Combined-inheritance corpus cases (extends/with/implements) reference illustrative
+    # superclass/mixin/interface names (e.g. `Bar`, `M1`, `I1`) that are never defined
+    # elsewhere in the isolated corpus file. That's expected here - these checks verify
+    # DartPoet emits valid extends/with/implements *syntax*, not that the referenced
+    # placeholder type names resolve to real declarations.
+    extends_non_class: ignore
+    mixin_of_non_class: ignore
+    implements_non_class: ignore
+    mixin_with_non_class_superclass: ignore

@@ -157,7 +157,7 @@ class DartFileTest {
         val serializer = "standardSerializers"
         val serializerClass = ClassName("Built<$name, ${name}Builder>")
         val modelClass = ClassSpec.abstractClass(name)
-            .superClass(serializerClass, InheritKeyword.IMPLEMENTS)
+            .implements(serializerClass)
             .function(
                 FunctionSpec.builder("serializer")
                     .returns(ClassName("Serializer<$name>"))

@@ -2,7 +2,6 @@ package net.theevilreaper.dartpoet.clazz
 
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.DartModifier.CLASS
-import net.theevilreaper.dartpoet.InheritKeyword
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.WriterHelper
@@ -40,7 +39,8 @@ class ClassSpec internal constructor(
     internal val isAnonymous: Boolean = builder.name == null && builder.classType == ClassType.CLASS
     internal val isLibrary: Boolean = builder.classType == ClassType.LIBRARY
     internal val superClass: TypeName? = builder.superClass
-    internal val inheritKeyWord: InheritKeyword? = builder.inheritKeyWord
+    internal val mixins: List<TypeName> = builder.mixins.toImmutableList()
+    internal val interfaces: List<TypeName> = builder.interfaces.toImmutableList()
     internal val typeDefs: List<AbstractTypeDef<*>> = builder.typedefs.toImmutableList()
     internal val functions: Set<FunctionSpec> = builder.functionStack.toImmutableSet()
     internal val properties: Set<PropertySpec> = builder.propertyStack.toImmutableSet()
@@ -57,6 +57,9 @@ class ClassSpec internal constructor(
     init {
         if (isLibrary) {
             check(name.isNotEmpty()) { "The name of a class can't be empty" }
+            check(superClass == null && mixins.isEmpty() && interfaces.isEmpty()) {
+                "A library class can't extend, mix in or implement other types"
+            }
         }
 
         if (isEnum) {
@@ -67,6 +70,27 @@ class ClassSpec internal constructor(
             enumPropertyStack.forEach {
                 check(it.parameters.size == propertiesSize) { "The entries from the enum property must have the same size" }
             }
+
+            check(superClass == null) {
+                "An enum can't extend a class in Dart, only 'with' and 'implements' are allowed"
+            }
+        }
+
+        if (isMixin) {
+            check(superClass == null) {
+                "A mixin declaration can't extend a class in Dart"
+            }
+            check(mixins.isEmpty()) {
+                "A mixin declaration can't use Dart's 'with' clause"
+            }
+        }
+
+        check(mixins.size == mixins.distinct().size) {
+            "Duplicate mixin type(s) found: ${mixins.groupingBy { it }.eachCount().filterValues { it > 1 }.keys}"
+        }
+
+        check(interfaces.size == interfaces.distinct().size) {
+            "Duplicate interface type(s) found: ${interfaces.groupingBy { it }.eachCount().filterValues { it > 1 }.keys}"
         }
 
         if (classType == ClassType.CLASS || classType == ClassType.ABSTRACT) {
@@ -116,7 +140,8 @@ class ClassSpec internal constructor(
         classBuilder.constantStack.addAll(constantStack)
         classBuilder.typedefs.addAll(typeDefs)
         classBuilder.superClass = superClass
-        classBuilder.inheritKeyWord = inheritKeyWord
+        classBuilder.mixins.addAll(mixins)
+        classBuilder.interfaces.addAll(interfaces)
         return classBuilder
     }
 
