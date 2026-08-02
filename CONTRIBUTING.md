@@ -61,7 +61,8 @@ separate from`test`/`build`/`check`. CI executes this verification for every pul
 To include generated output from a test in the analyzer corpus:
 
 - `@ParameterizedTest` with the generated spec provided as a method argument, add `@DartAnalyzeCase`. No further changes
-  are required.
+  are required. The first method argument must be the already-built spec object itself, not a builder/factory lambda,
+  since the extension records its `toString()` verbatim without checking its type.
 - Plain `@Test` with the spec created as a local variable, replace the usual
   `assertThat(spec.toString()).isEqualTo(expected)` with
   `spec.verifyDartOutput(expected)`.
