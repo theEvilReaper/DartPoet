@@ -1,16 +1,17 @@
 package net.theevilreaper.dartpoet.classTypes
 
-import com.google.common.truth.Truth
+import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.clazz.ClassSpec
-import net.theevilreaper.dartpoet.code.buildCodeBlock
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
+import net.theevilreaper.dartpoet.verify.verifyDartOutput
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import java.lang.reflect.Type
 
 @DisplayName("Test the generation of classes which have generic arguments")
 class GenericClassTest {
@@ -23,13 +24,15 @@ class GenericClassTest {
         val positionalParameter = ParameterSpec.positional("element", eClass).build()
         val genericClass: ClassSpec = ClassSpec.builder("TestClass")
             .generic(tClass)
-            .generic(listClass)
+            .generic(eClass)
             .property(
                 PropertySpec.builder("argument", tClass)
+                    .modifier { DartModifier.LATE }
                     .build()
             )
             .property(
                 PropertySpec.builder("list", listClass)
+                    .modifier { DartModifier.LATE }
                     .build()
             )
             .function(
@@ -40,12 +43,12 @@ class GenericClassTest {
                     .build()
             )
             .build()
-        Truth.assertThat(genericClass.toString()).isEqualTo(
+        genericClass.verifyDartOutput(
             """
-            |class TestClass<T, List<E>> {
+            |class TestClass<T, E> {
             |
-            |  T argument;
-            |  List<E> list;
+            |  late T argument;
+            |  late List<E> list;
             |
             |  void add(E element) {
             |    list.add(element);
@@ -53,5 +56,22 @@ class GenericClassTest {
             |}
             """.trimMargin()
         )
+    }
+
+    @Test
+    fun `test generic class with KClass overload`() {
+        val genericClass = ClassSpec.builder("TestClass")
+            .generic(String::class)
+            .build()
+        genericClass.verifyDartOutput("class TestClass<String> {}")
+    }
+
+    @Test
+    fun `test generic class with reflect Type overload`() {
+        val reflectType: Type = String::class.java
+        val genericClass = ClassSpec.builder("TestClass")
+            .generic(reflectType)
+            .build()
+        genericClass.verifyDartOutput("class TestClass<String> {}")
     }
 }
