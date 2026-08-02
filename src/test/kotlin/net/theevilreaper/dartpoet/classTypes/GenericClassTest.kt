@@ -1,19 +1,37 @@
 package net.theevilreaper.dartpoet.classTypes
 
-import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
+import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.clazz.ClassSpec
-import net.theevilreaper.dartpoet.code.buildCodeBlock
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
+import net.theevilreaper.dartpoet.verify.DartAnalyzeCase
+import net.theevilreaper.dartpoet.verify.verifyDartOutput
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
+import java.lang.reflect.Type
+import java.util.stream.Stream
 
 @DisplayName("Test the generation of classes which have generic arguments")
 class GenericClassTest {
+
+    companion object {
+        @JvmStatic
+        private fun genericOverloadCases(): Stream<Arguments> {
+            val reflectType: Type = String::class.java
+            return Stream.of(
+                Arguments.of(ClassSpec.builder("TestClass").generic(String::class).build(), "class TestClass<String> {}"),
+                Arguments.of(ClassSpec.builder("TestClass").generic(reflectType).build(), "class TestClass<String> {}"),
+            )
+        }
+    }
 
     @Test
     fun testGenericClassTest() {
@@ -23,13 +41,15 @@ class GenericClassTest {
         val positionalParameter = ParameterSpec.positional("element", eClass).build()
         val genericClass: ClassSpec = ClassSpec.builder("TestClass")
             .generic(tClass)
-            .generic(listClass)
+            .generic(eClass)
             .property(
                 PropertySpec.builder("argument", tClass)
+                    .modifier { DartModifier.LATE }
                     .build()
             )
             .property(
                 PropertySpec.builder("list", listClass)
+                    .modifier { DartModifier.LATE }
                     .build()
             )
             .function(
@@ -40,12 +60,12 @@ class GenericClassTest {
                     .build()
             )
             .build()
-        Truth.assertThat(genericClass.toString()).isEqualTo(
+        genericClass.verifyDartOutput(
             """
-            |class TestClass<T, List<E>> {
+            |class TestClass<T, E> {
             |
-            |  T argument;
-            |  List<E> list;
+            |  late T argument;
+            |  late List<E> list;
             |
             |  void add(E element) {
             |    list.add(element);
@@ -53,5 +73,12 @@ class GenericClassTest {
             |}
             """.trimMargin()
         )
+    }
+
+    @DartAnalyzeCase
+    @ParameterizedTest
+    @MethodSource("genericOverloadCases")
+    fun `test generic class with KClass and Type overloads`(classSpec: ClassSpec, expected: String) {
+        assertThat(classSpec.toString()).isEqualTo(expected)
     }
 }
