@@ -26,7 +26,7 @@ class ConstructorSpec internal constructor(
     internal val isNamed = named.orEmpty().trim().isNotEmpty()
     internal val isLambda = builder.lambda
     internal val initializer = builder.initializer
-    internal val modifiers = builder.modifiers.toImmutableSet()
+    internal val modifiers = builder.modifierData.modifiers.toImmutableSet()
 
     internal val docs = builder.docs.toImmutableList()
 
@@ -51,7 +51,7 @@ class ConstructorSpec internal constructor(
     fun toBuilder(): ConstructorBuilder {
         val builder = ConstructorBuilder(this.name, this.named)
         builder.lambda = this.isLambda
-        builder.modifiers.addAll(this.modifiers)
+        builder.modifierData.modifiers.addAll(this.modifiers)
         builder.parameters.addAll(this.parameters)
 
         if (this.initializer.build().isNotEmpty()) {

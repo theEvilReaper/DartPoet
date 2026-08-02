@@ -1,6 +1,7 @@
 package net.theevilreaper.dartpoet.enumeration
 
 import com.google.common.truth.Truth
+import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.enum.EnumEntrySpec
 import net.theevilreaper.dartpoet.enum.parameter.EnumParameterSpec
 import net.theevilreaper.dartpoet.type.ClassName
@@ -63,8 +64,16 @@ class EnumEntrySpecTest {
         assertEquals(propertySpec.name, specAsBuilder.name)
         assertEquals(propertySpec.generic, specAsBuilder.genericValueCast)
         assertTrue { propertySpec.annotations.isEmpty() }
-        assertTrue { specAsBuilder.annotations.isEmpty() }
+        assertTrue { specAsBuilder.annotationData.annotations.isEmpty() }
         assertTrue { specAsBuilder.parameters.isNotEmpty() }
         assertContentEquals(propertySpec.parameters, specAsBuilder.parameters)
+    }
+
+    @Test
+    fun `test annotation lambda overload adds annotation`() {
+        val propertySpec = EnumEntrySpec.builder("test")
+            .annotation { AnnotationSpec.builder("deprecated").build() }
+            .build()
+        assertEquals(1, propertySpec.annotations.size)
     }
 }

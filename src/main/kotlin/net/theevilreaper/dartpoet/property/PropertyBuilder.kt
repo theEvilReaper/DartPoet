@@ -3,6 +3,8 @@ package net.theevilreaper.dartpoet.property
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
+import net.theevilreaper.dartpoet.meta.SpecData
+import net.theevilreaper.dartpoet.meta.SpecMethods
 import net.theevilreaper.dartpoet.type.TypeName
 
 /**
@@ -16,9 +18,8 @@ import net.theevilreaper.dartpoet.type.TypeName
 class PropertyBuilder internal constructor(
     var name: String,
     var type: TypeName? = null,
-) {
-    internal val modifiers: MutableSet<DartModifier> = mutableSetOf()
-    internal val annotations: MutableList<AnnotationSpec> = mutableListOf()
+) : SpecMethods<PropertyBuilder> {
+    internal val specData: SpecData = SpecData()
     internal val docs: MutableList<CodeBlock> = mutableListOf()
     internal var nullable: Boolean = false
     internal var initBlock: CodeBlock.Builder = CodeBlock.builder()
@@ -58,8 +59,8 @@ class PropertyBuilder internal constructor(
      * @param annotation the annotation to add
      * @return the current [PropertyBuilder] instance
      */
-    fun annotation(annotation: () -> AnnotationSpec): PropertyBuilder = apply {
-        this.annotations += annotation()
+    override fun annotation(annotation: () -> AnnotationSpec): PropertyBuilder = apply {
+        this.specData.annotation(annotation)
     }
 
     /**
@@ -67,8 +68,17 @@ class PropertyBuilder internal constructor(
      * @param annotation the annotation to add
      * @return the current [PropertyBuilder] instance
      */
-    fun annotation(annotation: AnnotationSpec): PropertyBuilder = apply {
-        this.annotations += annotation
+    override fun annotation(annotation: AnnotationSpec): PropertyBuilder = apply {
+        this.specData.annotation(annotation)
+    }
+
+    /**
+     * Add an array of [AnnotationSpec] to the property.
+     * @param annotations the annotations to add
+     * @return the current [PropertyBuilder] instance
+     */
+    override fun annotations(vararg annotations: AnnotationSpec): PropertyBuilder = apply {
+        this.specData.annotations(*annotations)
     }
 
     /**
@@ -76,8 +86,8 @@ class PropertyBuilder internal constructor(
      * @param modifier the modifier to add
      * @return the current [PropertyBuilder] instance
      */
-    fun modifier(modifier: DartModifier): PropertyBuilder = apply {
-        this.modifiers += modifier
+    override fun modifier(modifier: DartModifier): PropertyBuilder = apply {
+        this.specData.modifier(modifier)
     }
 
     /**
@@ -93,8 +103,8 @@ class PropertyBuilder internal constructor(
      * @param modifier the modifier to add
      * @return the current [PropertyBuilder] instance
      */
-    fun modifier(modifier: () -> DartModifier): PropertyBuilder = apply {
-        this.modifiers += modifier()
+    override fun modifier(modifier: () -> DartModifier): PropertyBuilder = apply {
+        this.specData.modifier(modifier)
     }
 
     /**
@@ -102,8 +112,8 @@ class PropertyBuilder internal constructor(
      * @param modifiers the modifier values to add
      * @return the current [PropertyBuilder] instance
      */
-    fun modifiers(vararg modifiers: DartModifier) = apply {
-        this.modifiers += modifiers
+    override fun modifiers(vararg modifiers: DartModifier) = apply {
+        this.specData.modifiers(*modifiers)
     }
 
     /**

@@ -28,12 +28,12 @@ class PropertySpec internal constructor(
     internal var name = builder.name
     internal var type = builder.type
     internal val nullable = builder.nullable
-    internal var annotations: Set<AnnotationSpec> = builder.annotations.toImmutableSet()
+    internal var annotations: Set<AnnotationSpec> = builder.specData.annotations.toImmutableSet()
     internal var initBlock = builder.initBlock
-    internal var isPrivate = builder.modifiers.contains(DartModifier.PRIVATE)
-    internal var isConst = builder.modifiers.contains(DartModifier.CONST)
+    internal var isPrivate = builder.specData.modifiers.contains(DartModifier.PRIVATE)
+    internal var isConst = builder.specData.modifiers.contains(DartModifier.CONST)
     internal val docs = builder.docs
-    internal var modifiers: Set<DartModifier> = builder.modifiers
+    internal var modifiers: Set<DartModifier> = builder.specData.modifiers
         .also {
             if (it.isNotEmpty()) {
                 hasAllowedModifiers(it, ALLOWED_PROPERTY_MODIFIERS, "property")
@@ -75,11 +75,10 @@ class PropertySpec internal constructor(
      */
     fun toBuilder(): PropertyBuilder {
         val builder = PropertyBuilder(this.name, this.type)
-        builder.modifiers.addAll(this.modifiers)
-        builder.annotations.addAll(this.annotations)
+        builder.specData.modifiers.addAll(this.modifiers)
+        builder.specData.annotations.addAll(this.annotations)
         builder.initBlock = this.initBlock
         builder.docs.addAll(this.docs)
-        builder.modifiers.addAll(this.modifiers)
         builder.nullable = nullable
         return builder
     }

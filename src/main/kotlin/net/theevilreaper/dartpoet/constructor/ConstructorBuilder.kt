@@ -2,6 +2,8 @@ package net.theevilreaper.dartpoet.constructor
 
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeBlock
+import net.theevilreaper.dartpoet.meta.ModifierData
+import net.theevilreaper.dartpoet.meta.ModifierMethods
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 
 /**
@@ -19,11 +21,11 @@ class ConstructorBuilder internal constructor(
     val name: String,
     val named: String? = null,
     vararg modifiers: DartModifier
-) {
+) : ModifierMethods<ConstructorBuilder> {
     internal val parameters: MutableList<ParameterSpec> = mutableListOf()
     internal var lambda: Boolean = false
     internal val initializer: CodeBlock.Builder = CodeBlock.builder()
-    internal val modifiers: MutableList<DartModifier> = mutableListOf(*modifiers)
+    internal val modifierData: ModifierData = ModifierData().also { it.modifiers(*modifiers) }
     internal val docs: MutableList<CodeBlock> = mutableListOf()
 
     /**
@@ -40,16 +42,24 @@ class ConstructorBuilder internal constructor(
      * Add a [DartModifier] to the constructor.
      * @param modifier the modifier to add
      */
-    fun modifier(modifier: DartModifier) = apply {
-        this.modifiers += modifier
+    override fun modifier(modifier: DartModifier) = apply {
+        this.modifierData.modifier(modifier)
+    }
+
+    /**
+     * Add a [DartModifier] to the constructor via lambda reference.
+     * @param modifier the lambda reference to the modifier
+     */
+    override fun modifier(modifier: () -> DartModifier) = apply {
+        this.modifierData.modifier(modifier)
     }
 
     /**
      * Add an array of [DartModifier] to the constructor.
      * @param modifiers the modifiers to add
      */
-    fun modifiers(vararg modifiers: DartModifier) = apply {
-        this.modifiers += modifiers
+    override fun modifiers(vararg modifiers: DartModifier) = apply {
+        this.modifierData.modifiers(*modifiers)
     }
 
     /**

@@ -55,6 +55,6 @@ class ParameterSpecTest {
         assertEquals(parameterSpec.typeName, specAsBuilder.typeName)
         assertEquals(parameterSpec.isNullable, specAsBuilder.nullable)
         assertTrue { specAsBuilder.initializer!!.isNotEmpty() }
-        assertContentEquals(parameterSpec.annotations, specAsBuilder.annotations)
+        assertContentEquals(parameterSpec.annotations, specAsBuilder.annotationData.annotations)
     }
 }

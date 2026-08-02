@@ -3,6 +3,8 @@ package net.theevilreaper.dartpoet.constructor.factory
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.constructor.ConstructorDelegation
+import net.theevilreaper.dartpoet.meta.AnnotationData
+import net.theevilreaper.dartpoet.meta.AnnotationMethods
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.TypeName
 
@@ -15,9 +17,9 @@ import net.theevilreaper.dartpoet.type.TypeName
 class FactoryBuilder(
     val typeName: TypeName,
     val const: Boolean = false,
-) {
+) : AnnotationMethods<FactoryBuilder> {
     internal val documentation: CodeBlock.Builder = CodeBlock.builder()
-    internal val annotations: MutableSet<AnnotationSpec> = mutableSetOf()
+    internal val annotationData: AnnotationData = AnnotationData()
     internal val parameters: MutableSet<ParameterSpec> = mutableSetOf()
     internal val initializerBlock: CodeBlock.Builder = CodeBlock.builder()
     internal var delegation: ConstructorDelegation = ConstructorDelegation.NONE
@@ -34,12 +36,21 @@ class FactoryBuilder(
     }
 
     /**
+     * Add a new [AnnotationSpec] to the factory constructor via lambda reference.
+     * @param annotation the lambda reference to the annotation
+     * @return the current [FactoryBuilder] instance
+     */
+    override fun annotation(annotation: () -> AnnotationSpec) = apply {
+        this.annotationData.annotation(annotation)
+    }
+
+    /**
      * Add a new [AnnotationSpec] to the factory constructor.
      * @param annotation the annotation to add
      * @return the current [FactoryBuilder] instance
      */
-    fun annotation(annotation: AnnotationSpec) = apply {
-        annotations.add(annotation)
+    override fun annotation(annotation: AnnotationSpec) = apply {
+        this.annotationData.annotation(annotation)
     }
 
     /**
@@ -47,8 +58,8 @@ class FactoryBuilder(
      * @param annotations the annotations to add
      * @return the current [FactoryBuilder] instance
      */
-    fun annotation(vararg annotations: AnnotationSpec) = apply {
-        this.annotations.addAll(annotations)
+    override fun annotations(vararg annotations: AnnotationSpec) = apply {
+        this.annotationData.annotations(*annotations)
     }
 
     /**

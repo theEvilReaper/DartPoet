@@ -32,7 +32,7 @@ class FactorySpec(
 ) : ConstructorBase, ParameterContext<ParameterSpec> by FactoryParameterContext(builder.parameters.toImmutableList()) {
     val typeName: TypeName = builder.typeName
     val isConst: Boolean = builder.const
-    val annotations: Set<AnnotationSpec> = builder.annotations.toImmutableSet()
+    val annotations: Set<AnnotationSpec> = builder.annotationData.annotations.toImmutableSet()
     val documentation: CodeBlock = builder.documentation.build()
     val initializerBlock: CodeBlock = builder.initializerBlock.build()
     val named: String? = builder.namedString
@@ -68,7 +68,7 @@ class FactorySpec(
     fun toBuilder(): FactoryBuilder {
         val builder = FactoryBuilder(typeName, isConst)
         builder.documentation.add(documentation)
-        builder.annotations.addAll(annotations)
+        builder.annotationData.annotations.addAll(annotations)
         builder.parameters.addAll(parameters)
         builder.initializerBlock.add(initializerBlock)
         builder.delegation = constructorDelegation
