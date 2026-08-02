@@ -142,6 +142,7 @@ class ClassSpec internal constructor(
         classBuilder.superClass = superClass
         classBuilder.mixins.addAll(mixins)
         classBuilder.interfaces.addAll(interfaces)
+        classBuilder.genericCasts.addAll(genericCasts)
         return classBuilder
     }
 
