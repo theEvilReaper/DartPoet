@@ -10,6 +10,10 @@ import org.junit.jupiter.api.extension.ExtendWith
  * After a successful test invocation, [DartAnalyzeExtension] records the first
  * argument's `toString()` representation in [DartAnalyzeCorpus].
  *
+ * The first argument must be the already-built, renderable spec object itself -
+ * not a factory/builder lambda that produces it - since the extension records
+ * `arguments.first().toString()` verbatim with no type checking.
+ *
  * This annotation only applies to `@ParameterizedTest` methods, as the generated
  * output must be provided as a method argument. For regular `@Test` methods, use
  * [verifyDartOutput] instead.
