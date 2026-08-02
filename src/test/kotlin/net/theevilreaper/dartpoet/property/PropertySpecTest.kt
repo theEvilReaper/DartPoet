@@ -2,6 +2,7 @@ package net.theevilreaper.dartpoet.property
 
 import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.DartModifier
+import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.type.asTypeName
 import net.theevilreaper.dartpoet.util.ALLOWED_CONST_MODIFIERS
 import net.theevilreaper.dartpoet.util.ALLOWED_PROPERTY_MODIFIERS
@@ -97,6 +98,17 @@ class PropertySpecTest {
         assertNotNull(specAsBuilder)
         assertEquals(propertySpec.name, specAsBuilder.name)
         assertEquals(propertySpec.type, specAsBuilder.type)
-        assertTrue { specAsBuilder.modifiers.isNotEmpty() }
+        assertTrue { specAsBuilder.specData.modifiers.isNotEmpty() }
+    }
+
+    @Test
+    fun `test annotations vararg overload adds annotations`() {
+        val propertySpec = PropertySpec.builder("amount", Int::class.asTypeName())
+            .annotations(
+                AnnotationSpec.builder("deprecated").build(),
+                AnnotationSpec.builder("override").build()
+            )
+            .build()
+        assertEquals(2, propertySpec.annotations.size)
     }
 }

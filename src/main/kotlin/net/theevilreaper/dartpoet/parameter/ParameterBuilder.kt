@@ -2,12 +2,13 @@ package net.theevilreaper.dartpoet.parameter
 
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
-import net.theevilreaper.dartpoet.meta.SpecMethods
+import net.theevilreaper.dartpoet.meta.AnnotationData
+import net.theevilreaper.dartpoet.meta.AnnotationMethods
 import net.theevilreaper.dartpoet.type.TypeName
 
 /**
  * [ParameterBuilder] is responsible for configuring and assembling details of a parameter, such as its name,
- * type, named status, required status, nullability, and initializer. It implements the [SpecMethods]
+ * type, named status, required status, nullability, and initializer. It implements the [AnnotationMethods]
  * interface to provide methods for customizing parameter specifications.
  *
  * This class is typically used in code generation tasks to construct and customize parameter specifications
@@ -22,8 +23,8 @@ class ParameterBuilder internal constructor(
     val name: String,
     val type: ParameterType = ParameterType.POSITIONAL,
     val typeName: TypeName?,
-) {
-    internal val annotations: MutableList<AnnotationSpec> = mutableListOf()
+) : AnnotationMethods<ParameterBuilder> {
+    internal val annotationData: AnnotationData = AnnotationData()
     internal var named: Boolean = false
     internal var nullable: Boolean = false
     internal var coVariant: Boolean = false
@@ -71,8 +72,8 @@ class ParameterBuilder internal constructor(
      * @param annotation the lambda reference to the annotation
      * @return the current [ParameterBuilder] instance
      */
-    fun annotation(annotation: () -> AnnotationSpec) = apply {
-        this.annotations += annotation()
+    override fun annotation(annotation: () -> AnnotationSpec) = apply {
+        this.annotationData.annotation(annotation)
     }
 
     /**
@@ -80,8 +81,8 @@ class ParameterBuilder internal constructor(
      * @param annotation the annotation to add
      * @return the current [ParameterBuilder] instance
      */
-    fun annotation(annotation: AnnotationSpec) = apply {
-        this.annotations += annotation
+    override fun annotation(annotation: AnnotationSpec) = apply {
+        this.annotationData.annotation(annotation)
     }
 
     /**
@@ -89,8 +90,8 @@ class ParameterBuilder internal constructor(
      * @param annotations the annotations to add
      * @return the current [ParameterBuilder] instance
      */
-    fun annotations(vararg annotations: AnnotationSpec) = apply {
-        this.annotations.addAll(annotations)
+    override fun annotations(vararg annotations: AnnotationSpec) = apply {
+        this.annotationData.annotations(*annotations)
     }
 
     /**

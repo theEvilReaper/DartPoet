@@ -3,6 +3,8 @@ package net.theevilreaper.dartpoet.enum
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.enum.parameter.EnumParameterSpec
+import net.theevilreaper.dartpoet.meta.AnnotationData
+import net.theevilreaper.dartpoet.meta.AnnotationMethods
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asClassName
@@ -24,18 +26,27 @@ import kotlin.reflect.KClass
  */
 class EnumEntryBuilder(
     val name: String
-) {
+) : AnnotationMethods<EnumEntryBuilder> {
     internal var genericValueCast: TypeName? = null
-    internal val annotations: MutableList<AnnotationSpec> = mutableListOf()
+    internal val annotationData: AnnotationData = AnnotationData()
     internal val parameters: MutableList<EnumParameterSpec> = mutableListOf()
+
+    /**
+     * Adds a new [AnnotationSpec] instance to the property via lambda reference.
+     * @param annotation the lambda reference to the annotation
+     * @return the builder instance
+     */
+    override fun annotation(annotation: () -> AnnotationSpec) = apply {
+        this.annotationData.annotation(annotation)
+    }
 
     /**
      * Adds a new [AnnotationSpec] instance to the property.
      * @param annotation the annotation to add
      * @return the builder instance
      */
-    fun annotation(annotation: AnnotationSpec) = apply {
-        this.annotations += annotation
+    override fun annotation(annotation: AnnotationSpec) = apply {
+        this.annotationData.annotation(annotation)
     }
 
     /**
@@ -43,8 +54,8 @@ class EnumEntryBuilder(
      * @param annotations the annotations to add
      * @return the builder instance
      */
-    fun annotations(vararg annotations: AnnotationSpec) = apply {
-        this.annotations += annotations
+    override fun annotations(vararg annotations: AnnotationSpec) = apply {
+        this.annotationData.annotations(*annotations)
     }
 
     /**

@@ -22,7 +22,7 @@ class EnumEntrySpec internal constructor(
     internal val name = builder.name
     internal val generic = builder.genericValueCast
     internal val hasGeneric = builder.genericValueCast != null
-    internal val annotations = builder.annotations.toImmutableSet()
+    internal val annotations = builder.annotationData.annotations.toImmutableSet()
 
     /**
      * Contains some checks for the variable.
@@ -48,7 +48,7 @@ class EnumEntrySpec internal constructor(
      */
     fun toBuilder(): EnumEntryBuilder {
         val builder = EnumEntryBuilder(this.name)
-        builder.annotations.addAll(this.annotations)
+        builder.annotationData.annotations.addAll(this.annotations)
         builder.genericValueCast = this.generic
         builder.parameters.addAll(this.parameters)
         return builder
