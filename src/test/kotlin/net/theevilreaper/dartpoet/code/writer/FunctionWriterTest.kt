@@ -13,6 +13,7 @@ import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.DYNAMIC
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
 import net.theevilreaper.dartpoet.type.asClassName
+import net.theevilreaper.dartpoet.verify.verifyDartOutput
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -92,7 +93,7 @@ class FunctionWriterTest {
             .build()
         writer.close()
 
-        assertThat(method.toString()).isEqualTo(
+        method.verifyDartOutput(
             """
             |String getName() {
             |  return 'test';
@@ -109,7 +110,7 @@ class FunctionWriterTest {
             .modifier(DartModifier.PRIVATE)
             .addCode("return %C;", "Tobi").build()
         writer.close()
-        assertThat(method.toString()).isEqualTo(
+        method.verifyDartOutput(
             """
             |String _name() {
             |  return 'Tobi';
@@ -123,7 +124,7 @@ class FunctionWriterTest {
         val method = FunctionSpec.builder("getId")
             .returns(Int::class.asClassName().copy(nullable = true))
             .addCode("return %L;", 10).build()
-        assertThat(method.toString()).isEqualTo(
+        method.verifyDartOutput(
             """
             |int? getId() {
             |  return 10;
@@ -138,7 +139,7 @@ class FunctionWriterTest {
             .returns(Int::class.asClassName().copy(nullable = true))
             .addCode("return 1;")
             .build()
-        assertThat(method.toString()).isEqualTo(
+        method.verifyDartOutput(
             """
             |int? getValue() {
             |  return 1;
@@ -161,7 +162,7 @@ class FunctionWriterTest {
                     .build()
             )
             .build()
-        assertThat(method.toString()).isEqualTo(
+        method.verifyDartOutput(
             """
             |Future<String> getNameById(int id) async {
             |  return 'Thomas';
@@ -222,7 +223,7 @@ class FunctionWriterTest {
             .doc("Returns the name from an object")
             .doc("For generation tests it returns 'Test'")
             .build()
-        assertThat(function.toString()).isEqualTo(
+        function.verifyDartOutput(
             """
             |/// Returns the name from an object
             |/// For generation tests it returns 'Test'

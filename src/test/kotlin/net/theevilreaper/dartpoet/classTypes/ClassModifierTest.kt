@@ -3,6 +3,7 @@ package net.theevilreaper.dartpoet.classTypes
 import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.clazz.ClassSpec
+import net.theevilreaper.dartpoet.verify.DartAnalyzeCase
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
@@ -90,6 +91,7 @@ class ClassModifierTest {
         assertEquals(message, exception.message)
     }
 
+    @DartAnalyzeCase
     @ParameterizedTest(name = "Test cases for the exclusive class modifiers (base/interface/final/sealed)")
     @MethodSource("exclusiveModifierClasses")
     fun `test exclusive modifier classes`(classSpec: ClassSpec, expected: String) {
