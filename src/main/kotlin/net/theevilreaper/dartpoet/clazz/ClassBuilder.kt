@@ -313,16 +313,6 @@ class ClassBuilder internal constructor(
 
     /**
      * Add a generic type to the class builder.
-     * @param type the [TypeName] to add
-     * @return the given instance of an [ClassBuilder]
-     */
-    fun generic(type: TypeName) = apply {
-        check(this.classType != ClassType.LIBRARY) { NO_GENERIC_ON_LIBRARIES }
-        this.genericCasts += type
-    }
-
-    /**
-     * Add a generic type to the class builder.
      * @param type the [ClassName] to add
      * @return the given instance of an [ClassBuilder]
      */
@@ -337,7 +327,7 @@ class ClassBuilder internal constructor(
      * @return the given instance of an [ClassBuilder]
      */
     fun generic(type: Type) = apply {
-        generic(type.asTypeName())
+        generic(TypeName.get(type) as ClassName)
     }
 
     /**
@@ -346,7 +336,7 @@ class ClassBuilder internal constructor(
      * @return the given instance of an [ClassBuilder]
      */
     fun generic(type: KClass<*>) = apply {
-        generic(type.asTypeName())
+        generic(type.asClassName())
     }
 
     /**
