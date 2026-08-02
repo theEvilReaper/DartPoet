@@ -8,6 +8,7 @@ import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.DYNAMIC
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
 import net.theevilreaper.dartpoet.type.asTypeName
+import net.theevilreaper.dartpoet.verify.DartAnalyzeCase
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -134,12 +135,14 @@ class TypeDefWriterTest {
         )
     }
 
+    @DartAnalyzeCase
     @ParameterizedTest
     @MethodSource("typeDefs")
     fun `test typedef write`(typeDef: AbstractTypeDef<*>, expected: String) {
         Truth.assertThat(typeDef.toString()).isEqualTo(expected)
     }
 
+    @DartAnalyzeCase
     @ParameterizedTest
     @MethodSource("multipleCastArguments")
     fun `test typedef write with multiple casts`(typeDef: AbstractTypeDef<*>, expected: String) {
