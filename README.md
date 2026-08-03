@@ -1,54 +1,75 @@
 # DartPoet
 
-[![license](https://img.shields.io/github/license/theEvilReaper/DartPoet?style=for-the-badge&color=b2234c)](../LICENSE)
+[![license](https://img.shields.io/github/license/theEvilReaper/DartPoet?style=for-the-badge&color=b2234c)](LICENSE)
+[![Release](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Frepo.onelitefeather.dev%2Freleases%2Fnet%2Ftheevilreaper%2Fdartpoet%2Fmaven-metadata.xml&label=release&style=for-the-badge&color=blue)](#installation)
+[![JVM](https://img.shields.io/badge/JVM-25-orange?style=for-the-badge)](#installation)
+[![API status](https://img.shields.io/badge/API-experimental-yellow?style=for-the-badge)](#)
 
-DartPoet is a Kotlin-based library designed for generating Dart code programmatically. DartPoet, inspired by the design
-of JavaPoet and KotlinPoet, simplifies the creation of Dart source files by providing a fluent and expressive API. This
-library is particularly
-useful for developers looking to automate Dart code generation, ensuring consistency and reducing manual coding effort.
+DartPoet is a Kotlin-based library for programmatically generating Dart source code. Inspired by JavaPoet and
+KotlinPoet, it provides a fluent and expressive API for creating Dart files while reducing manual coding effort and
+improving consistency.
 
-The API allows the creation of the core functionalities of the Dart language, such as classes, methods, fields and more.
-Some of the newer features are not directly supported by the api itself, but can be added by using the `CodeBlock`
-class.
-At least the generated code relies on the null-safety feature from Dart. Which means that the code is generated for Dart
-version `2.12.0` or higher.
+The API supports the creation of core Dart language constructs, such as classes, methods, fields, and more.
+Some newer language features are not yet directly supported by the API, but they can be implemented using the
+`CodeBlock` class.
 
-> [!CAUTION]
+Generated code uses Dart's null-safety features and requires Dart `2.12.0` or newer.
+
+> [!WARNING]
 >
-> The library can be used in production, but it is still in development.
-> This means that some features can contain bugs or may change in the future.
-> We recommend to use the library with caution and to report any issues you encounter.
+> DartPoet is currently considered experimental. While the library can already
+> be used in production environments, APIs may still change and bugs may occur.
+> Please report any issues you encounter.
 
-## Usage
+## Installation
 
-At the moment the library is only available over the snapshot repository. This means that you have to add the snapshot
-repository from Maven to your project. The library is not yet available on Maven Central.
+DartPoet is currently published through the OneLiteFeather Maven repository due to ongoing issues with publishing to
+Maven Central. We are working on resolving this and plan to publish future releases to Maven Central as soon as
+possible. Until then, add one of the following repositories to your project:
 
-The url to the repository can be found [here](https://s01.oss.sonatype.org/content/repositories/snapshots/)
-
-To add the library to your project you can use the following snippet:
-
-Maven:
-
-```xml
-
-<dependency>
-    <groupId>dev.themeinerlp</groupId>
-    <artifactId>dartpoet</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-</dependency>
-```
-
-Gradle:
+<details>
+<summary>Release</summary>
 
 ```kotlin
-implementation("dev.themeinerlp:dartpoet:0.0.1-SNAPSHOT")
+repositories {
+    maven("https://repo.onelitefeather.dev/releases")
+}
 ```
+
+</details>
+
+<details>
+<summary>Snapshot</summary>
+
+```kotlin
+repositories {
+    maven("https://repo.onelitefeather.dev/snapshots")
+}
+```
+
+</details>
+
+Then add the DartPoet dependency:
+
+```kotlin
+dependencies {
+    implementation("net.theevilreaper:dartpoet:<version>")
+}
+```
+
+> [!NOTE]
+> Replace `<version>` with the desired release version. Snapshot versions are
+> available for testing upcoming changes
 
 ## Contributing
 
 We are happy to see that you are interested in contributing to our project. Please read
 our [contributing guidelines](CONTRIBUTING.md) before you start.
+
+## Changelog
+
+See the [GitHub Releases](https://github.com/theEvilReaper/DartPoet/releases)
+page for changes between versions.
 
 ## Wiki
 
