@@ -5,6 +5,32 @@
 
 * **modifier:** add void and object typenames ([2d4f0c5](https://github.com/theEvilReaper/DartPoet/commit/2d4f0c5e2882082e55ce032eee3b9a11418c0739))
 
+## [2.0.0](https://github.com/theEvilReaper/DartPoet/compare/v1.1.0...v2.0.0) (2026-08-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* **inheritance:** allow deeper class inheritance ([#263](https://github.com/theEvilReaper/DartPoet/issues/263))
+
+### Features
+
+* **analyze:** add more test cases to the dart analyze part ([#267](https://github.com/theEvilReaper/DartPoet/issues/267)) ([e4e4ac7](https://github.com/theEvilReaper/DartPoet/commit/e4e4ac7357b329d3f7fe11ed498bb39656faaef4))
+* **ci:** add Dart analyzer verification pipeline ([#262](https://github.com/theEvilReaper/DartPoet/issues/262)) ([ac048de](https://github.com/theEvilReaper/DartPoet/commit/ac048ded83190ff9255905b4daaf67a0191ca662))
+* **ci:** switch to Release Please ([#257](https://github.com/theEvilReaper/DartPoet/issues/257)) ([35274e0](https://github.com/theEvilReaper/DartPoet/commit/35274e0f0991042ce29bbefe846fe7199ff8eba8))
+* **class:** add support for sealed/base/interface modifiers ([#261](https://github.com/theEvilReaper/DartPoet/issues/261)) ([ac8dbd2](https://github.com/theEvilReaper/DartPoet/commit/ac8dbd22141de7985b909f7a8e018cb74a2e5fd1))
+
+
+### Bug Fixes
+
+* **class:** add JvmName annotation to avoid reserved keyword conflict ([b4a16cb](https://github.com/theEvilReaper/DartPoet/commit/b4a16cb0eb8606d1042c04b2672315b90787e9cf))
+* **class:** add missing genericCast copy ([430170d](https://github.com/theEvilReaper/DartPoet/commit/430170d4fc9e2a07a4e055d0ef0662b5be1b878a))
+* **class:** reject parameterized class generic declarations ([#268](https://github.com/theEvilReaper/DartPoet/issues/268)) ([18c2428](https://github.com/theEvilReaper/DartPoet/commit/18c242897260fb717fc4e563b5350a9367dea35f))
+
+
+### Code Refactoring
+
+* **inheritance:** allow deeper class inheritance ([#263](https://github.com/theEvilReaper/DartPoet/issues/263)) ([97853b2](https://github.com/theEvilReaper/DartPoet/commit/97853b28c4f96ed04c0b52929df1c4f0348eb0d0))
+
 ## [1.0.15](https://github.com/theEvilReaper/DartPoet/compare/v1.0.14...v1.0.15) (2026-07-27)
 
 
