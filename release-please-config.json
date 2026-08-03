@@ -6,7 +6,7 @@
   "pull-request-header": "",
   "packages": {
     ".": {
-      "package-name": "dartpoet",
+      "package-name": "DartPoet",
       "changelog-path": "CHANGELOG.md",
       "extra-files": [
         {
