@@ -9,7 +9,7 @@ plugins {
     alias(libs.plugins.maven.publish)
 }
 
-version = "1.0.15" // x-release-please-version
+version = "2.0.0" // x-release-please-version
 
 if (providers.gradleProperty("snapshot").isPresent) {
     val parts = version.toString().substringBefore('-').split('.')
