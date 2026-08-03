@@ -11,6 +11,22 @@ plugins {
 
 version = "1.0.15" //x-release-please-version
 
+if (providers.gradleProperty("snapshot").isPresent) {
+    val parts = version.toString().substringBefore('-').split('.')
+    require(parts.size == 3) {
+        "Cannot derive a snapshot from version '$version'"
+    }
+
+    version = buildString {
+        append(parts[0])
+        append('.')
+        append(parts[1])
+        append('.')
+        append(parts[2].toInt() + 1)
+        append("-SNAPSHOT")
+    }
+}
+
 dependencies {
     compileOnly(libs.jetbrains.annotations)
     testImplementation(libs.google.truth)
@@ -58,25 +74,22 @@ publishing {
         maven {
             authentication {
                 credentials(PasswordCredentials::class) {
-                    // Those credentials need to be set under "Settings -> Secrets -> Actions" in your repository
                     username = System.getenv("ONELITEFEATHER_MAVEN_USERNAME")
                     password = System.getenv("ONELITEFEATHER_MAVEN_PASSWORD")
                 }
             }
             name = "OneLiteFeatherRepository"
             url = if (rootProject.version.toString().contains("SNAPSHOT")) {
-                uri("https://repo.onelitefeather.dev/onelitefeather-snapshots")
+                uri("https://repo.onelitefeather.dev/snapshots")
             } else {
-                uri("https://repo.onelitefeather.dev/onelitefeather-releases")
+                uri("https://repo.onelitefeather.dev/releases")
             }
         }
     }
 }
 mavenPublishing {
-
     signAllPublications()
     coordinates("net.theevilreaper", "dartpoet", rootProject.version.toString())
-
 
     pom {
         name.set("DartPoet")
