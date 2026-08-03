@@ -5,6 +5,15 @@
 
 * **modifier:** add void and object typenames ([2d4f0c5](https://github.com/theEvilReaper/DartPoet/commit/2d4f0c5e2882082e55ce032eee3b9a11418c0739))
 
+## [2.0.1](https://github.com/theEvilReaper/DartPoet/compare/v2.0.0...v2.0.1) (2026-08-03)
+
+
+### Bug Fixes
+
+* **release:** Bump version to 2.0.0 ([6ec36ed](https://github.com/theEvilReaper/DartPoet/commit/6ec36edc89654fde8e79aff65ebaea9528f9d22f))
+* **release:** release please comment ([d8f37a7](https://github.com/theEvilReaper/DartPoet/commit/d8f37a760fb3d02ea2aab268bbcbbdf87823cac5))
+* **release:** Remove release type from packages ([238b41f](https://github.com/theEvilReaper/DartPoet/commit/238b41f19450f26c8bffafe5c894552ea4f0115f))
+
 ## [2.0.0](https://github.com/theEvilReaper/DartPoet/compare/v1.1.0...v2.0.0) (2026-08-03)
 
 
