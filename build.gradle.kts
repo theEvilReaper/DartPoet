@@ -72,17 +72,15 @@ kotlin {
 publishing {
     repositories {
         maven {
-            authentication {
-                credentials(PasswordCredentials::class) {
-                    username = System.getenv("ONELITEFEATHER_MAVEN_USERNAME")
-                    password = System.getenv("ONELITEFEATHER_MAVEN_PASSWORD")
-                }
-            }
             name = "OneLiteFeatherRepository"
-            url = if (rootProject.version.toString().contains("SNAPSHOT")) {
+            url = if (version.toString().endsWith("SNAPSHOT")) {
                 uri("https://repo.onelitefeather.dev/snapshots")
             } else {
                 uri("https://repo.onelitefeather.dev/releases")
+            }
+            credentials(PasswordCredentials::class)
+            authentication {
+                create<BasicAuthentication>("basic")
             }
         }
     }
