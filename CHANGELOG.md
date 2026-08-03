@@ -5,6 +5,14 @@
 
 * **modifier:** add void and object typenames ([2d4f0c5](https://github.com/theEvilReaper/DartPoet/commit/2d4f0c5e2882082e55ce032eee3b9a11418c0739))
 
+## [2.0.2](https://github.com/theEvilReaper/DartPoet/compare/2.0.1...2.0.2) (2026-08-03)
+
+
+### Bug Fixes
+
+* **release:** Rename OneLiteFeather repository secrets ([382c6fe](https://github.com/theEvilReaper/DartPoet/commit/382c6fe93d54182271c9dc97dfd6850be34b9fdf))
+* **release:** We love gradle ([7fe1bc7](https://github.com/theEvilReaper/DartPoet/commit/7fe1bc7eb164b756d7450ff9c9847c40229e246a))
+
 ## [2.0.1](https://github.com/theEvilReaper/DartPoet/compare/v2.0.0...2.0.1) (2026-08-03)
 
 
