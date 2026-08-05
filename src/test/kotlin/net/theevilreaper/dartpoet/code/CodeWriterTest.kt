@@ -26,4 +26,28 @@ class CodeWriterTest {
             writer.emitSpaces(1)
         }
     }
+
+    @Test
+    fun `test opening a statement twice throws`() {
+        val codeBlock = CodeBlock.builder().add("«").add("«").build()
+        assertThrows<IllegalStateException> {
+            CodeWriter(System.out).emitCode(codeBlock)
+        }
+    }
+
+    @Test
+    fun `test closing a statement that was never opened throws`() {
+        val codeBlock = CodeBlock.builder().add("»").build()
+        assertThrows<IllegalStateException> {
+            CodeWriter(System.out).emitCode(codeBlock)
+        }
+    }
+
+    @Test
+    fun `test opening and closing a statement does not throw`() {
+        val codeBlock = CodeBlock.builder().addStatement("foo()").build()
+        assertDoesNotThrow {
+            CodeWriter(System.out).emitCode(codeBlock)
+        }
+    }
 }

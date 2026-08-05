@@ -10,6 +10,8 @@ import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameter
 import net.theevilreaper.dartpoet.type.asTypeName
 import net.theevilreaper.dartpoet.verify.DartAnalyzeCase
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
@@ -153,5 +155,16 @@ class TypeDefWriterTest {
     @MethodSource("differentParameterTypes")
     fun `test typedef write with different parameter types`(typeDef: AbstractTypeDef<*>, expected: String) {
         Truth.assertThat(typeDef.toString()).isEqualTo(expected)
+    }
+
+    @Test
+    fun `test typedef with optional parameter that is neither nullable nor has an initializer throws`() {
+        val exception = assertThrows<IllegalArgumentException> {
+            TypeDef.function("ValueUpdate", genericClassName)
+                .returns(genericClassName)
+                .parameter(ParameterSpec.optional("data", genericClassName).build())
+                .build()
+        }
+        Truth.assertThat(exception.message).isEqualTo("Optional parameters must be nullable or have an initializer")
     }
 }
