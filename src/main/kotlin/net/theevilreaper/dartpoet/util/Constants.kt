@@ -46,6 +46,7 @@ internal val ALLOWED_PRIMITIVE_TYPES = setOf("Short", "Int", "Long", "Float", "D
 //Error message
 internal const val NO_PARAMETER_TYPE = "Parameter must have a type"
 internal const val NO_GENERIC_ON_LIBRARIES = "A library class can't have generic types"
+internal const val NO_MEMBERS_ON_LIBRARIES = "A library class can't declare functions, properties, constructors or constants"
 
 /**
  * Checks if a given set of [DartModifier] matches with a given set which contains the allowed [DartModifier].
