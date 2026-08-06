@@ -16,12 +16,20 @@ import net.theevilreaper.dartpoet.util.NEW_LINE
 import net.theevilreaper.dartpoet.util.SEMICOLON
 
 /**
+ * The [ClassWriter] contains the logic to write a [ClassSpec] to a [CodeWriter].
+ * It handles every [ClassType] variant. Each variant has its own header, body and closing shape.
  * @version 1.0.0
  * @since 1.0.0
  * @author theEvilReaper
  */
 internal class ClassWriter : Writeable<ClassSpec> {
 
+    /**
+     * Writes the given [ClassSpec] to a [CodeWriter] instance.
+     * Dispatches to the matching shape for the spec's [ClassSpec.classType]: anonymous class, library directive, empty body or full body.
+     * @param spec the [ClassSpec] which contains all data for the class
+     * @param writer the [CodeWriter] instance to append the generated code into
+     */
     override fun write(spec: ClassSpec, writer: CodeWriter) {
         if (spec.isAnonymous) {
             writeAnonymousClass(spec, writer)
@@ -30,19 +38,57 @@ internal class ClassWriter : Writeable<ClassSpec> {
 
         spec.annotations.emitAnnotations(writer, inLineAnnotations = false)
         writeClassHeader(spec, writer)
-        writeGenericArguments(spec, writer)
-        writeInheritance(spec, writer)
-        //Only write {} when the class contains now content
-        if (spec.hasNoContent) {
-            writer.emit("$CURLY_OPEN$CURLY_CLOSE")
 
-            if (spec.endsWithNewLine) {
-                writer.emit(NEW_LINE)
-            }
-
+        if (spec.isLibrary) {
+            writeLibraryDirective(spec, writer)
             return
         }
 
+        writeGenericArguments(spec, writer)
+        writeInheritance(spec, writer)
+
+        if (spec.hasNoContent) {
+            writeEmptyBody(spec, writer)
+            return
+        }
+
+        writeClassBody(spec, writer)
+    }
+
+    /**
+     * Writes the terminator of a Dart `library` directive.
+     * Unlike every other [ClassSpec.classType] it has no class body. It's a single statement terminated by a semicolon.
+     * @param spec the [ClassSpec] representing the library directive
+     * @param writer the [CodeWriter] to write the terminator to
+     */
+    private fun writeLibraryDirective(spec: ClassSpec, writer: CodeWriter) {
+        writer.emit(SEMICOLON)
+
+        if (spec.endsWithNewLine) {
+            writer.emit(NEW_LINE)
+        }
+    }
+
+    /**
+     * Writes an empty `{}` body for a class which has no content to generate.
+     * @param spec the [ClassSpec] which has no content
+     * @param writer the [CodeWriter] to write the empty body to
+     */
+    private fun writeEmptyBody(spec: ClassSpec, writer: CodeWriter) {
+        writer.emit("$CURLY_OPEN$CURLY_CLOSE")
+
+        if (spec.endsWithNewLine) {
+            writer.emit(NEW_LINE)
+        }
+    }
+
+    /**
+     * Writes the full `{ ... }` body of a class.
+     * Includes enum entries, constants, properties, constructors and functions.
+     * @param spec the [ClassSpec] which contains the body content
+     * @param writer the [CodeWriter] to write the body to
+     */
+    private fun writeClassBody(spec: ClassSpec, writer: CodeWriter) {
         writer.emit("{$NEW_LINE")
         writer.emit(NEW_LINE)
         writer.indent()
@@ -132,7 +178,6 @@ internal class ClassWriter : Writeable<ClassSpec> {
      * @param writer the [CodeWriter] to write the class declaration
      */
     private fun writeClassHeader(spec: ClassSpec, writer: CodeWriter) {
-        if (spec.classType == ClassType.LIBRARY) return
         val exclusiveModifier = when (spec.classType) {
             ClassType.CLASS, ClassType.ABSTRACT -> StringHelper.createModifierString(spec.modifiers.filter { it in EXCLUSIVE_CLASS_MODIFIERS })
             else -> EMPTY_STRING
@@ -151,6 +196,12 @@ internal class ClassWriter : Writeable<ClassSpec> {
 
 
 
+    /**
+     * Writes the `extends`, `with` and `implements` clauses of a class header in that order.
+     * Skips any clause the [spec] doesn't declare.
+     * @param spec the [ClassSpec] which contains the super class, mixins and interfaces
+     * @param writer the [CodeWriter] to write the inheritance clauses to
+     */
     private fun writeInheritance(spec: ClassSpec, writer: CodeWriter) {
         if (spec.superClass != null) {
             writer.emitCode("%L", "extends")
@@ -176,6 +227,12 @@ internal class ClassWriter : Writeable<ClassSpec> {
         }
     }
 
+    /**
+     * Writes each [EnumEntrySpec] in the receiver list.
+     * Separates entries with a comma and a newline. Does nothing if the list is empty.
+     * @param codeWriter the [CodeWriter] to write the entries to
+     * @param emitBlock the block used to write a single entry (defaults to [EnumEntrySpec.write])
+     */
     private fun List<EnumEntrySpec>.emit(
         codeWriter: CodeWriter,
         emitBlock: (EnumEntrySpec) -> Unit = { it.write(codeWriter) }

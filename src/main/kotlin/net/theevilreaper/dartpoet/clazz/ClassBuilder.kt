@@ -17,6 +17,7 @@ import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asClassName
 import net.theevilreaper.dartpoet.type.asTypeName
 import net.theevilreaper.dartpoet.util.NO_GENERIC_ON_LIBRARIES
+import net.theevilreaper.dartpoet.util.NO_MEMBERS_ON_LIBRARIES
 import java.lang.reflect.Type
 import kotlin.reflect.KClass
 
@@ -44,10 +45,19 @@ class ClassBuilder internal constructor(
     internal var endWithNewLine = false
 
     /**
+     * Guards methods that aren't allowed on a [ClassType.LIBRARY] class, e.g. generics or members.
+     * @param message the reason reported to the caller when [classType] is [ClassType.LIBRARY]
+     */
+    private fun checkNotLibrary(message: String) {
+        check(this.classType != ClassType.LIBRARY) { message }
+    }
+
+    /**
      * Add a constant [PropertySpec] to the file.
      * @param constant the property to add
      */
     fun constant(constant: ConstantPropertySpec) = apply {
+        checkNotLibrary(NO_MEMBERS_ON_LIBRARIES)
         this.constantStack += constant
     }
 
@@ -56,6 +66,7 @@ class ClassBuilder internal constructor(
      * @param constants the array to add
      */
     fun constants(vararg constants: ConstantPropertySpec) = apply {
+        checkNotLibrary(NO_MEMBERS_ON_LIBRARIES)
         this.constantStack += constants
     }
 
@@ -200,6 +211,7 @@ class ClassBuilder internal constructor(
      * @return the given instance of an [ClassBuilder]
      */
     fun property(propertySpec: PropertySpec) = apply {
+        checkNotLibrary(NO_MEMBERS_ON_LIBRARIES)
         this.propertyStack += propertySpec
     }
 
@@ -208,9 +220,7 @@ class ClassBuilder internal constructor(
      * @param propertySpec the property to add
      * @return the given instance of an [ClassBuilder]
      */
-    fun property(propertySpec: () -> PropertySpec) = apply {
-        this.propertyStack += propertySpec()
-    }
+    fun property(propertySpec: () -> PropertySpec) = this.property(propertySpec())
 
     /**
      * Add an array of [PropertySpec] to the class builder.
@@ -218,6 +228,7 @@ class ClassBuilder internal constructor(
      * @return the given instance of an [ClassBuilder]
      */
     fun properties(vararg properties: PropertySpec) = apply {
+        checkNotLibrary(NO_MEMBERS_ON_LIBRARIES)
         this.propertyStack += properties
     }
 
@@ -227,6 +238,7 @@ class ClassBuilder internal constructor(
      * @return the given instance of an [ClassBuilder]
      */
     fun function(function: FunctionSpec) = apply {
+        checkNotLibrary(NO_MEMBERS_ON_LIBRARIES)
         this.functionStack += function
     }
 
@@ -235,9 +247,7 @@ class ClassBuilder internal constructor(
      * @param function the function to add
      * @return the given instance of an [ClassBuilder]
      */
-    fun function(function: () -> FunctionSpec) = apply {
-        this.functionStack += function()
-    }
+    fun function(function: () -> FunctionSpec) = this.function(function())
 
     /**
      * Add a [ConstructorSpec] to the class builder.
@@ -245,6 +255,7 @@ class ClassBuilder internal constructor(
      * @return the given instance of an [ClassBuilder]
      */
     fun constructor(constructor: ConstructorBase) = apply {
+        checkNotLibrary(NO_MEMBERS_ON_LIBRARIES)
         this.constructorStack += constructor
     }
 
@@ -253,9 +264,7 @@ class ClassBuilder internal constructor(
      * @param constructor the constructor to add
      * @return the given instance of an [ClassBuilder]
      */
-    fun constructor(constructor: () -> ConstructorBase) = apply {
-        this.constructorStack += constructor()
-    }
+    fun constructor(constructor: () -> ConstructorBase) = this.constructor(constructor())
 
     /**
      * Add a [AnnotationSpec] to the class builder.
@@ -317,7 +326,7 @@ class ClassBuilder internal constructor(
      * @return the given instance of an [ClassBuilder]
      */
     fun generic(type: ClassName) = apply {
-        check(this.classType != ClassType.LIBRARY) { NO_GENERIC_ON_LIBRARIES }
+        checkNotLibrary(NO_GENERIC_ON_LIBRARIES)
         this.genericCasts += type
     }
 
