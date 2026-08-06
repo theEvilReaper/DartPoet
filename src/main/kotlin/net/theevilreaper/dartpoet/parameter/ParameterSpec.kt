@@ -51,9 +51,11 @@ class ParameterSpec internal constructor(
      * writing the parameter details to the specified [CodeWriter].
      *
      * @param codeWriter the [CodeWriter] to which the parameter should be written
+     * @param writeInitializer whether the parameter's initializer, if present, should be written.
+     * Should be `false` in contexts which don't support default parameter values, such as a Dart function type.
      */
-    internal fun write(codeWriter: CodeWriter) {
-        WriterHelper.parameterWriter.write(this, codeWriter)
+    internal fun write(codeWriter: CodeWriter, writeInitializer: Boolean = true) {
+        WriterHelper.parameterWriter.write(this, codeWriter, writeInitializer)
     }
 
     /**

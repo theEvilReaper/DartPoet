@@ -34,35 +34,54 @@ internal object ParameterHelper {
     }
 
     /**
+     * Builds the emit block passed to [emitParameters], honoring [writeInitializers].
+     * Kept as a single factory so every call site shares the same block instead of repeating it.
+     * @param codeWriter the [CodeWriter] the block writes to
+     * @param writeInitializers whether a parameter's initializer, if present, should be written
+     * @return a block which writes a single [ParameterSpec] to [codeWriter]
+     */
+    private fun parameterEmitBlock(codeWriter: CodeWriter, writeInitializers: Boolean): (ParameterSpec) -> Unit =
+        { it.write(codeWriter, writeInitializers) }
+
+    /**
      * Writes each parameter which is part of the [ParameterData] to the given [CodeWriter].
      * @param data the data to write
      * @param codeWriter the writer to append the data
      * @param indent if the generated code should be indented
-     * @param filter    Excluded whether to filter the excluded parameters
+     * @param writeInitializers whether initializers should be written for parameters that have one.
      */
     fun writeParameters(
         data: ParameterData<ParameterSpec>,
         codeWriter: CodeWriter,
         indent: Boolean = false,
+        writeInitializers: Boolean = true,
     ) {
         if (!data.hasParameters) {
             codeWriter.emitEmptyRoundBrackets()
             return
         }
         codeWriter.emit("(")
-        data.positionalParameters.emitParameters(codeWriter, forceNewLines = false)
+        data.positionalParameters.emitParameters(
+            codeWriter,
+            forceNewLines = false,
+            emitBlock = parameterEmitBlock(codeWriter, writeInitializers)
+        )
 
         if (data.positionalParameters.isNotEmpty() && (data.hasAdditionalParameters || data.optionalAndDefault.isNotEmpty())) {
             codeWriter.emit(", ")
         }
 
         if (data.hasAdditionalParameters) {
-            emitRequiredAndNamedParameter(data, codeWriter, indent)
+            emitRequiredAndNamedParameter(data, codeWriter, indent, writeInitializers)
         }
 
         if (data.optionalAndDefault.isNotEmpty()) {
             codeWriter.emit("[")
-            data.optionalAndDefault.emitParameters(codeWriter, forceNewLines = false)
+            data.optionalAndDefault.emitParameters(
+                codeWriter,
+                forceNewLines = false,
+                emitBlock = parameterEmitBlock(codeWriter, writeInitializers)
+            )
             codeWriter.emit("]")
         }
 
@@ -75,11 +94,13 @@ internal object ParameterHelper {
      * @param data the data to write
      * @param codeWriter the writer to append the data
      * @param indent whether to indent the data
+     * @param writeInitializers whether initializers should be written for parameters that have one
      */
     private fun emitRequiredAndNamedParameter(
         data: ParameterData<ParameterSpec>,
         codeWriter: CodeWriter,
         indent: Boolean = false,
+        writeInitializers: Boolean = true,
     ) {
         codeWriter.emit("$CURLY_OPEN")
 
@@ -88,8 +109,13 @@ internal object ParameterHelper {
             codeWriter.indent()
         }
 
-        internalParameterWrite(data.requiredParameters, data.namedParameters.isNotEmpty(), codeWriter)
-        internalParameterWrite(data.namedParameters, codeWriter = codeWriter)
+        internalParameterWrite(
+            data.requiredParameters,
+            data.namedParameters.isNotEmpty(),
+            codeWriter,
+            writeInitializers
+        )
+        internalParameterWrite(data.namedParameters, codeWriter = codeWriter, writeInitializers = writeInitializers)
 
         if (indent) {
             codeWriter.emit(NEW_LINE)
@@ -104,15 +130,21 @@ internal object ParameterHelper {
      * @param parameters the list of parameters to write
      * @param trailingComma whether to emit a trailing comma
      * @param codeWriter the active [CodeWriter]
+     * @param writeInitializers whether initializers should be written for parameters that have one
      */
     private fun internalParameterWrite(
         parameters: List<ParameterSpec>,
         trailingComma: Boolean = false,
-        codeWriter: CodeWriter
+        codeWriter: CodeWriter,
+        writeInitializers: Boolean = true,
     ) {
         if (parameters.isEmpty()) return
 
-        parameters.emitParameters(codeWriter, forceNewLines = false)
+        parameters.emitParameters(
+            codeWriter,
+            forceNewLines = false,
+            emitBlock = parameterEmitBlock(codeWriter, writeInitializers)
+        )
         if (trailingComma) {
             codeWriter.emit(COMMA_SEPARATOR)
         }

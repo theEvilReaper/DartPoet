@@ -20,7 +20,17 @@ internal class ParameterWriter : Writeable<ParameterSpec>, InitializerAppender<P
      * It should be noted that the writer doesn't check whether the spec contains errors.
      * This would be done when the spec is being created
      */
-    override fun write(spec: ParameterSpec, writer: CodeWriter) {
+    override fun write(spec: ParameterSpec, writer: CodeWriter) = write(spec, writer, writeInitializer = true)
+
+    /**
+     * Writes a [ParameterSpec] to code, optionally suppressing its initializer.
+     * A Dart function type (as used by [net.theevilreaper.dartpoet.function.typedef.function.FunctionTypeDefSpec])
+     * can't declare default parameter values, unlike a real function or constructor declaration.
+     * @param spec the [ParameterSpec] to write
+     * @param writer the [CodeWriter] to write the parameter to
+     * @param writeInitializer whether the parameter's initializer, if present, should be written
+     */
+    fun write(spec: ParameterSpec, writer: CodeWriter, writeInitializer: Boolean) {
         spec.annotations.emitAnnotations(writer, endWithNewLine = false)
 
         if (spec.type == ParameterType.REQUIRED) {
@@ -42,7 +52,10 @@ internal class ParameterWriter : Writeable<ParameterSpec>, InitializerAppender<P
             writer.emit("this.")
         }
         writer.emit(spec.name)
-        writeInitBlock(spec, writer)
+
+        if (writeInitializer) {
+            writeInitBlock(spec, writer)
+        }
     }
 
     /**
