@@ -17,6 +17,7 @@ import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asClassName
 import net.theevilreaper.dartpoet.type.asTypeName
 import net.theevilreaper.dartpoet.util.NO_GENERIC_ON_LIBRARIES
+import net.theevilreaper.dartpoet.util.NO_MEMBERS_ON_LIBRARIES
 import java.lang.reflect.Type
 import kotlin.reflect.KClass
 
@@ -44,10 +45,18 @@ class ClassBuilder internal constructor(
     internal var endWithNewLine = false
 
     /**
+     * Guards member-adding methods that aren't allowed on a [ClassType.LIBRARY] class.
+     */
+    private fun checkNoMembersOnLibrary() {
+        check(this.classType != ClassType.LIBRARY) { NO_MEMBERS_ON_LIBRARIES }
+    }
+
+    /**
      * Add a constant [PropertySpec] to the file.
      * @param constant the property to add
      */
     fun constant(constant: ConstantPropertySpec) = apply {
+        checkNoMembersOnLibrary()
         this.constantStack += constant
     }
 
@@ -56,6 +65,7 @@ class ClassBuilder internal constructor(
      * @param constants the array to add
      */
     fun constants(vararg constants: ConstantPropertySpec) = apply {
+        checkNoMembersOnLibrary()
         this.constantStack += constants
     }
 
@@ -200,6 +210,7 @@ class ClassBuilder internal constructor(
      * @return the given instance of an [ClassBuilder]
      */
     fun property(propertySpec: PropertySpec) = apply {
+        checkNoMembersOnLibrary()
         this.propertyStack += propertySpec
     }
 
@@ -209,6 +220,7 @@ class ClassBuilder internal constructor(
      * @return the given instance of an [ClassBuilder]
      */
     fun property(propertySpec: () -> PropertySpec) = apply {
+        checkNoMembersOnLibrary()
         this.propertyStack += propertySpec()
     }
 
@@ -218,6 +230,7 @@ class ClassBuilder internal constructor(
      * @return the given instance of an [ClassBuilder]
      */
     fun properties(vararg properties: PropertySpec) = apply {
+        checkNoMembersOnLibrary()
         this.propertyStack += properties
     }
 
@@ -227,6 +240,7 @@ class ClassBuilder internal constructor(
      * @return the given instance of an [ClassBuilder]
      */
     fun function(function: FunctionSpec) = apply {
+        checkNoMembersOnLibrary()
         this.functionStack += function
     }
 
@@ -236,6 +250,7 @@ class ClassBuilder internal constructor(
      * @return the given instance of an [ClassBuilder]
      */
     fun function(function: () -> FunctionSpec) = apply {
+        checkNoMembersOnLibrary()
         this.functionStack += function()
     }
 
@@ -245,6 +260,7 @@ class ClassBuilder internal constructor(
      * @return the given instance of an [ClassBuilder]
      */
     fun constructor(constructor: ConstructorBase) = apply {
+        checkNoMembersOnLibrary()
         this.constructorStack += constructor
     }
 
@@ -254,6 +270,7 @@ class ClassBuilder internal constructor(
      * @return the given instance of an [ClassBuilder]
      */
     fun constructor(constructor: () -> ConstructorBase) = apply {
+        checkNoMembersOnLibrary()
         this.constructorStack += constructor()
     }
 
