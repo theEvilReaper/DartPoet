@@ -1,6 +1,9 @@
 package net.theevilreaper.dartpoet.code.writer
 
 import com.google.common.truth.Truth
+import net.theevilreaper.dartpoet.DartFile
+import net.theevilreaper.dartpoet.clazz.ClassSpec
+import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.typedef.AbstractTypeDef
 import net.theevilreaper.dartpoet.function.typedef.TypeDef
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
@@ -9,6 +12,7 @@ import net.theevilreaper.dartpoet.type.DYNAMIC
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
 import net.theevilreaper.dartpoet.type.asTypeName
 import net.theevilreaper.dartpoet.verify.DartAnalyzeCase
+import net.theevilreaper.dartpoet.verify.verifyDartOutput
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -91,7 +95,7 @@ class TypeDefWriterTest {
                             .build()
                     )
                     .build(),
-                "typedef ValueUpdate<E> = E Function(String value, [E? data = null]);"
+                "typedef ValueUpdate<E> = E Function(String value, [E? data]);"
             ),
             Arguments.of(
                 TypeDef.function("ValueUpdate", genericClassName)
@@ -105,7 +109,7 @@ class TypeDefWriterTest {
                             .build()
                     )
                     .build(),
-                "typedef ValueUpdate<E> = E Function(Map<String, int> map, [E? data = null]);"
+                "typedef ValueUpdate<E> = E Function(Map<String, int> map, [E? data]);"
             ),
             Arguments.of(
                 TypeDef.function("ValueUpdate", genericClassName)
@@ -132,7 +136,7 @@ class TypeDefWriterTest {
                             .build() // Named optional weil nullable oder default
                     )
                     .build(),
-                "typedef ValueUpdate<E> = E Function(E data, {required String b, String? a, int c = 10});"
+                "typedef ValueUpdate<E> = E Function(E data, {required String b, String? a, int c});"
             )
         )
     }
@@ -151,10 +155,59 @@ class TypeDefWriterTest {
         Truth.assertThat(typeDef.toString()).isEqualTo(expected)
     }
 
+    @DartAnalyzeCase
     @ParameterizedTest
     @MethodSource("differentParameterTypes")
     fun `test typedef write with different parameter types`(typeDef: AbstractTypeDef<*>, expected: String) {
         Truth.assertThat(typeDef.toString()).isEqualTo(expected)
+    }
+
+    @Test
+    fun `test typedef and its implementing function in the same file`() {
+        val file = DartFile.builder("callback_lib")
+            .type(
+                ClassSpec.anonymousClassBuilder()
+                    .typedef(
+                        TypeDef.function("Callback")
+                            .parameters(
+                                ParameterSpec.positional("message", String::class).build(),
+                                ParameterSpec.optional("code", Int::class).nullable(true).build()
+                            )
+                            .build()
+                    )
+                    .build()
+            )
+            .type(
+                ClassSpec.builder("Handler")
+                    .function(
+                        FunctionSpec.builder("onMessage")
+                            .returns(Void::class)
+                            .parameters(
+                                ParameterSpec.positional("message", String::class).build(),
+                                ParameterSpec.optional("code", Int::class)
+                                    .nullable(true)
+                                    .initializer("%L", "0")
+                                    .build()
+                            )
+                            .addCode("code ??= 0;")
+                            .build()
+                    )
+                    .build()
+            )
+            .build()
+        file.verifyDartOutput(
+            """
+            |typedef Callback = void Function(String message, [int? code]);
+            |
+            |class Handler {
+            |
+            |  void onMessage(String message, [int? code = 0]) {
+            |    code ??= 0;
+            |  }
+            |}
+            |
+            """.trimMargin()
+        )
     }
 
     @Test
