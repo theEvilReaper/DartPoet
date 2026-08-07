@@ -8,7 +8,7 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            version("junit", "6.1.2")
+            version("junit", "6.1.3")
             version("google.truth", "1.4.5")
             version("kotlin", "2.4.10")
             version("jetbrains.annotations", "26.1.0")
