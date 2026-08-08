@@ -128,4 +128,19 @@ class ConstructorWriterTest {
             """.trimIndent()
         )
     }
+
+    @Test
+    fun `test constructor with super and field initializing parameters`() {
+        val constructor = ConstructorSpec.builder("Cat")
+            .parameters(
+                ParameterSpec.required("name").superParameter().build(),
+                ParameterSpec.named("color").nullable(true).build(),
+            )
+            .build()
+        assertThat(constructor.toString()).isEqualTo(
+            """
+            Cat({required super.name, this.color});
+            """.trimIndent()
+        )
+    }
 }

@@ -35,6 +35,7 @@ class ParameterSpec internal constructor(
     internal val initializer = builder.initializer
     internal val annotations = builder.annotationData.annotations.toImmutableSet()
     internal val coVariant = builder.coVariant
+    internal val isSuperParameter = builder.isSuperParameter
     override val hasInitializer = initializer != null && initializer.isNotEmpty()
     internal val hasNoTypeName: Boolean = builder.typeName == null
 
@@ -44,6 +45,7 @@ class ParameterSpec internal constructor(
      */
     init {
         check(name.trim().isNotEmpty()) { "The name of a parameter can't be empty" }
+        check(!isSuperParameter || typeName == null) { "A super parameter can't have an explicit typeName" }
     }
 
     /**
@@ -72,6 +74,7 @@ class ParameterSpec internal constructor(
         val builder = ParameterBuilder(this.name, this.type, this.typeName)
         builder.named = isNamed
         builder.nullable = isNullable
+        builder.superParameter(isSuperParameter)
         builder.annotations(*this.annotations.toTypedArray())
         builder.initializer = initializer
         return builder
