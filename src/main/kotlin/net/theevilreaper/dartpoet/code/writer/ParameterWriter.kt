@@ -49,7 +49,7 @@ internal class ParameterWriter : Writeable<ParameterSpec>, InitializerAppender<P
         val emitNullable = if (spec.isNullable && spec.typeName != null) "?·" else if (spec.typeName != null) "·" else EMPTY_STRING
         writer.emit(emitNullable)
         if (spec.hasNoTypeName) {
-            writer.emit("this.")
+            writer.emit(if (spec.isSuperParameter) "super." else "this.")
         }
         writer.emit(spec.name)
 
