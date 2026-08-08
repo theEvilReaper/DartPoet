@@ -5,6 +5,7 @@ import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
+import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.verify.verifyDartOutput
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -53,6 +54,61 @@ class LibraryCorpusTest {
             |  int y;
             |
             |  Point(this.x, this.y);
+            |
+            |}
+            |
+            """.trimMargin()
+        )
+    }
+
+    @Test
+    fun `test subclass constructor with super parameter renders and analyzes cleanly`() {
+        val file = DartFile.builder("shape_lib")
+            .type(
+                ClassSpec.builder("Shape")
+                    .properties(
+                        PropertySpec.builder("id", Int::class).build(),
+                    )
+                    .constructor(
+                        ConstructorSpec.builder("Shape")
+                            .parameters(
+                                ParameterSpec.positional("id").build(),
+                            )
+                            .build()
+                    )
+                    .build()
+            )
+            .type(
+                ClassSpec.builder("Circle")
+                    .superClass(ClassName("Shape"))
+                    .properties(
+                        PropertySpec.builder("radius", Double::class).build(),
+                    )
+                    .constructor(
+                        ConstructorSpec.builder("Circle")
+                            .parameters(
+                                ParameterSpec.positional("id").superParameter().build(),
+                                ParameterSpec.positional("radius").build(),
+                            )
+                            .build()
+                    )
+                    .build()
+            )
+            .build()
+        file.verifyDartOutput(
+            """
+            |class Shape {
+            |
+            |  int id;
+            |
+            |  Shape(this.id);
+            |
+            |}
+            |class Circle extends Shape {
+            |
+            |  double radius;
+            |
+            |  Circle(super.id, this.radius);
             |
             |}
             |

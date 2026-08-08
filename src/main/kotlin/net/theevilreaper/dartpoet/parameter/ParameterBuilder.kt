@@ -28,6 +28,7 @@ class ParameterBuilder internal constructor(
     internal var named: Boolean = false
     internal var nullable: Boolean = false
     internal var coVariant: Boolean = false
+    internal var isSuperParameter: Boolean = false
     internal var initializer: CodeBlock? = null
 
     /**
@@ -65,6 +66,16 @@ class ParameterBuilder internal constructor(
      */
     fun coVariant(coVariant: Boolean) = apply {
         this.coVariant = coVariant
+    }
+
+    /**
+     * Marks the parameter as a Dart super-initializer parameter (`super.fieldName`),
+     * forwarding it directly to the superclass constructor.
+     * @param superParameter true if the parameter should be written as `super.fieldName`
+     * @return the current [ParameterBuilder] instance
+     */
+    fun superParameter(superParameter: Boolean = true) = apply {
+        this.isSuperParameter = superParameter
     }
 
     /**
