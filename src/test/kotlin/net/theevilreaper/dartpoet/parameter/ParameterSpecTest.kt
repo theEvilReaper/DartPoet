@@ -4,6 +4,7 @@ import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
@@ -30,7 +31,15 @@ class ParameterSpecTest {
                 {
                     ParameterSpec.named("name", String::class).initializer("%C", "theEvilReaper")
                 },
-            )
+            ),
+            Arguments.of(
+                "super.name",
+                { ParameterSpec.positional("name").superParameter() },
+            ),
+            Arguments.of(
+                "required super.name",
+                { ParameterSpec.required("name").superParameter() },
+            ),
         )
     }
 
@@ -56,5 +65,20 @@ class ParameterSpecTest {
         assertEquals(parameterSpec.isNullable, specAsBuilder.nullable)
         assertTrue { specAsBuilder.initializer!!.isNotEmpty() }
         assertContentEquals(parameterSpec.annotations, specAsBuilder.annotationData.annotations)
+    }
+
+    @Test
+    fun `test super parameter with explicit typeName throws exception`() {
+        val exception = assertThrows<IllegalStateException> {
+            ParameterSpec.positional("name", String::class).superParameter().build()
+        }
+        assertTrue(exception.message?.contains("super parameter") == true)
+    }
+
+    @Test
+    fun `test super parameter spec to builder conversion`() {
+        val parameterSpec = ParameterSpec.positional("name").superParameter().build()
+        val specAsBuilder = parameterSpec.toBuilder()
+        assertTrue(specAsBuilder.isSuperParameter)
     }
 }
