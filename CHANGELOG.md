@@ -5,6 +5,15 @@
 
 * **modifier:** add void and object typenames ([2d4f0c5](https://github.com/theEvilReaper/DartPoet/commit/2d4f0c5e2882082e55ce032eee3b9a11418c0739))
 
+## [2.0.3](https://github.com/theEvilReaper/DartPoet/compare/2.0.2...2.0.3) (2026-08-07)
+
+
+### Bug Fixes
+
+* **class:** validate library classes before generation ([#274](https://github.com/theEvilReaper/DartPoet/issues/274)) ([18328fc](https://github.com/theEvilReaper/DartPoet/commit/18328fc150d5854cc2e6c67fb230687f2a5e483d))
+* **deps:** update junit-framework monorepo to v6.1.3 ([#277](https://github.com/theEvilReaper/DartPoet/issues/277)) ([0d4f272](https://github.com/theEvilReaper/DartPoet/commit/0d4f2725b7e510639d8fa97c5c0a88c026fecf55))
+* **typedef:** stop emitting default parameter values in typedefs ([#275](https://github.com/theEvilReaper/DartPoet/issues/275)) ([1efec65](https://github.com/theEvilReaper/DartPoet/commit/1efec655988e9ef2455d6e791e0a565d27a9e2bb))
+
 ## [2.0.2](https://github.com/theEvilReaper/DartPoet/compare/2.0.1...2.0.2) (2026-08-03)
 
 
