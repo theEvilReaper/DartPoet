@@ -81,4 +81,13 @@ class ParameterSpecTest {
         val specAsBuilder = parameterSpec.toBuilder()
         assertTrue(specAsBuilder.isSuperParameter)
     }
+
+    @Test
+    fun `test coVariant spec to builder conversion`() {
+        val parameterSpec = ParameterSpec.positional("name", String::class)
+            .coVariant(true)
+            .build()
+        val specAsBuilder = parameterSpec.toBuilder()
+        assertTrue(specAsBuilder.coVariant)
+    }
 }

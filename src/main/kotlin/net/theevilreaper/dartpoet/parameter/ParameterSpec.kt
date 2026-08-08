@@ -77,6 +77,7 @@ class ParameterSpec internal constructor(
         builder.superParameter(isSuperParameter)
         builder.annotations(*this.annotations.toTypedArray())
         builder.initializer = initializer
+        builder.coVariant = coVariant
         return builder
     }
 
