@@ -9,6 +9,7 @@ import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.parameter.ParameterBuilder
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
+import net.theevilreaper.dartpoet.type.TypeVariableName
 import net.theevilreaper.dartpoet.type.asTypeName
 import net.theevilreaper.dartpoet.util.COMMA_SEPARATOR
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
@@ -44,6 +45,18 @@ class ExtensionSpec internal constructor(
             false -> EMPTY_STRING
         }
         genericType.joinToString(separator) { it.getRawData() }
+    }
+
+    /**
+     * The generic-declaration form of [genericType], including bounds where present (via
+     * [net.theevilreaper.dartpoet.type.TypeVariableName.renderDeclaration]),
+     * used only for the `<...>` output in [ExtensionWriter]. Unlike
+     * [joinedRawTypes] (bare names only, used by the validation in the `init` block below), this
+     * must never be used for anything that compares against [extClass]'s raw data.
+     */
+    internal val genericDeclaration by lazy {
+        if (genericType.isEmpty()) return@lazy EMPTY_STRING
+        genericType.joinToString(COMMA_SEPARATOR) { TypeVariableName.renderDeclaration(it) }
     }
 
     /**

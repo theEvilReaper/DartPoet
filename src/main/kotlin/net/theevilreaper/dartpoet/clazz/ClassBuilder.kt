@@ -14,6 +14,7 @@ import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
+import net.theevilreaper.dartpoet.type.TypeVariableName
 import net.theevilreaper.dartpoet.type.asClassName
 import net.theevilreaper.dartpoet.type.asTypeName
 import net.theevilreaper.dartpoet.util.NO_GENERIC_ON_LIBRARIES
@@ -356,6 +357,33 @@ class ClassBuilder internal constructor(
     fun generic(type: Class<*>) = apply {
         generic(type.asClassName())
     }
+
+    /**
+     * Add a bounded generic type parameter to the class builder, e.g. `T extends Bar`.
+     * @param name the name of the type parameter
+     * @param bound the bound of the type parameter, represented as a [TypeName]
+     * @return the given instance of an [ClassBuilder]
+     */
+    fun generic(name: String, bound: TypeName) = apply {
+        checkNotLibrary(NO_GENERIC_ON_LIBRARIES)
+        this.genericCasts += TypeVariableName(name, bound)
+    }
+
+    /**
+     * Add a bounded generic type parameter to the class builder, e.g. `T extends Bar`.
+     * @param name the name of the type parameter
+     * @param bound the bound of the type parameter, represented as a [ClassName]
+     * @return the given instance of an [ClassBuilder]
+     */
+    fun generic(name: String, bound: ClassName) = generic(name, bound as TypeName)
+
+    /**
+     * Add a bounded generic type parameter to the class builder, e.g. `T extends Bar`.
+     * @param name the name of the type parameter
+     * @param bound the bound of the type parameter, represented as a [KClass]
+     * @return the given instance of an [ClassBuilder]
+     */
+    fun generic(name: String, bound: KClass<*>) = generic(name, bound.asTypeName())
 
     /**
      * Creates a new instance from the [ClassSpec].
