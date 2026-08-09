@@ -34,7 +34,7 @@ internal class ExtensionWriter : Writeable<ExtensionSpec>, DocumentationAppender
         }
 
         if (spec.hasGenericCast) {
-            writer.emitGenericBlock("%L", spec.joinedRawTypes)
+            writer.emitGenericBlock("%L", spec.genericDeclaration)
         }
 
         writer.emitCode("·%L·%T·", ON.identifier, spec.extClass)

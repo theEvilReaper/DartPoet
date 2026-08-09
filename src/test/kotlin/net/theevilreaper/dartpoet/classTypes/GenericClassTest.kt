@@ -31,6 +31,31 @@ class GenericClassTest {
                 Arguments.of(ClassSpec.builder("TestClass").generic(reflectType).build(), "class TestClass<String> {}"),
             )
         }
+
+        @JvmStatic
+        private fun boundedGenericCases(): Stream<Arguments> = Stream.of(
+            Arguments.of(
+                ClassSpec.builder("Box").generic("T", ClassName("Comparable")).build(),
+                "class Box<T extends Comparable> {}"
+            ),
+            Arguments.of(
+                ClassSpec.builder("Box")
+                    .generic("T", ClassName("Comparable").parameterizedBy(ClassName("T")))
+                    .build(),
+                "class Box<T extends Comparable<T>> {}"
+            ),
+            Arguments.of(
+                ClassSpec.builder("Box").generic("T", String::class).build(),
+                "class Box<T extends String> {}"
+            ),
+            Arguments.of(
+                ClassSpec.builder("Box")
+                    .generic("T", ClassName("Comparable"))
+                    .generic(ClassName("E"))
+                    .build(),
+                "class Box<T extends Comparable, E> {}"
+            ),
+        )
     }
 
     @Test
@@ -79,6 +104,13 @@ class GenericClassTest {
     @ParameterizedTest
     @MethodSource("genericOverloadCases")
     fun `test generic class with KClass and Type overloads`(classSpec: ClassSpec, expected: String) {
+        assertThat(classSpec.toString()).isEqualTo(expected)
+    }
+
+    @DartAnalyzeCase
+    @ParameterizedTest
+    @MethodSource("boundedGenericCases")
+    fun `test generic class with bounded type parameter`(classSpec: ClassSpec, expected: String) {
         assertThat(classSpec.toString()).isEqualTo(expected)
     }
 }

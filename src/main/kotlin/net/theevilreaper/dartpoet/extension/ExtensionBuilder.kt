@@ -4,6 +4,7 @@ import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
+import net.theevilreaper.dartpoet.type.TypeVariableName
 import net.theevilreaper.dartpoet.type.asTypeName
 import kotlin.reflect.KClass
 
@@ -105,6 +106,32 @@ class ExtensionBuilder(
     fun genericTypes(vararg genericType: KClass<*>) = apply {
         this.genericTypes += genericType.map { it.asTypeName() }
     }
+
+    /**
+     * Add a bounded generic type parameter for the extension, e.g. `T extends Bar`.
+     * @param name the name of the type parameter
+     * @param bound the bound of the type parameter, represented as a [TypeName]
+     * @return the current builder instance
+     */
+    fun genericTypes(name: String, bound: TypeName) = apply {
+        this.genericTypes += TypeVariableName(name, bound)
+    }
+
+    /**
+     * Add a bounded generic type parameter for the extension, e.g. `T extends Bar`.
+     * @param name the name of the type parameter
+     * @param bound the bound of the type parameter, represented as a [ClassName]
+     * @return the current builder instance
+     */
+    fun genericTypes(name: String, bound: ClassName) = genericTypes(name, bound as TypeName)
+
+    /**
+     * Add a bounded generic type parameter for the extension, e.g. `T extends Bar`.
+     * @param name the name of the type parameter
+     * @param bound the bound of the type parameter, represented as a [KClass]
+     * @return the current builder instance
+     */
+    fun genericTypes(name: String, bound: KClass<*>) = genericTypes(name, bound.asTypeName())
 
     /**
      * Creates a new instance from the [ExtensionSpec] class.

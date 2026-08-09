@@ -70,6 +70,29 @@ class ExtensionWriterTest {
                 "extension MapExt<T, E> on Map<T, E> {}"
             ),
         )
+
+        @JvmStatic
+        private fun boundedGenericExtension() = Stream.of(
+            Arguments.of(
+                ExtensionSpec.builder("ListExt", List::class.parameterizedBy(ClassName("T")))
+                    .genericTypes("T", ClassName("Comparable"))
+                    .build(),
+                "extension ListExt<T extends Comparable> on List<T> {}"
+            ),
+            Arguments.of(
+                ExtensionSpec.builder("ListExt", List::class.parameterizedBy(ClassName("T")))
+                    .genericTypes("T", String::class)
+                    .build(),
+                "extension ListExt<T extends String> on List<T> {}"
+            ),
+            Arguments.of(
+                ExtensionSpec.builder("MapExt", Map::class.parameterizedBy(ClassName("T"), ClassName("E")))
+                    .genericTypes("T", ClassName("Comparable"))
+                    .genericTypes(ClassName("E"))
+                    .build(),
+                "extension MapExt<T extends Comparable, E> on Map<T, E> {}"
+            ),
+        )
     }
 
     @DartAnalyzeCase
@@ -88,6 +111,13 @@ class ExtensionWriterTest {
     @ParameterizedTest
     @MethodSource("basicGenericExtension")
     fun `test generic extension`(extensionSpec: ExtensionSpec, expected: String) {
+        assertThat(extensionSpec.toString()).isEqualTo(expected)
+    }
+
+    @DartAnalyzeCase
+    @ParameterizedTest
+    @MethodSource("boundedGenericExtension")
+    fun `test bounded generic extension`(extensionSpec: ExtensionSpec, expected: String) {
         assertThat(extensionSpec.toString()).isEqualTo(expected)
     }
 
