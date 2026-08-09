@@ -37,6 +37,8 @@ class FunctionTypeDefSpec(
                 indent = parameterData.requiredParameters.size > 1,
                 writeInitializers = false,
             )
+        } else {
+            writer.emitEmptyRoundBrackets()
         }
         writer.emitCode(SEMICOLON)
     }
