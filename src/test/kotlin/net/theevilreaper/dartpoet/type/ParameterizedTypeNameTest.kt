@@ -24,6 +24,14 @@ class ParameterizedTypeNameTest {
             Arguments.of(
                 "Map<String, dynamic>",
                 Map::class.parameterizedBy(String::class.asTypeName(), DYNAMIC)
+            ),
+            Arguments.of(
+                "List<String?>",
+                List::class.parameterizedBy(String::class.asTypeName().copy(nullable = true))
+            ),
+            Arguments.of(
+                "Map<String, int?>",
+                Map::class.parameterizedBy(String::class.asTypeName(), Int::class.asTypeName().copy(nullable = true))
             )
         )
 
