@@ -8,6 +8,7 @@ import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.code.emitConstructors
 import net.theevilreaper.dartpoet.code.emitFunctions
 import net.theevilreaper.dartpoet.enum.EnumEntrySpec
+import net.theevilreaper.dartpoet.type.TypeVariableName
 import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.util.CURLY_CLOSE
 import net.theevilreaper.dartpoet.util.CURLY_OPEN
@@ -151,7 +152,7 @@ internal class ClassWriter : Writeable<ClassSpec> {
                     prefix = LESS_THAN_SIGN,
                     separator = COMMA_SEPARATOR,
                     postfix = GREATER_THAN_SIGN
-                ) { it.toString() }
+                ) { TypeVariableName.renderDeclaration(it) }
                 writer.emitCode("%L", joinedGenerics)
                 writer.emitSpace()
             }
