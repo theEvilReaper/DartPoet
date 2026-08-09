@@ -1,6 +1,7 @@
 package net.theevilreaper.dartpoet.type
 
 import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.util.COMMA_SEPARATOR
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.GREATER_THAN_SIGN
@@ -77,12 +78,16 @@ class ParameterizedTypeName internal constructor(
         }
 
         if (typeArguments.isNotEmpty()) {
+            // Dispatch each argument through emit() (like %T does), not toString(): TypeName.toString()
+            // goes through cachedString, which appends a nullable "?" on top of whatever emit() already
+            // wrote, doubling it for any TypeName whose own emit() self-appends "?" (e.g. ClassName,
+            // FunctionTypeName).
             val joinedArguments = StringHelper.concatData(
                 typeArguments,
                 prefix = LESS_THAN_SIGN,
                 separator = COMMA_SEPARATOR,
                 postfix = GREATER_THAN_SIGN
-            ) { it.toString() }
+            ) { buildCodeString { it.emit(this) } }
             out.emit(joinedArguments)
         }
         return out
