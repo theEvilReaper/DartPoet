@@ -4,8 +4,13 @@ import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
+import net.theevilreaper.dartpoet.type.FunctionTypeName
+import net.theevilreaper.dartpoet.type.INTEGER
+import net.theevilreaper.dartpoet.type.STRING
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asTypeName
+import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.verify.verifyDartOutput
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -146,5 +151,35 @@ class PropertyWriterTest {
         assertNotNull(property)
         assertTrue(property.nullable)
         assertThat(property.toString()).isEqualTo("String? name;")
+    }
+
+    @Test
+    fun `write non-nullable empty function type property`() {
+        val property = PropertySpec.builder("callback", FunctionTypeName.builder().build())
+            .modifier { DartModifier.LATE }
+            .build()
+        property.verifyDartOutput("late void Function() callback;")
+    }
+
+    @Test
+    fun `write nullable function type property`() {
+        val property = PropertySpec.builder("onDone", FunctionTypeName.builder().nullable().build())
+            .build()
+        property.verifyDartOutput("void Function()? onDone;")
+    }
+
+    @Test
+    fun `write property with nested function type parameter`() {
+        val innerFunctionType = FunctionTypeName.builder()
+            .returns(INTEGER)
+            .parameter(ParameterSpec.positional("value", STRING).build())
+            .build()
+        val outerFunctionType = FunctionTypeName.builder()
+            .parameter(ParameterSpec.positional("mapper", innerFunctionType).build())
+            .build()
+        val property = PropertySpec.builder("onMap", outerFunctionType)
+            .modifier { DartModifier.LATE }
+            .build()
+        property.verifyDartOutput("late void Function(int Function(String value) mapper) onMap;")
     }
 }

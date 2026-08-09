@@ -9,6 +9,9 @@ import net.theevilreaper.dartpoet.function.FunctionType
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.MethodAccessorType
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.type.FunctionTypeName
+import net.theevilreaper.dartpoet.type.INTEGER
+import net.theevilreaper.dartpoet.type.STRING
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.DYNAMIC
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
@@ -250,6 +253,29 @@ class FunctionWriterTest {
             """
            abstract void testMethod({required String b, String? a, int c = 10});
             """.trimIndent()
+        )
+    }
+
+    @Test
+    fun `test function write with function type parameter`() {
+        val functionSpec = FunctionSpec.builder("doWork")
+            .parameter(
+                ParameterSpec.positional(
+                    "mapper",
+                    FunctionTypeName.builder()
+                        .returns(INTEGER)
+                        .parameter(ParameterSpec.positional("value", STRING).build())
+                        .build()
+                ).build()
+            )
+            .addCode("mapper('test');")
+            .build()
+        functionSpec.verifyDartOutput(
+            """
+            |void doWork(int Function(String value) mapper) {
+            |  mapper('test');
+            |}
+            """.trimMargin()
         )
     }
 }
