@@ -47,6 +47,10 @@ class TypeDefWriterTest {
                     .build(),
                 "typedef json = Map<String, dynamic>;"
             ),
+            Arguments.of(
+                TypeDef.function("Callback").build(),
+                "typedef Callback = void Function();"
+            ),
         )
 
         @JvmStatic
