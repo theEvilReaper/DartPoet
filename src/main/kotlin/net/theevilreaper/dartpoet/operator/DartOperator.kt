@@ -1,6 +1,6 @@
 package net.theevilreaper.dartpoet.operator
 
-interface DartOperator {
+sealed interface DartOperator {
 
     val symbol: String
 }
