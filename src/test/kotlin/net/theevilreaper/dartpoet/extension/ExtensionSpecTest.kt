@@ -1,6 +1,11 @@
 package net.theevilreaper.dartpoet.extension
 
+import net.theevilreaper.dartpoet.operator.BinaryOperator
+import net.theevilreaper.dartpoet.operator.DartOperatorSpec
+import net.theevilreaper.dartpoet.operator.UnaryOperator
+import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.ClassName
+import net.theevilreaper.dartpoet.type.INTEGER
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import org.junit.jupiter.api.Assertions.*
@@ -67,11 +72,60 @@ class ExtensionSpecTest {
         val extensionSpec = ExtensionSpec.builder("isEmpty", "String")
             .endsWithNewLine(true)
             .doc("%C", "This is a test line")
+            .operator(
+                DartOperatorSpec.builder(UnaryOperator.NEGATE)
+                    .returnType(net.theevilreaper.dartpoet.type.BOOLEAN)
+                    .addCode("return %L;", "true")
+                    .build()
+            )
             .build()
         val specAsBuilder = extensionSpec.toBuilder()
         assertEquals(extensionSpec.name, specAsBuilder.name)
         assertEquals(extensionSpec.extClass, specAsBuilder.extClass)
         assertTrue { specAsBuilder.docs.isNotEmpty() }
         assertEquals(extensionSpec.endWithNewLine, specAsBuilder.endWithNewLine)
+        assertEquals(extensionSpec.operators.toList(), specAsBuilder.operatorStack)
+    }
+
+    @Test
+    fun `test duplicate operator symbol throws`() {
+        assertThrows(IllegalStateException::class.java) {
+            ExtensionSpec.builder("NumExt", Int::class)
+                .operator(
+                    DartOperatorSpec.builder(BinaryOperator.PLUS)
+                        .returnType(INTEGER)
+                        .parameter(ParameterSpec.positional("other", INTEGER).build())
+                        .addCode("return %L;", "this + other")
+                        .build()
+                )
+                .operator(
+                    DartOperatorSpec.builder(BinaryOperator.PLUS)
+                        .returnType(INTEGER)
+                        .parameter(ParameterSpec.positional("other", INTEGER).build())
+                        .addCode("return %L;", "this + other")
+                        .build()
+                )
+                .build()
+        }
+    }
+
+    @Test
+    fun `test binary and unary operator sharing a symbol does not throw`() {
+        val extension = ExtensionSpec.builder("VectorExt", ClassName("Vector"))
+            .operator(
+                DartOperatorSpec.builder(BinaryOperator.MINUS)
+                    .returnType(ClassName("Vector"))
+                    .parameter(ParameterSpec.positional("other", ClassName("Vector")).build())
+                    .addCode("return %L;", "this")
+                    .build()
+            )
+            .operator(
+                DartOperatorSpec.builder(UnaryOperator.NEGATE)
+                    .returnType(ClassName("Vector"))
+                    .addCode("return %L;", "this")
+                    .build()
+            )
+            .build()
+        assertTrue { extension.toString().isNotEmpty() }
     }
 }

@@ -5,6 +5,7 @@ import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.DocumentationAppender
 import net.theevilreaper.dartpoet.code.Writeable
 import net.theevilreaper.dartpoet.code.emitFunctions
+import net.theevilreaper.dartpoet.code.emitOperators
 import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.util.CURLY_CLOSE
 import net.theevilreaper.dartpoet.util.NEW_LINE
@@ -49,6 +50,12 @@ internal class ExtensionWriter : Writeable<ExtensionSpec>, DocumentationAppender
         writer.indent()
 
         spec.functions.emitFunctions(writer)
+
+        if (spec.functions.isNotEmpty() && spec.operators.isNotEmpty()) {
+            writer.emit(NEW_LINE)
+            writer.emit(NEW_LINE)
+        }
+        spec.operators.emitOperators(writer)
 
         writer.emit(NEW_LINE)
 
