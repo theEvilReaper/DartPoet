@@ -9,6 +9,14 @@ import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.util.NO_PARAMETER_TYPE
 
+/**
+ * The builder class to describe an operator overload for a Dart class.
+ * Only supports the parameter shape Dart's `operator` grammar actually allows: a flat list
+ * of simple positional parameters, no named/optional/default parameters.
+ * @param operator the operator this builder describes
+ * @author theEvilReaper
+ * @since 2.1.0
+ */
 class DartOperatorBuilder internal constructor(
     val operator: DartOperator
 ) : AnnotationMethods<DartOperatorBuilder> {

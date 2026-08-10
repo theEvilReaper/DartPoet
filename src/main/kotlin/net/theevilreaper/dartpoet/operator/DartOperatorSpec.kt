@@ -13,6 +13,14 @@ import net.theevilreaper.dartpoet.util.toImmutableList
 import net.theevilreaper.dartpoet.util.toImmutableSet
 import org.jetbrains.annotations.Contract
 
+/**
+ * The spec class contains all relevant information about an operator overload in dart.
+ * An [net.theevilreaper.dartpoet.code.writer.operator.OperatorWriter] instance reads the data
+ * from it to write the operator declaration into the class structure from dart.
+ * @param builder the builder instance to retrieve the data from
+ * @author theEvilReaper
+ * @since 2.1.0
+ */
 class DartOperatorSpec internal constructor(
     builder: DartOperatorBuilder
 ) {

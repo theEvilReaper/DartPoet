@@ -1,5 +1,11 @@
 package net.theevilreaper.dartpoet.operator
 
+/**
+ * Enumerates Dart's overloadable binary operators. Each one takes exactly one parameter
+ * (the right-hand operand) when used in an `operator` declaration.
+ * @author theEvilReaper
+ * @since 2.1.0
+ */
 enum class BinaryOperator(
     override val symbol: String
 ) : DartOperator {
