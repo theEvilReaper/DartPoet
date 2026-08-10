@@ -7,6 +7,7 @@ import net.theevilreaper.dartpoet.code.*
 import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.code.emitConstructors
 import net.theevilreaper.dartpoet.code.emitFunctions
+import net.theevilreaper.dartpoet.code.emitOperators
 import net.theevilreaper.dartpoet.enum.EnumEntrySpec
 import net.theevilreaper.dartpoet.type.TypeVariableName
 import net.theevilreaper.dartpoet.util.*
@@ -127,8 +128,14 @@ internal class ClassWriter : Writeable<ClassSpec> {
 
         spec.functions.emitFunctions(writer)
 
+        if (spec.functions.isNotEmpty() && spec.operators.isNotEmpty()) {
+            writer.emit(NEW_LINE)
+            writer.emit(NEW_LINE)
+        }
+        spec.operators.emitOperators(writer)
+
         writer.unindent()
-        if (spec.functions.isNotEmpty()) {
+        if (spec.functions.isNotEmpty() || spec.operators.isNotEmpty()) {
             writer.emit(NEW_LINE)
         }
         writer.emit("}")

@@ -11,6 +11,7 @@ import net.theevilreaper.dartpoet.enum.EnumEntrySpec
 import net.theevilreaper.dartpoet.constructor.ConstructorBase
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.typedef.AbstractTypeDef
+import net.theevilreaper.dartpoet.operator.DartOperatorSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.util.toImmutableList
@@ -43,6 +44,7 @@ class ClassSpec internal constructor(
     internal val interfaces: List<TypeName> = builder.interfaces.toImmutableList()
     internal val typeDefs: List<AbstractTypeDef<*>> = builder.typedefs.toImmutableList()
     internal val functions: Set<FunctionSpec> = builder.functionStack.toImmutableSet()
+    internal val operators: Set<DartOperatorSpec> = builder.operatorStack.toImmutableSet()
     internal val properties: Set<PropertySpec> = builder.propertyStack.toImmutableSet()
     internal val constructors: Set<ConstructorBase> = builder.constructorStack.toImmutableSet()
     internal val enumPropertyStack: List<EnumEntrySpec> = builder.enumPropertyStack.toImmutableList()
@@ -52,7 +54,7 @@ class ClassSpec internal constructor(
      * Returns true when the class has no content to generate.
      */
     internal val hasNoContent: Boolean
-        get() = functions.isEmpty() && properties.isEmpty() && constructors.isEmpty() && constantStack.isEmpty() && enumPropertyStack.isEmpty()
+        get() = functions.isEmpty() && properties.isEmpty() && constructors.isEmpty() && constantStack.isEmpty() && enumPropertyStack.isEmpty() && operators.isEmpty()
 
     init {
         if (isLibrary) {
@@ -91,6 +93,14 @@ class ClassSpec internal constructor(
 
         check(interfaces.size == interfaces.distinct().size) {
             "Duplicate interface type(s) found: ${interfaces.groupingBy { it }.eachCount().filterValues { it > 1 }.keys}"
+        }
+
+        check(operators.size == operators.distinctBy { it.operator }.size) {
+            "Duplicate operator(s) found: ${operators.groupingBy { it.operator }.eachCount().filterValues { it > 1 }.map { it.key.symbol }}"
+        }
+
+        check(!isAnonymous || operators.isEmpty()) {
+            "An anonymous class can't declare operators"
         }
 
         if (classType == ClassType.CLASS || classType == ClassType.ABSTRACT) {
@@ -136,6 +146,7 @@ class ClassSpec internal constructor(
 
         classBuilder.propertyStack.addAll(properties)
         classBuilder.functionStack.addAll(functions)
+        classBuilder.operatorStack.addAll(operators)
         classBuilder.constructorStack.addAll(constructors)
         classBuilder.constantStack.addAll(constantStack)
         classBuilder.typedefs.addAll(typeDefs)
