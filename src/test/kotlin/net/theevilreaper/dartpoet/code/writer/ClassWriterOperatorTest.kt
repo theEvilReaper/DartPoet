@@ -6,12 +6,14 @@ import net.theevilreaper.dartpoet.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.operator.BinaryOperator
 import net.theevilreaper.dartpoet.operator.DartOperatorSpec
+import net.theevilreaper.dartpoet.operator.IndexOperator
 import net.theevilreaper.dartpoet.operator.UnaryOperator
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.type.BOOLEAN
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.INTEGER
+import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
 import net.theevilreaper.dartpoet.type.VOID
 import net.theevilreaper.dartpoet.verify.DartAnalyzeCase
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -145,6 +147,49 @@ class ClassWriterOperatorTest {
                 |
                 |  Money operator -() {
                 |    return Money(-cents);
+                |  }
+                |}
+                """.trimMargin()
+            ),
+            Arguments.of(
+                ClassSpec.builder("IntList")
+                    .property {
+                        PropertySpec.builder("_values", List::class.parameterizedBy(INTEGER)).build()
+                    }
+                    .constructor(
+                        ConstructorSpec.builder("IntList")
+                            .parameter(ParameterSpec.positional("_values").build())
+                            .build()
+                    )
+                    .operator(
+                        DartOperatorSpec.builder(IndexOperator.INDEX)
+                            .returnType(INTEGER)
+                            .parameter(ParameterSpec.positional("index", INTEGER).build())
+                            .addCode("return %L;", "_values[index]")
+                            .build()
+                    )
+                    .operator(
+                        DartOperatorSpec.builder(IndexOperator.INDEX_ASSIGN)
+                            .returnType(VOID)
+                            .parameter(ParameterSpec.positional("index", INTEGER).build())
+                            .parameter(ParameterSpec.positional("value", INTEGER).build())
+                            .addCode("%L = %L;", "_values[index]", "value")
+                            .build()
+                    )
+                    .build(),
+                """
+                |class IntList {
+                |
+                |  List<int> _values;
+                |
+                |  IntList(this._values);
+                |
+                |  int operator [](int index) {
+                |    return _values[index];
+                |  }
+                |
+                |  void operator []=(int index, int value) {
+                |    _values[index] = value;
                 |  }
                 |}
                 """.trimMargin()
