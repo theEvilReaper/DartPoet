@@ -57,7 +57,7 @@ class DartOperatorSpec internal constructor(
             }
         }
 
-        check(body.isNotEmpty()) { "An operator must have a body" }
+        check(!(type == FunctionType.SHORTEN && body.isEmpty())) { "Lambda can only be used with a body" }
     }
 
     /**

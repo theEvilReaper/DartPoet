@@ -1,6 +1,7 @@
 package net.theevilreaper.dartpoet.operator
 
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
+import net.theevilreaper.dartpoet.function.FunctionType
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.INTEGER
 import net.theevilreaper.dartpoet.type.VOID
@@ -162,13 +163,23 @@ class DartOperatorSpecTest {
     }
 
     @Test
-    fun `test operator without a body throws`() {
+    fun `test operator with empty body and standard type builds successfully`() {
+        val operator = DartOperatorSpec.builder(UnaryOperator.NEGATE)
+            .returnType(INTEGER)
+            .build()
+        assertTrue { operator.body.isEmpty() }
+        assertEquals(FunctionType.STANDARD, operator.type)
+    }
+
+    @Test
+    fun `test operator with empty body and shorten type throws`() {
         val exception = assertThrows(IllegalStateException::class.java) {
             DartOperatorSpec.builder(UnaryOperator.NEGATE)
                 .returnType(INTEGER)
+                .type(FunctionType.SHORTEN)
                 .build()
         }
-        assertEquals("An operator must have a body", exception.message)
+        assertEquals("Lambda can only be used with a body", exception.message)
     }
 
     @Test
