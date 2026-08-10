@@ -1,18 +1,22 @@
 package net.theevilreaper.dartpoet.operator
 
-class DartOperatorBuilder {
+import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.type.TypeName
 
-    var operator: DartOperator? = null
-    var parameters: List<String> = emptyList()
-    var returnType: String? = null
+class DartOperatorBuilder(
+    val operator: DartOperator
+) {
+
+    var parameters: MutableList<ParameterSpec> = mutableListOf()
+    var returnType: TypeName? = null
 
     /**
-     * Sets the operator type.
+     * Adds a parameter to the operator.
      *
-     * @param operator the operator type
+     * @param parameter the parameter to add
      * @return the given instance of a [DartOperatorBuilder]
      */
-    fun operator(operator: DartOperator) = apply { this.operator = operator }
+    fun parameter(parameter: ParameterSpec) = apply { this.parameters.add(parameter) }
 
     /**
      * Sets the parameters for the operator.
@@ -20,7 +24,7 @@ class DartOperatorBuilder {
      * @param parameters the parameters for the operator
      * @return the given instance of a [DartOperatorBuilder]
      */
-    fun parameters(parameters: List<String>) = apply { this.parameters = parameters }
+    fun parameters(parameters: List<ParameterSpec>) = apply { this.parameters.addAll(parameters) }
 
     /**
      * Sets the return type of the operator.
@@ -28,7 +32,7 @@ class DartOperatorBuilder {
      * @param returnType the return type of the operator
      * @return the given instance of a [DartOperatorBuilder]
      */
-    fun returnType(returnType: String) = apply { this.returnType = returnType }
+    fun returnType(returnType: TypeName) = apply { this.returnType = returnType }
 
     /**
      * Builds the [DartOperatorSpec] instance.
