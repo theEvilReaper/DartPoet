@@ -118,6 +118,16 @@ class OperatorWriterTest {
     }
 
     @Test
+    fun `write operator without a body`() {
+        val operator = DartOperatorSpec.builder(BinaryOperator.PLUS)
+            .returnType(INTEGER)
+            .parameter(ParameterSpec.positional("other", INTEGER).build())
+            .build()
+
+        assertThat(operator.toString()).isEqualTo("int operator +(int other);")
+    }
+
+    @Test
     fun `write operator with doc comment`() {
         val operator = DartOperatorSpec.builder(UnaryOperator.NEGATE)
             .returnType(ClassName("Vector"))
