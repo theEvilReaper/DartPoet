@@ -4,6 +4,5 @@ enum class UnaryOperator(
     override val symbol: String
 ) : DartOperator {
     NEGATE("-"),
-    COMPLEMENT("~"),
-    NOT("!");
+    COMPLEMENT("~");
 }
