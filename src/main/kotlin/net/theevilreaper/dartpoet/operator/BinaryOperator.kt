@@ -19,6 +19,11 @@ enum class BinaryOperator(
     GREATER_THAN(">"),
     LESS_THAN_OR_EQUAL("<="),
     GREATER_THAN_OR_EQUAL(">="),
+    /**
+     * Overriding `==` without also overriding `hashCode` is flagged by Dart's analyzer/lints
+     * in most projects. When generating a class with this operator, consider also generating
+     * a matching `hashCode` getter/method (DartPoet doesn't enforce or generate this automatically).
+     */
     EQUAL("=="),
     BITWISE_AND("&"),
     BITWISE_OR("|"),

@@ -2,6 +2,7 @@ package net.theevilreaper.dartpoet.extension
 
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.function.FunctionSpec
+import net.theevilreaper.dartpoet.operator.DartOperatorSpec
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.TypeVariableName
@@ -22,6 +23,7 @@ class ExtensionBuilder(
     internal var genericTypes: MutableList<TypeName> = mutableListOf()
     internal var endWithNewLine: Boolean = false
     internal val functionStack: MutableList<FunctionSpec> = mutableListOf()
+    internal val operatorStack: MutableList<DartOperatorSpec> = mutableListOf()
     internal val docs: MutableList<CodeBlock> = mutableListOf()
 
     /**
@@ -60,6 +62,33 @@ class ExtensionBuilder(
      */
     fun functions(vararg functions: FunctionSpec) = apply {
         this.functionStack += functions
+    }
+
+    /**
+     * Adds a new [DartOperatorSpec] to the extension.
+     * @param operator the operator to add
+     * @return the current builder instance
+     */
+    fun operator(operator: DartOperatorSpec) = apply {
+        this.operatorStack += operator
+    }
+
+    /**
+     * Adds a new [DartOperatorSpec] to the extension using a lambda expression.
+     * @param operator a lambda expression that creates the operator to add
+     * @return the current builder instance
+     */
+    fun operator(operator: () -> DartOperatorSpec) = apply {
+        this.operatorStack += operator()
+    }
+
+    /**
+     * Adds multiple [DartOperatorSpec] instances to the extension.
+     * @param operators the operators to add
+     * @return the current builder instance
+     */
+    fun operators(vararg operators: DartOperatorSpec) = apply {
+        this.operatorStack += operators
     }
 
     /**

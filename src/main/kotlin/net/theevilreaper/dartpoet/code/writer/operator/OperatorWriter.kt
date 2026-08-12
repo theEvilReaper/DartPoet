@@ -7,6 +7,7 @@ import net.theevilreaper.dartpoet.code.Writeable
 import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.function.FunctionType
 import net.theevilreaper.dartpoet.operator.DartOperatorSpec
+import net.theevilreaper.dartpoet.util.SEMICOLON
 
 internal class OperatorWriter : Writeable<DartOperatorSpec>, DocumentationAppender {
 
@@ -44,6 +45,11 @@ internal class OperatorWriter : Writeable<DartOperatorSpec>, DocumentationAppend
     }
 
     private fun writeBody(spec: DartOperatorSpec, writer: CodeWriter) {
+        if (spec.body.isEmpty()) {
+            writer.emit(SEMICOLON)
+            return
+        }
+
         when (spec.type) {
             FunctionType.STANDARD -> {
                 writer.emitSpace()

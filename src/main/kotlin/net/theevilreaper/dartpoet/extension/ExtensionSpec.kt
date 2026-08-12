@@ -6,6 +6,7 @@ import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.code.writer.ExtensionWriter
 import net.theevilreaper.dartpoet.function.FunctionSpec
+import net.theevilreaper.dartpoet.operator.DartOperatorSpec
 import net.theevilreaper.dartpoet.parameter.ParameterBuilder
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
@@ -33,9 +34,10 @@ class ExtensionSpec internal constructor(
     internal val endWithNewLine: Boolean = builder.endWithNewLine
     internal val genericType: List<TypeName> = builder.genericTypes.toImmutableList()
     internal val functions: Set<FunctionSpec> = builder.functionStack.toImmutableSet()
+    internal val operators: Set<DartOperatorSpec> = builder.operatorStack.toImmutableSet()
     internal val docs: List<CodeBlock> = builder.docs.toImmutableList()
     internal val hasGenericCast: Boolean = builder.genericTypes.isNotEmpty()
-    internal val hasNoContent: Boolean = builder.functionStack.isEmpty()
+    internal val hasNoContent: Boolean = builder.functionStack.isEmpty() && builder.operatorStack.isEmpty()
 
     internal val joinedRawTypes by lazy {
         if (genericType.isEmpty()) return@lazy EMPTY_STRING
@@ -76,6 +78,10 @@ class ExtensionSpec internal constructor(
                 """.trimIndent()
             }
         }
+
+        check(operators.size == operators.distinctBy { it.operator }.size) {
+            "Duplicate operator(s) found: ${operators.groupingBy { it.operator }.eachCount().filterValues { it > 1 }.map { it.key.symbol }}"
+        }
     }
 
     /**
@@ -103,6 +109,7 @@ class ExtensionSpec internal constructor(
         builder.endWithNewLine = this.endWithNewLine
         builder.docs.addAll(this.docs)
         builder.functionStack.addAll(this.functions)
+        builder.operatorStack.addAll(this.operators)
         return builder
     }
 
