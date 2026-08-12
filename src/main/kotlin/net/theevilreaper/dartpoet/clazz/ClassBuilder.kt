@@ -7,6 +7,7 @@ import net.theevilreaper.dartpoet.constructor.ConstructorBase
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.meta.SpecData
 import net.theevilreaper.dartpoet.meta.SpecMethods
+import net.theevilreaper.dartpoet.operator.DartOperatorSpec
 import net.theevilreaper.dartpoet.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.function.typedef.AbstractTypeDef
 import net.theevilreaper.dartpoet.function.typedef.alias.AliasTypeDefSpec
@@ -37,6 +38,7 @@ class ClassBuilder internal constructor(
     internal val propertyStack: MutableList<PropertySpec> = mutableListOf()
     internal val genericCasts: MutableList<TypeName> = mutableListOf()
     internal val functionStack: MutableList<FunctionSpec> = mutableListOf()
+    internal val operatorStack: MutableList<DartOperatorSpec> = mutableListOf()
     internal val enumPropertyStack: MutableList<EnumEntrySpec> = mutableListOf()
     internal val constantStack: MutableSet<ConstantPropertySpec> = mutableSetOf()
     internal val typedefs: MutableList<AbstractTypeDef<*>> = mutableListOf()
@@ -249,6 +251,33 @@ class ClassBuilder internal constructor(
      * @return the given instance of an [ClassBuilder]
      */
     fun function(function: () -> FunctionSpec) = this.function(function())
+
+    /**
+     * Add a [DartOperatorSpec] to the class builder.
+     * @param operator the operator to add
+     * @return the given instance of an [ClassBuilder]
+     */
+    fun operator(operator: DartOperatorSpec) = apply {
+        checkNotLibrary(NO_MEMBERS_ON_LIBRARIES)
+        this.operatorStack += operator
+    }
+
+    /**
+     * Add a [DartOperatorSpec] to the class builder over a lambda reference.
+     * @param operator the operator to add
+     * @return the given instance of an [ClassBuilder]
+     */
+    fun operator(operator: () -> DartOperatorSpec) = this.operator(operator())
+
+    /**
+     * Add an array of [DartOperatorSpec] to the class builder.
+     * @param operators the operators to add
+     * @return the given instance of an [ClassBuilder]
+     */
+    fun operators(vararg operators: DartOperatorSpec) = apply {
+        checkNotLibrary(NO_MEMBERS_ON_LIBRARIES)
+        this.operatorStack += operators
+    }
 
     /**
      * Add a [ConstructorSpec] to the class builder.

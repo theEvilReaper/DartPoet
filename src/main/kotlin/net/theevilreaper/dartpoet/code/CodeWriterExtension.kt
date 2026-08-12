@@ -8,6 +8,7 @@ import net.theevilreaper.dartpoet.directive.Directive
 import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.typedef.AbstractTypeDef
+import net.theevilreaper.dartpoet.operator.DartOperatorSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
@@ -53,6 +54,20 @@ internal fun Set<FunctionSpec>.emitFunctions(
     forEachIndexed { index, functionSpec ->
         if (index > 0) emit(NEW_LINE)
         emitBlock(functionSpec)
+        if (emitNewLines && index < size - 1) emit(NEW_LINE)
+    }
+}
+
+internal fun Set<DartOperatorSpec>.emitOperators(
+    codeWriter: CodeWriter,
+    emitBlock: (DartOperatorSpec) -> Unit = { it.write(codeWriter) },
+) = with(codeWriter) {
+    if (isEmpty()) return@with
+    val emitNewLines = size > 1
+
+    forEachIndexed { index, operatorSpec ->
+        if (index > 0) emit(NEW_LINE)
+        emitBlock(operatorSpec)
         if (emitNewLines && index < size - 1) emit(NEW_LINE)
     }
 }

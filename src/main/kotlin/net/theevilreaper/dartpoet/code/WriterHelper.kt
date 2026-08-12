@@ -1,6 +1,7 @@
 package net.theevilreaper.dartpoet.code
 
 import net.theevilreaper.dartpoet.code.writer.*
+import net.theevilreaper.dartpoet.code.writer.operator.OperatorWriter
 import net.theevilreaper.dartpoet.code.writer.typedef.TypeDefWriter
 import org.jetbrains.annotations.ApiStatus.Internal
 
@@ -31,4 +32,5 @@ internal object WriterHelper {
     internal val parameterWriter by lazy { ParameterWriter() }
     internal val propertyWriter by lazy { PropertyWriter() }
     internal val typeDefWriter by lazy { TypeDefWriter() }
+    internal val operatorWriter by lazy { OperatorWriter() }
 }

@@ -30,7 +30,8 @@ enum class DartModifier(
     CO_VARIANT("covariant", ModifierTarget.PARAMETER, ModifierTarget.PROPERTY),
     SEALED("sealed", ModifierTarget.CLASS),
     BASE("base", ModifierTarget.CLASS),
-    INTERFACE("interface", ModifierTarget.CLASS)
+    INTERFACE("interface", ModifierTarget.CLASS),
+    OPERATOR("operator", ModifierTarget.FUNCTION)
     ;
 
     /**
