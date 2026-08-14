@@ -44,33 +44,45 @@ internal val String.isPlaceholder
 fun String.nextPotentialPlaceholderPosition(startIndex: Int) =
     indexOfAny(NO_ARG_PLACEHOLDERS, startIndex)
 
+/**
+ * Emits each element of the collection to a [CodeWriter]. Elements are separated by a blank line.
+ * No new line is emitted before the first element or after the last one.
+ * @param codeWriter the writer to emit into
+ * @param emitBlock the block that emits a single element
+ */
+internal fun <T> Collection<T>.emitBlankLineSeparated(
+    codeWriter: CodeWriter,
+    emitBlock: (T) -> Unit,
+) = with(codeWriter) {
+    if (isEmpty()) return@with
+    val emitNewLines = size > 1
+
+    forEachIndexed { index, element ->
+        if (index > 0) emit(NEW_LINE)
+        emitBlock(element)
+        if (emitNewLines && index < size - 1) emit(NEW_LINE)
+    }
+}
+
+/**
+ * Emits the functions of the set to a [CodeWriter] via [emitBlankLineSeparated].
+ * @param codeWriter the writer to emit into
+ * @param emitBlock the block that emits a single function
+ */
 internal fun Set<FunctionSpec>.emitFunctions(
     codeWriter: CodeWriter,
     emitBlock: (FunctionSpec) -> Unit = { it.write(codeWriter) },
-) = with(codeWriter) {
-    if (isEmpty()) return@with
-    val emitNewLines = size > 1
+) = emitBlankLineSeparated(codeWriter, emitBlock)
 
-    forEachIndexed { index, functionSpec ->
-        if (index > 0) emit(NEW_LINE)
-        emitBlock(functionSpec)
-        if (emitNewLines && index < size - 1) emit(NEW_LINE)
-    }
-}
-
+/**
+ * Emits the operators of the set to a [CodeWriter] via [emitBlankLineSeparated].
+ * @param codeWriter the writer to emit into
+ * @param emitBlock the block that emits a single operator
+ */
 internal fun Set<DartOperatorSpec>.emitOperators(
     codeWriter: CodeWriter,
     emitBlock: (DartOperatorSpec) -> Unit = { it.write(codeWriter) },
-) = with(codeWriter) {
-    if (isEmpty()) return@with
-    val emitNewLines = size > 1
-
-    forEachIndexed { index, operatorSpec ->
-        if (index > 0) emit(NEW_LINE)
-        emitBlock(operatorSpec)
-        if (emitNewLines && index < size - 1) emit(NEW_LINE)
-    }
-}
+) = emitBlankLineSeparated(codeWriter, emitBlock)
 
 internal fun Set<AnnotationSpec>.emitAnnotations(
     codeWriter: CodeWriter,
@@ -126,21 +138,18 @@ internal fun List<ParameterSpec>.emitParameters(
     }
 }
 
+/**
+ * Emits the extensions of the list to a [CodeWriter] via [emitBlockElements].
+ * A single extension gets no trailing new line unless [forceNewLines] is true.
+ * @param codeWriter the writer to emit into
+ * @param forceNewLines forces a separating new line even for a single extension
+ * @param emitBlock the block that emits a single extension
+ */
 internal fun List<ExtensionSpec>.emitExtensions(
     codeWriter: CodeWriter,
     forceNewLines: Boolean = false,
     emitBlock: (ExtensionSpec) -> Unit = { it.write(codeWriter) },
-) = with(codeWriter) {
-    if (isEmpty()) return@with
-    val emitNewLines = size > 1 || forceNewLines
-
-    forEachIndexed { index, extension ->
-        if (index > 0 && emitNewLines) emit(NEW_LINE)
-        emitBlock(extension)
-    }
-
-    if (emitNewLines) emit(NEW_LINE)
-}
+) = emitBlockElements(codeWriter, forceNewLines, alwaysEmitTrailingNewLine = false, emitBlock = emitBlock)
 
 internal fun <T : Directive> List<T>.writeImports(
     writer: CodeWriter,
@@ -158,48 +167,60 @@ internal fun <T : Directive> List<T>.writeImports(
     writer.emit(NEW_LINE)
 }
 
-internal fun Set<ConstantPropertySpec>.emitConstants(
-    codeWriter: CodeWriter,
-    emitBlock: (ConstantPropertySpec) -> Unit = { it.write(codeWriter) },
-) = with(codeWriter) {
-    if (isEmpty()) return@with
-    val emitNewLines = size > 1
-
-    forEachIndexed { index, property ->
-        if (index > 0 && emitNewLines) emit(NEW_LINE)
-        emitBlock(property)
-    }
-
-    emit(NEW_LINE)
-}
-
-internal fun List<AbstractTypeDef<*>>.emitTypeDefs(
-    codeWriter: CodeWriter,
-    emitBlock: (AbstractTypeDef<*>) -> Unit = { it.write(codeWriter) },
-) = with(codeWriter) {
-    if (isEmpty()) return@with
-    val emitNewLines = size > 1
-
-    forEachIndexed { index, typeDef ->
-        if (index > 0 && emitNewLines) emit(NEW_LINE)
-        emitBlock(typeDef)
-    }
-
-    emit(NEW_LINE)
-}
-
-internal fun Set<PropertySpec>.emitProperties(
+/**
+ * Emits each element of the collection to a [CodeWriter]. Elements are separated by a single new line.
+ * A trailing new line is emitted after the last element by default.
+ * Set [alwaysEmitTrailingNewLine] to false to omit it when the collection has a single element and [forceNewLines] is false.
+ * @param codeWriter the writer to emit into
+ * @param forceNewLines forces a separating new line even for a single element
+ * @param alwaysEmitTrailingNewLine whether the trailing new line is always emitted
+ * @param emitBlock the block that emits a single element
+ */
+internal fun <T> Collection<T>.emitBlockElements(
     codeWriter: CodeWriter,
     forceNewLines: Boolean = false,
-    emitBlock: (PropertySpec) -> Unit = { it.write(codeWriter) },
+    alwaysEmitTrailingNewLine: Boolean = true,
+    emitBlock: (T) -> Unit,
 ) = with(codeWriter) {
     if (isEmpty()) return@with
     val emitNewLines = size > 1 || forceNewLines
 
-    forEachIndexed { index, property ->
+    forEachIndexed { index, element ->
         if (index > 0 && emitNewLines) emit(NEW_LINE)
-        emitBlock(property)
+        emitBlock(element)
     }
 
-    emit(NEW_LINE)
+    if (alwaysEmitTrailingNewLine || emitNewLines) emit(NEW_LINE)
 }
+
+/**
+ * Emits the constants of the set to a [CodeWriter] via [emitBlockElements].
+ * @param codeWriter the writer to emit into
+ * @param emitBlock the block that emits a single constant
+ */
+internal fun Set<ConstantPropertySpec>.emitConstants(
+    codeWriter: CodeWriter,
+    emitBlock: (ConstantPropertySpec) -> Unit = { it.write(codeWriter) },
+) = emitBlockElements(codeWriter, emitBlock = emitBlock)
+
+/**
+ * Emits the type definitions of the list to a [CodeWriter] via [emitBlockElements].
+ * @param codeWriter the writer to emit into
+ * @param emitBlock the block that emits a single type definition
+ */
+internal fun List<AbstractTypeDef<*>>.emitTypeDefs(
+    codeWriter: CodeWriter,
+    emitBlock: (AbstractTypeDef<*>) -> Unit = { it.write(codeWriter) },
+) = emitBlockElements(codeWriter, emitBlock = emitBlock)
+
+/**
+ * Emits the properties of the set to a [CodeWriter] via [emitBlockElements].
+ * @param codeWriter the writer to emit into
+ * @param forceNewLines forces a separating new line even for a single property
+ * @param emitBlock the block that emits a single property
+ */
+internal fun Set<PropertySpec>.emitProperties(
+    codeWriter: CodeWriter,
+    forceNewLines: Boolean = false,
+    emitBlock: (PropertySpec) -> Unit = { it.write(codeWriter) },
+) = emitBlockElements(codeWriter, forceNewLines, emitBlock = emitBlock)
