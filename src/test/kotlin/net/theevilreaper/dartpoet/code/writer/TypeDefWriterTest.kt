@@ -224,4 +224,21 @@ class TypeDefWriterTest {
         }
         Truth.assertThat(exception.message).isEqualTo("Optional parameters must be nullable or have an initializer")
     }
+
+    @Test
+    fun `test typedef with non-nullable optional parameter renders without its initializer`() {
+        // A function typedef never renders parameter initializers (Dart forbids default values on a bare
+        // function type), but a non-nullable optional parameter without a rendered default is still valid
+        // Dart for a function type - unlike for a concrete function/method declaration, there's no
+        // implementation that would need the default to actually fall back to. Confirmed with `dart analyze`.
+        val typeDef = TypeDef.function("ValueUpdate", genericClassName)
+            .returns(genericClassName)
+            .parameter(
+                ParameterSpec.optional("data", Int::class)
+                    .initializer("%L", "0")
+                    .build()
+            )
+            .build()
+        typeDef.verifyDartOutput("typedef ValueUpdate<E> = E Function([int data]);")
+    }
 }

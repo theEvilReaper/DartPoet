@@ -5,6 +5,7 @@ import net.theevilreaper.dartpoet.clazz.ClassBuilder
 import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
+import net.theevilreaper.dartpoet.function.typedef.TypeDef
 import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.type.ClassName
@@ -83,6 +84,14 @@ class LibraryClassTest {
     fun `test library class can't declare constants`() {
         val exception = assertThrows<IllegalStateException> {
             builder.constant(ConstantPropertySpec.classConst("id", Int::class).initWith("%L", 1).build())
+        }
+        assertThat(exception.message).isEqualTo("A library class can't declare functions, properties, constructors or constants")
+    }
+
+    @Test
+    fun `test library class can't declare typedefs`() {
+        val exception = assertThrows<IllegalStateException> {
+            builder.typedef(TypeDef.alias("JsonMap").returns(ClassName("Map")).build())
         }
         assertThat(exception.message).isEqualTo("A library class can't declare functions, properties, constructors or constants")
     }

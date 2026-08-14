@@ -54,7 +54,7 @@ class ClassSpec internal constructor(
      * Returns true when the class has no content to generate.
      */
     internal val hasNoContent: Boolean
-        get() = functions.isEmpty() && properties.isEmpty() && constructors.isEmpty() && constantStack.isEmpty() && enumPropertyStack.isEmpty() && operators.isEmpty()
+        get() = functions.isEmpty() && properties.isEmpty() && constructors.isEmpty() && constantStack.isEmpty() && enumPropertyStack.isEmpty() && operators.isEmpty() && typeDefs.isEmpty()
 
     init {
         if (isLibrary) {

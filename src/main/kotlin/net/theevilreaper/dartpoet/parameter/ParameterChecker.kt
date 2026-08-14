@@ -18,7 +18,7 @@ internal object ParameterChecker {
     fun checkRequiredPositional(parameters: List<ParameterSpec>) {
         if (parameters.isEmpty()) return
         parameters.forEach {
-            require(it.hasInitializer) {
+            require(!it.hasInitializer) {
                 "Required parameters must not have an initializer"
             }
         }

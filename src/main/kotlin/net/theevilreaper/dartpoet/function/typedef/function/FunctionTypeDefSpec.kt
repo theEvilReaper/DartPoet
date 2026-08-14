@@ -28,18 +28,14 @@ class FunctionTypeDefSpec(
         writer.emitCode("%T", Function::class.asTypeName())
         val parameterData: ParameterData<ParameterSpec> = ParameterData.of(this)
 
-        if (parameterData.hasParameters) {
-            // A Dart function type can't declare default parameter values, those only belong on
-            // the function/constructor that actually implements the signature.
-            ParameterHelper.writeParameters(
-                parameterData,
-                writer,
-                indent = parameterData.requiredParameters.size > 1,
-                writeInitializers = false,
-            )
-        } else {
-            writer.emitEmptyRoundBrackets()
-        }
+        // A Dart function type can't declare default parameter values, those only belong on
+        // the function/constructor that actually implements the signature.
+        ParameterHelper.writeParameters(
+            parameterData,
+            writer,
+            indent = parameterData.requiredParameters.size > 1,
+            writeInitializers = false,
+        )
         writer.emitCode(SEMICOLON)
     }
 
