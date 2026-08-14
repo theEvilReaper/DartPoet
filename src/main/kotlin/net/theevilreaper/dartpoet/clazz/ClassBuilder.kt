@@ -78,6 +78,7 @@ class ClassBuilder internal constructor(
      * @param typeDefSpec the typedef to add
      */
     fun typedef(typeDefSpec: AbstractTypeDef<*>) = apply {
+        checkNotLibrary(NO_MEMBERS_ON_LIBRARIES)
         this.typedefs += typeDefSpec
     }
 
@@ -86,6 +87,7 @@ class ClassBuilder internal constructor(
      * @param typeDefSpec the typedefs to add
      */
     fun typedef(vararg typeDefSpec: AbstractTypeDef<*>) = apply {
+        checkNotLibrary(NO_MEMBERS_ON_LIBRARIES)
         this.typedefs += typeDefSpec
     }
 
