@@ -14,7 +14,9 @@ import net.theevilreaper.dartpoet.parameter.ParameterContext
 class FunctionTypeDefSpec(
     builder: FunctionTypeDefBuilder
 ) : AbstractTypeDef<FunctionTypeDefBuilder>(
-    builder.type
+    builder.type,
+    builder.docs,
+    builder.annotationData.annotations.toSet(),
 ), ParameterContext<ParameterSpec> by ParameterContext(builder.parameters) {
     internal val returnType: TypeName = builder.returnType
 
@@ -48,6 +50,8 @@ class FunctionTypeDefSpec(
         val newBuilder = FunctionTypeDefBuilder(this.type)
         newBuilder.returnType = this.returnType
         newBuilder.parameters.addAll(this.parameters)
+        newBuilder.docs.addAll(this.docs)
+        newBuilder.annotations(*this.annotations.toTypedArray())
         return newBuilder
     }
 }
