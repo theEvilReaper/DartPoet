@@ -2,7 +2,9 @@ package net.theevilreaper.dartpoet.code.writer
 
 import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.clazz.ClassSpec
+import net.theevilreaper.dartpoet.function.typedef.TypeDef
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
+import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.verify.DartAnalyzeCase
 import org.junit.jupiter.api.DisplayName
@@ -71,6 +73,26 @@ class ClassWriterTest {
             |
             |  static const String test = 'Test';
             |  static const int maxId = 100;
+            |
+            |}
+            """.trimMargin()
+        )
+    }
+
+    @Test
+    fun `test class writing with a typedef emits the typedef in its body`() {
+        val clazz = ClassSpec.builder("TestClass")
+            .typedef(
+                TypeDef.alias("JsonMap")
+                    .returns(ClassName("Map"))
+                    .build()
+            )
+            .build()
+        assertThat(clazz.toString()).isEqualTo(
+            """
+            |class TestClass {
+            |
+            |  typedef JsonMap = Map;
             |
             |}
             """.trimMargin()

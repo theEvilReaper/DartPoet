@@ -114,6 +114,12 @@ internal class ClassWriter : Writeable<ClassSpec> {
             writer.emit(NEW_LINE)
         }
 
+        spec.typeDefs.emitTypeDefs(writer)
+
+        if (spec.typeDefs.isNotEmpty()) {
+            writer.emit(NEW_LINE)
+        }
+
         spec.properties.emitProperties(writer)
 
         if (spec.properties.isNotEmpty()) {
