@@ -2,6 +2,7 @@ package net.theevilreaper.dartpoet.code.writer
 
 import com.google.common.truth.Truth
 import net.theevilreaper.dartpoet.DartFile
+import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.typedef.AbstractTypeDef
@@ -240,5 +241,42 @@ class TypeDefWriterTest {
             )
             .build()
         typeDef.verifyDartOutput("typedef ValueUpdate<E> = E Function([int data]);")
+    }
+
+    @DartAnalyzeCase
+    @Test
+    fun `test alias typedef with docs and annotations renders properly`() {
+        val typeDef = TypeDef.alias("StringMap")
+            .doc("A map of strings.")
+            .annotation(AnnotationSpec.builder("deprecated").build())
+            .returns(Map::class.parameterizedBy(String::class.asTypeName(), String::class.asTypeName()))
+            .build()
+
+        typeDef.verifyDartOutput(
+            """
+            |/// A map of strings.
+            |@deprecated
+            |typedef StringMap = Map<String, String>;
+            """.trimMargin()
+        )
+    }
+
+    @DartAnalyzeCase
+    @Test
+    fun `test function typedef with docs and annotations renders properly`() {
+        val typeDef = TypeDef.function("EventHandler")
+            .doc("Handles an event.")
+            .annotation(AnnotationSpec.builder("deprecated").build())
+            .returns(Void::class)
+            .parameter(ParameterSpec.positional("event", String::class).build())
+            .build()
+
+        typeDef.verifyDartOutput(
+            """
+            |/// Handles an event.
+            |@deprecated
+            |typedef EventHandler = void Function(String event);
+            """.trimMargin()
+        )
     }
 }
