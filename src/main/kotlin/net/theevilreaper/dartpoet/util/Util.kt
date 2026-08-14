@@ -104,7 +104,3 @@ private fun String.isValidDartIdentifier(): Boolean {
     if (!first.isLetter() && first != '_' && first != '$') return false
     return drop(1).all { it.isLetterOrDigit() || it == '_' || it == '$' }
 }
-
-internal fun String.escapeSegmentsIfNecessary(delimiter: Char = '.') = split(delimiter)
-    .filter { it.isNotEmpty() }
-    .joinToString(delimiter.toString()) { it.escapeIfNecessary() }
