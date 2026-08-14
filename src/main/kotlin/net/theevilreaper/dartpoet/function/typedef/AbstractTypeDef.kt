@@ -1,9 +1,13 @@
 package net.theevilreaper.dartpoet.function.typedef
 
+import net.theevilreaper.dartpoet.annotation.AnnotationSpec
+import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.type.TypeName
+import net.theevilreaper.dartpoet.util.toImmutableList
+import net.theevilreaper.dartpoet.util.toImmutableSet
 
 /**
  * Abstract base class for all typedef specifications.
@@ -18,11 +22,20 @@ import net.theevilreaper.dartpoet.type.TypeName
  *
  * @param T the concrete builder type used to recreate or modify this typedef
  * @property type the type of the typedef
+ * @property docs the list of documentation blocks
+ * @property annotations the set of annotations applied to the typedef
  *
  * @author theEvilReaper
  * @since 1.0.0
  */
-abstract class AbstractTypeDef<T> internal constructor(val type: TypeName) {
+abstract class AbstractTypeDef<T> internal constructor(
+    val type: TypeName,
+    docs: List<CodeBlock> = emptyList(),
+    annotations: Set<AnnotationSpec> = emptySet(),
+) {
+    val docs: List<CodeBlock> = docs.toImmutableList()
+    val annotations: Set<AnnotationSpec> = annotations.toImmutableSet()
+
 
     /**
      * Trigger the writing process from the [TypeDefWriter] to write the spec into dart code.

@@ -14,6 +14,8 @@ class AliasTypeDefSpec internal constructor(
     val builder: AliasTypeDefBuilder
 ): AbstractTypeDef<AliasTypeDefBuilder>(
     builder.name,
+    builder.docs,
+    builder.annotationData.annotations.toSet(),
 ) {
     internal val returnType = builder.returnType
 
@@ -34,6 +36,8 @@ class AliasTypeDefSpec internal constructor(
     override fun toBuilder(): AliasTypeDefBuilder {
         val newBuilder = AliasTypeDefBuilder(this.type)
         newBuilder.returnType = this.returnType
+        newBuilder.docs.addAll(this.docs)
+        newBuilder.annotations(*this.annotations.toTypedArray())
         return newBuilder
     }
 }

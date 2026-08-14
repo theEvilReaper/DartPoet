@@ -2,7 +2,9 @@ package net.theevilreaper.dartpoet.code.writer.typedef
 
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.DocumentationAppender
 import net.theevilreaper.dartpoet.code.Writeable
+import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.function.typedef.AbstractTypeDef
 import net.theevilreaper.dartpoet.function.typedef.alias.AliasTypeDefSpec
 
@@ -13,7 +15,7 @@ import net.theevilreaper.dartpoet.function.typedef.alias.AliasTypeDefSpec
  * @version 1.0.0
  * @author theEvilReaper
  */
-class TypeDefWriter : Writeable<AbstractTypeDef<*>> {
+class TypeDefWriter : Writeable<AbstractTypeDef<*>>, DocumentationAppender {
 
     /**
      * Appends the [AliasTypeDefSpec] to the given [CodeWriter].
@@ -21,6 +23,8 @@ class TypeDefWriter : Writeable<AbstractTypeDef<*>> {
      * @param writer the writer to append the data
      */
     override fun write(spec: AbstractTypeDef<*>, writer: CodeWriter) {
+        emitDocumentation(spec.docs, writer)
+        spec.annotations.emitAnnotations(writer, inLineAnnotations = false)
         writer.emit(DartModifier.TYPEDEF.identifier)
         writer.emitSpace()
         writer.emitCode("%T", spec.type)
