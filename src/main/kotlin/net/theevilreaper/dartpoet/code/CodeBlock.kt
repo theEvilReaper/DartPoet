@@ -489,9 +489,6 @@ class CodeBlock private constructor(
 
         internal val Char.isMultiCharNoArgPlaceholder get() = this == '%'
         internal val Char.isSingleCharNoArgPlaceholder get() = isOneOf('⇥', '⇤', '«', '»')
-        internal val String.isPlaceholder
-            get() = (length == 1 && first().isSingleCharNoArgPlaceholder) ||
-                    (length == 2 && first().isMultiCharNoArgPlaceholder)
 
         internal fun String.nextPotentialPlaceholderPosition(startIndex: Int) =
             indexOfAny(charArrayOf('%', '«', '»', '⇥', '⇤'), startIndex)
