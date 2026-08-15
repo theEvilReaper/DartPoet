@@ -1,5 +1,6 @@
 package net.theevilreaper.dartpoet.constructor
 
+import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.buildCodeString
@@ -29,6 +30,13 @@ class ConstructorSpec internal constructor(
     internal val modifiers = builder.modifierData.modifiers.toImmutableSet()
 
     internal val docs = builder.docs.toImmutableList()
+
+    init {
+        if (modifiers.contains(DartModifier.EXTERNAL)) {
+            check(initializer.build().isEmpty()) { "An external constructor can't have an initializer" }
+            check(!modifiers.contains(DartModifier.CONST)) { "An external constructor can't be const" }
+        }
+    }
 
     /**
      * Calls the [ConstructorWriter] to write the given data with the structure of an constructor into a [CodeWriter]

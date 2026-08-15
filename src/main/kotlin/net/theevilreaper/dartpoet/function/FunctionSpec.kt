@@ -50,6 +50,10 @@ class FunctionSpec internal constructor(
     init {
         require(name.trim().isNotEmpty()) { "The name of a function can't be empty" }
         require(body.isEmpty() || !modifiers.contains(DartModifier.ABSTRACT)) { "An abstract method can't have a body" }
+        require(body.isEmpty() || !modifiers.contains(DartModifier.EXTERNAL)) { "An external function can't have a body" }
+        require(!(modifiers.contains(DartModifier.ABSTRACT) && modifiers.contains(DartModifier.EXTERNAL))) {
+            "A function can't be both abstract and external"
+        }
         require(!(type == FunctionType.SHORTEN && body.isEmpty())) { "Lambda can only be used with a body" }
         require(!(requiredParameters.isNotEmpty() && parametersWithDefaults.isNotEmpty())) { "A function can't have required and optional parameters" }
     }

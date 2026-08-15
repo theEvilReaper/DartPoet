@@ -52,6 +52,8 @@ class PropertySpec internal constructor(
         require(!(builder.type == null && !isConst)) { "Only a const property can have no type" }
         check(!(builder. type == null && nullable)) { "A nullable property needs a type" }
         require(!(isConst && this.initBlock.isEmpty())) { "A const variable needs an init block" }
+        require(!modifiers.contains(DartModifier.EXTERNAL) || this.initBlock.isEmpty()) { "An external property can't have an initializer" }
+        require(!modifiers.contains(DartModifier.EXTERNAL) || !isConst) { "An external property can't be const" }
     }
 
     /**
