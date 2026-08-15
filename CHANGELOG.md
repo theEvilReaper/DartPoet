@@ -5,6 +5,34 @@
 
 * **modifier:** add void and object typenames ([2d4f0c5](https://github.com/theEvilReaper/DartPoet/commit/2d4f0c5e2882082e55ce032eee3b9a11418c0739))
 
+## [3.0.0](https://github.com/theEvilReaper/DartPoet/compare/2.0.3...3.0.0) (2026-08-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* **class:** remove library as a valid class type ([#291](https://github.com/theEvilReaper/DartPoet/issues/291))
+
+### Features
+
+* add operator overloading support ([#285](https://github.com/theEvilReaper/DartPoet/issues/285)) ([06b3641](https://github.com/theEvilReaper/DartPoet/commit/06b36412c55183264a8620cca7a3fa1c8c8c5446))
+* **parameter:** support super.fieldName parameters ([#279](https://github.com/theEvilReaper/DartPoet/issues/279)) ([c0e05c1](https://github.com/theEvilReaper/DartPoet/commit/c0e05c18f626daec05bd3314ff2750dd26e21d8e))
+* **type:** add FunctionTypeName for inline Dart function types ([#281](https://github.com/theEvilReaper/DartPoet/issues/281)) ([6e81b7a](https://github.com/theEvilReaper/DartPoet/commit/6e81b7abe494c7d40097df2c54d949fdc8f0b50b))
+* **typedef:** add support for documentation comments and annotations ([#289](https://github.com/theEvilReaper/DartPoet/issues/289)) ([4ad2c15](https://github.com/theEvilReaper/DartPoet/commit/4ad2c1599490261f3505715c57b97bfb14981b10))
+* **type:** support bounded generic type parameters ([#284](https://github.com/theEvilReaper/DartPoet/issues/284)) ([1a492bd](https://github.com/theEvilReaper/DartPoet/commit/1a492bde0a3ca5579189171e695021df9d04582f))
+
+
+### Bug Fixes
+
+* correct typedef and parameter-checker validation bugs ([#288](https://github.com/theEvilReaper/DartPoet/issues/288)) ([70ab280](https://github.com/theEvilReaper/DartPoet/commit/70ab280c3307087b8caaf5105bbbc8e921cfcab5))
+* **function:** emit round brackets when no parameters are present ([#282](https://github.com/theEvilReaper/DartPoet/issues/282)) ([c7ce916](https://github.com/theEvilReaper/DartPoet/commit/c7ce9163a1b3ab181eaa8a46385418322b49769e))
+* **parameter:** add missign coVariant copy and add test for that case ([e3d739f](https://github.com/theEvilReaper/DartPoet/commit/e3d739fa1781534615109e5ac0e5bead71e92b45))
+* **type:** doubled nullable marker on generic type arguments ([#283](https://github.com/theEvilReaper/DartPoet/issues/283)) ([533baf1](https://github.com/theEvilReaper/DartPoet/commit/533baf18d9858c9b2fbd08c9253a11c8ae7f4454))
+
+
+### Miscellaneous Chores
+
+* **class:** remove library as a valid class type ([#291](https://github.com/theEvilReaper/DartPoet/issues/291)) ([b6fc1d5](https://github.com/theEvilReaper/DartPoet/commit/b6fc1d502c89a5ae113a7c2da96785e65d084ed5))
+
 ## [2.0.3](https://github.com/theEvilReaper/DartPoet/compare/2.0.2...2.0.3) (2026-08-07)
 
 
