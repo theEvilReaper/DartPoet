@@ -29,9 +29,10 @@ internal const val ROUND_CLOSE = ")"
 internal const val LESS_THAN_SIGN = "<"
 internal const val GREATER_THAN_SIGN = ">"
 
-internal val ALLOWED_FUNCTION_MODIFIERS = setOf(DartModifier.PUBLIC, DartModifier.PRIVATE, DartModifier.STATIC, DartModifier.ABSTRACT)
+internal val ALLOWED_FUNCTION_MODIFIERS =
+    setOf(DartModifier.PUBLIC, DartModifier.PRIVATE, DartModifier.STATIC, DartModifier.ABSTRACT, DartModifier.EXTERNAL)
 internal val ALLOWED_PROPERTY_MODIFIERS =
-    setOf(DartModifier.PRIVATE, DartModifier.FINAL, DartModifier.LATE, DartModifier.STATIC, DartModifier.CONST, DartModifier.CO_VARIANT)
+    setOf(DartModifier.PRIVATE, DartModifier.FINAL, DartModifier.LATE, DartModifier.STATIC, DartModifier.CONST, DartModifier.CO_VARIANT, DartModifier.EXTERNAL)
 internal val ALLOWED_CLASS_CONST_MODIFIERS = setOf(DartModifier.CONST)
 internal val ALLOWED_CONST_MODIFIERS = setOf(DartModifier.STATIC, DartModifier.CONST)
 internal val EXCLUSIVE_CLASS_MODIFIERS = setOf(DartModifier.BASE, DartModifier.INTERFACE, DartModifier.FINAL, DartModifier.SEALED)
