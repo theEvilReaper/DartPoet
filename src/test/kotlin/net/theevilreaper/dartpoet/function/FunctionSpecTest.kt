@@ -33,6 +33,16 @@ class FunctionSpecTest {
                 "An abstract method can't have a body"
             ),
             Arguments.of(
+                { FunctionSpec.builder("getName").modifier(DartModifier.EXTERNAL).addCode("%L", "value").build() },
+                IllegalArgumentException::class.java,
+                "An external function can't have a body"
+            ),
+            Arguments.of(
+                { FunctionSpec.builder("getName").modifiers(DartModifier.ABSTRACT, DartModifier.EXTERNAL).build() },
+                IllegalArgumentException::class.java,
+                "A function can't be both abstract and external"
+            ),
+            Arguments.of(
                 {
                     FunctionSpec.builder("print")
                         .modifiers(DartModifier.ABSTRACT)

@@ -2,11 +2,16 @@ package net.theevilreaper.dartpoet.code.writer
 
 import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.clazz.ClassSpec
+import net.theevilreaper.dartpoet.constructor.ConstructorSpec
+import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.typedef.TypeDef
+import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.verify.DartAnalyzeCase
+import net.theevilreaper.dartpoet.verify.verifyDartOutput
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -94,6 +99,41 @@ class ClassWriterTest {
             |
             |  typedef JsonMap = Map;
             |
+            |}
+            """.trimMargin()
+        )
+    }
+
+    @Test
+    fun `test class writing with external members`() {
+        val clazz = ClassSpec.builder("NativeBinding")
+            .constructor(
+                ConstructorSpec.builder("NativeBinding")
+                    .modifier(DartModifier.EXTERNAL)
+                    .build()
+            )
+            .property(
+                PropertySpec.builder("nativeHandle", Int::class)
+                    .modifier(DartModifier.EXTERNAL)
+                    .build()
+            )
+            .function(
+                FunctionSpec.builder("nativeCall", Int::class)
+                    .modifier(DartModifier.EXTERNAL)
+                    .parameters(ParameterSpec.positional("arg", String::class).build())
+                    .build()
+            )
+            .build()
+
+        clazz.verifyDartOutput(
+            """
+            |class NativeBinding {
+            |
+            |  external int nativeHandle;
+            |
+            |  external NativeBinding();
+            |
+            |  external int nativeCall(String arg);
             |}
             """.trimMargin()
         )

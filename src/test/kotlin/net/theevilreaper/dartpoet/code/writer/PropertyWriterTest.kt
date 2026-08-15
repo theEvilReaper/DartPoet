@@ -62,6 +62,12 @@ class PropertyWriterTest {
                     .modifier { DartModifier.PRIVATE }
                     .build(),
                 "String _privatModifier;"
+            ),
+            Arguments.of(
+                PropertySpec.builder("apiKey", String::class)
+                    .modifier { DartModifier.EXTERNAL }
+                    .build(),
+                "external String apiKey;"
             )
         )
 

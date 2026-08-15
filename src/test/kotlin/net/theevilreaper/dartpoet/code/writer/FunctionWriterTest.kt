@@ -278,4 +278,30 @@ class FunctionWriterTest {
             """.trimMargin()
         )
     }
+
+    @Test
+    fun `test external function write`() {
+        val functionSpec = FunctionSpec.builder("nativeMethod")
+            .modifiers(DartModifier.EXTERNAL)
+            .returns(INTEGER)
+            .parameters(ParameterSpec.positional("count", INTEGER).build())
+            .build()
+        functionSpec.verifyDartOutput("external int nativeMethod(int count);")
+    }
+
+    @Test
+    fun `test external getter and setter write`() {
+        val getterSpec = FunctionSpec.builder("count", INTEGER)
+            .modifiers(DartModifier.EXTERNAL)
+            .accessorType(MethodAccessorType.GETTER)
+            .build()
+        getterSpec.verifyDartOutput("external int get count;")
+
+        val setterSpec = FunctionSpec.builder("count", INTEGER)
+            .modifiers(DartModifier.EXTERNAL)
+            .accessorType(MethodAccessorType.SETTER)
+            .parameter(ParameterSpec.positional("value", INTEGER).build())
+            .build()
+        setterSpec.verifyDartOutput("external set count(int value);")
+    }
 }

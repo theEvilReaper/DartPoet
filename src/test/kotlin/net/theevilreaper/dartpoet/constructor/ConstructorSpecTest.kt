@@ -23,4 +23,25 @@ class ConstructorSpecTest {
             .build()
         assertTrue(constructorSpec.modifiers.contains(DartModifier.CONST))
     }
+
+    @Test
+    fun `test external constructor with initializer throws exception`() {
+        val exception = assertThrows(IllegalStateException::class.java) {
+            ConstructorSpec.builder("TestModel")
+                .modifier(DartModifier.EXTERNAL)
+                .addCode(net.theevilreaper.dartpoet.code.CodeBlock.of("field = 1"))
+                .build()
+        }
+        assertEquals("An external constructor can't have an initializer", exception.message)
+    }
+
+    @Test
+    fun `test external const constructor throws exception`() {
+        val exception = assertThrows(IllegalStateException::class.java) {
+            ConstructorSpec.builder("TestModel")
+                .modifiers(DartModifier.EXTERNAL, DartModifier.CONST)
+                .build()
+        }
+        assertEquals("An external constructor can't be const", exception.message)
+    }
 }

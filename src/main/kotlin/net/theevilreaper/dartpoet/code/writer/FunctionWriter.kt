@@ -106,13 +106,18 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
         writer.emitCode(codeBlock = typeDefinition, ensureTrailingNewline = false)
         writer.emitSpace()
         writer.emit(spec.name)
-        if (spec.hasGetterAccessor) {
-            writer.emitSpace()
-        }
-
         if (spec.hasSetterAccessor) {
             val parameterData = ParameterData.of(spec)
             ParameterHelper.writeParameters(parameterData, writer)
+        }
+
+        if (spec.body.isEmpty()) {
+            writer.emit(SEMICOLON)
+            return
+        }
+
+        if (spec.hasGetterAccessor) {
+            writer.emitSpace()
         }
 
         val bracketType = when (spec.type) {
