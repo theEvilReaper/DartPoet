@@ -1,11 +1,4 @@
-# [1.1.0](https://github.com/theEvilReaper/DartPoet/compare/v1.0.15...v1.1.0) (2026-07-27)
-
-
-### Features
-
-* **modifier:** add void and object typenames ([2d4f0c5](https://github.com/theEvilReaper/DartPoet/commit/2d4f0c5e2882082e55ce032eee3b9a11418c0739))
-
-## [3.0.0](https://github.com/theEvilReaper/DartPoet/compare/2.0.3...3.0.0) (2026-08-15)
+## [2.1.0](https://github.com/theEvilReaper/DartPoet/compare/2.0.3...2.1.0) (2026-08-15)
 
 
 ### ⚠ BREAKING CHANGES
