@@ -13,7 +13,13 @@ The API supports the creation of core Dart language constructs, such as classes,
 Some newer language features are not yet directly supported by the API, but they can be implemented using the
 `CodeBlock` class.
 
-Generated code uses Dart's null-safety features and requires Dart `2.12.0` or newer.
+Generated code uses Dart's null-safety features and requires Dart `2.19.0` or newer.
+
+> [!NOTE]
+> **Roadmap & Dart 3 Support:**  
+> We are currently finalizing the remaining pre-Dart 3.0 language features (such as mixin `on`-clauses and direct
+> top-level file declarations) before rolling out full native support for Dart 3.0+ features (including Record Types,
+> Pattern Matching and Extension Types).
 
 > [!WARNING]
 >
