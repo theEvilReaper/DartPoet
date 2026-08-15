@@ -38,7 +38,6 @@ class ClassSpec internal constructor(
     internal val isAbstract: Boolean = builder.classType == ClassType.ABSTRACT
     internal val isMixin: Boolean = builder.classType == ClassType.MIXIN
     internal val isAnonymous: Boolean = builder.name == null && builder.classType == ClassType.CLASS
-    internal val isLibrary: Boolean = builder.classType == ClassType.LIBRARY
     internal val superClass: TypeName? = builder.superClass
     internal val mixins: List<TypeName> = builder.mixins.toImmutableList()
     internal val interfaces: List<TypeName> = builder.interfaces.toImmutableList()
@@ -57,13 +56,6 @@ class ClassSpec internal constructor(
         get() = functions.isEmpty() && properties.isEmpty() && constructors.isEmpty() && constantStack.isEmpty() && enumPropertyStack.isEmpty() && operators.isEmpty() && typeDefs.isEmpty()
 
     init {
-        if (isLibrary) {
-            check(name.isNotEmpty()) { "The name of a class can't be empty" }
-            check(superClass == null && mixins.isEmpty() && interfaces.isEmpty()) {
-                "A library class can't extend, mix in or implement other types"
-            }
-        }
-
         if (isEnum) {
             check(enumPropertyStack.isNotEmpty()) { "A enum requires at least one enum property" }
 
@@ -196,12 +188,5 @@ class ClassSpec internal constructor(
          */
         @JvmStatic
         fun abstractClass(name: String) = ClassBuilder(name, ClassType.ABSTRACT)
-
-        /**
-         * Creates a new [ClassBuilder] instance for a library class.
-         * @return the created instance
-         */
-        @JvmStatic
-        fun libraryClass(name: String) = ClassBuilder(name, ClassType.LIBRARY)
     }
 }

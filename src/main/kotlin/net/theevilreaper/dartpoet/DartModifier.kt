@@ -23,7 +23,6 @@ enum class DartModifier(
     ABSTRACT("abstract", ModifierTarget.CLASS),
     FACTORY("factory", ModifierTarget.FUNCTION),
     CLASS("class", ModifierTarget.CLASS),
-    LIBRARY("library", ModifierTarget.CLASS),
     ON("on", ModifierTarget.CLASS),
     TYPEDEF("typedef", ModifierTarget.TYPEDEF),
     REQUIRED("required", ModifierTarget.PARAMETER),

@@ -1,6 +1,5 @@
 package net.theevilreaper.dartpoet.directive
 
-import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.directive.impl.DartDirective
 import net.theevilreaper.dartpoet.directive.impl.RelativeDirective
@@ -22,6 +21,7 @@ internal object DirectiveHelper {
 
     private const val IMPORT_KEY: String = "import"
     private const val EXPORT_KEY: String = "export"
+    private const val LIBRARY_KEY: String = "library"
     private const val PART_KEY: String = "part"
     private const val RELATIVE_DOTS: String = "../"
 
@@ -113,7 +113,7 @@ internal object DirectiveHelper {
      */
     private fun getLibraryImportKey(asPartOf: Boolean = false): String = when (asPartOf) {
         true -> "part of"
-        false -> DartModifier.LIBRARY.identifier
+        false -> LIBRARY_KEY
     }
 
     /**
