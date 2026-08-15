@@ -22,6 +22,7 @@ import net.theevilreaper.dartpoet.type.asTypeName
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertContentEquals
 
 @DisplayName("Test somme cases from a DartFile object")
@@ -70,6 +71,17 @@ class DartFileTest {
             |
             """.trimMargin()
         )
+    }
+
+    @Test
+    fun `test duplicate library directives are rejected`() {
+        val exception = assertThrows<IllegalStateException> {
+            DartFile.builder("dup_lib")
+                .directive(DirectiveFactory.createLib("first_lib"))
+                .directive(DirectiveFactory.createLib("second_lib"))
+                .build()
+        }
+        assertEquals("Only one library directive is allowed", exception.message)
     }
 
     @Test
