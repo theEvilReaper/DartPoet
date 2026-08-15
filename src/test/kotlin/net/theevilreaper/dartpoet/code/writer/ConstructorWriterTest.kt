@@ -5,6 +5,7 @@ import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.verify.verifyDartOutput
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
@@ -142,5 +143,25 @@ class ConstructorWriterTest {
             Cat({required super.name, this.color});
             """.trimIndent()
         )
+    }
+
+    @Test
+    fun `test external constructor write`() {
+        val constructor = ConstructorSpec.builder("Point")
+            .modifier(DartModifier.EXTERNAL)
+            .parameters(
+                ParameterSpec.positional("x", Int::class).build(),
+                ParameterSpec.positional("y", Int::class).build()
+            )
+            .build()
+        assertThat(constructor.toString()).isEqualTo("external Point(int x, int y);")
+    }
+
+    @Test
+    fun `test external named constructor write`() {
+        val constructor = ConstructorSpec.named("Point", "origin")
+            .modifier(DartModifier.EXTERNAL)
+            .build()
+        assertThat(constructor.toString()).isEqualTo("external Point.origin();")
     }
 }

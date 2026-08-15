@@ -73,6 +73,15 @@ class PropertySpecTest {
                         .build()
                 },
                 "These modifiers [FINAL] are not allowed in a const property context. Allowed modifiers: $ALLOWED_CONST_MODIFIERS"
+            ),
+            Arguments.of(
+                {
+                    PropertySpec.builder("test", String::class)
+                        .modifier(DartModifier.EXTERNAL)
+                        .initWith("%C", "hello")
+                        .build()
+                },
+                "An external property can't have an initializer"
             )
         )
     }
