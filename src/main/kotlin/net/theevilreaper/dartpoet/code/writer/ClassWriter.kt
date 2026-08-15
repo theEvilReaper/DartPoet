@@ -28,7 +28,7 @@ internal class ClassWriter : Writeable<ClassSpec> {
 
     /**
      * Writes the given [ClassSpec] to a [CodeWriter] instance.
-     * Dispatches to the matching shape for the spec's [ClassSpec.classType]: anonymous class, library directive, empty body or full body.
+     * Dispatches to the matching shape for the spec's [ClassSpec.classType]: anonymous class, empty body or full body.
      * @param spec the [ClassSpec] which contains all data for the class
      * @param writer the [CodeWriter] instance to append the generated code into
      */
@@ -41,11 +41,6 @@ internal class ClassWriter : Writeable<ClassSpec> {
         spec.annotations.emitAnnotations(writer, inLineAnnotations = false)
         writeClassHeader(spec, writer)
 
-        if (spec.isLibrary) {
-            writeLibraryDirective(spec, writer)
-            return
-        }
-
         writeGenericArguments(spec, writer)
         writeInheritance(spec, writer)
 
@@ -55,20 +50,6 @@ internal class ClassWriter : Writeable<ClassSpec> {
         }
 
         writeClassBody(spec, writer)
-    }
-
-    /**
-     * Writes the terminator of a Dart `library` directive.
-     * Unlike every other [ClassSpec.classType] it has no class body. It's a single statement terminated by a semicolon.
-     * @param spec the [ClassSpec] representing the library directive
-     * @param writer the [CodeWriter] to write the terminator to
-     */
-    private fun writeLibraryDirective(spec: ClassSpec, writer: CodeWriter) {
-        writer.emit(SEMICOLON)
-
-        if (spec.endsWithNewLine) {
-            writer.emit(NEW_LINE)
-        }
     }
 
     /**

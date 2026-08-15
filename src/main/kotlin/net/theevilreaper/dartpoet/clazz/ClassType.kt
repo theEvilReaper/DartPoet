@@ -15,5 +15,4 @@ enum class ClassType(
     ABSTRACT(DartModifier.ABSTRACT.identifier),
     MIXIN(DartModifier.MIXIN.identifier),
     ENUM(DartModifier.ENUM.identifier),
-    LIBRARY(DartModifier.LIBRARY.identifier)
 }
