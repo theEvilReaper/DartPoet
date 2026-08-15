@@ -30,7 +30,8 @@ enum class DartModifier(
     SEALED("sealed", ModifierTarget.CLASS),
     BASE("base", ModifierTarget.CLASS),
     INTERFACE("interface", ModifierTarget.CLASS),
-    OPERATOR("operator", ModifierTarget.FUNCTION)
+    OPERATOR("operator", ModifierTarget.FUNCTION),
+    EXTERNAL("external", ModifierTarget.FUNCTION, ModifierTarget.PROPERTY, ModifierTarget.CLASS)
     ;
 
     /**

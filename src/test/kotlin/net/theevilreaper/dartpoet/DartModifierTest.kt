@@ -42,4 +42,13 @@ class DartModifierTest {
         assertFalse(modifier.containsTarget(ModifierTarget.PARAMETER))
         assertFalse(modifier.containsTarget(ModifierTarget.TYPEDEF))
     }
+
+    @Test
+    fun `test external modifier targets`() {
+        assertTrue { DartModifier.EXTERNAL.containsTarget(ModifierTarget.CLASS) }
+        assertTrue { DartModifier.EXTERNAL.containsTarget(ModifierTarget.FUNCTION) }
+        assertTrue { DartModifier.EXTERNAL.containsTarget(ModifierTarget.PROPERTY) }
+        assertFalse { DartModifier.EXTERNAL.containsTarget(ModifierTarget.PARAMETER) }
+        assertFalse { DartModifier.EXTERNAL.containsTarget(ModifierTarget.TYPEDEF) }
+    }
 }
