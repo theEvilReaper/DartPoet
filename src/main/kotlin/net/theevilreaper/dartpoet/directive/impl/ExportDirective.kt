@@ -19,8 +19,8 @@ class ExportDirective internal constructor(
 ) : BaseDirective(DirectiveType.EXPORT, path) {
 
     init {
-        check(!(castType != null && castType in Companion.invalidCastType)) {
-            "The following cast types are not allowed for an export directive: [${Companion.invalidCastType.joinToString()}]"
+        check(!(castType != null && castType in invalidCastType)) {
+            "The following cast types are not allowed for an export directive: [${invalidCastType.joinToString()}]"
         }
 
         DirectiveHelper.validateCast(importCast, castType)

@@ -15,7 +15,6 @@ import net.theevilreaper.dartpoet.parameter.ParameterType
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.util.ParameterBase
-import net.theevilreaper.dartpoet.util.ParameterHelper
 import net.theevilreaper.dartpoet.util.toImmutableList
 import net.theevilreaper.dartpoet.util.toImmutableSet
 

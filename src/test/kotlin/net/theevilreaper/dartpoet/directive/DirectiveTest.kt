@@ -76,7 +76,7 @@ class DirectiveTest {
 
     @ParameterizedTest(name = "Test lib directive creation for: {arguments}")
     @MethodSource("libDirectives")
-    fun `test library imports`(expected: String, current: Directive, ) {
+    fun `test library imports`(expected: String, current: Directive) {
         assertEquals(expected, current.asString())
     }
 

@@ -2,7 +2,6 @@ package net.theevilreaper.dartpoet.parameter
 
 import net.theevilreaper.dartpoet.util.ParameterBase
 
-import net.theevilreaper.dartpoet.util.ParameterHelper
 import net.theevilreaper.dartpoet.util.toImmutableList
 
 /**

@@ -219,7 +219,7 @@ class FunctionWriterTest {
             .accessorType(MethodAccessorType.GETTER)
             .addCode("%L", "_value;")
             .build()
-        assertThat(function.toString()).isEqualTo("int get value => _value;");
+        assertThat(function.toString()).isEqualTo("int get value => _value;")
     }
 
     @Test

@@ -5,7 +5,6 @@ import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
-import net.theevilreaper.dartpoet.verify.verifyDartOutput
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 

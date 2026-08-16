@@ -13,4 +13,4 @@ import org.jetbrains.annotations.ApiStatus.Internal
  * @author theEvilReaper
  */
 @Internal
-interface ConstructorBase { }
+interface ConstructorBase

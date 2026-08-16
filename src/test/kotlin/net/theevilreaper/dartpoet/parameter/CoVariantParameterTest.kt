@@ -2,7 +2,6 @@ package net.theevilreaper.dartpoet.parameter
 
 import com.google.common.truth.Truth.*
 import net.theevilreaper.dartpoet.DartModifier
-import net.theevilreaper.dartpoet.ModifierTarget
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.type.asClassName
 import org.junit.jupiter.api.Test

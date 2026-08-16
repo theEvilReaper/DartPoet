@@ -15,7 +15,7 @@ class StringHelperTest {
     @ParameterizedTest(name = "Test if the given variable name {0} is invalid")
     @ValueSource(strings = ["", " "])
     fun `test if empty variable name throws exception`(input: String) {
-        assertThrowsExactly<IllegalArgumentException>(
+        assertThrowsExactly(
             IllegalArgumentException::class.java,
             { StringHelper.ensureVariableNameWithPrivateModifier(input, true) },
             "The name parameter can't be empty"

@@ -42,7 +42,7 @@ class PackageDirectiveTest {
 
     @Test
     fun `test package directive creation with a given dart suffix`() {
-        val path  = "my_local_file.dart";
+        val path  = "my_local_file.dart"
         val packageDirective = DirectiveFactory.createPackage(path)
 
         assertInstanceOf(PackageDirective::class.java, packageDirective)
@@ -55,7 +55,7 @@ class PackageDirectiveTest {
 
     @Test
     fun `test package directive creation`() {
-        val path  = "my_local_file";
+        val path  = "my_local_file"
         val packageDirective = DirectiveFactory.createPackage(path)
 
         assertInstanceOf(PackageDirective::class.java, packageDirective)
