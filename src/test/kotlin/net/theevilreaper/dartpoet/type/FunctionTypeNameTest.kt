@@ -53,6 +53,20 @@ class FunctionTypeNameTest {
                     .parameter(ParameterSpec.positional("value", ClassName("T")).build())
                     .build()
             ),
+            Arguments.of(
+                "T Function(T value)",
+                FunctionTypeName.builder()
+                    .returns(TypeVariableName("T"))
+                    .parameter(ParameterSpec.positional("value", TypeVariableName("T")).build())
+                    .build()
+            ),
+            Arguments.of(
+                "T Function(T value)",
+                FunctionTypeName.builder()
+                    .returns(TypeVariableName("T", ClassName("Comparable")))
+                    .parameter(ParameterSpec.positional("value", TypeVariableName("T", ClassName("Comparable"))).build())
+                    .build()
+            ),
         )
     }
 

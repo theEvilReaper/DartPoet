@@ -13,15 +13,16 @@ import net.theevilreaper.dartpoet.type.FunctionTypeName
 import net.theevilreaper.dartpoet.type.INTEGER
 import net.theevilreaper.dartpoet.type.STRING
 import net.theevilreaper.dartpoet.type.ClassName
-import net.theevilreaper.dartpoet.type.DYNAMIC
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
 import net.theevilreaper.dartpoet.type.asClassName
+import net.theevilreaper.dartpoet.verify.DartAnalyzeCase
 import net.theevilreaper.dartpoet.verify.verifyDartOutput
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
+import java.lang.reflect.Type
 import java.util.stream.Stream
 
 @DisplayName("Test function writer")
@@ -30,18 +31,41 @@ class FunctionWriterTest {
     private companion object {
 
         @JvmStatic
-        private fun castFunctionWrite() = Stream.of(
-            Arguments.of(
-                FunctionSpec.builder("getId").returns(Int::class).typeCast(Int::class).build(),
-                "int getId<int>();"
-            ),
-            Arguments.of(
-                FunctionSpec.builder("getModels").returns(List::class.parameterizedBy(ClassName("Model")))
-                    .typeCast(List::class.parameterizedBy(DYNAMIC))
-                    .build(),
-                "List<Model> getModels<List<dynamic>>();",
+        private fun genericOverloadCases(): Stream<Arguments> {
+            val reflectType: Type = String::class.java
+            return Stream.of(
+                Arguments.of(
+                    FunctionSpec.builder("identity")
+                        .modifiers(DartModifier.EXTERNAL)
+                        .generic(String::class)
+                        .returns(ClassName("String"))
+                        .parameter(ParameterSpec.positional("value", ClassName("String")).build())
+                        .build(),
+                    "external String identity<String>(String value);"
+                ),
+                Arguments.of(
+                    FunctionSpec.builder("identity")
+                        .modifiers(DartModifier.EXTERNAL)
+                        .generic(reflectType)
+                        .returns(ClassName("String"))
+                        .parameter(ParameterSpec.positional("value", ClassName("String")).build())
+                        .build(),
+                    "external String identity<String>(String value);"
+                ),
+                Arguments.of(
+                    FunctionSpec.builder("max")
+                        .modifiers(DartModifier.EXTERNAL)
+                        .generic("T", Comparable::class)
+                        .returns(ClassName("T"))
+                        .parameters(
+                            ParameterSpec.positional("a", ClassName("T")).build(),
+                            ParameterSpec.positional("b", ClassName("T")).build()
+                        )
+                        .build(),
+                    "external T max<T extends Comparable>(T a, T b);"
+                ),
             )
-        )
+        }
 
         @JvmStatic
         private fun basicFunctionWrites(): Stream<Arguments> = Stream.of(
@@ -74,10 +98,23 @@ class FunctionWriterTest {
         )
     }
 
+    @DartAnalyzeCase
     @ParameterizedTest
-    @MethodSource("castFunctionWrite")
-    fun `test function write with cast typeNames`(functionSpec: FunctionSpec, expected: String) {
+    @MethodSource("genericOverloadCases")
+    fun `test generic function overloads produce equivalent output`(functionSpec: FunctionSpec, expected: String) {
         assertThat(functionSpec.toString()).isEqualTo(expected)
+    }
+
+    @Test
+    fun `test generic function write with multiple type parameters`() {
+        val functionSpec = FunctionSpec.builder("map")
+            .modifiers(DartModifier.EXTERNAL)
+            .generic(ClassName("T"))
+            .generic(ClassName("R"))
+            .returns(ClassName("R"))
+            .parameter(ParameterSpec.positional("value", ClassName("T")).build())
+            .build()
+        functionSpec.verifyDartOutput("external R map<T, R>(T value);")
     }
 
     @ParameterizedTest
