@@ -39,7 +39,7 @@ class CodeBlockTest {
     @Test
     fun `test percent s escapes dollar sign with double quotes`() {
         val block = CodeBlock.builder()
-            .addStatement("%S", "costs \$5")
+            .addStatement("%S", $$"costs $5")
             .build()
         assertThat(block.toString().trim()).isEqualTo(
             """
@@ -52,7 +52,7 @@ class CodeBlockTest {
     @Test
     fun `test percent c escapes dollar sign with single quotes`() {
         val block = CodeBlock.builder()
-            .addStatement("%C", "costs \$5")
+            .addStatement("%C", $$"costs $5")
             .build()
         assertThat(block.toString().trim()).isEqualTo(
             """

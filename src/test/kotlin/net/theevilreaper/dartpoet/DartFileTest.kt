@@ -181,7 +181,7 @@ class DartFileTest {
                     .type(FunctionType.SHORTEN)
                     .accessorType(MethodAccessorType.GETTER)
                     .modifier(DartModifier.STATIC)
-                    .addCode("%L", "_\$${name}Serializer;")
+                    .addCode("%L", $$"_$$${name}Serializer;")
                     .build()
             )
             .function(

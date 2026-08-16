@@ -29,7 +29,7 @@ class FactoryFileTest {
     @Test
     fun `write test class with factory constructors`() {
         val versionModelClass = ClassName(versionModel)
-        val freezedMixing = ClassName("_${'$'}$versionModel")
+        val freezedMixing = ClassName($$"_$$$versionModel")
         val versionFreezedClass = ClassSpec.builder(versionModel)
             .withMixins(freezedMixing)
             .annotation { AnnotationSpec.builder("freezed").build() }
