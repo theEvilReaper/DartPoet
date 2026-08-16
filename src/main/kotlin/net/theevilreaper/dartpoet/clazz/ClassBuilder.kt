@@ -43,6 +43,7 @@ class ClassBuilder internal constructor(
     internal var superClass: TypeName? = null
     internal val mixins: MutableList<TypeName> = mutableListOf()
     internal val interfaces: MutableList<TypeName> = mutableListOf()
+    internal val onTypes: MutableList<TypeName> = mutableListOf()
     internal var endWithNewLine = false
 
     /**
@@ -186,6 +187,36 @@ class ClassBuilder internal constructor(
     @JvmName("implementsTypes")
     fun implements(vararg interfaces: KClass<*>) = apply {
         this.interfaces += interfaces.map { it.asTypeName() }
+    }
+
+    /**
+     * Add one or more superclass constraints to a mixin via Dart's `on` clause.
+     * Only valid for a mixin declaration.
+     * @param onTypes the constraint types to add
+     * @return the given instance of an [ClassBuilder]
+     */
+    fun on(vararg onTypes: TypeName) = apply {
+        this.onTypes += onTypes
+    }
+
+    /**
+     * Add one or more superclass constraints to a mixin via Dart's `on` clause.
+     * Only valid for a mixin declaration.
+     * @param onTypes the constraint types to add
+     * @return the given instance of an [ClassBuilder]
+     */
+    fun on(vararg onTypes: Type) = apply {
+        this.onTypes += onTypes.map { it.asTypeName() }
+    }
+
+    /**
+     * Add one or more superclass constraints to a mixin via Dart's `on` clause.
+     * Only valid for a mixin declaration.
+     * @param onTypes the constraint types to add
+     * @return the given instance of an [ClassBuilder]
+     */
+    fun on(vararg onTypes: KClass<*>) = apply {
+        this.onTypes += onTypes.map { it.asTypeName() }
     }
 
     /**

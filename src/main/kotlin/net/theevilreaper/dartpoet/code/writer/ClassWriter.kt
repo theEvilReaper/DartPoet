@@ -213,6 +213,14 @@ internal class ClassWriter : Writeable<ClassSpec> {
             writer.emitSpace()
         }
 
+        if (spec.onTypes.isNotEmpty()) {
+            writer.emitCode("%L", "on")
+            writer.emitSpace()
+            val joinedOnTypes = StringHelper.concatData(spec.onTypes, separator = COMMA_SEPARATOR) { it.toString() }
+            writer.emitCode("%L", joinedOnTypes)
+            writer.emitSpace()
+        }
+
         if (spec.interfaces.isNotEmpty()) {
             writer.emitCode("%L", "implements")
             writer.emitSpace()
