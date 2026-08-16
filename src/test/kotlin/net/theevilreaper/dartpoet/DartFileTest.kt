@@ -33,12 +33,16 @@ class DartFileTest {
         val dartFileSpec = DartFile.builder("TestClass")
             .indent(" ")
             .annotation(AnnotationSpec.builder("ignore").build())
+            .property(PropertySpec.builder("greeting", String::class).build())
+            .function(FunctionSpec.builder("main").build())
             .build()
         val specAsBuilder = dartFileSpec.toBuilder()
         assertEquals(dartFileSpec.name, specAsBuilder.name)
         assertEquals(dartFileSpec.indent, specAsBuilder.indent)
         assertEquals(dartFileSpec.annotations.size, specAsBuilder.annotations.size)
         assertContentEquals(dartFileSpec.annotations, specAsBuilder.annotations)
+        assertEquals(dartFileSpec.properties, specAsBuilder.propertyStack.toSet())
+        assertEquals(dartFileSpec.functions, specAsBuilder.functionStack.toSet())
     }
 
     @Test
