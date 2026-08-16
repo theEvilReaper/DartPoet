@@ -19,29 +19,34 @@ internal class DartFileWriter : Writeable<DartFile>, DocumentationAppender {
         emitDirectives(writer, spec.exportDirectives)
         emitDirectives(writer, spec.partImports)
 
-        spec.constants.emitConstants(writer)
+        val hasTypeDefs = spec.hasTypeDefs
+        val hasProperties = spec.properties.isNotEmpty()
+        val hasFunctions = spec.functions.isNotEmpty()
+        val hasTypes = spec.types.isNotEmpty()
+        val hasExtensions = spec.extensions.isNotEmpty()
 
-        if (spec.constants.isNotEmpty()) {
-            writer.emit(NEW_LINE)
+        spec.constants.emitConstants(writer)
+        emitSectionSeparator(writer, spec.constants.isNotEmpty(), hasTypeDefs || hasProperties || hasFunctions || hasTypes || hasExtensions)
+
+        if (hasTypeDefs) {
+            spec.typeDefs.emitTypeDefs(writer)
+            emitSectionSeparator(writer, hasContent = true, hasMoreContent = hasProperties || hasFunctions || hasTypes || hasExtensions)
         }
 
         spec.properties.emitProperties(writer)
-
-        if (spec.properties.isNotEmpty()) {
-            writer.emit(NEW_LINE)
-        }
-
-        if (spec.hasTypeDefs) {
-            spec.typeDefs.emitTypeDefs(writer)
-        }
+        emitSectionSeparator(writer, hasProperties, hasFunctions || hasTypes || hasExtensions)
 
         spec.functions.emitFunctions(writer)
 
-        if (spec.functions.isNotEmpty()) {
+        if (hasFunctions) {
+            // Unlike the sections above, emitFunctions() never ends with its own trailing
+            // newline, so one is always needed here to close its last line, plus a second
+            // only when more content follows to open a blank-line separator.
             writer.emit(NEW_LINE)
+            emitSectionSeparator(writer, hasContent = true, hasMoreContent = hasTypes || hasExtensions)
         }
 
-        if (spec.types.isNotEmpty()) {
+        if (hasTypes) {
             spec.types.forEach {
                 classWriter.write(it, writer)
                 if (spec.types.size > 1) {
@@ -62,5 +67,16 @@ internal class DartFileWriter : Writeable<DartFile>, DocumentationAppender {
         if (directives.isEmpty()) return
         directives.writeImports(codeWriter, newLineAtBegin = false)
         codeWriter.emit(NEW_LINE)
+    }
+
+    /**
+     * Emits a blank-line separator between two top level sections, but only when [hasContent]
+     * is true and [hasMoreContent] indicates a later section is non-empty - so a section never
+     * leaves a dangling blank line when it turns out to be the last content in the file.
+     */
+    private fun emitSectionSeparator(writer: CodeWriter, hasContent: Boolean, hasMoreContent: Boolean) {
+        if (hasContent && hasMoreContent) {
+            writer.emit(NEW_LINE)
+        }
     }
 }
