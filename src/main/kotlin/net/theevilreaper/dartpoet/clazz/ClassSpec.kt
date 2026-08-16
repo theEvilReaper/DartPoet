@@ -41,6 +41,7 @@ class ClassSpec internal constructor(
     internal val superClass: TypeName? = builder.superClass
     internal val mixins: List<TypeName> = builder.mixins.toImmutableList()
     internal val interfaces: List<TypeName> = builder.interfaces.toImmutableList()
+    internal val onTypes: List<TypeName> = builder.onTypes.toImmutableList()
     internal val typeDefs: List<AbstractTypeDef<*>> = builder.typedefs.toImmutableList()
     internal val functions: Set<FunctionSpec> = builder.functionStack.toImmutableSet()
     internal val operators: Set<DartOperatorSpec> = builder.operatorStack.toImmutableSet()
@@ -79,8 +80,16 @@ class ClassSpec internal constructor(
             }
         }
 
+        check(isMixin || onTypes.isEmpty()) {
+            "Dart's 'on' clause is only allowed on a mixin declaration"
+        }
+
         check(mixins.size == mixins.distinct().size) {
             "Duplicate mixin type(s) found: ${mixins.groupingBy { it }.eachCount().filterValues { it > 1 }.keys}"
+        }
+
+        check(onTypes.size == onTypes.distinct().size) {
+            "Duplicate 'on' type(s) found: ${onTypes.groupingBy { it }.eachCount().filterValues { it > 1 }.keys}"
         }
 
         check(interfaces.size == interfaces.distinct().size) {
@@ -145,6 +154,7 @@ class ClassSpec internal constructor(
         classBuilder.superClass = superClass
         classBuilder.mixins.addAll(mixins)
         classBuilder.interfaces.addAll(interfaces)
+        classBuilder.onTypes.addAll(onTypes)
         classBuilder.genericCasts.addAll(genericCasts)
         return classBuilder
     }
