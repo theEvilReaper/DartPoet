@@ -120,7 +120,7 @@ class DartFileTest {
                     .addCode(buildCodeBlock {
                         addStatement("final queryParams = %L;", "<String, dynamic>{}")
                         addStatement("final baseUri = Uri.parse(apiClient.baseUrl);")
-                        addStatement("final uri = baseUri.replace(queryParameters: queryParameters, path: '\${baseUri.path}/defect/\$id/');")
+                        addStatement($$"final uri = baseUri.replace(queryParameters: queryParameters, path: '${baseUri.path}/defect/$id/');")
                         addStatement("return await apiClient.dio.getUri<JsonMap>(")
                         indent()
                         addStatement("uri,")
@@ -141,7 +141,7 @@ class DartFileTest {
             .type(handlerApiClass)
             .build()
         assertThat(file.toString()).isEqualTo(
-            """
+            $$"""
             |part of testLibrary;
             |
             |class DefectApi {
@@ -153,7 +153,7 @@ class DartFileTest {
             |  Future<DefectDTO> getByID(int id) async {
             |    final queryParams = <String, dynamic>{};
             |    final baseUri = Uri.parse(apiClient.baseUrl);
-            |    final uri = baseUri.replace(queryParameters: queryParameters, path: '${"$"}{baseUri.path}/defect/${"$"}id/');
+            |    final uri = baseUri.replace(queryParameters: queryParameters, path: '${baseUri.path}/defect/$id/');
             |    return await apiClient.dio.getUri<JsonMap>(
             |      uri,
             |    ).then((response) {

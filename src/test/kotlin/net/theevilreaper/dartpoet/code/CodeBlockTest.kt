@@ -65,11 +65,11 @@ class CodeBlockTest {
     @Test
     fun `test percent p keeps dollar sign for string interpolation`() {
         val block = CodeBlock.builder()
-            .addStatement("%P", "Hello \$name")
+            .addStatement("%P", $$"Hello $name")
             .build()
         assertThat(block.toString().trim()).isEqualTo(
-            """
-        |'Hello ${'$'}name'
+            $$"""
+        |'Hello $name'
         """.trimMargin()
         )
     }
