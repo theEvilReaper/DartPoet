@@ -2,6 +2,8 @@ package net.theevilreaper.dartpoet.type
 
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
+import net.theevilreaper.dartpoet.util.COMMA_SEPARATOR
+import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.NULLABLE_CHAR
 
 /**
@@ -64,6 +66,18 @@ class TypeVariableName internal constructor(
             val name = buildCodeString { typeName.emit(this) }
             val bound = (typeName as? TypeVariableName)?.bound ?: return name
             return "$name extends ${buildCodeString { bound.emit(this) }}"
+        }
+
+        /**
+         * Renders [typeNames] as a comma-separated generic-declaration list via [renderDeclaration],
+         * e.g. `T, E extends Comparable`. Returns an empty string for an empty list.
+         *
+         * Shared by every writer that emits a `<...>` type-parameter list at a declaration site
+         * (class, extension, function), so the join logic exists exactly once.
+         */
+        internal fun renderDeclarationList(typeNames: List<TypeName>): String {
+            if (typeNames.isEmpty()) return EMPTY_STRING
+            return typeNames.joinToString(COMMA_SEPARATOR) { renderDeclaration(it) }
         }
     }
 }
