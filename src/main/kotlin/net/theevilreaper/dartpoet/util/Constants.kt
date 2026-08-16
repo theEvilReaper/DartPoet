@@ -38,7 +38,7 @@ internal val ALLOWED_CONST_MODIFIERS = setOf(DartModifier.STATIC, DartModifier.C
 internal val EXCLUSIVE_CLASS_MODIFIERS = setOf(DartModifier.BASE, DartModifier.INTERFACE, DartModifier.FINAL, DartModifier.SEALED)
 
 //RegEx
-private val namePattern: Regex = Regex($$"^[a-z]+(?:_[a-z]+)*$")
+private val namePattern: Regex = Regex("^[a-z]+(?:_[a-z]+)*$")
 private val lowerCamelCase: Regex = Regex("[a-z]+[A-Z0-9]*[a-z0-9]*[A-Za-z0-9]*")
 private val indentPattern: Regex = Regex(" +")
 
