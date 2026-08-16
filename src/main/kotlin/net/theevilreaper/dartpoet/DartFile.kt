@@ -11,6 +11,8 @@ import net.theevilreaper.dartpoet.directive.impl.LibraryDirective
 import net.theevilreaper.dartpoet.directive.impl.PartDirective
 import net.theevilreaper.dartpoet.directive.impl.RelativeDirective
 import net.theevilreaper.dartpoet.extension.ExtensionSpec
+import net.theevilreaper.dartpoet.function.FunctionSpec
+import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.util.DART_FILE_ENDING
@@ -33,6 +35,8 @@ class DartFile internal constructor(
     internal val extensions: List<ExtensionSpec> = builder.extensionStack
     internal val docs = builder.docs
     internal val constants: Set<ConstantPropertySpec> = builder.constants.toImmutableSet()
+    internal val properties: Set<PropertySpec> = builder.propertyStack.toImmutableSet()
+    internal val functions: Set<FunctionSpec> = builder.functionStack.toImmutableSet()
     private val directives = builder.directives.toImmutableList()
     internal val dartImports =
         DirectiveOrdering.sortDirectives<DartDirective>(DartDirective::class, directives) { it.contains("dart:") }
@@ -126,6 +130,8 @@ class DartFile internal constructor(
         builder.annotations.addAll(this.annotations)
         builder.extensionStack.addAll(this.extensions)
         builder.constants.addAll(this.constants)
+        builder.propertyStack.addAll(this.properties)
+        builder.functionStack.addAll(this.functions)
         builder.docs.addAll(this.docs.toMutableList())
         builder.indent = this.indent
         return builder
