@@ -65,6 +65,17 @@ class ClassInheritanceTest {
             Arguments.of(
                 ClassSpec.mixinClass("Handler").implements(ClassName("I1")).build(),
                 "mixin Handler implements I1 {}"
+            ),
+            Arguments.of(
+                ClassSpec.mixinClass("Handler").on(ClassName("Base")).build(),
+                "mixin Handler on Base {}"
+            ),
+            Arguments.of(
+                ClassSpec.mixinClass("Handler")
+                    .on(ClassName("Base"), ClassName("Other"))
+                    .implements(ClassName("I1"))
+                    .build(),
+                "mixin Handler on Base, Other implements I1 {}"
             )
         )
 
@@ -110,6 +121,22 @@ class ClassInheritanceTest {
                         .build()
                 },
                 "Duplicate interface type(s) found: [I1]"
+            ),
+            Arguments.of(
+                {
+                    ClassSpec.builder("Foo")
+                        .on(ClassName("Base"))
+                        .build()
+                },
+                "Dart's 'on' clause is only allowed on a mixin declaration"
+            ),
+            Arguments.of(
+                {
+                    ClassSpec.mixinClass("Handler")
+                        .on(ClassName("Base"), ClassName("Base"))
+                        .build()
+                },
+                "Duplicate 'on' type(s) found: [Base]"
             )
         )
     }
