@@ -25,8 +25,20 @@ internal class DartFileWriter : Writeable<DartFile>, DocumentationAppender {
             writer.emit(NEW_LINE)
         }
 
+        spec.properties.emitProperties(writer)
+
+        if (spec.properties.isNotEmpty()) {
+            writer.emit(NEW_LINE)
+        }
+
         if (spec.hasTypeDefs) {
             spec.typeDefs.emitTypeDefs(writer)
+        }
+
+        spec.functions.emitFunctions(writer)
+
+        if (spec.functions.isNotEmpty()) {
+            writer.emit(NEW_LINE)
         }
 
         if (spec.types.isNotEmpty()) {
