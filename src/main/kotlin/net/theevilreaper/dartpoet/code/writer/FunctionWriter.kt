@@ -51,8 +51,8 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
         writer.emitSpace()
         writer.emit(StringHelper.ensureVariableNameWithPrivateModifier(spec.name, spec.isPrivate))
 
-        if (spec.typeCast != null) {
-            writer.emitGenericBlock("%T", spec.typeCast)
+        if (spec.genericCasts.isNotEmpty()) {
+            writer.emitGenericBlock("%L", spec.genericDeclaration)
         }
 
         val parameterData = ParameterData.of(spec)

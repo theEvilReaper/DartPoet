@@ -2,6 +2,7 @@ package net.theevilreaper.dartpoet.function
 
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.asTypeName
 import net.theevilreaper.dartpoet.util.NO_PARAMETER_TYPE
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -163,6 +164,7 @@ class FunctionSpecTest {
         val functionSpec = FunctionSpec.builder("getAmount")
             .returns(Int::class.asTypeName().copy(nullable = true))
             .async(false)
+            .generic("T", ClassName("Comparable"))
             .addCode("return %L", "10")
             .build()
         val specAsBuilder = functionSpec.toBuilder()
@@ -170,5 +172,6 @@ class FunctionSpecTest {
         assertEquals(functionSpec.returnType, specAsBuilder.returnType)
         assertFalse { specAsBuilder.async }
         assertTrue { specAsBuilder.body.isNotEmpty() }
+        assertEquals(functionSpec.genericCasts, specAsBuilder.genericCasts)
     }
 }

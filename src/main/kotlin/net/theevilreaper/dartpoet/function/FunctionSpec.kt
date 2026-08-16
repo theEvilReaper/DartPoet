@@ -10,9 +10,11 @@ import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
+import net.theevilreaper.dartpoet.type.TypeVariableName
 import net.theevilreaper.dartpoet.type.asTypeName
 import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.parameter.ParameterContext
+import net.theevilreaper.dartpoet.util.toImmutableList
 import net.theevilreaper.dartpoet.util.toImmutableSet
 import java.lang.reflect.Type
 import kotlin.reflect.KClass
@@ -40,7 +42,8 @@ class FunctionSpec internal constructor(
     }.filter { it != DartModifier.PRIVATE && it != DartModifier.PUBLIC }.toImmutableSet()
 
     internal val isPrivate = builder.specData.modifiers.remove(DartModifier.PRIVATE)
-    internal val typeCast = builder.typeCast
+    internal val genericCasts: List<TypeName> = builder.genericCasts.toImmutableList()
+    internal val genericDeclaration by lazy { TypeVariableName.renderDeclarationList(genericCasts) }
     internal val docs = builder.docs
 
     internal val hasMethodAccessorType = methodAccessorType != null
@@ -82,7 +85,7 @@ class FunctionSpec internal constructor(
         builder.modifiers(*this.modifiers.toTypedArray())
         builder.parameters.addAll(this.parameters)
         builder.async = this.isAsync
-        builder.typeCast = this.typeCast
+        builder.genericCasts.addAll(this.genericCasts)
         builder.methodAccessorType = this.methodAccessorType
         builder.body.formatParts.addAll(this.body.formatParts)
         builder.body.args.add(this.body.args)

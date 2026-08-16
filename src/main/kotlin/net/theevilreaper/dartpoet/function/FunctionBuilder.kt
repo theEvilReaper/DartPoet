@@ -8,6 +8,7 @@ import net.theevilreaper.dartpoet.meta.SpecMethods
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
+import net.theevilreaper.dartpoet.type.TypeVariableName
 import net.theevilreaper.dartpoet.type.VOID
 import net.theevilreaper.dartpoet.type.asClassName
 import net.theevilreaper.dartpoet.type.asTypeName
@@ -29,7 +30,7 @@ class FunctionBuilder internal constructor(
     internal val parameters: MutableList<ParameterSpec> = mutableListOf()
     internal var async: Boolean = false
     internal val body: CodeBlock.Builder = CodeBlock.builder()
-    internal var typeCast: TypeName? = null
+    internal val genericCasts: MutableList<TypeName> = mutableListOf()
     internal var lambda: Boolean = false
     internal val docs: MutableList<CodeBlock> = mutableListOf()
     internal var type: FunctionType = FunctionType.STANDARD
@@ -62,31 +63,57 @@ class FunctionBuilder internal constructor(
     }
 
     /**
-     * This method allows to specify a type cast using a [TypeName] object.
-     * It sets the type cast for the current instance and returns the modified instance.
-     *
-     * @param cast the [TypeName] representing the type to cast to
-     * @return the involved builder instance
+     * Add a generic type to the function builder.
+     * @param type the [ClassName] to add
+     * @return the given instance of an [FunctionBuilder]
      */
-    fun typeCast(cast: TypeName) = apply { this.typeCast = cast }
+    fun generic(type: ClassName) = apply {
+        this.genericCasts += type
+    }
 
     /**
-     * This method allows to specify a type cast using a [ClassName] object.
-     * It sets the type cast for the current instance and returns the modified instance.
-     *
-     * @param cast the [ClassName] representing the type to cast to
-     * @return the involved builder instance
+     * Add a generic type to the function builder.
+     * @param type the [Type] to add
+     * @return the given instance of an [FunctionBuilder]
      */
-    fun typeCast(cast: ClassName) = apply { this.typeCast = cast }
+    fun generic(type: Type) = apply {
+        generic(TypeName.get(type) as ClassName)
+    }
 
     /**
-     * This method allows to specify a type cast using a [KClass] object.
-     * It sets the type cast for the current instance and returns the modified instance.
-     *
-     * @param cast the [KClass] representing the type to cast to
-     * @return the involved builder instance
+     * Add a generic type to the function builder.
+     * @param type the [KClass] to add
+     * @return the given instance of an [FunctionBuilder]
      */
-    fun typeCast(cast: KClass<*>) = apply { this.typeCast = cast.asTypeName() }
+    fun generic(type: KClass<*>) = apply {
+        generic(type.asClassName())
+    }
+
+    /**
+     * Add a bounded generic type parameter to the function builder, e.g. `T extends Bar`.
+     * @param name the name of the type parameter
+     * @param bound the bound of the type parameter, represented as a [TypeName]
+     * @return the given instance of an [FunctionBuilder]
+     */
+    fun generic(name: String, bound: TypeName) = apply {
+        this.genericCasts += TypeVariableName(name, bound)
+    }
+
+    /**
+     * Add a bounded generic type parameter to the function builder, e.g. `T extends Bar`.
+     * @param name the name of the type parameter
+     * @param bound the bound of the type parameter, represented as a [ClassName]
+     * @return the given instance of an [FunctionBuilder]
+     */
+    fun generic(name: String, bound: ClassName) = generic(name, bound as TypeName)
+
+    /**
+     * Add a bounded generic type parameter to the function builder, e.g. `T extends Bar`.
+     * @param name the name of the type parameter
+     * @param bound the bound of the type parameter, represented as a [KClass]
+     * @return the given instance of an [FunctionBuilder]
+     */
+    fun generic(name: String, bound: KClass<*>) = generic(name, bound.asTypeName())
 
     fun addCode(format: String, vararg args: Any?) = apply {
         body.add(format, *args)

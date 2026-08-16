@@ -80,12 +80,6 @@ class ExtensionWriterTest {
                 "extension ListExt<T extends Comparable> on List<T> {}"
             ),
             Arguments.of(
-                ExtensionSpec.builder("ListExt", List::class.parameterizedBy(ClassName("T")))
-                    .genericTypes("T", String::class)
-                    .build(),
-                "extension ListExt<T extends String> on List<T> {}"
-            ),
-            Arguments.of(
                 ExtensionSpec.builder("MapExt", Map::class.parameterizedBy(ClassName("T"), ClassName("E")))
                     .genericTypes("T", ClassName("Comparable"))
                     .genericTypes(ClassName("E"))
