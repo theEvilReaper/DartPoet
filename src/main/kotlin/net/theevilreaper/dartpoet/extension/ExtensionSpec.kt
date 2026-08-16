@@ -56,10 +56,7 @@ class ExtensionSpec internal constructor(
      * [joinedRawTypes] (bare names only, used by the validation in the `init` block below), this
      * must never be used for anything that compares against [extClass]'s raw data.
      */
-    internal val genericDeclaration by lazy {
-        if (genericType.isEmpty()) return@lazy EMPTY_STRING
-        genericType.joinToString(COMMA_SEPARATOR) { TypeVariableName.renderDeclaration(it) }
-    }
+    internal val genericDeclaration by lazy { TypeVariableName.renderDeclarationList(genericType) }
 
     /**
      * Performs checks on variables to avoid unwanted or incorrect data.
