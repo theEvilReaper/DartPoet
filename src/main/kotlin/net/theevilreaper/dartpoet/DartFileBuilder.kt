@@ -6,6 +6,7 @@ import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.directive.Directive
+import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.typedef.AbstractTypeDef
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.property.PropertySpec
@@ -22,6 +23,8 @@ class DartFileBuilder(
     internal val extensionStack: MutableList<ExtensionSpec> = mutableListOf()
     internal val constants: MutableSet<ConstantPropertySpec> = mutableSetOf()
     internal val typeDefs: MutableList<AbstractTypeDef<*>> = mutableListOf()
+    internal val propertyStack: MutableList<PropertySpec> = mutableListOf()
+    internal val functionStack: MutableList<FunctionSpec> = mutableListOf()
     internal var indent = DEFAULT_INDENT
 
     /**
@@ -34,6 +37,50 @@ class DartFileBuilder(
 
     fun constants(vararg constants: ConstantPropertySpec) = apply {
         this.constants += constants
+    }
+
+    /**
+     * Add a top level [PropertySpec] to the file.
+     * @param property the property to add
+     */
+    fun property(property: PropertySpec) = apply {
+        this.propertyStack += property
+    }
+
+    /**
+     * Add a top level [PropertySpec] to the file over a lambda reference.
+     * @param property the property to add
+     */
+    fun property(property: () -> PropertySpec) = this.property(property())
+
+    /**
+     * Add an array of top level [PropertySpec] to the file.
+     * @param properties the properties to add
+     */
+    fun properties(vararg properties: PropertySpec) = apply {
+        this.propertyStack += properties
+    }
+
+    /**
+     * Add a top level [FunctionSpec] to the file.
+     * @param function the function to add
+     */
+    fun function(function: FunctionSpec) = apply {
+        this.functionStack += function
+    }
+
+    /**
+     * Add a top level [FunctionSpec] to the file over a lambda reference.
+     * @param function the function to add
+     */
+    fun function(function: () -> FunctionSpec) = this.function(function())
+
+    /**
+     * Add an array of top level [FunctionSpec] to the file.
+     * @param functions the functions to add
+     */
+    fun functions(vararg functions: FunctionSpec) = apply {
+        this.functionStack += functions
     }
 
     fun directive(directive: Directive) = apply {
