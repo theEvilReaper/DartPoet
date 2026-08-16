@@ -3,7 +3,7 @@
 [![license](https://img.shields.io/github/license/theEvilReaper/DartPoet?style=for-the-badge&color=b2234c)](LICENSE)
 [![Release](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Frepo.onelitefeather.dev%2Freleases%2Fnet%2Ftheevilreaper%2Fdartpoet%2Fmaven-metadata.xml&label=release&style=for-the-badge&color=blue)](#installation)
 [![JVM](https://img.shields.io/badge/JVM-25-orange?style=for-the-badge)](#installation)
-[![API status](https://img.shields.io/badge/API-experimental-yellow?style=for-the-badge)](#)
+[![API status](https://img.shields.io/badge/API-experimental-yellow?style=for-the-badge)]
 
 DartPoet is a Kotlin-based library for programmatically generating Dart source code. Inspired by JavaPoet and
 KotlinPoet, it provides a fluent and expressive API for creating Dart files while reducing manual coding effort and
