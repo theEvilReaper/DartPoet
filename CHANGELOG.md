@@ -26,6 +26,15 @@
 
 * **class:** remove library as a valid class type ([#291](https://github.com/theEvilReaper/DartPoet/issues/291)) ([b6fc1d5](https://github.com/theEvilReaper/DartPoet/commit/b6fc1d502c89a5ae113a7c2da96785e65d084ed5))
 
+## [2.2.0](https://github.com/theEvilReaper/DartPoet/compare/2.1.0...2.2.0) (2026-08-16)
+
+
+### Features
+
+* add external modifier support ([#292](https://github.com/theEvilReaper/DartPoet/issues/292)) ([4841e1f](https://github.com/theEvilReaper/DartPoet/commit/4841e1fc30d3fd5ff53ce16b02747b0aae36ff4c))
+* **class:** add support for the mixin 'on' clause ([#295](https://github.com/theEvilReaper/DartPoet/issues/295)) ([29fbc69](https://github.com/theEvilReaper/DartPoet/commit/29fbc69ffb620602202a3d719bce78933072bf4e))
+* **file:** add support for top level functions and properties ([#296](https://github.com/theEvilReaper/DartPoet/issues/296)) ([12a84a8](https://github.com/theEvilReaper/DartPoet/commit/12a84a81d663335f475376e82534a16c883abacb))
+
 ## [2.0.3](https://github.com/theEvilReaper/DartPoet/compare/2.0.2...2.0.3) (2026-08-07)
 
 
