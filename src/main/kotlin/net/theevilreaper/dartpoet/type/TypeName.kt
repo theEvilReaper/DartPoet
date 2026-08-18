@@ -31,7 +31,6 @@ sealed class TypeName(val isNullable: Boolean) {
     private val cachedString: String by lazy {
         buildCodeString {
             emit(this)
-            if (isNullable) emit(NULLABLE_CHAR)
         }
     }
 
