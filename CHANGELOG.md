@@ -26,6 +26,13 @@
 
 * **class:** remove library as a valid class type ([#291](https://github.com/theEvilReaper/DartPoet/issues/291)) ([b6fc1d5](https://github.com/theEvilReaper/DartPoet/commit/b6fc1d502c89a5ae113a7c2da96785e65d084ed5))
 
+## [2.3.0](https://github.com/theEvilReaper/DartPoet/compare/2.2.0...2.3.0) (2026-08-20)
+
+
+### Features
+
+* **type:** add support for record types ([#297](https://github.com/theEvilReaper/DartPoet/issues/297)) ([1f5b008](https://github.com/theEvilReaper/DartPoet/commit/1f5b0081292a4308093bc78aa884a775b373a24b))
+
 ## [2.2.0](https://github.com/theEvilReaper/DartPoet/compare/2.1.0...2.2.0) (2026-08-16)
 
 
