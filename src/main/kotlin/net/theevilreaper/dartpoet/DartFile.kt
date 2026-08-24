@@ -25,8 +25,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 
 class DartFile internal constructor(
-    builder: DartFileBuilder,
-    val maxDepth: Int = DEFAULT_MAX_DEPTH
+    builder: DartFileBuilder
 ) {
     internal val name: String = builder.name
     internal val indent: String = builder.indent
@@ -81,18 +80,33 @@ class DartFile internal constructor(
 
     /**
      * Writes the content from a [DartFile] to the given [Path].
+     *
+     * [baseDir] is the directory that relative imports (`../`) must not escape. It defaults to
+     * [path] itself, matching the previous behaviour where the write target was also the security
+     * boundary. Pass an ancestor of [path] explicitly when the file is written into a subdirectory
+     * of the actual project root but still needs to reference sibling directories via a relative
+     * import, e.g.:
+     *
+     * ```kotlin
+     * // lib/enchantment/armor_enchantment.dart importing lib/api/enchantment.dart
+     * dartFile.write(libRoot.resolve("enchantment"), baseDir = libRoot)
+     * ```
+     *
      * @param path the path where the file should be written
+     * @param baseDir the directory relative imports must stay within; defaults to [path]
      * @throws IOException if the file can't be written
+     * @throws IllegalArgumentException if [path] is not located inside [baseDir]
      */
     @Throws(IOException::class)
-    fun write(path: Path) {
+    @JvmOverloads
+    fun write(path: Path, baseDir: Path = path) {
         require(Files.notExists(path) || Files.isDirectory(path)) {
             "The given path $path exists but it is not a directory"
         }
 
         require(isDartConventionFileName(name)) {
             """
-             The given name $name has some issues with the naming   
+             The given name $name has some issues with the naming
              Please take a look at this page https://dart.dev/tools/linter-rules#file_names
             """.trimIndent()
         }
@@ -104,15 +118,21 @@ class DartFile internal constructor(
 
         PathValidation.validateFileName(fileName)
 
+        val normalizedTargetDir = path.toAbsolutePath().normalize()
+        val normalizedBaseDir = baseDir.toAbsolutePath().normalize()
+
+        require(normalizedTargetDir.startsWith(normalizedBaseDir)) {
+            "The write target '$normalizedTargetDir' must be located inside baseDir '$normalizedBaseDir'"
+        }
+
         val pathToWrite = path.resolve(fileName).normalize()
 
-        require(pathToWrite.startsWith(path.toAbsolutePath().normalize())) {
+        require(pathToWrite.startsWith(normalizedTargetDir)) {
             "Resolved file path '$pathToWrite' would be outside target directory '$path'"
         }
 
         if (relativeImports.isNotEmpty()) {
-            val normalizedPath = path.toAbsolutePath().normalize()
-            PathValidation.validateRelativeImports(relativeImports, normalizedPath, pathToWrite)
+            PathValidation.validateRelativeImports(relativeImports, normalizedBaseDir, pathToWrite)
         }
 
         OutputStreamWriter(Files.newOutputStream(pathToWrite), Charsets.UTF_8)
@@ -144,7 +164,7 @@ class DartFile internal constructor(
 
         /**
          * Creates a new instance from an [DartFileBuilder] to create class structures.
-         * @param name the name which is used for the dart file
+         * @param name the name that is used for the Dart file
          * @return the created instance from the [DartFileBuilder] instance
          */
         @JvmStatic
