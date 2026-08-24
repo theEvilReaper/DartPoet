@@ -26,6 +26,13 @@
 
 * **class:** remove library as a valid class type ([#291](https://github.com/theEvilReaper/DartPoet/issues/291)) ([b6fc1d5](https://github.com/theEvilReaper/DartPoet/commit/b6fc1d502c89a5ae113a7c2da96785e65d084ed5))
 
+## [2.3.1](https://github.com/theEvilReaper/DartPoet/compare/2.3.0...2.3.1) (2026-08-24)
+
+
+### Bug Fixes
+
+* **file:** allow generated files to reference other folders in the same project ([#300](https://github.com/theEvilReaper/DartPoet/issues/300)) ([9bb00a9](https://github.com/theEvilReaper/DartPoet/commit/9bb00a9c7568ce1f476f4f26116c0f4ab5c9aca6))
+
 ## [2.3.0](https://github.com/theEvilReaper/DartPoet/compare/2.2.0...2.3.0) (2026-08-20)
 
 
