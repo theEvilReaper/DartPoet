@@ -52,7 +52,7 @@ abstract class BaseDirective(
      * @return true when the path starts with the word otherwise false
      */
     private fun isDartImport(): Boolean {
-        return path.startsWith("dart")
+        return path.startsWith("dart:")
     }
 
     /**
