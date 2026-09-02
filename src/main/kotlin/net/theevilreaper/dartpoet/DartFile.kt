@@ -8,6 +8,7 @@ import net.theevilreaper.dartpoet.code.buildCodeString
 import net.theevilreaper.dartpoet.directive.impl.DartDirective
 import net.theevilreaper.dartpoet.directive.impl.ExportDirective
 import net.theevilreaper.dartpoet.directive.impl.LibraryDirective
+import net.theevilreaper.dartpoet.directive.impl.PackageDirective
 import net.theevilreaper.dartpoet.directive.impl.PartDirective
 import net.theevilreaper.dartpoet.directive.impl.RelativeDirective
 import net.theevilreaper.dartpoet.extension.ExtensionSpec
@@ -46,7 +47,9 @@ class DartFile internal constructor(
     internal val exportDirectives =
         DirectiveOrdering.sortDirectives<ExportDirective>(ExportDirective::class, directives)
     internal val relativeImports =
-        DirectiveOrdering.sortDirectives<RelativeDirective>(RelativeDirective::class, directives)
+        DirectiveOrdering.sortDirectives(
+            directives.filter { it is RelativeDirective || it is PackageDirective }
+        )
     internal val typeDefs = builder.typeDefs.toImmutableList()
     internal val hasTypeDefs = typeDefs.isNotEmpty()
 
