@@ -136,18 +136,18 @@ internal object DirectiveHelper {
      * @return the input with an indication dot as a prefix
      */
     private fun updateRelativeImportBegin(directive: RelativeDirective): String {
-        val rawPath = directive.getRawPath()
+        val path = directive.getPathWithEnding()
 
         // If a path already has ../, return as-is (user already provided the dots)
-        if (rawPath.startsWith("../")) {
-            return rawPath
+        if (path.startsWith("../")) {
+            return path
         }
 
         // Otherwise add based on depth
         return when (directive.depth) {
-            0 -> rawPath // No prefix needed
-            1 -> "$RELATIVE_DOTS$rawPath"
-            else -> "${RELATIVE_DOTS.repeat(directive.depth)}$rawPath"
+            0 -> path // No prefix needed
+            1 -> "$RELATIVE_DOTS$path"
+            else -> "${RELATIVE_DOTS.repeat(directive.depth)}$path"
         }
     }
 }
