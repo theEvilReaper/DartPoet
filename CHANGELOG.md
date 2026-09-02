@@ -26,6 +26,15 @@
 
 * **class:** remove library as a valid class type ([#291](https://github.com/theEvilReaper/DartPoet/issues/291)) ([b6fc1d5](https://github.com/theEvilReaper/DartPoet/commit/b6fc1d502c89a5ae113a7c2da96785e65d084ed5))
 
+## [2.3.2](https://github.com/theEvilReaper/DartPoet/compare/2.3.1...2.3.2) (2026-09-02)
+
+
+### Bug Fixes
+
+* **directive:** append .dart extension to relative imports ([#304](https://github.com/theEvilReaper/DartPoet/issues/304)) ([f81df41](https://github.com/theEvilReaper/DartPoet/commit/f81df41feb92ab7f02522dc1b6f158c29af0d6f4))
+* **directive:** improve consistency across directive implementations ([#306](https://github.com/theEvilReaper/DartPoet/issues/306)) ([ff0edcc](https://github.com/theEvilReaper/DartPoet/commit/ff0edcc7b929ac8497f02f481bf5986e76647033))
+* **file:** improve relative import path validation ([#308](https://github.com/theEvilReaper/DartPoet/issues/308)) ([4267d79](https://github.com/theEvilReaper/DartPoet/commit/4267d796e0403a256371c939a595b3381ae4ebfd))
+
 ## [2.3.1](https://github.com/theEvilReaper/DartPoet/compare/2.3.0...2.3.1) (2026-08-24)
 
 
