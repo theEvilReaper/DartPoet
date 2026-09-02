@@ -140,7 +140,7 @@ internal object DirectiveHelper {
      * @param directive the directive to get the path from it
      * @return the input with an indication dot as a prefix
      */
-    private fun updateRelativeImportBegin(directive: RelativeDirective): String {
+    internal fun updateRelativeImportBegin(directive: RelativeDirective): String {
         val path = directive.getPathWithEnding()
 
         // If a path already has ../, return as-is (user already provided the dots)
