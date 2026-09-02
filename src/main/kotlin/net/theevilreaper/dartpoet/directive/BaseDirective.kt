@@ -34,7 +34,9 @@ abstract class BaseDirective(
     /**
      * Makes a comparison with two [Directive] implementation over a [Comparable]
      */
-    override fun compareTo(other: Directive): Int = asString().compareTo(other.toString())
+    override fun compareTo(other: Directive): Int = asString().compareTo(other.asString())
+
+    override fun toString(): String = asString()
 
     /**
      * Ensures that the directive path ends with .dart.

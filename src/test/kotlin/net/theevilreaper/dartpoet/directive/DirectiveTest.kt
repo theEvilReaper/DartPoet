@@ -4,6 +4,7 @@ import net.theevilreaper.dartpoet.directive.impl.*
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import net.theevilreaper.dartpoet.util.SPACE_STRING
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -35,7 +36,9 @@ class DirectiveTest {
             Arguments.of({ RelativeDirective("flutter/material.dart", CastType.AS, null) }, INVALID_CAST_USAGE),
             Arguments.of({ RelativeDirective("flutter/material.dart", null, "test") }, INVALID_CAST_USAGE),
             Arguments.of({ ExportDirective("test.dart", CastType.HIDE, null) }, INVALID_CAST_USAGE),
-            Arguments.of({ ExportDirective("test.dart", null, "test") }, INVALID_CAST_USAGE)
+            Arguments.of({ ExportDirective("test.dart", null, "test") }, INVALID_CAST_USAGE),
+            Arguments.of({ PackageDirective("test.dart", CastType.AS, null) }, INVALID_CAST_USAGE),
+            Arguments.of({ PackageDirective("test.dart", null, "test") }, INVALID_CAST_USAGE)
         )
 
         @JvmStatic
@@ -104,5 +107,22 @@ class DirectiveTest {
     fun `test package import`() {
         val import = DirectiveFactory.create(DirectiveType.IMPORT, "flutter/material.dart")
         assertEquals(packageImport, import.asString())
+    }
+
+    @Test
+    fun `test directive compareTo`() {
+        val directiveA = DirectiveFactory.create(DirectiveType.IMPORT, "a.dart")
+        val directiveB = DirectiveFactory.create(DirectiveType.IMPORT, "b.dart")
+        val directiveA2 = DirectiveFactory.create(DirectiveType.IMPORT, "a.dart")
+
+        assertEquals(0, directiveA.compareTo(directiveA2))
+        assertTrue(directiveA < directiveB)
+        assertTrue(directiveB > directiveA)
+    }
+
+    @Test
+    fun `test directive toString matches asString`() {
+        val directive = DirectiveFactory.create(DirectiveType.IMPORT, "flutter/material.dart")
+        assertEquals(directive.asString(), directive.toString())
     }
 }

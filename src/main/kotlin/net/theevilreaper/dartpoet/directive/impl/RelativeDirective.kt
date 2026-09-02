@@ -28,9 +28,7 @@ class RelativeDirective internal constructor(
         val decoded: String? = URLDecoder.decode(path, StandardCharsets.UTF_8)
         require(path == decoded) { "The path $path contains invalid characters" }
 
-        check((castType == null) == (importCast == null)) {
-            "The castType and importCast must be set together or must be null. A mixed state is not allowed"
-        }
+        DirectiveHelper.validateCast(importCast, castType)
     }
 
     /**

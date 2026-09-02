@@ -14,4 +14,10 @@ class PartDirectiveTest {
         val partImport = DirectiveFactory.create(DirectiveType.PART, "item_model.freezed.dart")
         assertEquals(expectedImport, partImport.asString())
     }
+
+    @Test
+    fun `create part import without dart extension`() {
+        val partImport = DirectiveFactory.create(DirectiveType.PART, "item_model.freezed")
+        assertEquals(expectedImport, partImport.asString())
+    }
 }

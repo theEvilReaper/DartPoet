@@ -23,9 +23,7 @@ class PackageDirective internal constructor(
 ): BaseDirective(DirectiveType.PACKAGE, path) {
 
     init {
-        require((castType == null) == (importCast == null)) {
-            "castType and importCast must be both null or both non-null."
-        }
+        DirectiveHelper.validateCast(importCast, castType)
     }
 
     /**
