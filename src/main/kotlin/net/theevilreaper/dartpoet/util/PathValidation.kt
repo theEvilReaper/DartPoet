@@ -1,6 +1,8 @@
 package net.theevilreaper.dartpoet.util
 
 import net.theevilreaper.dartpoet.directive.Directive
+import net.theevilreaper.dartpoet.directive.DirectiveHelper
+import net.theevilreaper.dartpoet.directive.impl.PackageDirective
 import net.theevilreaper.dartpoet.directive.impl.RelativeDirective
 import java.nio.file.Path
 
@@ -63,10 +65,18 @@ internal object PathValidation {
         val targetDir = targetFile.parent ?: baseDir
 
         relativeImports.forEach { directive ->
-            val import = directive as? RelativeDirective
-                ?: throw IllegalArgumentException("Only RelativeDirective is supported")
+            val (importPath, expectedDepth) = when (directive) {
+                is RelativeDirective -> Pair(
+                    DirectiveHelper.updateRelativeImportBegin(directive),
+                    directive.depth
+                )
+                is PackageDirective -> Pair(
+                    directive.getPathWithEnding(),
+                    0
+                )
+                else -> throw IllegalArgumentException("Only RelativeDirective and PackageDirective are supported")
+            }
 
-            val importPath = import.getRawPath()
             val resolvedImport = targetDir.resolve(importPath).normalize()
 
             require(resolvedImport.startsWith(baseDir)) {
@@ -74,8 +84,8 @@ internal object PathValidation {
             }
 
             val actualDepth = importPath.split("/").count { it == ".." }
-            require(actualDepth >= import.depth) {
-                "Relative import path '$importPath' does not match expected depth ${import.depth} " + "(actual depth: $actualDepth)"
+            require(actualDepth >= expectedDepth) {
+                "Relative import path '$importPath' does not match expected depth $expectedDepth " + "(actual depth: $actualDepth)"
             }
         }
     }

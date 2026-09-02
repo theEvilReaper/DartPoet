@@ -124,7 +124,7 @@ internal object DirectiveHelper {
     /**
      * The method updates the given import path if it doesn't start with `dart:`.
      * In this case, the method will add the `package:` prefix to the path.
-     * A  `package:` import is required when the [DartDirective] is used to import a file from a package.
+     * A `package:` import is required when the [DartDirective] is used to import a file from a package.
      * @param path the path to update
      * @return the updated path
      */
@@ -140,7 +140,7 @@ internal object DirectiveHelper {
      * @param directive the directive to get the path from it
      * @return the input with an indication dot as a prefix
      */
-    private fun updateRelativeImportBegin(directive: RelativeDirective): String {
+    internal fun updateRelativeImportBegin(directive: RelativeDirective): String {
         val path = directive.getPathWithEnding()
 
         // If a path already has ../, return as-is (user already provided the dots)

@@ -223,4 +223,44 @@ class PathTraversalTest {
             PathValidation.validateRelativeImports(imports, baseDir, targetFile)
         }
     }
+
+    @Test
+    fun `test relative import with depth parameter passes when within bounds`() {
+        val baseDir = tempDir.resolve("myproject/lib")
+        val targetFile = baseDir.resolve("impl/user_impl.dart")
+
+        val importWithDepth = DirectiveFactory.createRelative("models/user.dart", depth = 1)
+        val imports = listOf(importWithDepth)
+
+        assertDoesNotThrow {
+            PathValidation.validateRelativeImports(imports, baseDir, targetFile)
+        }
+    }
+
+    @Test
+    fun `test relative import with depth parameter fails when escaping baseDir`() {
+        val baseDir = tempDir.resolve("myproject/lib")
+        val targetFile = baseDir.resolve("impl/user_impl.dart")
+
+        val escapingImport = DirectiveFactory.createRelative("outside.dart", depth = 3)
+        val imports = listOf(escapingImport)
+
+        val exception = assertThrows(IllegalArgumentException::class.java) {
+            PathValidation.validateRelativeImports(imports, baseDir, targetFile)
+        }
+        assertTrue(exception.message!!.contains("outside project directory"))
+    }
+
+    @Test
+    fun `test package directive passes when within baseDir`() {
+        val baseDir = tempDir.resolve("myproject/lib")
+        val targetFile = baseDir.resolve("impl/user_impl.dart")
+
+        val localImport = DirectiveFactory.createPackage("local_helper")
+        val imports = listOf(localImport)
+
+        assertDoesNotThrow {
+            PathValidation.validateRelativeImports(imports, baseDir, targetFile)
+        }
+    }
 }
