@@ -124,7 +124,7 @@ internal object DirectiveHelper {
     /**
      * The method updates the given import path if it doesn't start with `dart:`.
      * In this case, the method will add the `package:` prefix to the path.
-     * A  `package:` import is required when the [DartDirective] is used to import a file from a package.
+     * A `package:` import is required when the [DartDirective] is used to import a file from a package.
      * @param path the path to update
      * @return the updated path
      */
