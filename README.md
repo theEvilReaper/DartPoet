@@ -17,9 +17,10 @@ Generated code uses Dart's null-safety features and requires Dart `2.19.0` or ne
 
 > [!NOTE]
 > **Roadmap & Dart 3 Support:**  
-> We are currently finalizing the remaining pre-Dart 3.0 language features (such as mixin `on`-clauses and direct
-> top-level file declarations) before rolling out full native support for Dart 3.0+ features (including Record Types,
-> Pattern Matching and Extension Types).
+> DartPoet already supports key modern language features such as mixin `on`-clauses, top-level file declarations,
+> and Dart 3.0 Record Types (`RecordTypeName`). Full native support for remaining Dart 3.0+ features (such as
+> refined Class Modifier combinations and Dart 3.3 Extension Types) is actively in development. See our
+> [Feature Support Matrix](FEATURE_MATRIX.md) for full details.
 
 > [!WARNING]
 >
@@ -77,15 +78,10 @@ our [contributing guidelines](CONTRIBUTING.md) before you start.
 See the [GitHub Releases](https://github.com/theEvilReaper/DartPoet/releases)
 page for changes between versions.
 
-## Wiki
+## Documentation & Feature Support
 
-The wiki contains all the information you need to get started with the library.
-It provides explanations for different parts of the library and how to use them.
+For a detailed breakdown of all supported Dart language constructs across Dart 1.x, 2.x, and 3.x, please consult the
+[**Feature Support Matrix**](FEATURE_MATRIX.md).
 
-> [!CAUTION]
->
-> Due to the state of the project, the wiki is not yet available. We are working on it and will provide it as soon as
-> possible.
->
-> If you want to see how you can use the library, you can take a look at the tests.
-> They contain examples for different parts of the library.
+You can also explore our comprehensive test suite in [`src/test/kotlin`](src/test/kotlin) for real-world usage examples
+covering all supported declarations, types, and code generation patterns.
