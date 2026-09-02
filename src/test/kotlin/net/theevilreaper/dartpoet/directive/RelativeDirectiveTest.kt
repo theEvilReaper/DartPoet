@@ -66,6 +66,41 @@ class RelativeDirectiveTest {
                 DirectiveFactory.createRelative(TEST_IMPORT, CastType.SHOW, CAST_VALUE),
                 "import '../model/item_model.dart' show item;",
                 1
+            ),
+            Arguments.of(
+                DirectiveFactory.create(DirectiveType.RELATIVE, "../path/to/file"),
+                "import '../path/to/file.dart';",
+                1
+            ),
+            Arguments.of(
+                DirectiveFactory.create(DirectiveType.RELATIVE, "path/to/file"),
+                "import '../path/to/file.dart';",
+                1
+            ),
+            Arguments.of(
+                DirectiveFactory.create(DirectiveType.RELATIVE, "../dart_helper/utils"),
+                "import '../dart_helper/utils.dart';",
+                1
+            ),
+            Arguments.of(
+                DirectiveFactory.create(DirectiveType.RELATIVE, "dart_helper/utils"),
+                "import '../dart_helper/utils.dart';",
+                1
+            ),
+            Arguments.of(
+                DirectiveFactory.createRelative("path/to/file", depth = 2),
+                "import '../../path/to/file.dart';",
+                2
+            ),
+            Arguments.of(
+                DirectiveFactory.create(
+                    DirectiveType.RELATIVE,
+                    "../api/enchantment",
+                    CastType.AS,
+                    "enchantment"
+                ),
+                "import '../api/enchantment.dart' as enchantment;",
+                1
             )
         )
 
@@ -94,7 +129,7 @@ class RelativeDirectiveTest {
         val currentImportString = current.asString()
         assertEquals(expected, currentImportString)
         val prefixCount = countRelativeSegments(currentImportString)
-        assertEquals(depth, prefixCount, "There should be exactly two dot prefix")
+        assertEquals(depth, prefixCount, "There should be exactly $depth dot prefix")
     }
 
     @ParameterizedTest(name = "Sanitize invalid prefix: {0} with depth {1}")
@@ -132,7 +167,6 @@ class RelativeDirectiveTest {
         assertInstanceOf(RelativeDirective::class.java, import)
 
         val importAsString = import.asString()
-        println(importAsString)
         assertNotNull(importAsString, "The import should not be null")
 
         val prefixCount = countRelativeSegments(importAsString)
@@ -150,7 +184,7 @@ class RelativeDirectiveTest {
         val importAsString = relativeImport.asString()
 
         val prefixCount = countRelativeSegments(importAsString)
-        assertEquals(4, prefixCount, "There should be exactly two dot prefix")
+        assertEquals(4, prefixCount, "There should be exactly 4 dot prefix")
     }
 
     @Test

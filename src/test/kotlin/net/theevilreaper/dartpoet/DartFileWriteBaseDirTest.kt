@@ -30,7 +30,7 @@ class DartFileWriteBaseDirTest {
 
         val writtenFile = enchantmentDir.resolve("armor_enchantment.dart")
         assertThat(Files.exists(writtenFile)).isTrue()
-        assertThat(Files.readString(writtenFile)).contains("import '../api/enchantment';")
+        assertThat(Files.readString(writtenFile)).contains("import '../api/enchantment.dart';")
     }
 
     @Test
