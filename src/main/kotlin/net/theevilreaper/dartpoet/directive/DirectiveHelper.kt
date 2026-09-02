@@ -100,9 +100,14 @@ internal object DirectiveHelper {
             else -> Pair(getLibraryImportKey(asPartOf), "%L")
         }
 
+        val path = when (directive.type()) {
+            DirectiveType.PART -> directive.getPathWithEnding()
+            else -> directive.getRawPath()
+        }
+
         writer.emitCode("%L", importPair.first)
         writer.emitSpace()
-        writer.emitCode(importPair.second, directive.getRawPath())
+        writer.emitCode(importPair.second, path)
         writer.emit(SEMICOLON)
     }
 
