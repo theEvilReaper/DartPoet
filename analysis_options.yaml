@@ -22,3 +22,11 @@ analyzer:
     mixin_with_non_class_superclass: ignore
     mixin_super_class_constraint_non_interface: ignore
     undefined_class: ignore
+    uri_does_not_exist: ignore
+    uri_has_not_been_generated: ignore
+    unused_import: ignore
+    directives_ordering: error
+
+linter:
+  rules:
+    - directives_ordering
