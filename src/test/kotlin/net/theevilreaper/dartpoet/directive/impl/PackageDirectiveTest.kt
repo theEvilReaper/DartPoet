@@ -25,7 +25,7 @@ class PackageDirectiveTest {
         castType: CastType?,
         importCast: String?
     ) {
-        val exception = assertThrows(IllegalArgumentException::class.java) {
+        val exception = assertThrows(IllegalStateException::class.java) {
             DirectiveFactory.create(
                 directive = DirectiveType.PACKAGE,
                 path = "my_local_file",
@@ -35,7 +35,7 @@ class PackageDirectiveTest {
         }
 
         assertEquals(
-            "castType and importCast must be both null or both non-null.",
+            "The castType and importCast must be set together or must be null. A mixed state is not allowed",
             exception.message
         )
     }
