@@ -200,7 +200,12 @@ class ClassSpec internal constructor(
         /**
          * Create a new [ClassBuilder] instance for an enum dart class.
          * @return the created instance
+         * @deprecated Use [net.theevilreaper.dartpoet.enum.EnumSpec.builder] instead.
          */
+        @Deprecated(
+            message = "Use EnumSpec.builder(name) instead",
+            replaceWith = ReplaceWith("EnumSpec.builder(name)", "net.theevilreaper.dartpoet.enum.EnumSpec")
+        )
         @JvmStatic
         fun enumClass(name: String) = ClassBuilder(name, ClassType.ENUM)
 
