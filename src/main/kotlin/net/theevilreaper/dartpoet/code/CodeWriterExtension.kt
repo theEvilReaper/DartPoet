@@ -12,9 +12,15 @@ import net.theevilreaper.dartpoet.operator.DartOperatorSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
+import net.theevilreaper.dartpoet.type.TypeName
+import net.theevilreaper.dartpoet.type.TypeVariableName
+import net.theevilreaper.dartpoet.util.COMMA_SEPARATOR
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
+import net.theevilreaper.dartpoet.util.GREATER_THAN_SIGN
+import net.theevilreaper.dartpoet.util.LESS_THAN_SIGN
 import net.theevilreaper.dartpoet.util.NEW_LINE
 import net.theevilreaper.dartpoet.util.SPACE
+import net.theevilreaper.dartpoet.util.StringHelper
 
 internal val SPECIAL_CHARACTERS = " \n·".toCharArray()
 internal val UNSAFE_LINE_START = Regex("\\s*[-+].*")
@@ -199,3 +205,38 @@ internal fun Set<PropertySpec>.emitProperties(
     forceNewLines: Boolean = false,
     emitBlock: (PropertySpec) -> Unit = { it.write(codeWriter) },
 ) = emitBlockElements(codeWriter, forceNewLines, emitBlock = emitBlock)
+
+/**
+ * Emits the generic type arguments declaration (e.g. `<T, R extends Object>`) to a [CodeWriter]
+ * followed by a space, or a single space if [generics] is empty.
+ * @param generics the generic type names to emit
+ */
+internal fun CodeWriter.emitGenericTypeArguments(generics: Collection<TypeName>) {
+    if (generics.isEmpty()) {
+        emitSpace()
+    } else {
+        val joinedGenerics = StringHelper.concatData(
+            generics,
+            prefix = LESS_THAN_SIGN,
+            separator = COMMA_SEPARATOR,
+            postfix = GREATER_THAN_SIGN
+        ) { TypeVariableName.renderDeclaration(it) }
+        emitCode("%L", joinedGenerics)
+        emitSpace()
+    }
+}
+
+/**
+ * Emits a clause keyword followed by comma-separated type names and a trailing space if [types] is not empty
+ * (e.g. `implements A, B ` or `with C, D ` or `on E, F `).
+ * @param keyword the clause keyword ("implements", "with", "on")
+ * @param types the type names to emit
+ */
+internal fun CodeWriter.emitTypeClause(keyword: String, types: Collection<TypeName>) {
+    if (types.isEmpty()) return
+    emitCode("%L", keyword)
+    emitSpace()
+    val joinedTypes = StringHelper.concatData(types, separator = COMMA_SEPARATOR) { it.toString() }
+    emitCode("%L", joinedTypes)
+    emitSpace()
+}

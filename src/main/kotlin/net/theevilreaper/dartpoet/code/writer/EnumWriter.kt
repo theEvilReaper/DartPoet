@@ -7,14 +7,12 @@ import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.code.emitConstants
 import net.theevilreaper.dartpoet.code.emitConstructors
 import net.theevilreaper.dartpoet.code.emitFunctions
+import net.theevilreaper.dartpoet.code.emitGenericTypeArguments
 import net.theevilreaper.dartpoet.code.emitOperators
 import net.theevilreaper.dartpoet.code.emitProperties
+import net.theevilreaper.dartpoet.code.emitTypeClause
 import net.theevilreaper.dartpoet.enum.EnumEntrySpec
 import net.theevilreaper.dartpoet.enum.EnumSpec
-import net.theevilreaper.dartpoet.type.TypeVariableName
-import net.theevilreaper.dartpoet.util.COMMA_SEPARATOR
-import net.theevilreaper.dartpoet.util.GREATER_THAN_SIGN
-import net.theevilreaper.dartpoet.util.LESS_THAN_SIGN
 import net.theevilreaper.dartpoet.util.NEW_LINE
 import net.theevilreaper.dartpoet.util.SEMICOLON
 import net.theevilreaper.dartpoet.util.StringHelper
@@ -49,37 +47,12 @@ internal class EnumWriter : Writeable<EnumSpec> {
     }
 
     private fun writeGenericArguments(spec: EnumSpec, writer: CodeWriter) {
-        when (spec.genericCasts.isEmpty()) {
-            true -> writer.emitSpace()
-            false -> {
-                val joinedGenerics = StringHelper.concatData(
-                    spec.genericCasts,
-                    prefix = LESS_THAN_SIGN,
-                    separator = COMMA_SEPARATOR,
-                    postfix = GREATER_THAN_SIGN
-                ) { TypeVariableName.renderDeclaration(it) }
-                writer.emitCode("%L", joinedGenerics)
-                writer.emitSpace()
-            }
-        }
+        writer.emitGenericTypeArguments(spec.genericCasts)
     }
 
     private fun writeInheritance(spec: EnumSpec, writer: CodeWriter) {
-        if (spec.mixins.isNotEmpty()) {
-            writer.emitCode("%L", "with")
-            writer.emitSpace()
-            val joinedMixins = StringHelper.concatData(spec.mixins, separator = COMMA_SEPARATOR) { it.toString() }
-            writer.emitCode("%L", joinedMixins)
-            writer.emitSpace()
-        }
-
-        if (spec.interfaces.isNotEmpty()) {
-            writer.emitCode("%L", "implements")
-            writer.emitSpace()
-            val joinedInterfaces = StringHelper.concatData(spec.interfaces, separator = COMMA_SEPARATOR) { it.toString() }
-            writer.emitCode("%L", joinedInterfaces)
-            writer.emitSpace()
-        }
+        writer.emitTypeClause("with", spec.mixins)
+        writer.emitTypeClause("implements", spec.interfaces)
     }
 
     private fun writeEnumBody(spec: EnumSpec, writer: CodeWriter) {

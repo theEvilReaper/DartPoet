@@ -35,6 +35,7 @@ class ClassSpec internal constructor(
     internal val modifiers: Set<DartModifier> = builder.classMetaData.modifiers.toImmutableSet()
     internal val annotations: Set<AnnotationSpec> = builder.classMetaData.annotations.toImmutableSet()
     internal val endsWithNewLine: Boolean = builder.endWithNewLine
+    // TODO(v3.0): Remove ClassType, isEnum, isMixin, and legacy enum/mixin properties once deprecated APIs are removed
     internal val isEnum: Boolean = builder.classType == ClassType.ENUM
     internal val isAbstract: Boolean = builder.classType == ClassType.ABSTRACT
     internal val isMixin: Boolean = builder.classType == ClassType.MIXIN
