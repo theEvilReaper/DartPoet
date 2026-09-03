@@ -8,8 +8,6 @@ import net.theevilreaper.dartpoet.util.NEW_LINE
 
 internal class DartFileWriter : Writeable<DartFile>, DocumentationAppender {
 
-    private val classWriter = ClassWriter()
-
     override fun write(spec: DartFile, writer: CodeWriter) {
         emitDocumentation(spec.docs, writer)
         emitDirectives(writer, spec.libImport)
@@ -48,11 +46,10 @@ internal class DartFileWriter : Writeable<DartFile>, DocumentationAppender {
 
         if (hasTypes) {
             spec.types.forEach {
-                classWriter.write(it, writer)
+                it.write(writer)
                 if (spec.types.size > 1) {
                     writer.emit(NEW_LINE)
                 }
-
             }
         }
         spec.extensions.emitExtensions(writer)

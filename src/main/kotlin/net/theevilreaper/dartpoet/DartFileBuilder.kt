@@ -2,14 +2,15 @@ package net.theevilreaper.dartpoet
 
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.ClassBuilder
-import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
-import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.directive.Directive
+import net.theevilreaper.dartpoet.enum.EnumBuilder
+import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.typedef.AbstractTypeDef
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.property.PropertySpec
+import net.theevilreaper.dartpoet.spec.TypeSpec
 import net.theevilreaper.dartpoet.util.DEFAULT_INDENT
 import net.theevilreaper.dartpoet.util.isIndent
 
@@ -17,7 +18,7 @@ class DartFileBuilder(
     val name: String
 ) {
     internal val docs: MutableList<CodeBlock> = mutableListOf()
-    internal val specTypes: MutableList<ClassSpec> = mutableListOf()
+    internal val specTypes: MutableList<TypeSpec> = mutableListOf()
     internal val directives: MutableList<Directive> = mutableListOf()
     internal val annotations: MutableList<AnnotationSpec> = mutableListOf()
     internal val extensionStack: MutableList<ExtensionSpec> = mutableListOf()
@@ -138,16 +139,25 @@ class DartFileBuilder(
         this.typeDefs += typeDef
     }
 
-    fun type(dartFileSpec: ClassSpec) = apply {
+    fun type(dartFileSpec: TypeSpec) = apply {
         this.specTypes += dartFileSpec
     }
 
-    fun type(vararg classSpecs: ClassSpec) = apply {
-        this.specTypes += classSpecs
+    fun type(vararg typeSpecs: TypeSpec) = apply {
+        this.specTypes += typeSpecs
     }
 
     fun type(dartFileSpec: ClassBuilder) = apply {
         this.specTypes += dartFileSpec.build()
+    }
+
+    /**
+     * Add an enum specification to the file builder using an [EnumBuilder].
+     * @param enumBuilder the builder whose built [EnumSpec] should be added
+     * @return the current instance of [DartFileBuilder]
+     */
+    fun type(enumBuilder: EnumBuilder) = apply {
+        this.specTypes += enumBuilder.build()
     }
 
     fun annotations(vararg annotations: AnnotationSpec) = apply {

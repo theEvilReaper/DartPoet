@@ -1,7 +1,6 @@
 package net.theevilreaper.dartpoet
 
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
-import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.buildCodeString
@@ -14,6 +13,7 @@ import net.theevilreaper.dartpoet.directive.impl.RelativeDirective
 import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
+import net.theevilreaper.dartpoet.spec.TypeSpec
 import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.util.DART_FILE_ENDING
@@ -31,7 +31,7 @@ class DartFile internal constructor(
     internal val name: String = builder.name
     internal val indent: String = builder.indent
     internal val annotations: List<AnnotationSpec> = builder.annotations.toImmutableList()
-    internal val types: List<ClassSpec> = builder.specTypes.toImmutableList()
+    internal val types: List<TypeSpec> = builder.specTypes.toImmutableList()
     internal val extensions: List<ExtensionSpec> = builder.extensionStack
     internal val docs = builder.docs
     internal val constants: Set<ConstantPropertySpec> = builder.constants.toImmutableSet()
