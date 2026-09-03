@@ -143,8 +143,8 @@ class DartFileBuilder(
         this.specTypes += dartFileSpec
     }
 
-    fun type(vararg classSpecs: TypeSpec) = apply {
-        this.specTypes += classSpecs
+    fun type(vararg typeSpecs: TypeSpec) = apply {
+        this.specTypes += typeSpecs
     }
 
     fun type(dartFileSpec: ClassBuilder) = apply {
