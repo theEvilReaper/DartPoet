@@ -103,18 +103,11 @@ class MixinSpecTest {
 
     @Test
     fun `test generic mixin`() {
-        val mixinSpec = MixinSpec.builder("Cache")
-            .generic(ClassName("T"))
-            .build()
-        mixinSpec.verifyDartOutput("mixin Cache<T> {}")
-    }
-
-    @Test
-    fun `test generic mixin with bounded type`() {
         val mixinSpec = MixinSpec.builder("Repository")
             .generic("T", ClassName("Entity"))
+            .generic("R")
             .build()
-        assertEquals("mixin Repository<T extends Entity> {}", mixinSpec.toString())
+        mixinSpec.verifyDartOutput("mixin Repository<T extends Entity, R> {}")
     }
 
     @Test
@@ -233,50 +226,41 @@ class MixinSpecTest {
     }
 
     @Test
-    fun `test validation blank or whitespace name throws`() {
-        val exceptionEmpty = assertThrows<IllegalStateException> {
+    fun `test validation throws on invalid name or modifier`() {
+        val emptyEx = assertThrows<IllegalStateException> {
             MixinSpec.builder("").build()
         }
-        assertEquals("The mixin name can not be empty or contain whitespaces", exceptionEmpty.message)
+        assertEquals("The mixin name can not be empty or contain whitespaces", emptyEx.message)
 
-        val exceptionWhitespace = assertThrows<IllegalStateException> {
+        val whitespaceEx = assertThrows<IllegalStateException> {
             MixinSpec.builder("Invalid Name").build()
         }
-        assertEquals("The mixin name can not be empty or contain whitespaces", exceptionWhitespace.message)
-    }
+        assertEquals("The mixin name can not be empty or contain whitespaces", whitespaceEx.message)
 
-    @Test
-    fun `test validation invalid modifier throws`() {
-        val exception = assertThrows<IllegalStateException> {
+        val modifierEx = assertThrows<IllegalStateException> {
             MixinSpec.builder("InvalidModifier")
                 .modifier(DartModifier.ABSTRACT)
                 .build()
         }
-        assertTrue(exception.message!!.startsWith("A mixin can only have the 'base' modifier"))
+        assertTrue(modifierEx.message!!.startsWith("A mixin can only have the 'base' modifier"))
     }
 
     @Test
-    fun `test validation duplicate on types throws`() {
-        val exception = assertThrows<IllegalStateException> {
+    fun `test validation throws on duplicate elements`() {
+        val dupOnEx = assertThrows<IllegalStateException> {
             MixinSpec.builder("DupOn")
                 .on(ClassName("Base"), ClassName("Base"))
                 .build()
         }
-        assertTrue(exception.message!!.startsWith("Duplicate 'on' type(s) found"))
-    }
+        assertTrue(dupOnEx.message!!.startsWith("Duplicate 'on' type(s) found"))
 
-    @Test
-    fun `test validation duplicate interfaces throws`() {
-        val exception = assertThrows<IllegalStateException> {
+        val dupInterfaceEx = assertThrows<IllegalStateException> {
             MixinSpec.builder("DupInterface")
                 .implements(ClassName("I1"), ClassName("I1"))
                 .build()
         }
-        assertTrue(exception.message!!.startsWith("Duplicate interface type(s) found"))
-    }
+        assertTrue(dupInterfaceEx.message!!.startsWith("Duplicate interface type(s) found"))
 
-    @Test
-    fun `test validation duplicate operators throws`() {
         val op1 = DartOperatorSpec.builder(BinaryOperator.PLUS)
             .returnType(ClassName("int"))
             .parameter(ParameterSpec.positional("other", ClassName("int")).build())
@@ -287,14 +271,13 @@ class MixinSpecTest {
             .parameter(ParameterSpec.positional("other", ClassName("int")).build())
             .addCode("return 2;")
             .build()
-
-        val exception = assertThrows<IllegalStateException> {
+        val dupOperatorEx = assertThrows<IllegalStateException> {
             MixinSpec.builder("DupOperator")
                 .operator(op1)
                 .operator(op2)
                 .build()
         }
-        assertTrue(exception.message!!.startsWith("Duplicate operator(s) found"))
+        assertTrue(dupOperatorEx.message!!.startsWith("Duplicate operator(s) found"))
     }
 
     @Test

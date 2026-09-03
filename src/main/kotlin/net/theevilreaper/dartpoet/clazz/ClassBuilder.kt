@@ -5,6 +5,7 @@ import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.enum.EnumEntrySpec
 import net.theevilreaper.dartpoet.constructor.ConstructorBase
 import net.theevilreaper.dartpoet.function.FunctionSpec
+import net.theevilreaper.dartpoet.meta.GenericMethods
 import net.theevilreaper.dartpoet.meta.SpecData
 import net.theevilreaper.dartpoet.meta.SpecMethods
 import net.theevilreaper.dartpoet.operator.DartOperatorSpec
@@ -30,7 +31,7 @@ class ClassBuilder internal constructor(
     internal val name: String?,
     internal val classType: ClassType,
     vararg modifiers: DartModifier
-) : SpecMethods<ClassBuilder> {
+) : SpecMethods<ClassBuilder>, GenericMethods<ClassBuilder> {
     internal val classMetaData: SpecData = SpecData(*modifiers)
     internal val constructorStack: MutableList<ConstructorBase> = mutableListOf()
     internal val propertyStack: MutableList<PropertySpec> = mutableListOf()
@@ -364,11 +365,38 @@ class ClassBuilder internal constructor(
     }
 
     /**
+     * Adds a generic type parameter as a [TypeName].
+     * @param typeName the type name to add
+     * @return the given instance of an [ClassBuilder]
+     */
+    override fun genericCast(typeName: TypeName) = apply {
+        this.genericCasts += typeName
+    }
+
+    /**
+     * Adds multiple generic type parameters as [TypeName] instances.
+     * @param typeNames the type names to add
+     * @return the given instance of an [ClassBuilder]
+     */
+    override fun genericCasts(vararg typeNames: TypeName) = apply {
+        this.genericCasts += typeNames
+    }
+
+    /**
+     * Add an unconstrained generic type parameter with the given [name].
+     * @param name the name of the generic type variable (e.g. "T")
+     * @return the given instance of an [ClassBuilder]
+     */
+    override fun generic(name: String) = apply {
+        this.genericCasts += TypeVariableName(name)
+    }
+
+    /**
      * Add a generic type to the class builder.
      * @param type the [ClassName] to add
      * @return the given instance of an [ClassBuilder]
      */
-    fun generic(type: ClassName) = apply {
+    override fun generic(type: ClassName) = apply {
         this.genericCasts += type
     }
 
@@ -377,7 +405,7 @@ class ClassBuilder internal constructor(
      * @param type the [Type] to add
      * @return the given instance of an [ClassBuilder]
      */
-    fun generic(type: Type) = apply {
+    override fun generic(type: Type) = apply {
         generic(TypeName.get(type) as ClassName)
     }
 
@@ -386,7 +414,7 @@ class ClassBuilder internal constructor(
      * @param type the [KClass] to add
      * @return the given instance of an [ClassBuilder]
      */
-    fun generic(type: KClass<*>) = apply {
+    override fun generic(type: KClass<*>) = apply {
         generic(type.asClassName())
     }
 
@@ -395,7 +423,7 @@ class ClassBuilder internal constructor(
      * @param type the [Class] to add
      * @return the given instance of an [ClassBuilder]
      */
-    fun generic(type: Class<*>) = apply {
+    override fun generic(type: Class<*>) = apply {
         generic(type.asClassName())
     }
 
@@ -405,7 +433,7 @@ class ClassBuilder internal constructor(
      * @param bound the bound of the type parameter, represented as a [TypeName]
      * @return the given instance of an [ClassBuilder]
      */
-    fun generic(name: String, bound: TypeName) = apply {
+    override fun generic(name: String, bound: TypeName) = apply {
         this.genericCasts += TypeVariableName(name, bound)
     }
 
@@ -415,7 +443,7 @@ class ClassBuilder internal constructor(
      * @param bound the bound of the type parameter, represented as a [ClassName]
      * @return the given instance of an [ClassBuilder]
      */
-    fun generic(name: String, bound: ClassName) = generic(name, bound as TypeName)
+    override fun generic(name: String, bound: ClassName) = generic(name, bound as TypeName)
 
     /**
      * Add a bounded generic type parameter to the class builder, e.g. `T extends Bar`.
@@ -423,7 +451,15 @@ class ClassBuilder internal constructor(
      * @param bound the bound of the type parameter, represented as a [KClass]
      * @return the given instance of an [ClassBuilder]
      */
-    fun generic(name: String, bound: KClass<*>) = generic(name, bound.asTypeName())
+    override fun generic(name: String, bound: KClass<*>) = generic(name, bound.asTypeName())
+
+    /**
+     * Add a bounded generic type parameter to the class builder, e.g. `T extends Bar`.
+     * @param name the name of the type parameter
+     * @param bound the bound of the type parameter, represented as a Java [Class]
+     * @return the given instance of an [ClassBuilder]
+     */
+    override fun generic(name: String, bound: Class<*>) = generic(name, bound.asClassName())
 
     /**
      * Creates a new instance from the [ClassSpec].
