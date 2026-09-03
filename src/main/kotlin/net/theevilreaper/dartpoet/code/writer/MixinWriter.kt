@@ -7,8 +7,10 @@ import net.theevilreaper.dartpoet.code.Writeable
 import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.code.emitConstants
 import net.theevilreaper.dartpoet.code.emitFunctions
+import net.theevilreaper.dartpoet.code.emitGenericTypeArguments
 import net.theevilreaper.dartpoet.code.emitOperators
 import net.theevilreaper.dartpoet.code.emitProperties
+import net.theevilreaper.dartpoet.code.emitTypeClause
 import net.theevilreaper.dartpoet.code.emitTypeDefs
 import net.theevilreaper.dartpoet.mixin.MixinSpec
 import net.theevilreaper.dartpoet.type.TypeVariableName
@@ -50,37 +52,12 @@ internal class MixinWriter : Writeable<MixinSpec> {
     }
 
     private fun writeGenericArguments(spec: MixinSpec, writer: CodeWriter) {
-        when (spec.genericCasts.isEmpty()) {
-            true -> writer.emitSpace()
-            false -> {
-                val joinedGenerics = StringHelper.concatData(
-                    spec.genericCasts,
-                    prefix = LESS_THAN_SIGN,
-                    separator = COMMA_SEPARATOR,
-                    postfix = GREATER_THAN_SIGN
-                ) { TypeVariableName.renderDeclaration(it) }
-                writer.emitCode("%L", joinedGenerics)
-                writer.emitSpace()
-            }
-        }
+        writer.emitGenericTypeArguments(spec.genericCasts)
     }
 
     private fun writeInheritance(spec: MixinSpec, writer: CodeWriter) {
-        if (spec.onTypes.isNotEmpty()) {
-            writer.emitCode("%L", "on")
-            writer.emitSpace()
-            val joinedOnTypes = StringHelper.concatData(spec.onTypes, separator = COMMA_SEPARATOR) { it.toString() }
-            writer.emitCode("%L", joinedOnTypes)
-            writer.emitSpace()
-        }
-
-        if (spec.interfaces.isNotEmpty()) {
-            writer.emitCode("%L", "implements")
-            writer.emitSpace()
-            val joinedInterfaces = StringHelper.concatData(spec.interfaces, separator = COMMA_SEPARATOR) { it.toString() }
-            writer.emitCode("%L", joinedInterfaces)
-            writer.emitSpace()
-        }
+        writer.emitTypeClause("on", spec.onTypes)
+        writer.emitTypeClause("implements", spec.interfaces)
     }
 
     private fun writeEmptyBody(spec: MixinSpec, writer: CodeWriter) {

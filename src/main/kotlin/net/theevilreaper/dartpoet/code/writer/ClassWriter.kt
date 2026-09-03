@@ -139,19 +139,7 @@ internal class ClassWriter : Writeable<ClassSpec> {
      * @param writer the [CodeWriter] to write the generic arguments
      */
     private fun writeGenericArguments(spec: ClassSpec, writer: CodeWriter) {
-        when (spec.genericCasts.isEmpty()) {
-            true -> writer.emitSpace()
-            false -> {
-                val joinedGenerics = StringHelper.concatData(
-                    spec.genericCasts,
-                    prefix = LESS_THAN_SIGN,
-                    separator = COMMA_SEPARATOR,
-                    postfix = GREATER_THAN_SIGN
-                ) { TypeVariableName.renderDeclaration(it) }
-                writer.emitCode("%L", joinedGenerics)
-                writer.emitSpace()
-            }
-        }
+        writer.emitGenericTypeArguments(spec.genericCasts)
     }
 
     /**
@@ -193,10 +181,8 @@ internal class ClassWriter : Writeable<ClassSpec> {
         writer.emit(StringHelper.ensureVariableNameWithPrivateModifier(spec.name, spec.modifiers.contains(PRIVATE)))
     }
 
-
-
     /**
-     * Writes the `extends`, `with` and `implements` clauses of a class header in that order.
+     * Writes the `extends`, `with`, `on` and `implements` clauses of a class header in that order.
      * Skips any clause the [spec] doesn't declare.
      * @param spec the [ClassSpec] which contains the super class, mixins and interfaces
      * @param writer the [CodeWriter] to write the inheritance clauses to
@@ -208,30 +194,9 @@ internal class ClassWriter : Writeable<ClassSpec> {
             writer.emitCode("%T", spec.superClass)
             writer.emitSpace()
         }
-
-        if (spec.mixins.isNotEmpty()) {
-            writer.emitCode("%L", "with")
-            writer.emitSpace()
-            val joinedMixins = StringHelper.concatData(spec.mixins, separator = COMMA_SEPARATOR) { it.toString() }
-            writer.emitCode("%L", joinedMixins)
-            writer.emitSpace()
-        }
-
-        if (spec.onTypes.isNotEmpty()) {
-            writer.emitCode("%L", "on")
-            writer.emitSpace()
-            val joinedOnTypes = StringHelper.concatData(spec.onTypes, separator = COMMA_SEPARATOR) { it.toString() }
-            writer.emitCode("%L", joinedOnTypes)
-            writer.emitSpace()
-        }
-
-        if (spec.interfaces.isNotEmpty()) {
-            writer.emitCode("%L", "implements")
-            writer.emitSpace()
-            val joinedInterfaces = StringHelper.concatData(spec.interfaces, separator = COMMA_SEPARATOR) { it.toString() }
-            writer.emitCode("%L", joinedInterfaces)
-            writer.emitSpace()
-        }
+        writer.emitTypeClause("with", spec.mixins)
+        writer.emitTypeClause("on", spec.onTypes)
+        writer.emitTypeClause("implements", spec.interfaces)
     }
 
     /**
