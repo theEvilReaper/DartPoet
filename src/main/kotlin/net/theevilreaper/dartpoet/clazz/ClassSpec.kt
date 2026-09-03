@@ -37,6 +37,7 @@ class ClassSpec internal constructor(
     internal val isEnum: Boolean = builder.classType == ClassType.ENUM
     internal val isAbstract: Boolean = builder.classType == ClassType.ABSTRACT
     internal val isMixin: Boolean = builder.classType == ClassType.MIXIN
+    internal val isMixinClass: Boolean = builder.classMetaData.modifiers.contains(DartModifier.MIXIN) && (builder.classType == ClassType.CLASS || builder.classType == ClassType.ABSTRACT)
     internal val isAnonymous: Boolean = builder.name == null && builder.classType == ClassType.CLASS
     internal val superClass: TypeName? = builder.superClass
     internal val mixins: List<TypeName> = builder.mixins.toImmutableList()
@@ -77,6 +78,23 @@ class ClassSpec internal constructor(
             }
             check(mixins.isEmpty()) {
                 "A mixin declaration can't use Dart's 'with' clause"
+            }
+            val invalidMixinModifiers = modifiers.intersect(setOf(DartModifier.INTERFACE, DartModifier.FINAL, DartModifier.SEALED))
+            check(invalidMixinModifiers.isEmpty()) {
+                "A mixin can only have the 'base' modifier, but got: $invalidMixinModifiers"
+            }
+        }
+
+        if (isMixinClass) {
+            check(superClass == null) {
+                "A mixin class can't extend a class in Dart"
+            }
+            check(mixins.isEmpty()) {
+                "A mixin class can't use Dart's 'with' clause"
+            }
+            val invalidMixinClassModifiers = modifiers.intersect(setOf(DartModifier.INTERFACE, DartModifier.FINAL, DartModifier.SEALED))
+            check(invalidMixinClassModifiers.isEmpty()) {
+                "A mixin class can only be combined with 'base' or 'abstract', but got: $invalidMixinClassModifiers"
             }
         }
 
