@@ -8,6 +8,7 @@ import net.theevilreaper.dartpoet.enum.EnumBuilder
 import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.typedef.AbstractTypeDef
+import net.theevilreaper.dartpoet.mixin.MixinBuilder
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.spec.TypeSpec
@@ -158,6 +159,15 @@ class DartFileBuilder(
      */
     fun type(enumBuilder: EnumBuilder) = apply {
         this.specTypes += enumBuilder.build()
+    }
+
+    /**
+     * Add a mixin specification to the file builder using a [MixinBuilder].
+     * @param mixinBuilder the builder whose built [MixinSpec] should be added
+     * @return the current instance of [DartFileBuilder]
+     */
+    fun type(mixinBuilder: MixinBuilder) = apply {
+        this.specTypes += mixinBuilder.build()
     }
 
     fun annotations(vararg annotations: AnnotationSpec) = apply {
