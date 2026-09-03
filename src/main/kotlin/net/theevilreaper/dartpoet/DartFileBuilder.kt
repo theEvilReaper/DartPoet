@@ -2,10 +2,10 @@ package net.theevilreaper.dartpoet
 
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.ClassBuilder
-import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
-import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.directive.Directive
+import net.theevilreaper.dartpoet.enum.EnumBuilder
+import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.typedef.AbstractTypeDef
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
@@ -149,6 +149,15 @@ class DartFileBuilder(
 
     fun type(dartFileSpec: ClassBuilder) = apply {
         this.specTypes += dartFileSpec.build()
+    }
+
+    /**
+     * Add an enum specification to the file builder using an [EnumBuilder].
+     * @param enumBuilder the builder whose built [EnumSpec] should be added
+     * @return the current instance of [DartFileBuilder]
+     */
+    fun type(enumBuilder: EnumBuilder) = apply {
+        this.specTypes += enumBuilder.build()
     }
 
     fun annotations(vararg annotations: AnnotationSpec) = apply {
