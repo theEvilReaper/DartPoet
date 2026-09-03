@@ -33,5 +33,6 @@ internal object WriterHelper {
     internal val parameterWriter by lazy { ParameterWriter() }
     internal val propertyWriter by lazy { PropertyWriter() }
     internal val typeDefWriter by lazy { TypeDefWriter() }
+    internal val mixinWriter by lazy { MixinWriter() }
     internal val operatorWriter by lazy { OperatorWriter() }
 }
