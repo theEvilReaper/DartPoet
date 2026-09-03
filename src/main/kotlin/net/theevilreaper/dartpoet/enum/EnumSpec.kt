@@ -43,7 +43,17 @@ class EnumSpec internal constructor(
         get() = properties.isEmpty() && constructors.isEmpty() && functions.isEmpty() && operators.isEmpty() && constants.isEmpty()
 
     init {
+        check(name.isNotBlank() && !name.contains(" ")) { "The enum name can not be empty or contain whitespaces" }
         check(entries.isNotEmpty()) { "An enum requires at least one enum entry" }
+
+        check(entries.size == entries.distinctBy { it.name }.size) {
+            "Duplicate enum entry name(s) found: ${entries.groupingBy { it.name }.eachCount().filterValues { it > 1 }.keys}"
+        }
+
+        val invalidModifiers = modifiers.filter { it != DartModifier.PUBLIC && it != DartModifier.PRIVATE }
+        check(invalidModifiers.isEmpty()) {
+            "Enums only support PUBLIC or PRIVATE modifiers, but got: $invalidModifiers"
+        }
 
         val propertiesSize = properties.size
         entries.forEach {
