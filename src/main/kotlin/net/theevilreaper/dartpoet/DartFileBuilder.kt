@@ -10,6 +10,7 @@ import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.typedef.AbstractTypeDef
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.property.PropertySpec
+import net.theevilreaper.dartpoet.spec.TypeSpec
 import net.theevilreaper.dartpoet.util.DEFAULT_INDENT
 import net.theevilreaper.dartpoet.util.isIndent
 
@@ -17,7 +18,7 @@ class DartFileBuilder(
     val name: String
 ) {
     internal val docs: MutableList<CodeBlock> = mutableListOf()
-    internal val specTypes: MutableList<ClassSpec> = mutableListOf()
+    internal val specTypes: MutableList<TypeSpec> = mutableListOf()
     internal val directives: MutableList<Directive> = mutableListOf()
     internal val annotations: MutableList<AnnotationSpec> = mutableListOf()
     internal val extensionStack: MutableList<ExtensionSpec> = mutableListOf()
@@ -138,11 +139,11 @@ class DartFileBuilder(
         this.typeDefs += typeDef
     }
 
-    fun type(dartFileSpec: ClassSpec) = apply {
+    fun type(dartFileSpec: TypeSpec) = apply {
         this.specTypes += dartFileSpec
     }
 
-    fun type(vararg classSpecs: ClassSpec) = apply {
+    fun type(vararg classSpecs: TypeSpec) = apply {
         this.specTypes += classSpecs
     }
 
