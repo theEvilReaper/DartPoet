@@ -212,7 +212,12 @@ class ClassSpec internal constructor(
         /**
          * Create a new [ClassBuilder] instance for a mixin dart class.
          * @return the created instance
+         * @deprecated Use [net.theevilreaper.dartpoet.mixin.MixinSpec.builder] instead.
          */
+        @Deprecated(
+            message = "Use MixinSpec.builder(name) instead",
+            replaceWith = ReplaceWith("MixinSpec.builder(name)", "net.theevilreaper.dartpoet.mixin.MixinSpec")
+        )
         @JvmStatic
         fun mixinClass(name: String) = ClassBuilder(name, ClassType.MIXIN)
 
