@@ -13,10 +13,6 @@ import net.theevilreaper.dartpoet.code.emitProperties
 import net.theevilreaper.dartpoet.code.emitTypeClause
 import net.theevilreaper.dartpoet.enum.EnumEntrySpec
 import net.theevilreaper.dartpoet.enum.EnumSpec
-import net.theevilreaper.dartpoet.type.TypeVariableName
-import net.theevilreaper.dartpoet.util.COMMA_SEPARATOR
-import net.theevilreaper.dartpoet.util.GREATER_THAN_SIGN
-import net.theevilreaper.dartpoet.util.LESS_THAN_SIGN
 import net.theevilreaper.dartpoet.util.NEW_LINE
 import net.theevilreaper.dartpoet.util.SEMICOLON
 import net.theevilreaper.dartpoet.util.StringHelper

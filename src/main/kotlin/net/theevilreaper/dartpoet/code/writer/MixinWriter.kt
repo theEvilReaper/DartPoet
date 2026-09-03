@@ -1,6 +1,5 @@
 package net.theevilreaper.dartpoet.code.writer
 
-import net.theevilreaper.dartpoet.DartModifier.BASE
 import net.theevilreaper.dartpoet.DartModifier.PRIVATE
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.Writeable
@@ -13,12 +12,8 @@ import net.theevilreaper.dartpoet.code.emitProperties
 import net.theevilreaper.dartpoet.code.emitTypeClause
 import net.theevilreaper.dartpoet.code.emitTypeDefs
 import net.theevilreaper.dartpoet.mixin.MixinSpec
-import net.theevilreaper.dartpoet.type.TypeVariableName
-import net.theevilreaper.dartpoet.util.COMMA_SEPARATOR
 import net.theevilreaper.dartpoet.util.CURLY_CLOSE
 import net.theevilreaper.dartpoet.util.CURLY_OPEN
-import net.theevilreaper.dartpoet.util.GREATER_THAN_SIGN
-import net.theevilreaper.dartpoet.util.LESS_THAN_SIGN
 import net.theevilreaper.dartpoet.util.NEW_LINE
 import net.theevilreaper.dartpoet.util.StringHelper
 

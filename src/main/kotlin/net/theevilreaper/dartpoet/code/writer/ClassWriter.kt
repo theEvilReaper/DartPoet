@@ -10,7 +10,6 @@ import net.theevilreaper.dartpoet.code.emitConstructors
 import net.theevilreaper.dartpoet.code.emitFunctions
 import net.theevilreaper.dartpoet.code.emitOperators
 import net.theevilreaper.dartpoet.enum.EnumEntrySpec
-import net.theevilreaper.dartpoet.type.TypeVariableName
 import net.theevilreaper.dartpoet.util.*
 import net.theevilreaper.dartpoet.util.CURLY_CLOSE
 import net.theevilreaper.dartpoet.util.CURLY_OPEN
