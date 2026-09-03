@@ -4,6 +4,7 @@ import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.typedef.AbstractTypeDef
+import net.theevilreaper.dartpoet.meta.GenericMethods
 import net.theevilreaper.dartpoet.meta.SpecData
 import net.theevilreaper.dartpoet.meta.SpecMethods
 import net.theevilreaper.dartpoet.operator.DartOperatorSpec
@@ -31,7 +32,7 @@ import kotlin.reflect.KClass
 class MixinBuilder internal constructor(
     val name: String,
     vararg modifiers: DartModifier
-) : SpecMethods<MixinBuilder> {
+) : SpecMethods<MixinBuilder>, GenericMethods<MixinBuilder> {
     internal val specData: SpecData = SpecData(*modifiers)
     internal val onTypes: MutableList<TypeName> = mutableListOf()
     internal val interfaces: MutableList<TypeName> = mutableListOf()
@@ -70,37 +71,37 @@ class MixinBuilder internal constructor(
         this.interfaces += interfaces.map { it.asTypeName() }
     }
 
-    fun genericCast(typeName: TypeName) = apply {
+    override fun genericCast(typeName: TypeName) = apply {
         this.genericCasts += typeName
     }
 
-    fun genericCasts(vararg typeNames: TypeName) = apply {
+    override fun genericCasts(vararg typeNames: TypeName) = apply {
         this.genericCasts += typeNames
     }
 
-    fun generic(type: ClassName) = apply {
+    override fun generic(name: String) = apply {
+        this.genericCasts += TypeVariableName(name)
+    }
+
+    override fun generic(type: ClassName) = apply {
         this.genericCasts += type
     }
 
-    fun generic(type: Type) = apply {
+    override fun generic(type: Type) = apply {
         this.genericCasts += type.asTypeName()
     }
 
-    fun generic(type: KClass<*>) = apply {
+    override fun generic(type: KClass<*>) = apply {
         this.genericCasts += type.asClassName()
     }
 
-    fun generic(type: Class<*>) = apply {
+    override fun generic(type: Class<*>) = apply {
         this.genericCasts += type.asClassName()
     }
 
-    fun generic(name: String, bound: TypeName) = apply {
+    override fun generic(name: String, bound: TypeName) = apply {
         this.genericCasts += TypeVariableName(name, bound)
     }
-
-    fun generic(name: String, bound: ClassName) = generic(name, bound as TypeName)
-
-    fun generic(name: String, bound: KClass<*>) = generic(name, bound.asTypeName())
 
     fun property(property: PropertySpec) = apply {
         this.properties += property
