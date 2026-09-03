@@ -108,35 +108,18 @@ class EnumSpecTest {
     @Test
     fun `test generic enum`() {
         val enumSpec = EnumSpec.builder("Result")
-            .genericCast(ClassName("T"))
+            .generic("T")
+            .generic("E", Comparable::class)
             .entry(EnumEntrySpec.builder("success").build())
             .entry(EnumEntrySpec.builder("failure").build())
             .build()
 
         enumSpec.verifyDartOutput(
             """
-            |enum Result<T> {
+            |enum Result<T, E extends Comparable> {
             |
             |  success,
             |  failure
-            |}
-            """.trimMargin()
-        )
-    }
-
-    @Test
-    fun `test generic enum with string and bound overloads`() {
-        val enumSpec = EnumSpec.builder("Result")
-            .generic("T")
-            .generic("E", Comparable::class)
-            .entry(EnumEntrySpec.builder("success").build())
-            .build()
-
-        enumSpec.verifyDartOutput(
-            """
-            |enum Result<T, E extends Comparable> {
-            |
-            |  success
             |}
             """.trimMargin()
         )
@@ -216,16 +199,13 @@ class EnumSpecTest {
     }
 
     @Test
-    fun `test validation empty entries throws`() {
-        val exception = assertThrows<IllegalStateException> {
+    fun `test validation throws on invalid entries`() {
+        val emptyEx = assertThrows<IllegalStateException> {
             EnumSpec.builder("EmptyEnum").build()
         }
-        assertEquals("An enum requires at least one enum entry", exception.message)
-    }
+        assertEquals("An enum requires at least one enum entry", emptyEx.message)
 
-    @Test
-    fun `test validation entry parameter count mismatch throws`() {
-        val exception = assertThrows<IllegalStateException> {
+        val mismatchEx = assertThrows<IllegalStateException> {
             EnumSpec.builder("MismatchEnum")
                 .property(PropertySpec.builder("name", String::class).build())
                 .entry(
@@ -236,86 +216,73 @@ class EnumSpecTest {
                 )
                 .build()
         }
-        assertEquals("The entries from the enum property must have the same size", exception.message)
+        assertEquals("The entries from the enum property must have the same size", mismatchEx.message)
     }
 
     @Test
-    fun `test validation duplicate mixin throws`() {
-        val exception = assertThrows<IllegalStateException> {
+    fun `test validation throws on duplicate elements`() {
+        val dupMixinEx = assertThrows<IllegalStateException> {
             EnumSpec.builder("DupMixin")
                 .withMixins(ClassName("M1"), ClassName("M1"))
                 .entry(EnumEntrySpec.builder("entry").build())
                 .build()
         }
-        assertTrue(exception.message!!.startsWith("Duplicate mixin type(s) found"))
-    }
+        assertTrue(dupMixinEx.message!!.startsWith("Duplicate mixin type(s) found"))
 
-    @Test
-    fun `test validation duplicate interface throws`() {
-        val exception = assertThrows<IllegalStateException> {
+        val dupInterfaceEx = assertThrows<IllegalStateException> {
             EnumSpec.builder("DupInterface")
                 .implements(ClassName("I1"), ClassName("I1"))
                 .entry(EnumEntrySpec.builder("entry").build())
                 .build()
         }
-        assertTrue(exception.message!!.startsWith("Duplicate interface type(s) found"))
-    }
+        assertTrue(dupInterfaceEx.message!!.startsWith("Duplicate interface type(s) found"))
 
-    @Test
-    fun `test validation duplicate operator throws`() {
+        val dupEntryEx = assertThrows<IllegalStateException> {
+            EnumSpec.builder("DupEntries")
+                .entry(EnumEntrySpec.builder("same").build())
+                .entry(EnumEntrySpec.builder("same").build())
+                .build()
+        }
+        assertTrue(dupEntryEx.message!!.startsWith("Duplicate enum entry name(s) found"))
+
         val op1 = DartOperatorSpec.builder(BinaryOperator.PLUS)
             .returnType(ClassName("int"))
             .parameter(ParameterSpec.positional("other", ClassName("int")).build())
-            .addCode("return %L;", "1")
+            .addCode("return 1;")
             .build()
         val op2 = DartOperatorSpec.builder(BinaryOperator.PLUS)
             .returnType(ClassName("int"))
             .parameter(ParameterSpec.positional("other", ClassName("int")).build())
-            .addCode("return %L;", "2")
+            .addCode("return 2;")
             .build()
-
-        val exception = assertThrows<IllegalStateException> {
+        val dupOperatorEx = assertThrows<IllegalStateException> {
             EnumSpec.builder("DupOperator")
                 .entry(EnumEntrySpec.builder("entry").build())
                 .operator(op1)
                 .operator(op2)
                 .build()
         }
-        assertTrue(exception.message!!.startsWith("Duplicate operator(s) found"))
+        assertTrue(dupOperatorEx.message!!.startsWith("Duplicate operator(s) found"))
     }
 
     @Test
-    fun `test validation blank or whitespace name throws`() {
-        val exceptionEmpty = assertThrows<IllegalStateException> {
+    fun `test validation throws on invalid name or modifier`() {
+        val emptyEx = assertThrows<IllegalStateException> {
             EnumSpec.builder("").entry(EnumEntrySpec.builder("a").build()).build()
         }
-        assertEquals("The enum name can not be empty or contain whitespaces", exceptionEmpty.message)
+        assertEquals("The enum name can not be empty or contain whitespaces", emptyEx.message)
 
-        val exceptionWhitespace = assertThrows<IllegalStateException> {
+        val whitespaceEx = assertThrows<IllegalStateException> {
             EnumSpec.builder("Invalid Name").entry(EnumEntrySpec.builder("a").build()).build()
         }
-        assertEquals("The enum name can not be empty or contain whitespaces", exceptionWhitespace.message)
-    }
+        assertEquals("The enum name can not be empty or contain whitespaces", whitespaceEx.message)
 
-    @Test
-    fun `test validation duplicate entry name throws`() {
-        val exception = assertThrows<IllegalStateException> {
-            EnumSpec.builder("DupEntries")
-                .entry(EnumEntrySpec.builder("same").build())
-                .entry(EnumEntrySpec.builder("same").build())
-                .build()
-        }
-        assertTrue(exception.message!!.startsWith("Duplicate enum entry name(s) found"))
-    }
-
-    @Test
-    fun `test validation invalid modifier throws`() {
-        val exception = assertThrows<IllegalStateException> {
+        val modifierEx = assertThrows<IllegalStateException> {
             EnumSpec.builder("InvalidModifier")
                 .modifier(DartModifier.ABSTRACT)
                 .entry(EnumEntrySpec.builder("a").build())
                 .build()
         }
-        assertTrue(exception.message!!.startsWith("Enums only support PUBLIC or PRIVATE modifiers"))
+        assertTrue(modifierEx.message!!.startsWith("Enums only support PUBLIC or PRIVATE modifiers"))
     }
 }

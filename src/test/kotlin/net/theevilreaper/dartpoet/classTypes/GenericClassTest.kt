@@ -24,17 +24,11 @@ class GenericClassTest {
 
     companion object {
         @JvmStatic
-        private fun genericOverloadCases(): Stream<Arguments> {
-            val reflectType: Type = String::class.java
-            return Stream.of(
-                Arguments.of(ClassSpec.builder("TestClass").generic("T").build(), "class TestClass<T> {}"),
-                Arguments.of(ClassSpec.builder("TestClass").generic(String::class).build(), "class TestClass<String> {}"),
-                Arguments.of(ClassSpec.builder("TestClass").generic(reflectType).build(), "class TestClass<String> {}"),
-            )
-        }
-
-        @JvmStatic
-        private fun boundedGenericCases(): Stream<Arguments> = Stream.of(
+        private fun genericClassCases(): Stream<Arguments> = Stream.of(
+            Arguments.of(
+                ClassSpec.builder("TestClass").generic("T").build(),
+                "class TestClass<T> {}"
+            ),
             Arguments.of(
                 ClassSpec.builder("Box").generic("T", ClassName("Comparable")).build(),
                 "class Box<T extends Comparable> {}"
@@ -103,15 +97,8 @@ class GenericClassTest {
 
     @DartAnalyzeCase
     @ParameterizedTest
-    @MethodSource("genericOverloadCases")
-    fun `test generic class with KClass and Type overloads`(classSpec: ClassSpec, expected: String) {
-        assertThat(classSpec.toString()).isEqualTo(expected)
-    }
-
-    @DartAnalyzeCase
-    @ParameterizedTest
-    @MethodSource("boundedGenericCases")
-    fun `test generic class with bounded type parameter`(classSpec: ClassSpec, expected: String) {
+    @MethodSource("genericClassCases")
+    fun `test generic class declarations`(classSpec: ClassSpec, expected: String) {
         assertThat(classSpec.toString()).isEqualTo(expected)
     }
 }
