@@ -13,6 +13,7 @@ import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.typedef.AbstractTypeDef
 import net.theevilreaper.dartpoet.operator.DartOperatorSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
+import net.theevilreaper.dartpoet.spec.TypeSpec
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.util.toImmutableList
 import net.theevilreaper.dartpoet.util.toImmutableSet
@@ -28,8 +29,8 @@ import net.theevilreaper.dartpoet.util.EXCLUSIVE_CLASS_MODIFIERS
  */
 class ClassSpec internal constructor(
     builder: ClassBuilder,
-) {
-    internal val name: String = builder.name.orEmpty()
+) : TypeSpec {
+    override val name: String = builder.name.orEmpty()
     internal val classType: ClassType = builder.classType
     internal val modifiers: Set<DartModifier> = builder.classMetaData.modifiers.toImmutableSet()
     internal val annotations: Set<AnnotationSpec> = builder.classMetaData.annotations.toImmutableSet()
@@ -137,7 +138,7 @@ class ClassSpec internal constructor(
      * Calls the [ClassWriter] to write the data from the spec into code for dart
      * @param codeWriter the [CodeWriter] instance to apply the data
      */
-    internal fun write(codeWriter: CodeWriter) {
+    override fun write(codeWriter: CodeWriter) {
         WriterHelper.classWriter.write(this, codeWriter)
     }
 
