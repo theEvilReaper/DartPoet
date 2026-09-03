@@ -17,7 +17,7 @@ import kotlin.reflect.KClass
  * @author theEvilReaper
  * @since 2.4.0
  */
-internal interface GenericMethods<T> {
+interface GenericMethods<T> {
 
     /**
      * Adds a generic type parameter as a [TypeName].
