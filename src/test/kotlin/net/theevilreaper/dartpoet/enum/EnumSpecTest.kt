@@ -265,4 +265,39 @@ class EnumSpecTest {
         }
         assertTrue(exception.message!!.startsWith("Duplicate operator(s) found"))
     }
+
+    @Test
+    fun `test validation blank or whitespace name throws`() {
+        val exceptionEmpty = assertThrows<IllegalStateException> {
+            EnumSpec.builder("").entry(EnumEntrySpec.builder("a").build()).build()
+        }
+        assertEquals("The enum name can not be empty or contain whitespaces", exceptionEmpty.message)
+
+        val exceptionWhitespace = assertThrows<IllegalStateException> {
+            EnumSpec.builder("Invalid Name").entry(EnumEntrySpec.builder("a").build()).build()
+        }
+        assertEquals("The enum name can not be empty or contain whitespaces", exceptionWhitespace.message)
+    }
+
+    @Test
+    fun `test validation duplicate entry name throws`() {
+        val exception = assertThrows<IllegalStateException> {
+            EnumSpec.builder("DupEntries")
+                .entry(EnumEntrySpec.builder("same").build())
+                .entry(EnumEntrySpec.builder("same").build())
+                .build()
+        }
+        assertTrue(exception.message!!.startsWith("Duplicate enum entry name(s) found"))
+    }
+
+    @Test
+    fun `test validation invalid modifier throws`() {
+        val exception = assertThrows<IllegalStateException> {
+            EnumSpec.builder("InvalidModifier")
+                .modifier(DartModifier.ABSTRACT)
+                .entry(EnumEntrySpec.builder("a").build())
+                .build()
+        }
+        assertTrue(exception.message!!.startsWith("Enums only support PUBLIC or PRIVATE modifiers"))
+    }
 }
