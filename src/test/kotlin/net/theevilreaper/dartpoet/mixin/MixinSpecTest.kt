@@ -219,7 +219,7 @@ class MixinSpecTest {
             .function(FunctionSpec.builder("fly").build())
 
         val dartFile = DartFile.builder("flying")
-            .type(mixinBuilder)
+            .type(mixinBuilder.build())
             .build()
 
         dartFile.verifyDartOutput(
