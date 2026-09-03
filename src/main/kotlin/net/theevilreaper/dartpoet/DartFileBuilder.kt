@@ -4,7 +4,6 @@ import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.ClassBuilder
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.directive.Directive
-import net.theevilreaper.dartpoet.enum.EnumBuilder
 import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.typedef.AbstractTypeDef
@@ -139,25 +138,46 @@ class DartFileBuilder(
         this.typeDefs += typeDef
     }
 
-    fun type(dartFileSpec: TypeSpec) = apply {
-        this.specTypes += dartFileSpec
+    /**
+     * Add a top level [TypeSpec] (e.g. [net.theevilreaper.dartpoet.clazz.ClassSpec], [net.theevilreaper.dartpoet.enum.EnumSpec], [net.theevilreaper.dartpoet.mixin.MixinSpec]) to the file.
+     * @param typeSpec the type specification to add
+     * @return the current instance of [DartFileBuilder]
+     */
+    fun type(typeSpec: TypeSpec) = apply {
+        this.specTypes += typeSpec
     }
 
+    /**
+     * Add a top level [TypeSpec] to the file over a lambda reference.
+     * @param typeSpec lambda returning the type specification to add
+     * @return the current instance of [DartFileBuilder]
+     */
+    fun type(typeSpec: () -> TypeSpec) = this.type(typeSpec())
+
+    /**
+     * Add an array of top level [TypeSpec]s to the file.
+     * @param typeSpecs the type specifications to add
+     * @return the current instance of [DartFileBuilder]
+     */
     fun type(vararg typeSpecs: TypeSpec) = apply {
         this.specTypes += typeSpecs
     }
 
-    fun type(dartFileSpec: ClassBuilder) = apply {
-        this.specTypes += dartFileSpec.build()
-    }
-
     /**
-     * Add an enum specification to the file builder using an [EnumBuilder].
-     * @param enumBuilder the builder whose built [EnumSpec] should be added
+     * Add an array of top level [TypeSpec]s to the file.
+     * @param typeSpecs the type specifications to add
      * @return the current instance of [DartFileBuilder]
      */
-    fun type(enumBuilder: EnumBuilder) = apply {
-        this.specTypes += enumBuilder.build()
+    fun types(vararg typeSpecs: TypeSpec) = apply {
+        this.specTypes += typeSpecs
+    }
+
+    @Deprecated(
+        message = "Pass the built ClassSpec instead",
+        replaceWith = ReplaceWith("type(dartFileSpec.build())")
+    )
+    fun type(dartFileSpec: ClassBuilder) = apply {
+        this.specTypes += dartFileSpec.build()
     }
 
     fun annotations(vararg annotations: AnnotationSpec) = apply {
