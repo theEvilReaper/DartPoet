@@ -104,6 +104,14 @@ class MixinSpecTest {
     @Test
     fun `test generic mixin`() {
         val mixinSpec = MixinSpec.builder("Cache")
+            .generic("T")
+            .build()
+        mixinSpec.verifyDartOutput("mixin Cache<T> {}")
+    }
+
+    @Test
+    fun `test generic mixin with ClassName`() {
+        val mixinSpec = MixinSpec.builder("Cache")
             .generic(ClassName("T"))
             .build()
         mixinSpec.verifyDartOutput("mixin Cache<T> {}")

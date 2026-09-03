@@ -125,6 +125,24 @@ class EnumSpecTest {
     }
 
     @Test
+    fun `test generic enum with string and bound overloads`() {
+        val enumSpec = EnumSpec.builder("Result")
+            .generic("T")
+            .generic("E", Comparable::class)
+            .entry(EnumEntrySpec.builder("success").build())
+            .build()
+
+        enumSpec.verifyDartOutput(
+            """
+            |enum Result<T, E extends Comparable> {
+            |
+            |  success
+            |}
+            """.trimMargin()
+        )
+    }
+
+    @Test
     fun `test enum with annotations and private modifier`() {
         val enumSpec = EnumSpec.builder("Status", DartModifier.PRIVATE)
             .annotation(AnnotationSpec.builder("deprecated").build())

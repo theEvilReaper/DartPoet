@@ -27,6 +27,7 @@ class GenericClassTest {
         private fun genericOverloadCases(): Stream<Arguments> {
             val reflectType: Type = String::class.java
             return Stream.of(
+                Arguments.of(ClassSpec.builder("TestClass").generic("T").build(), "class TestClass<T> {}"),
                 Arguments.of(ClassSpec.builder("TestClass").generic(String::class).build(), "class TestClass<String> {}"),
                 Arguments.of(ClassSpec.builder("TestClass").generic(reflectType).build(), "class TestClass<String> {}"),
             )
