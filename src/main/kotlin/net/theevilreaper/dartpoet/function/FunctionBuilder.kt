@@ -3,6 +3,7 @@ package net.theevilreaper.dartpoet.function
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
+import net.theevilreaper.dartpoet.meta.GenericMethods
 import net.theevilreaper.dartpoet.meta.SpecData
 import net.theevilreaper.dartpoet.meta.SpecMethods
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
@@ -25,7 +26,7 @@ import kotlin.reflect.KClass
 class FunctionBuilder internal constructor(
     val name: String,
     var returnType: TypeName = VOID
-) : SpecMethods<FunctionBuilder> {
+) : SpecMethods<FunctionBuilder>, GenericMethods<FunctionBuilder> {
     internal val specData: SpecData = SpecData()
     internal val parameters: MutableList<ParameterSpec> = mutableListOf()
     internal var async: Boolean = false
@@ -63,11 +64,38 @@ class FunctionBuilder internal constructor(
     }
 
     /**
+     * Adds a generic type parameter as a [TypeName].
+     * @param typeName the type name to add
+     * @return the given instance of an [FunctionBuilder]
+     */
+    override fun genericCast(typeName: TypeName) = apply {
+        this.genericCasts += typeName
+    }
+
+    /**
+     * Adds multiple generic type parameters as [TypeName] instances.
+     * @param typeNames the type names to add
+     * @return the given instance of an [FunctionBuilder]
+     */
+    override fun genericCasts(vararg typeNames: TypeName) = apply {
+        this.genericCasts += typeNames
+    }
+
+    /**
+     * Add an unconstrained generic type parameter with the given [name].
+     * @param name the name of the generic type variable (e.g. "T")
+     * @return the given instance of an [FunctionBuilder]
+     */
+    override fun generic(name: String) = apply {
+        this.genericCasts += TypeVariableName(name)
+    }
+
+    /**
      * Add a generic type to the function builder.
      * @param type the [ClassName] to add
      * @return the given instance of an [FunctionBuilder]
      */
-    fun generic(type: ClassName) = apply {
+    override fun generic(type: ClassName) = apply {
         this.genericCasts += type
     }
 
@@ -76,7 +104,7 @@ class FunctionBuilder internal constructor(
      * @param type the [Type] to add
      * @return the given instance of an [FunctionBuilder]
      */
-    fun generic(type: Type) = apply {
+    override fun generic(type: Type) = apply {
         generic(TypeName.get(type) as ClassName)
     }
 
@@ -85,7 +113,16 @@ class FunctionBuilder internal constructor(
      * @param type the [KClass] to add
      * @return the given instance of an [FunctionBuilder]
      */
-    fun generic(type: KClass<*>) = apply {
+    override fun generic(type: KClass<*>) = apply {
+        generic(type.asClassName())
+    }
+
+    /**
+     * Add a generic type to the function builder.
+     * @param type the [Class] to add
+     * @return the given instance of an [FunctionBuilder]
+     */
+    override fun generic(type: Class<*>) = apply {
         generic(type.asClassName())
     }
 
@@ -95,7 +132,7 @@ class FunctionBuilder internal constructor(
      * @param bound the bound of the type parameter, represented as a [TypeName]
      * @return the given instance of an [FunctionBuilder]
      */
-    fun generic(name: String, bound: TypeName) = apply {
+    override fun generic(name: String, bound: TypeName) = apply {
         this.genericCasts += TypeVariableName(name, bound)
     }
 
@@ -105,7 +142,7 @@ class FunctionBuilder internal constructor(
      * @param bound the bound of the type parameter, represented as a [ClassName]
      * @return the given instance of an [FunctionBuilder]
      */
-    fun generic(name: String, bound: ClassName) = generic(name, bound as TypeName)
+    override fun generic(name: String, bound: ClassName) = generic(name, bound as TypeName)
 
     /**
      * Add a bounded generic type parameter to the function builder, e.g. `T extends Bar`.
@@ -113,7 +150,15 @@ class FunctionBuilder internal constructor(
      * @param bound the bound of the type parameter, represented as a [KClass]
      * @return the given instance of an [FunctionBuilder]
      */
-    fun generic(name: String, bound: KClass<*>) = generic(name, bound.asTypeName())
+    override fun generic(name: String, bound: KClass<*>) = generic(name, bound.asTypeName())
+
+    /**
+     * Add a bounded generic type parameter to the function builder, e.g. `T extends Bar`.
+     * @param name the name of the type parameter
+     * @param bound the bound of the type parameter, represented as a Java [Class]
+     * @return the given instance of an [FunctionBuilder]
+     */
+    override fun generic(name: String, bound: Class<*>) = generic(name, bound.asClassName())
 
     fun addCode(format: String, vararg args: Any?) = apply {
         body.add(format, *args)
