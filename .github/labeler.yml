@@ -1,0 +1,85 @@
+"area: spec":
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/main/kotlin/**/spec/**'
+          - 'src/main/kotlin/**/clazz/**'
+          - 'src/main/kotlin/**/enum/**'
+          - 'src/main/kotlin/**/mixin/**'
+          - 'src/main/kotlin/**/extension/**'
+          - 'src/main/kotlin/**/annotation/**'
+          - 'src/main/kotlin/**/DartFile*'
+          - 'src/test/kotlin/**/spec/**'
+          - 'src/test/kotlin/**/clazz/**'
+          - 'src/test/kotlin/**/enum/**'
+          - 'src/test/kotlin/**/mixin/**'
+          - 'src/test/kotlin/**/extension/**'
+          - 'src/test/kotlin/**/DartFile*'
+
+"area: function":
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/main/kotlin/**/function/**'
+          - 'src/main/kotlin/**/constructor/**'
+          - 'src/main/kotlin/**/parameter/**'
+          - 'src/main/kotlin/**/operator/**'
+          - 'src/test/kotlin/**/function/**'
+          - 'src/test/kotlin/**/constructor/**'
+          - 'src/test/kotlin/**/parameter/**'
+          - 'src/test/kotlin/**/operator/**'
+
+"area: property":
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/main/kotlin/**/property/**'
+          - 'src/test/kotlin/**/property/**'
+
+"area: writer":
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/main/kotlin/**/code/**'
+          - 'src/test/kotlin/**/code/**'
+
+"area: types":
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/main/kotlin/**/type/**'
+          - 'src/test/kotlin/**/type/**'
+
+"area: directive":
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/main/kotlin/**/directive/**'
+          - 'src/test/kotlin/**/directive/**'
+
+"area: meta":
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/main/kotlin/**/meta/**'
+          - 'src/main/kotlin/**/DartModifier*'
+          - 'src/main/kotlin/**/ModifierTarget*'
+          - 'src/test/kotlin/**/meta/**'
+
+"area: corpus":
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/test/kotlin/**/corpus/**'
+
+"area: build":
+    - changed-files:
+          - any-glob-to-any-file:
+                - 'build.gradle.kts'
+                - 'settings.gradle.kts'
+                - 'gradle/**'
+                - 'gradle.properties'
+
+"area: ci":
+    - changed-files:
+          - any-glob-to-any-file:
+                - '.github/workflows/**'
+                - '.github/actions/**'
+
+"area: documentation":
+    - changed-files:
+          - any-glob-to-any-file:
+                - '**/*.md'
+                - 'docs/**'
