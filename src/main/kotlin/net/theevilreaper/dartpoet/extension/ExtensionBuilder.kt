@@ -2,11 +2,14 @@ package net.theevilreaper.dartpoet.extension
 
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.function.FunctionSpec
+import net.theevilreaper.dartpoet.meta.GenericMethods
 import net.theevilreaper.dartpoet.operator.DartOperatorSpec
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.TypeVariableName
+import net.theevilreaper.dartpoet.type.asClassName
 import net.theevilreaper.dartpoet.type.asTypeName
+import java.lang.reflect.Type
 import kotlin.reflect.KClass
 
 /**
@@ -19,7 +22,7 @@ import kotlin.reflect.KClass
 class ExtensionBuilder(
     val name: String? = null,
     val extClass: TypeName,
-) {
+) : GenericMethods<ExtensionBuilder> {
     internal var genericTypes: MutableList<TypeName> = mutableListOf()
     internal var endWithNewLine: Boolean = false
     internal val functionStack: MutableList<FunctionSpec> = mutableListOf()
@@ -101,66 +104,126 @@ class ExtensionBuilder(
     }
 
     /**
-     * Add a generic type for the extension
-     * @param genericType the generic type to set as [ClassName]
+     * Adds a generic type parameter as a [TypeName].
+     * @param typeName the type name to add
      * @return the current builder instance
      */
-    fun genericTypes(vararg genericType: ClassName) = apply {
-        this.genericTypes += genericType
+    override fun genericCast(typeName: TypeName) = apply {
+        this.genericTypes += typeName
     }
 
     /**
-     * Add a generic type for the extension
-     * @param genericType the generic type to set as [TypeName]
+     * Adds multiple generic type parameters as [TypeName] instances.
+     * @param typeNames the type names to add
      * @return the current builder instance
      */
-    fun genericTypes(vararg genericType: TypeName) = apply {
-        this.genericTypes += genericType
+    override fun genericCasts(vararg typeNames: TypeName) = apply {
+        this.genericTypes += typeNames
     }
 
     /**
-     * Add a generic type for the extension
-     * @param genericType the generic type to set as [Class]
+     * Add an unconstrained generic type parameter with the given [name].
+     * @param name the name of the generic type variable (e.g. "T")
      * @return the current builder instance
      */
-    fun genericTypes(vararg genericType: Class<*>) = apply {
-        this.genericTypes += genericType.map { it.asTypeName() }
+    override fun generic(name: String) = apply {
+        this.genericTypes += TypeVariableName(name)
     }
 
     /**
-     * Add a generic type for the extension
-     * @param genericType the generic type to set as [KClass]
+     * Add a generic type to the extension builder.
+     * @param type the [ClassName] to add
      * @return the current builder instance
      */
-    fun genericTypes(vararg genericType: KClass<*>) = apply {
-        this.genericTypes += genericType.map { it.asTypeName() }
+    override fun generic(type: ClassName) = apply {
+        this.genericTypes += type
     }
 
     /**
-     * Add a bounded generic type parameter for the extension, e.g. `T extends Bar`.
+     * Add a generic type to the extension builder.
+     * @param type the [Type] to add
+     * @return the current builder instance
+     */
+    override fun generic(type: Type) = apply {
+        generic(TypeName.get(type) as ClassName)
+    }
+
+    /**
+     * Add a generic type to the extension builder.
+     * @param type the [KClass] to add
+     * @return the current builder instance
+     */
+    override fun generic(type: KClass<*>) = apply {
+        generic(type.asClassName())
+    }
+
+    /**
+     * Add a generic type to the extension builder.
+     * @param type the [Class] to add
+     * @return the current builder instance
+     */
+    override fun generic(type: Class<*>) = apply {
+        generic(type.asClassName())
+    }
+
+    /**
+     * Add a bounded generic type parameter to the extension builder, e.g. `T extends Bar`.
      * @param name the name of the type parameter
      * @param bound the bound of the type parameter, represented as a [TypeName]
      * @return the current builder instance
      */
-    fun genericTypes(name: String, bound: TypeName) = apply {
+    override fun generic(name: String, bound: TypeName) = apply {
         this.genericTypes += TypeVariableName(name, bound)
     }
 
     /**
-     * Add a bounded generic type parameter for the extension, e.g. `T extends Bar`.
+     * Add a bounded generic type parameter to the extension builder, e.g. `T extends Bar`.
      * @param name the name of the type parameter
      * @param bound the bound of the type parameter, represented as a [ClassName]
      * @return the current builder instance
      */
-    fun genericTypes(name: String, bound: ClassName) = genericTypes(name, bound as TypeName)
+    override fun generic(name: String, bound: ClassName) = generic(name, bound as TypeName)
 
     /**
-     * Add a bounded generic type parameter for the extension, e.g. `T extends Bar`.
+     * Add a bounded generic type parameter to the extension builder, e.g. `T extends Bar`.
      * @param name the name of the type parameter
      * @param bound the bound of the type parameter, represented as a [KClass]
      * @return the current builder instance
      */
-    fun genericTypes(name: String, bound: KClass<*>) = genericTypes(name, bound.asTypeName())
+    override fun generic(name: String, bound: KClass<*>) = generic(name, bound.asTypeName())
+
+    /**
+     * Add a bounded generic type parameter to the extension builder, e.g. `T extends Bar`.
+     * @param name the name of the type parameter
+     * @param bound the bound of the type parameter, represented as a Java [Class]
+     * @return the current builder instance
+     */
+    override fun generic(name: String, bound: Class<*>) = generic(name, bound.asClassName())
+
+    @Deprecated("Use generic(type) or genericCasts(*types) instead", ReplaceWith("genericCasts(*genericType)"))
+    fun genericTypes(vararg genericType: ClassName) = genericCasts(*genericType)
+
+    @Deprecated("Use generic(type) or genericCasts(*types) instead", ReplaceWith("genericCasts(*genericType)"))
+    fun genericTypes(vararg genericType: TypeName) = genericCasts(*genericType)
+
+    @Deprecated("Use generic(type) instead")
+    fun genericTypes(vararg genericType: Class<*>) = apply {
+        this.genericTypes += genericType.map { it.asTypeName() }
+    }
+
+    @Deprecated("Use generic(type) instead")
+    fun genericTypes(vararg genericType: KClass<*>) = apply {
+        this.genericTypes += genericType.map { it.asTypeName() }
+    }
+
+    @Deprecated("Use generic(name, bound) instead", ReplaceWith("generic(name, bound)"))
+    fun genericTypes(name: String, bound: TypeName) = generic(name, bound)
+
+    @Deprecated("Use generic(name, bound) instead", ReplaceWith("generic(name, bound)"))
+    fun genericTypes(name: String, bound: ClassName) = generic(name, bound)
+
+    @Deprecated("Use generic(name, bound) instead", ReplaceWith("generic(name, bound)"))
+    fun genericTypes(name: String, bound: KClass<*>) = generic(name, bound)
 
     /**
      * Creates a new instance from the [ExtensionSpec] class.
