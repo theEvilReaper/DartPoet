@@ -1,5 +1,6 @@
 package net.theevilreaper.dartpoet.extension
 
+import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.operator.BinaryOperator
 import net.theevilreaper.dartpoet.operator.DartOperatorSpec
 import net.theevilreaper.dartpoet.operator.UnaryOperator
@@ -127,5 +128,28 @@ class ExtensionSpecTest {
             )
             .build()
         assertTrue { extension.toString().isNotEmpty() }
+    }
+
+    @Test
+    fun `test extension with generic string overload`() {
+        val extension = ExtensionSpec.builder("ListExt", List::class.parameterizedBy(ClassName("T")))
+            .generic("T")
+            .function(
+                FunctionSpec.builder("firstOrNull")
+                    .returns(ClassName("T").copy(nullable = true))
+                    .addCode("return isEmpty ? null : first;")
+                    .build()
+            )
+            .build()
+        assertEquals(
+            """
+            |extension ListExt<T> on List<T> {
+            |  T? firstOrNull() {
+            |    return isEmpty ? null : first;
+            |  }
+            |}
+            """.trimMargin(),
+            extension.toString()
+        )
     }
 }

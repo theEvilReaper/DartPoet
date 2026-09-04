@@ -5,6 +5,7 @@ import net.theevilreaper.dartpoet.clazz.ClassBuilder
 import net.theevilreaper.dartpoet.clazz.ClassType
 import net.theevilreaper.dartpoet.enum.EnumBuilder
 import net.theevilreaper.dartpoet.function.FunctionBuilder
+import net.theevilreaper.dartpoet.extension.ExtensionBuilder
 import net.theevilreaper.dartpoet.mixin.MixinBuilder
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeVariableName
@@ -23,7 +24,8 @@ class GenericMethodsTest {
             ClassBuilder("TestClass", ClassType.CLASS),
             EnumBuilder("TestEnum"),
             MixinBuilder("TestMixin"),
-            FunctionBuilder("testFunc")
+            FunctionBuilder("testFunc"),
+            ExtensionBuilder(name = "TestExt", extClass = ClassName("Object"))
         )
     }
 
@@ -32,6 +34,7 @@ class GenericMethodsTest {
         is EnumBuilder -> builder.genericCasts.map { TypeVariableName.renderDeclaration(it) }
         is MixinBuilder -> builder.genericCasts.map { TypeVariableName.renderDeclaration(it) }
         is FunctionBuilder -> builder.genericCasts.map { TypeVariableName.renderDeclaration(it) }
+        is ExtensionBuilder -> builder.genericTypes.map { TypeVariableName.renderDeclaration(it) }
         else -> error("Unknown builder: $builder")
     }
 
