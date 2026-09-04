@@ -24,7 +24,7 @@ class GenericMethodsTest {
             ClassBuilder("TestClass", ClassType.CLASS),
             EnumBuilder("TestEnum"),
             MixinBuilder("TestMixin"),
-            FunctionBuilder("testFunc")
+            FunctionBuilder("testFunc"),
             ExtensionBuilder(name = "TestExt", extClass = ClassName("Object"))
         )
     }
