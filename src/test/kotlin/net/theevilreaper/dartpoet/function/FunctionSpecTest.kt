@@ -174,4 +174,22 @@ class FunctionSpecTest {
         assertTrue { specAsBuilder.body.isNotEmpty() }
         assertEquals(functionSpec.genericCasts, specAsBuilder.genericCasts)
     }
+
+    @Test
+    fun `test generic function with string overload`() {
+        val functionSpec = FunctionSpec.builder("identity")
+            .generic("T")
+            .returns(ClassName("T"))
+            .parameter(ParameterSpec.positional("value", ClassName("T")).build())
+            .addCode("return value;")
+            .build()
+        assertEquals(
+            """
+            |T identity<T>(T value) {
+            |  return value;
+            |}
+            """.trimMargin(),
+            functionSpec.toString()
+        )
+    }
 }

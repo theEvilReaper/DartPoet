@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.clazz.ClassBuilder
 import net.theevilreaper.dartpoet.clazz.ClassType
 import net.theevilreaper.dartpoet.enum.EnumBuilder
+import net.theevilreaper.dartpoet.function.FunctionBuilder
 import net.theevilreaper.dartpoet.mixin.MixinBuilder
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeVariableName
@@ -21,7 +22,8 @@ class GenericMethodsTest {
         fun builders(): Stream<GenericMethods<*>> = Stream.of(
             ClassBuilder("TestClass", ClassType.CLASS),
             EnumBuilder("TestEnum"),
-            MixinBuilder("TestMixin")
+            MixinBuilder("TestMixin"),
+            FunctionBuilder("testFunc")
         )
     }
 
@@ -29,6 +31,7 @@ class GenericMethodsTest {
         is ClassBuilder -> builder.genericCasts.map { TypeVariableName.renderDeclaration(it) }
         is EnumBuilder -> builder.genericCasts.map { TypeVariableName.renderDeclaration(it) }
         is MixinBuilder -> builder.genericCasts.map { TypeVariableName.renderDeclaration(it) }
+        is FunctionBuilder -> builder.genericCasts.map { TypeVariableName.renderDeclaration(it) }
         else -> error("Unknown builder: $builder")
     }
 
