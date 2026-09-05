@@ -26,6 +26,16 @@
 
 * **class:** remove library as a valid class type ([#291](https://github.com/theEvilReaper/DartPoet/issues/291)) ([b6fc1d5](https://github.com/theEvilReaper/DartPoet/commit/b6fc1d502c89a5ae113a7c2da96785e65d084ed5))
 
+## [2.4.0](https://github.com/theEvilReaper/DartPoet/compare/2.3.2...2.4.0) (2026-09-05)
+
+
+### Features
+
+* **class:** support mixin modifiers ([#309](https://github.com/theEvilReaper/DartPoet/issues/309)) ([88a540c](https://github.com/theEvilReaper/DartPoet/commit/88a540ce5e1d72338baa9453fcff2820cb5899de))
+* **extension:** support GenericMethods interface ([#316](https://github.com/theEvilReaper/DartPoet/issues/316)) ([52f3f90](https://github.com/theEvilReaper/DartPoet/commit/52f3f9007cb15b6ce58eede334fc0b38a27f185d))
+* **function:** support GenericMethods interface ([#315](https://github.com/theEvilReaper/DartPoet/issues/315)) ([251be63](https://github.com/theEvilReaper/DartPoet/commit/251be6373323346919f642230a59aaad5133f077))
+* **meta:** add GenericMethods interface ([#314](https://github.com/theEvilReaper/DartPoet/issues/314)) ([7aa5d24](https://github.com/theEvilReaper/DartPoet/commit/7aa5d24e3b48e6fe2297ccd1730906364283f85f))
+
 ## [2.3.2](https://github.com/theEvilReaper/DartPoet/compare/2.3.1...2.3.2) (2026-09-02)
 
 
