@@ -182,6 +182,7 @@ class CodeBlock private constructor(
     class Builder {
         internal val formatParts = mutableListOf<String>()
         internal val args = mutableListOf<Any?>()
+        private val switchCaseStack = ArrayDeque<Boolean>()
 
         fun isEmpty(): Boolean = formatParts.isEmpty()
 
@@ -467,6 +468,116 @@ class CodeBlock private constructor(
         fun clear(): Builder = apply {
             formatParts.clear()
             args.clear()
+            switchCaseStack.clear()
+        }
+
+        /**
+         * Begins a Dart switch statement, emitting `switch (<target>) {\n` and indenting.
+         * @param target the target expression of the switch statement
+         * @param args the arguments to replace placeholders in the target
+         */
+        fun beginSwitch(target: String, vararg args: Any?): Builder = apply {
+            add("switch ($target)·{\n", *args)
+            indent()
+            switchCaseStack.addLast(false)
+        }
+
+        /**
+         * Begins a case within a Dart switch statement.
+         * If a previous case was currently open, its body will be unindented automatically.
+         * @param pattern the pattern or value to match against
+         * @param guard an optional guard condition using Dart's `when` keyword
+         * @param args arguments for placeholders in pattern and guard
+         */
+        fun beginCase(pattern: String, guard: String? = null, vararg args: Any?): Builder = apply {
+            if (switchCaseStack.isNotEmpty() && switchCaseStack.last()) {
+                unindent()
+                switchCaseStack.removeLast()
+                switchCaseStack.addLast(false)
+            }
+            if (switchCaseStack.isNotEmpty()) {
+                switchCaseStack.removeLast()
+                switchCaseStack.addLast(true)
+            }
+            if (guard != null) {
+                add("case $pattern·when $guard:\n", *args)
+            } else {
+                add("case $pattern:\n", *args)
+            }
+            indent()
+        }
+
+        /**
+         * Begins a default case within a Dart switch statement.
+         * If a previous case was currently open, its body will be unindented automatically.
+         */
+        fun beginDefault(): Builder = apply {
+            if (switchCaseStack.isNotEmpty() && switchCaseStack.last()) {
+                unindent()
+                switchCaseStack.removeLast()
+                switchCaseStack.addLast(false)
+            }
+            if (switchCaseStack.isNotEmpty()) {
+                switchCaseStack.removeLast()
+                switchCaseStack.addLast(true)
+            }
+            add("default:\n")
+            indent()
+        }
+
+        /**
+         * Ends the current case body within a switch statement.
+         */
+        fun endCase(): Builder = apply {
+            if (switchCaseStack.isNotEmpty() && switchCaseStack.last()) {
+                unindent()
+                switchCaseStack.removeLast()
+                switchCaseStack.addLast(false)
+            }
+        }
+
+        /**
+         * Closes an active switch statement, ending any open case body and emitting `}\n`.
+         */
+        fun endSwitch(): Builder = apply {
+            if (switchCaseStack.isNotEmpty()) {
+                if (switchCaseStack.removeLast()) {
+                    unindent()
+                }
+            }
+            unindent()
+            add("}\n")
+        }
+
+        /**
+         * Adds a switch statement using a structured DSL block.
+         * @param target the target expression of the switch statement
+         * @param args arguments for format placeholders in target
+         * @param action the DSL builder action configuring the cases
+         */
+        fun addSwitch(
+            target: String,
+            vararg args: Any?,
+            action: SwitchStatementBuilder.() -> Unit
+        ): Builder = apply {
+            beginSwitch(target, *args)
+            SwitchStatementBuilder(this).action()
+            endSwitch()
+        }
+
+        /**
+         * Adds a Dart 3 switch expression to this builder using a structured DSL block.
+         * @param target the target expression being switched on
+         * @param args arguments for format placeholders in target
+         * @param action the DSL builder action configuring the cases
+         */
+        fun addSwitchExpression(
+            target: String,
+            vararg args: Any?,
+            action: SwitchExpressionBuilder.() -> Unit
+        ): Builder = apply {
+            val expr = SwitchExpressionBuilder().apply(action).build(target, args.toList())
+            add(expr)
         }
 
         fun build(): CodeBlock = CodeBlock(formatParts.toImmutableList(), args.toImmutableList())
@@ -486,6 +597,21 @@ class CodeBlock private constructor(
 
         @JvmStatic
         fun builder(): Builder = Builder()
+
+        /**
+         * Creates a Dart 3 switch expression [CodeBlock] using a structured DSL block.
+         * @param target the target expression being switched on
+         * @param args arguments for format placeholders in target
+         * @param action the DSL builder action configuring the expression cases
+         */
+        @JvmStatic
+        fun switchExpression(
+            target: String,
+            vararg args: Any?,
+            action: SwitchExpressionBuilder.() -> Unit
+        ): CodeBlock {
+            return SwitchExpressionBuilder().apply(action).build(target, args.toList())
+        }
 
         internal val Char.isMultiCharNoArgPlaceholder get() = this == '%'
         internal val Char.isSingleCharNoArgPlaceholder get() = isOneOf('⇥', '⇤', '«', '»')
@@ -521,4 +647,91 @@ inline fun buildCodeBlock(builderAction: CodeBlock.Builder.() -> Unit): CodeBloc
  */
 inline fun CodeBlock.Builder.withIndent(builderAction: CodeBlock.Builder.() -> Unit): CodeBlock.Builder {
     return indent().also(builderAction).unindent()
+}
+
+/**
+ * Builder class for configuring cases in a Dart switch statement DSL block.
+ */
+class SwitchStatementBuilder internal constructor(private val builder: CodeBlock.Builder) {
+
+    /**
+     * Adds a `case` clause to the switch statement with an optional `when` guard.
+     * @param pattern the pattern or value to match
+     * @param guard an optional guard condition
+     * @param args arguments for placeholders in pattern or guard
+     * @param action code block builder populating the case body
+     */
+    fun case(
+        pattern: String,
+        guard: String? = null,
+        vararg args: Any?,
+        action: CodeBlock.Builder.() -> Unit
+    ) {
+        builder.beginCase(pattern, guard, *args)
+        builder.action()
+        builder.endCase()
+    }
+
+    /**
+     * Adds a `default:` clause to the switch statement.
+     * @param action code block builder populating the default body
+     */
+    fun default(action: CodeBlock.Builder.() -> Unit) {
+        builder.beginDefault()
+        builder.action()
+        builder.endCase()
+    }
+}
+
+/**
+ * Case entry for a Dart 3 switch expression.
+ */
+internal data class SwitchExpressionCase(
+    val pattern: String,
+    val expression: String,
+    val guard: String?,
+    val args: List<Any?>
+)
+
+/**
+ * Builder class for configuring cases in a Dart 3 switch expression.
+ */
+class SwitchExpressionBuilder internal constructor() {
+    internal val cases = mutableListOf<SwitchExpressionCase>()
+
+    /**
+     * Adds a case to the switch expression: `pattern [when guard] => expression,`.
+     * @param pattern the pattern to match against
+     * @param expression the resulting expression when matched
+     * @param guard optional guard condition using `when`
+     * @param args arguments for format placeholders in pattern, guard, or expression
+     */
+    fun case(pattern: String, expression: String, guard: String? = null, vararg args: Any?) = apply {
+        cases += SwitchExpressionCase(pattern, expression, guard, args.toList())
+    }
+
+    /**
+     * Adds a default `_ => expression,` case to the switch expression.
+     * @param expression the resulting expression for the default case
+     * @param args arguments for format placeholders in expression
+     */
+    fun caseDefault(expression: String, vararg args: Any?) = apply {
+        cases += SwitchExpressionCase("_", expression, null, args.toList())
+    }
+
+    internal fun build(target: String, targetArgs: List<Any?>): CodeBlock {
+        val builder = CodeBlock.builder()
+        builder.add("switch ($target)·{\n", *targetArgs.toTypedArray())
+        builder.indent()
+        for (c in cases) {
+            if (c.guard != null) {
+                builder.add("${c.pattern}·when ${c.guard}·=> ${c.expression},\n", *c.args.toTypedArray())
+            } else {
+                builder.add("${c.pattern}·=> ${c.expression},\n", *c.args.toTypedArray())
+            }
+        }
+        builder.unindent()
+        builder.add("}")
+        return builder.build()
+    }
 }
