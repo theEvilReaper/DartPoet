@@ -540,10 +540,8 @@ class CodeBlock private constructor(
          * Closes an active switch statement, ending any open case body and emitting `}\n`.
          */
         fun endSwitch(): Builder = apply {
-            if (switchCaseStack.isNotEmpty()) {
-                if (switchCaseStack.removeLast()) {
-                    unindent()
-                }
+            if (switchCaseStack.isNotEmpty() && switchCaseStack.removeLast()) {
+                unindent()
             }
             unindent()
             add("}\n")
