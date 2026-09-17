@@ -582,8 +582,8 @@ class CodeBlock private constructor(
     }
 
     companion object {
-        private val NAMED_ARGUMENT = Regex("%([\\w_]+):([\\w]).*")
-        private val LOWERCASE = Regex("[a-z]+[\\w_]*")
+        private val NAMED_ARGUMENT = Regex("""%(\w+):(\w).*""")
+        private val LOWERCASE = Regex("""[a-z]+\w*""")
         private const val ARG_NAME = 1
         private const val TYPE_NAME = 2
         private val NO_ARG_PLACEHOLDERS = setOf("⇥", "⇤", "«", "»")
