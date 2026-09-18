@@ -65,20 +65,6 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
     }
 
     /**
-     * Returns the postfix [String] based on a given boolean predicate.
-     * If the predicate returns true it will return [SPACE] otherwise an [EMPTY_STRING].
-     * **Note** This method is a internal method which is only used in this class
-     * @param predicate the predicate which is used to determine the postfix
-     * @return the determined postfix [String]
-     */
-    private inline fun getPostFix(crossinline predicate: () -> Boolean): String {
-        return when (predicate()) {
-            true -> SPACE
-            else -> EMPTY_STRING
-        }
-    }
-
-    /**
      * Returns a [ParameterizedTypeName] if the spec is async otherwise null.
      * This is required because the return value of an async function must be wrapped in a [Future].
      * @param spec The function spec to check
