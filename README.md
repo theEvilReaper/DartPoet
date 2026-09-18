@@ -13,7 +13,8 @@ The API supports the creation of core Dart language constructs, such as classes,
 Some newer language features are not yet directly supported by the API, but they can be implemented using the
 `CodeBlock` class.
 
-Generated code uses Dart's null-safety features and requires Dart `2.19.0` or newer.
+Generated code uses Dart's null-safety features and requires Dart `3.0` or newer. Some newer constructs need a
+more recent SDK. Extension Types require Dart `3.3+`, and private named parameters require Dart `3.12+`.
 
 > [!NOTE]
 > **Roadmap & Dart 3 Support:**  
