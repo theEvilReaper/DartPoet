@@ -17,9 +17,10 @@ Generated code uses Dart's null-safety features and requires Dart `2.19.0` or ne
 
 > [!NOTE]
 > **Roadmap & Dart 3 Support:**  
-> We are currently finalizing the remaining pre-Dart 3.0 language features (such as mixin `on`-clauses and direct
-> top-level file declarations) before rolling out full native support for Dart 3.0+ features (including Record Types,
-> Pattern Matching and Extension Types).
+> Most Dart 3.0+ features are now natively supported, including Record Types, Extension Types, the combined
+> `mixin class` declaration, and Dart 3.12's private named parameters. The one remaining gap is a dedicated API for
+> structured pattern matching (record/list/object destructuring, `if`-case); until then, patterns can still be
+> expressed as raw strings inside the existing `switch` statement/expression DSL.
 
 > [!WARNING]
 >
