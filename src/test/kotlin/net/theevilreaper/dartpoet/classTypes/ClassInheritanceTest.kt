@@ -61,21 +61,6 @@ class ClassInheritanceTest {
                 |
                 |}
                 """.trimMargin()
-            ),
-            Arguments.of(
-                ClassSpec.mixinClass("Handler").implements(ClassName("I1")).build(),
-                "mixin Handler implements I1 {}"
-            ),
-            Arguments.of(
-                ClassSpec.mixinClass("Handler").on(ClassName("Base")).build(),
-                "mixin Handler on Base {}"
-            ),
-            Arguments.of(
-                ClassSpec.mixinClass("Handler")
-                    .on(ClassName("Base"), ClassName("Other"))
-                    .implements(ClassName("I1"))
-                    .build(),
-                "mixin Handler on Base, Other implements I1 {}"
             )
         )
 
@@ -89,22 +74,6 @@ class ClassInheritanceTest {
                         .build()
                 },
                 "An enum can't extend a class in Dart, only 'with' and 'implements' are allowed"
-            ),
-            Arguments.of(
-                {
-                    ClassSpec.mixinClass("Handler")
-                        .withMixins(ClassName("M1"))
-                        .build()
-                },
-                "A mixin declaration can't use Dart's 'with' clause"
-            ),
-            Arguments.of(
-                {
-                    ClassSpec.mixinClass("Handler")
-                        .superClass(ClassName("Base"))
-                        .build()
-                },
-                "A mixin declaration can't extend a class in Dart"
             ),
             Arguments.of(
                 {
@@ -129,14 +98,6 @@ class ClassInheritanceTest {
                         .build()
                 },
                 "Dart's 'on' clause is only allowed on a mixin declaration"
-            ),
-            Arguments.of(
-                {
-                    ClassSpec.mixinClass("Handler")
-                        .on(ClassName("Base"), ClassName("Base"))
-                        .build()
-                },
-                "Duplicate 'on' type(s) found: [Base]"
             )
         )
     }

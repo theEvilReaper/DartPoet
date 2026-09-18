@@ -2,13 +2,13 @@ package net.theevilreaper.dartpoet.corpus
 
 import net.theevilreaper.dartpoet.DartFile
 import net.theevilreaper.dartpoet.DartModifier
-import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.enum.EnumEntryBuilder
 import net.theevilreaper.dartpoet.enum.EnumEntrySpec
 import net.theevilreaper.dartpoet.enum.EnumSpec
 import net.theevilreaper.dartpoet.enum.parameter.EnumParameterSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
+import net.theevilreaper.dartpoet.mixin.MixinSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.type.BOOLEAN
@@ -89,7 +89,7 @@ class EnumCorpusTest {
 
     @Test
     fun `test enums implementing interfaces and using mixins in DartFile`() {
-        val loggingMixin = ClassSpec.mixinClass("LoggingMixin")
+        val loggingMixin = MixinSpec.builder("LoggingMixin")
             .function(
                 FunctionSpec.builder("log")
                     .parameter(ParameterSpec.positional("msg", STRING).build())

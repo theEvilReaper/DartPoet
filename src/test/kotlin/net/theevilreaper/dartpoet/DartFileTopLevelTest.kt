@@ -113,7 +113,7 @@ class DartFileTopLevelTest {
                     .addCode("print(appName);")
                     .build()
             )
-            .type(ClassSpec.builder("AppConfig"))
+            .type(ClassSpec.builder("AppConfig").build())
             .build()
         file.verifyDartOutput(
             """

@@ -38,7 +38,7 @@ class ExtensionSpecTest {
                 IllegalStateException::class.java,
                 {
                     ExtensionSpec.builder("ListExt", List::class.parameterizedBy(String::class))
-                        .genericTypes(Int::class)
+                        .generic(Int::class)
                         .build()
                 },
                 """
@@ -50,7 +50,7 @@ class ExtensionSpecTest {
                 IllegalStateException::class.java,
                 {
                     ExtensionSpec.builder("MapExt", Map::class.parameterizedBy(String::class, Int::class))
-                        .genericTypes(ClassName("D"), ClassName("D"))
+                        .genericCasts(ClassName("D"), ClassName("D"))
                         .build()
                 },
                 """

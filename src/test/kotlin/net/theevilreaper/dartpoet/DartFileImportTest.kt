@@ -48,6 +48,7 @@ class DartFileImportTest {
                             )
                             .build()
                     )
+                    .build()
             )
             .build()
         assertThat(dartFile.toString()).isEqualTo(

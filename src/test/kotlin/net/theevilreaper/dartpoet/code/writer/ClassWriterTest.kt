@@ -27,7 +27,6 @@ class ClassWriterTest {
         @JvmStatic
         private fun simpleClasses() = Stream.of(
             Arguments.of(ClassSpec.builder("Test").build(), "class Test {}"),
-            Arguments.of(ClassSpec.mixinClass("Test").build(), "mixin Test {}"),
             Arguments.of(
                 ClassSpec.builder("Model").endWithNewLine(true).build(),
                 """

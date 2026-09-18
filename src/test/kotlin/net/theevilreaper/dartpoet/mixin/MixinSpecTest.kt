@@ -243,6 +243,21 @@ class MixinSpecTest {
                 .build()
         }
         assertTrue(modifierEx.message!!.startsWith("A mixin can only have the 'base' modifier"))
+
+        val interfaceEx = assertThrows<IllegalStateException> {
+            MixinSpec.builder("Handler").modifier(DartModifier.INTERFACE).build()
+        }
+        assertEquals("A mixin can only have the 'base' modifier, but got: [INTERFACE]", interfaceEx.message)
+
+        val finalEx = assertThrows<IllegalStateException> {
+            MixinSpec.builder("Handler").modifier(DartModifier.FINAL).build()
+        }
+        assertEquals("A mixin can only have the 'base' modifier, but got: [FINAL]", finalEx.message)
+
+        val sealedEx = assertThrows<IllegalStateException> {
+            MixinSpec.builder("Handler").modifier(DartModifier.SEALED).build()
+        }
+        assertEquals("A mixin can only have the 'base' modifier, but got: [SEALED]", sealedEx.message)
     }
 
     @Test

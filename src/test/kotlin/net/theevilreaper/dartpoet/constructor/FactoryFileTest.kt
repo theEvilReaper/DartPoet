@@ -62,6 +62,7 @@ class FactoryFileTest {
                     .addCode("%L", $$"_$VersionModelFromJson(json);")
                     .build()
             }
+            .build()
         val versionFile = DartFile.builder("version.dart")
             .directives(
                 DirectiveFactory.create(DirectiveType.IMPORT, "freezed_annotation/freezed_annotation.dart"),

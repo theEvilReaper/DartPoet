@@ -59,13 +59,13 @@ class ExtensionWriterTest {
         private fun basicGenericExtension() = Stream.of(
             Arguments.of(
                 ExtensionSpec.builder("ListExt", List::class.parameterizedBy(ClassName("T")))
-                    .genericTypes(ClassName("T"))
+                    .genericCasts(ClassName("T"))
                     .build(),
                 "extension ListExt<T> on List<T> {}"
             ),
             Arguments.of(
                 ExtensionSpec.builder("MapExt", Map::class.parameterizedBy(ClassName("T"), ClassName("E")))
-                    .genericTypes(ClassName("T"), ClassName("E"))
+                    .genericCasts(ClassName("T"), ClassName("E"))
                     .build(),
                 "extension MapExt<T, E> on Map<T, E> {}"
             ),
@@ -75,14 +75,14 @@ class ExtensionWriterTest {
         private fun boundedGenericExtension() = Stream.of(
             Arguments.of(
                 ExtensionSpec.builder("ListExt", List::class.parameterizedBy(ClassName("T")))
-                    .genericTypes("T", ClassName("Comparable"))
+                    .generic("T", ClassName("Comparable"))
                     .build(),
                 "extension ListExt<T extends Comparable> on List<T> {}"
             ),
             Arguments.of(
                 ExtensionSpec.builder("MapExt", Map::class.parameterizedBy(ClassName("T"), ClassName("E")))
-                    .genericTypes("T", ClassName("Comparable"))
-                    .genericTypes(ClassName("E"))
+                    .generic("T", ClassName("Comparable"))
+                    .genericCasts(ClassName("E"))
                     .build(),
                 "extension MapExt<T extends Comparable, E> on Map<T, E> {}"
             ),

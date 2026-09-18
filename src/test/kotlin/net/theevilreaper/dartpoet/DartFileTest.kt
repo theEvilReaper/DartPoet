@@ -236,6 +236,7 @@ class DartFileTest {
             .type(
                 ClassSpec.builder(name.replaceFirstChar { it.uppercase() })
                     .annotation(AnnotationSpec.builder("freezed").build())
+                    .build()
             )
             .build()
         assertThat(classFile.toString()).isEqualTo(
@@ -259,6 +260,7 @@ class DartFileTest {
             .doc("This is a [%L]", "Test")
             .type(
                 ClassSpec.builder("Test")
+                    .build()
             )
             .build()
         assertThat(clazz.toString()).isEqualTo(

@@ -48,30 +48,6 @@ class ClassModifierTest {
             ),
             Arguments.of(
                 {
-                    ClassSpec.mixinClass("Handler")
-                        .modifier { DartModifier.INTERFACE }
-                        .build()
-                },
-                "A mixin can only have the 'base' modifier, but got: [INTERFACE]"
-            ),
-            Arguments.of(
-                {
-                    ClassSpec.mixinClass("Handler")
-                        .modifier { DartModifier.FINAL }
-                        .build()
-                },
-                "A mixin can only have the 'base' modifier, but got: [FINAL]"
-            ),
-            Arguments.of(
-                {
-                    ClassSpec.mixinClass("Handler")
-                        .modifier { DartModifier.SEALED }
-                        .build()
-                },
-                "A mixin can only have the 'base' modifier, but got: [SEALED]"
-            ),
-            Arguments.of(
-                {
                     ClassSpec.builder("Handler")
                         .modifiers(DartModifier.MIXIN, DartModifier.INTERFACE)
                         .build()
@@ -143,10 +119,6 @@ class ClassModifierTest {
             Arguments.of(
                 ClassSpec.abstractClass("Handler").modifier { DartModifier.INTERFACE }.build(),
                 "abstract interface class Handler {}"
-            ),
-            Arguments.of(
-                ClassSpec.mixinClass("Handler").modifier { DartModifier.BASE }.build(),
-                "base mixin Handler {}"
             ),
             Arguments.of(
                 ClassSpec.builder("Handler").modifier { DartModifier.MIXIN }.build(),

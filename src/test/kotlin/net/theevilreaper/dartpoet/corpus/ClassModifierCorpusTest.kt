@@ -5,6 +5,7 @@ import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
+import net.theevilreaper.dartpoet.mixin.MixinSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.STRING
@@ -17,7 +18,7 @@ class ClassModifierCorpusTest {
 
     @Test
     fun `test Dart 3 base mixin and mixin class declarations in DartFile`() {
-        val baseLogMixin = ClassSpec.mixinClass("BaseLogMixin")
+        val baseLogMixin = MixinSpec.builder("BaseLogMixin")
             .modifier { DartModifier.BASE }
             .function(
                 FunctionSpec.builder("log")
