@@ -200,36 +200,9 @@ class ExtensionBuilder(
      */
     override fun generic(name: String, bound: Class<*>) = generic(name, bound.asClassName())
 
-    @Deprecated("Use generic(type) or genericCasts(*types) instead", ReplaceWith("genericCasts(*genericType)"))
-    fun genericTypes(vararg genericType: ClassName) = genericCasts(*genericType)
-
-    @Deprecated("Use generic(type) or genericCasts(*types) instead", ReplaceWith("genericCasts(*genericType)"))
-    fun genericTypes(vararg genericType: TypeName) = genericCasts(*genericType)
-
-    @Deprecated("Use generic(type) instead")
-    fun genericTypes(vararg genericType: Class<*>) = apply {
-        this.genericTypes += genericType.map { it.asTypeName() }
-    }
-
-    @Deprecated("Use generic(type) instead")
-    fun genericTypes(vararg genericType: KClass<*>) = apply {
-        this.genericTypes += genericType.map { it.asTypeName() }
-    }
-
-    @Deprecated("Use generic(name, bound) instead", ReplaceWith("generic(name, bound)"))
-    fun genericTypes(name: String, bound: TypeName) = generic(name, bound)
-
-    @Deprecated("Use generic(name, bound) instead", ReplaceWith("generic(name, bound)"))
-    fun genericTypes(name: String, bound: ClassName) = generic(name, bound)
-
-    @Deprecated("Use generic(name, bound) instead", ReplaceWith("generic(name, bound)"))
-    fun genericTypes(name: String, bound: KClass<*>) = generic(name, bound)
-
     /**
      * Creates a new instance from the [ExtensionSpec] class.
      * @return the created instance
      */
-    fun build(): ExtensionSpec {
-        return ExtensionSpec(this)
-    }
+    fun build(): ExtensionSpec = ExtensionSpec(this)
 }
