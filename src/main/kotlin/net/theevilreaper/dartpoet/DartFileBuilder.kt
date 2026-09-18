@@ -172,14 +172,6 @@ class DartFileBuilder(
         this.specTypes += typeSpecs
     }
 
-    @Deprecated(
-        message = "Pass the built ClassSpec instead",
-        replaceWith = ReplaceWith("type(dartFileSpec.build())")
-    )
-    fun type(dartFileSpec: ClassBuilder) = apply {
-        this.specTypes += dartFileSpec.build()
-    }
-
     fun annotations(vararg annotations: AnnotationSpec) = apply {
         this.annotations += annotations
     }
