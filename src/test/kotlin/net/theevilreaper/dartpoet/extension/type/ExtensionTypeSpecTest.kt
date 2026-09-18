@@ -49,9 +49,9 @@ class ExtensionTypeSpecTest {
     @Test
     fun `test extension type with implements clause`() {
         val extensionType = ExtensionTypeSpec.builder("Meters", ParameterSpec.positional("value", DOUBLE).build())
-            .implements(ClassName("Comparable").parameterizedBy(ClassName("Meters")))
+            .implements(ClassName("Comparable").parameterizedBy(ClassName("num")))
             .build()
-        extensionType.verifyDartOutput("extension type Meters(double value) implements Comparable<Meters> {}")
+        extensionType.verifyDartOutput("extension type Meters(double value) implements Comparable<num> {}")
     }
 
     @Test

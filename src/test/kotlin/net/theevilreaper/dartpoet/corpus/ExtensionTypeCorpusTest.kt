@@ -8,7 +8,6 @@ import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.BOOLEAN
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.INTEGER
-import net.theevilreaper.dartpoet.type.OVERRIDE
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
 import net.theevilreaper.dartpoet.verify.verifyDartOutput
 import org.junit.jupiter.api.DisplayName
@@ -20,13 +19,12 @@ class ExtensionTypeCorpusTest {
     @Test
     fun `test extension type implementing an interface used in a top-level function`() {
         val userId = ExtensionTypeSpec.builder("UserId", ParameterSpec.positional("value", INTEGER).build())
-            .implements(ClassName("Comparable").parameterizedBy(ClassName("UserId")))
+            .implements(ClassName("Comparable").parameterizedBy(ClassName("num")))
             .function(
-                FunctionSpec.builder("compareTo")
-                    .annotation(OVERRIDE)
-                    .returns(INTEGER)
+                FunctionSpec.builder("isGreaterThan")
+                    .returns(BOOLEAN)
                     .parameter(ParameterSpec.positional("other", ClassName("UserId")).build())
-                    .addCode("return value.compareTo(other.value);")
+                    .addCode("return value > other.value;")
                     .build()
             )
             .build()
@@ -49,11 +47,10 @@ class ExtensionTypeCorpusTest {
             |  return a == b;
             |}
             |
-            |extension type UserId(int value) implements Comparable<UserId> {
+            |extension type UserId(int value) implements Comparable<num> {
             |
-            |  @override
-            |  int compareTo(UserId other) {
-            |    return value.compareTo(other.value);
+            |  bool isGreaterThan(UserId other) {
+            |    return value > other.value;
             |  }
             |}
             """.trimMargin()
@@ -81,7 +78,7 @@ class ExtensionTypeCorpusTest {
 
         file.verifyDartOutput(
             """
-            |extension type const _Wrapper._<T>(T value) {
+            |extension type const _Wrapper<T>._(T value) {
             |
             |  T unwrap() {
             |    return value;
