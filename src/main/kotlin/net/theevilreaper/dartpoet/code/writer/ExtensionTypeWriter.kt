@@ -31,6 +31,7 @@ internal class ExtensionTypeWriter : Writeable<ExtensionTypeSpec> {
     override fun write(spec: ExtensionTypeSpec, writer: CodeWriter) {
         writeHeader(spec, writer)
         writeGenericArguments(spec, writer)
+        writeConstructorName(spec, writer)
         writeRepresentation(spec, writer)
         writeInheritance(spec, writer)
 
@@ -52,11 +53,6 @@ internal class ExtensionTypeWriter : Writeable<ExtensionTypeSpec> {
         }
 
         writer.emit(StringHelper.ensureVariableNameWithPrivateModifier(spec.name, spec.modifiers.contains(PRIVATE)))
-
-        if (spec.constructorName != null) {
-            writer.emit(".")
-            writer.emit(spec.constructorName)
-        }
     }
 
     private fun writeGenericArguments(spec: ExtensionTypeSpec, writer: CodeWriter) {
@@ -68,6 +64,12 @@ internal class ExtensionTypeWriter : Writeable<ExtensionTypeSpec> {
             postfix = GREATER_THAN_SIGN
         ) { TypeVariableName.renderDeclaration(it) }
         writer.emitCode("%L", joinedGenerics)
+    }
+
+    private fun writeConstructorName(spec: ExtensionTypeSpec, writer: CodeWriter) {
+        if (spec.constructorName == null) return
+        writer.emit(".")
+        writer.emit(spec.constructorName)
     }
 
     private fun writeRepresentation(spec: ExtensionTypeSpec, writer: CodeWriter) {
