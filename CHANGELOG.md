@@ -26,6 +26,20 @@
 
 * **class:** remove library as a valid class type ([#291](https://github.com/theEvilReaper/DartPoet/issues/291)) ([b6fc1d5](https://github.com/theEvilReaper/DartPoet/commit/b6fc1d502c89a5ae113a7c2da96785e65d084ed5))
 
+## [2.5.0](https://github.com/theEvilReaper/DartPoet/compare/2.4.0...2.5.0) (2026-09-19)
+
+
+### Features
+
+* **code:** add extension type support ([#323](https://github.com/theEvilReaper/DartPoet/issues/323)) ([454f8b6](https://github.com/theEvilReaper/DartPoet/commit/454f8b6ead7c439e9c1c67e489f437770f093499))
+* **code:** add pattern case handling ([#324](https://github.com/theEvilReaper/DartPoet/issues/324)) ([cc8ad22](https://github.com/theEvilReaper/DartPoet/commit/cc8ad22c53ac33d6e973f7dde2e3c11ead3399ca))
+* **code:** add switch case support ([#320](https://github.com/theEvilReaper/DartPoet/issues/320)) ([80ae59e](https://github.com/theEvilReaper/DartPoet/commit/80ae59e32bad9e87830d0ac30cc2afcb2a16e937))
+
+
+### Bug Fixes
+
+* **test:** avoid deprecated method usage ([35fde49](https://github.com/theEvilReaper/DartPoet/commit/35fde4977e618c4e2c0da24b395b4f999b08abb1))
+
 ## [2.4.0](https://github.com/theEvilReaper/DartPoet/compare/2.3.2...2.4.0) (2026-09-05)
 
 
