@@ -24,6 +24,7 @@ import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.typedef.AbstractTypeDef
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.pattern.Pattern
 import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asTypeName
@@ -508,6 +509,16 @@ class CodeBlock private constructor(
         }
 
         /**
+         * Begins a case within a Dart switch statement using a structured [Pattern].
+         * If a previous case was currently open, its body will be unindented automatically.
+         * @param pattern the structured pattern to match against
+         * @param guard an optional guard condition using Dart's `when` keyword
+         * @param args arguments for placeholders in guard
+         */
+        fun beginCase(pattern: Pattern, guard: String? = null, vararg args: Any?): Builder =
+            beginCase(pattern.toString(), guard, *args)
+
+        /**
          * Begins a default case within a Dart switch statement.
          * If a previous case was currently open, its body will be unindented automatically.
          */
@@ -671,6 +682,20 @@ class SwitchStatementBuilder internal constructor(private val builder: CodeBlock
     }
 
     /**
+     * Adds a `case` clause to the switch statement using a structured [Pattern], with an optional `when` guard.
+     * @param pattern the structured pattern to match
+     * @param guard an optional guard condition
+     * @param args arguments for placeholders in guard
+     * @param action code block builder populating the case body
+     */
+    fun case(
+        pattern: Pattern,
+        guard: String? = null,
+        vararg args: Any?,
+        action: CodeBlock.Builder.() -> Unit
+    ) = case(pattern.toString(), guard, *args, action = action)
+
+    /**
      * Adds a `default:` clause to the switch statement.
      * @param action code block builder populating the default body
      */
@@ -707,6 +732,16 @@ class SwitchExpressionBuilder internal constructor() {
     fun case(pattern: String, expression: String, guard: String? = null, vararg args: Any?) = apply {
         cases += SwitchExpressionCase(pattern, expression, guard, args.toList())
     }
+
+    /**
+     * Adds a case to the switch expression using a structured [Pattern]: `pattern [when guard] => expression,`.
+     * @param pattern the structured pattern to match against
+     * @param expression the resulting expression when matched
+     * @param guard optional guard condition using `when`
+     * @param args arguments for format placeholders in guard or expression
+     */
+    fun case(pattern: Pattern, expression: String, guard: String? = null, vararg args: Any?) =
+        case(pattern.toString(), expression, guard, *args)
 
     /**
      * Adds a default `_ => expression,` case to the switch expression.
