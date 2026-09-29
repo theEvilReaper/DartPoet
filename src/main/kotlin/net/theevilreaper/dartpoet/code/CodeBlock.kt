@@ -350,7 +350,9 @@ class CodeBlock private constructor(
 
         private fun addArgument(format: String, c: Char, arg: Any?) {
             when (c) {
-                'N' -> this.args += argToName(arg).escapeIfNecessary()
+                'N' -> this.args += argToName(arg).escapeIfNecessary(
+                    isTypeName = arg is ClassSpec || arg is AbstractTypeDef<*>,
+                )
                 'L' -> this.args += argToLiteral(arg)
                 'S' -> this.args += argToString(arg)
                 'P' -> this.args += arg as? CodeBlock ?: argToString(arg)
