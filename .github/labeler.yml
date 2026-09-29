@@ -13,6 +13,9 @@
           - 'src/test/kotlin/**/enum/**'
           - 'src/test/kotlin/**/mixin/**'
           - 'src/test/kotlin/**/extension/**'
+          - 'src/test/kotlin/**/annotation/**'
+          - 'src/test/kotlin/**/classTypes/**'
+          - 'src/test/kotlin/**/enumeration/**'
           - 'src/test/kotlin/**/DartFile*'
 
 "area: function":
@@ -45,6 +48,18 @@
           - 'src/main/kotlin/**/type/**'
           - 'src/test/kotlin/**/type/**'
 
+"area: pattern":
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/main/kotlin/**/pattern/**'
+          - 'src/test/kotlin/**/pattern/**'
+
+"area: util":
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/main/kotlin/**/util/**'
+          - 'src/test/kotlin/**/util/**'
+
 "area: directive":
   - changed-files:
       - any-glob-to-any-file:
@@ -58,11 +73,14 @@
           - 'src/main/kotlin/**/DartModifier*'
           - 'src/main/kotlin/**/ModifierTarget*'
           - 'src/test/kotlin/**/meta/**'
+          - 'src/test/kotlin/**/DartModifier*'
 
 "area: corpus":
   - changed-files:
       - any-glob-to-any-file:
           - 'src/test/kotlin/**/corpus/**'
+          - 'src/test/kotlin/**/verify/**'
+          - 'src/test/resources/META-INF/services/**'
 
 "area: build":
     - changed-files:
