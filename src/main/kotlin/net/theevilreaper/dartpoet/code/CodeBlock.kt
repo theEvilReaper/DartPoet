@@ -410,6 +410,8 @@ class CodeBlock private constructor(
                 value.isNaN() -> return "double.nan"
                 value == Double.POSITIVE_INFINITY -> return "double.infinity"
                 value == Double.NEGATIVE_INFINITY -> return "double.negativeInfinity"
+                // BigDecimal has no negative zero, so the sign has to be kept here
+                value == 0.0 -> return if (1.0 / value < 0) "-0.0" else "0.0"
             }
 
             // Parse the shortest representation (e.g. `1.0E-5`) so no digits are lost to rounding

@@ -26,6 +26,7 @@ class LiteralCorpusTest {
                 finalProperty("regular", DOUBLE, "%L", 1.5),
                 finalProperty("small", DOUBLE, "%L", 0.00001),
                 finalProperty("tiny", DOUBLE, "%L", 1.5e-7),
+                finalProperty("negativeZero", DOUBLE, "%L", -0.0),
             )
             .build()
 
@@ -34,6 +35,7 @@ class LiteralCorpusTest {
             |final double regular = 1.5;
             |final double small = 0.00001;
             |final double tiny = 0.00000015;
+            |final double negativeZero = -0.0;
             |
             """.trimMargin()
         )
