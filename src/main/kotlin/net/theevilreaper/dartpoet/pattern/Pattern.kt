@@ -1,5 +1,6 @@
 package net.theevilreaper.dartpoet.pattern
 
+import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asClassName
 import net.theevilreaper.dartpoet.type.asTypeName
@@ -16,7 +17,27 @@ import kotlin.reflect.KClass
  */
 sealed class Pattern {
 
+    /**
+     * The precedence of the pattern, which decides if it needs parentheses when it's nested in another pattern.
+     * Most patterns are primary patterns and never need parentheses.
+     */
+    internal open val precedence: Int get() = PRIMARY_PRECEDENCE
+
+    /**
+     * Renders the pattern and wraps it in parentheses if its precedence is lower than [minimum].
+     * @param minimum the lowest precedence which can be used without parentheses
+     * @return the rendered pattern
+     */
+    internal fun render(minimum: Int): String = if (precedence < minimum) "($this)" else toString()
+
     companion object {
+
+        // Precedence levels from the Dart grammar, from the loosest to the tightest binding
+        internal const val LOGICAL_OR_PRECEDENCE = 1
+        internal const val LOGICAL_AND_PRECEDENCE = 2
+        internal const val RELATIONAL_PRECEDENCE = 3
+        internal const val UNARY_PRECEDENCE = 4
+        internal const val PRIMARY_PRECEDENCE = 5
 
         /**
          * Creates an untyped wildcard pattern (`_`).
@@ -151,13 +172,93 @@ sealed class Pattern {
             ObjectPattern(type.asClassName(), fields)
 
         /**
+         * Creates a map pattern that matches a map containing the given [entries], e.g. `{'id': int id}`.
+         * The keys must be constant values: strings, numbers, booleans, `null` or a [CodeBlock]
+         * which is emitted verbatim (e.g. `Color.red`).
+         * @param entries the sub-patterns, keyed by map key
+         * @return the created [Pattern]
+         * @since 2.6.0
+         */
+        @JvmStatic
+        fun map(entries: Map<*, Pattern>): Pattern = MapPattern(entries)
+
+        /**
+         * Creates a relational pattern that compares the matched value with [operand], e.g. `>= 0`.
+         * The operand must be a constant value: a string, number, boolean, `null` or a [CodeBlock]
+         * which is emitted verbatim.
+         * @param operator the comparison operator
+         * @param operand the constant to compare with
+         * @return the created [Pattern]
+         * @since 2.6.0
+         */
+        @JvmStatic
+        fun relational(operator: RelationalOperator, operand: Any?): Pattern = RelationalPattern(operator, operand)
+
+        /**
+         * Creates a logical-or pattern which matches if any of the given [patterns] matches, e.g. `1 || 2`.
+         * @param patterns the alternatives, at least two
+         * @return the created [Pattern]
+         * @since 2.6.0
+         */
+        @JvmStatic
+        fun or(vararg patterns: Pattern): Pattern = LogicalPattern(LogicalPattern.Operator.OR, patterns.toList())
+
+        /**
+         * Creates a logical-and pattern which matches if all given [patterns] match, e.g. `> 0 && < 10`.
+         * @param patterns the patterns which must match, at least two
+         * @return the created [Pattern]
+         * @since 2.6.0
+         */
+        @JvmStatic
+        fun and(vararg patterns: Pattern): Pattern = LogicalPattern(LogicalPattern.Operator.AND, patterns.toList())
+
+        /**
+         * Creates a cast pattern which casts the matched value to [type] before matching [pattern],
+         * e.g. `var x as int`. The cast throws at runtime if the value has a different type.
+         * @param pattern the pattern to match after the cast
+         * @param type the type to cast to
+         * @return the created [Pattern]
+         * @since 2.6.0
+         */
+        @JvmStatic
+        fun cast(pattern: Pattern, type: TypeName): Pattern = CastPattern(pattern, type)
+
+        /**
+         * Creates a null-check pattern which only matches a non-null value, e.g. `var name?`.
+         * @param pattern the pattern to match against the non-null value
+         * @return the created [Pattern]
+         * @since 2.6.0
+         */
+        @JvmStatic
+        fun nullCheck(pattern: Pattern): Pattern = NullCheckPattern(pattern)
+
+        /**
+         * Creates a null-assert pattern which throws if the matched value is null, e.g. `var name!`.
+         * @param pattern the pattern to match against the non-null value
+         * @return the created [Pattern]
+         * @since 2.6.0
+         */
+        @JvmStatic
+        fun nullAssert(pattern: Pattern): Pattern = NullAssertPattern(pattern)
+
+        /**
          * Creates a pattern that emits [expression] verbatim - an escape hatch for pattern syntax
-         * not yet modeled as a dedicated [Pattern] (e.g. relational `< 0`, logical `a || b`,
-         * null-check `x?`, null-assert `x!`, or cast `x as int` patterns).
+         * not modeled as a dedicated [Pattern]. A raw pattern is never wrapped in parentheses.
          * @param expression the raw Dart pattern expression
          * @return the created [Pattern]
          */
         @JvmStatic
         fun raw(expression: String): Pattern = RawPattern(expression)
     }
+}
+
+/**
+ * Renders a constant value, as used for map pattern keys and relational pattern operands.
+ * A [CodeBlock] is emitted verbatim, all other values are rendered like a [LiteralPattern].
+ * @param value the constant value
+ * @return the rendered constant
+ */
+internal fun patternConstant(value: Any?): String = when (value) {
+    is CodeBlock -> value.toString()
+    else -> LiteralPattern(value).toString()
 }

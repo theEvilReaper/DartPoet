@@ -1,8 +1,8 @@
 package net.theevilreaper.dartpoet.pattern
 
 /**
- * A [RawPattern] emits [expression] verbatim. Escape hatch for Dart pattern syntax not yet modeled
- * as a dedicated [Pattern] (relational, logical, null-check/assert and cast patterns).
+ * A [RawPattern] emits [expression] verbatim. Escape hatch for Dart pattern syntax not modeled
+ * as a dedicated [Pattern]. A raw pattern is never wrapped in parentheses.
  *
  * @author theEvilReaper
  * @since 2.5.0
