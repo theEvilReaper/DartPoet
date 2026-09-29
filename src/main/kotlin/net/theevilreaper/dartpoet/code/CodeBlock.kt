@@ -34,6 +34,7 @@ import net.theevilreaper.dartpoet.util.escapeIfNecessary
 import net.theevilreaper.dartpoet.util.isOneOf
 import net.theevilreaper.dartpoet.util.toImmutableList
 import java.lang.reflect.Type
+import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import kotlin.reflect.KClass
@@ -400,14 +401,23 @@ class CodeBlock private constructor(
                 groupingSeparator = '_'
             }
 
-            val precision = if (o is Float || o is Double) o.toString().split(".").last().length else 0
-
-            val pattern = when (o) {
-                is Float, is Double -> "###,##0.0" + "#".repeat(precision - 1)
-                else -> "###,##0"
+            if (o !is Float && o !is Double) {
+                return DecimalFormat("###,##0", format).format(o)
             }
 
-            return DecimalFormat(pattern, format).format(o)
+            val value = o.toDouble()
+            when {
+                value.isNaN() -> return "double.nan"
+                value == Double.POSITIVE_INFINITY -> return "double.infinity"
+                value == Double.NEGATIVE_INFINITY -> return "double.negativeInfinity"
+            }
+
+            // Parse the shortest representation (e.g. `1.0E-5`) so no digits are lost to rounding
+            val decimal = BigDecimal(o.toString())
+            val decimalFormat = DecimalFormat("###,##0.0", format).apply {
+                maximumFractionDigits = maxOf(1, decimal.stripTrailingZeros().scale())
+            }
+            return decimalFormat.format(decimal)
         }
 
         /**
