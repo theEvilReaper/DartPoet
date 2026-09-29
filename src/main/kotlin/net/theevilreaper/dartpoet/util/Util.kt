@@ -60,6 +60,8 @@ internal fun dartStringLiteral(
     val tripleQuote = quote.repeat(3)
 
     val multiline = '\n' in value
+    // Dart drops a whitespace-only first line of a multiline literal, so its line break is escaped
+    var escapeFirstNewline = multiline && value.substringBefore('\n').all { it == ' ' || it == '\t' }
 
     val escaped = buildString {
         for (c in value) {
@@ -67,10 +69,15 @@ internal fun dartStringLiteral(
                 c == quoteChar -> append("\\$quoteChar")
                 c == '\\' -> append("\\\\")
                 c == '$' -> if (escapeDollar) append("\\$") else append(c)
-                // Multiline literals keep their tabs and carriage returns as written
+                // A raw carriage return is normalized to a newline by Dart, even in multiline literals
+                c == '\r' -> append("\\r")
+                c == '\n' && escapeFirstNewline -> {
+                    append("\\n")
+                    escapeFirstNewline = false
+                }
+                // Multiline literals keep their tabs and line breaks as written
                 multiline -> append(c)
                 c == '\t' -> append("\\t")
-                c == '\r' -> append("\\r")
                 else -> append(c)
             }
         }

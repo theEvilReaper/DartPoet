@@ -73,4 +73,38 @@ class LiteralCorpusTest {
             """.trimMargin()
         )
     }
+
+    @Test
+    fun `test multiline string literals keep carriage returns`() {
+        val file = DartFile.builder("multiline_carriage_return_literals")
+            .property(finalProperty("crlf", STRING, "%C", "first\r\nsecond"))
+            .build()
+
+        file.verifyDartOutput(
+            """
+            |final String crlf = '''first\r
+            |second''';
+            |
+            """.trimMargin()
+        )
+    }
+
+    @Test
+    fun `test multiline string literals keep a whitespace only first line`() {
+        val file = DartFile.builder("multiline_leading_line_literals")
+            .properties(
+                finalProperty("leadingNewline", STRING, "%C", "\nfirst\nsecond"),
+                finalProperty("leadingSpaces", STRING, "%C", "  \n  indented"),
+            )
+            .build()
+
+        file.verifyDartOutput(
+            """
+            |final String leadingNewline = '''\nfirst
+            |second''';
+            |final String leadingSpaces = '''  \n  indented''';
+            |
+            """.trimMargin()
+        )
+    }
 }
