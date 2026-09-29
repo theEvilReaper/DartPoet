@@ -59,23 +59,24 @@ internal fun dartStringLiteral(
     val quote = quoteChar.toString()
     val tripleQuote = quote.repeat(3)
 
-    if ('\n' in value) {
-        return "$tripleQuote${value.replace(quote, "\\$quote")}$tripleQuote"
-    }
+    val multiline = '\n' in value
 
     val escaped = buildString {
         for (c in value) {
-            when (c) {
-                quoteChar -> append("\\$quoteChar")
-                '\\' -> append("\\\\")
-                '$' -> if (escapeDollar) append("\\$") else append(c)
-                '\t' -> append("\\t")
-                '\r' -> append("\\r")
+            when {
+                c == quoteChar -> append("\\$quoteChar")
+                c == '\\' -> append("\\\\")
+                c == '$' -> if (escapeDollar) append("\\$") else append(c)
+                // Multiline literals keep their tabs and carriage returns as written
+                multiline -> append(c)
+                c == '\t' -> append("\\t")
+                c == '\r' -> append("\\r")
                 else -> append(c)
             }
         }
     }
-    return "$quote$escaped$quote"
+    val delimiter = if (multiline) tripleQuote else quote
+    return "$delimiter$escaped$delimiter"
 }
 
 private val DART_KEYWORDS = setOf(
