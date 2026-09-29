@@ -25,6 +25,7 @@ import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.typedef.AbstractTypeDef
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.pattern.Pattern
+import net.theevilreaper.dartpoet.pattern.requireOuterPattern
 import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asTypeName
@@ -608,6 +609,201 @@ class CodeBlock private constructor(
             add(expr)
         }
 
+        /**
+         * Begins an if-case statement, e.g. `if (json case {'id': int id} when id > 0) {`.
+         * Continue it with [nextIfCase] or [nextControlFlow] and close it with [endControlFlow].
+         * @param expression the expression which is matched
+         * @param pattern the pattern to match against
+         * @param guard an optional guard condition using Dart's `when` keyword
+         * @param args arguments for placeholders in the expression, pattern and guard
+         * @since 2.6.0
+         */
+        fun beginIfCase(expression: String, pattern: String, guard: String? = null, vararg args: Any?): Builder = apply {
+            add("${ifCase(expression, pattern, guard)}·{\n", *args)
+            indent()
+        }
+
+        /**
+         * Begins an if-case statement using a structured [Pattern].
+         * @param expression the expression which is matched
+         * @param pattern the structured pattern to match against
+         * @param guard an optional guard condition using Dart's `when` keyword
+         * @param args arguments for placeholders in the expression and guard
+         * @since 2.6.0
+         */
+        fun beginIfCase(expression: String, pattern: Pattern, guard: String? = null, vararg args: Any?): Builder =
+            beginIfCase(expression, pattern.toString(), guard, *args)
+
+        /**
+         * Continues an if-case statement with another branch, e.g. `} else if (json case String s) {`.
+         * @param expression the expression which is matched
+         * @param pattern the pattern to match against
+         * @param guard an optional guard condition using Dart's `when` keyword
+         * @param args arguments for placeholders in the expression, pattern and guard
+         * @since 2.6.0
+         */
+        fun nextIfCase(expression: String, pattern: String, guard: String? = null, vararg args: Any?): Builder = apply {
+            unindent()
+            add("}·else·${ifCase(expression, pattern, guard)}·{\n", *args)
+            indent()
+        }
+
+        /**
+         * Continues an if-case statement with another branch using a structured [Pattern].
+         * @param expression the expression which is matched
+         * @param pattern the structured pattern to match against
+         * @param guard an optional guard condition using Dart's `when` keyword
+         * @param args arguments for placeholders in the expression and guard
+         * @since 2.6.0
+         */
+        fun nextIfCase(expression: String, pattern: Pattern, guard: String? = null, vararg args: Any?): Builder =
+            nextIfCase(expression, pattern.toString(), guard, *args)
+
+        private fun ifCase(expression: String, pattern: String, guard: String?): String = when (guard) {
+            null -> "if ($expression case $pattern)"
+            else -> "if ($expression case $pattern·when $guard)"
+        }
+
+        /**
+         * Adds an if-case statement with one or more branches and an optional `else` branch.
+         * @param expression the expression which is matched in every branch
+         * @param args arguments for placeholders in the expression
+         * @param action the builder which adds the branches
+         * @since 2.6.0
+         */
+        fun addIfCase(expression: String, vararg args: Any?, action: IfCaseBuilder.() -> Unit): Builder = apply {
+            IfCaseBuilder(this, expression, args.toList()).apply(action).finish()
+        }
+
+        /**
+         * Adds a pattern variable declaration, e.g. `final (lat, lng) = position;`.
+         * @param pattern the pattern which declares the variables
+         * @param initializer the expression which is destructured
+         * @param args arguments for placeholders in the pattern and initializer
+         * @param isFinal whether the variables are declared with `final` instead of `var`
+         * @since 2.6.0
+         */
+        fun addPatternDeclaration(
+            pattern: String,
+            initializer: String,
+            vararg args: Any?,
+            isFinal: Boolean = false,
+        ): Builder = addStatement("${declarationKeyword(isFinal)} $pattern = $initializer;", *args)
+
+        /**
+         * Adds a pattern variable declaration using a structured [Pattern]. The pattern must be a record,
+         * list, map or object pattern whose variables use [Pattern.identifier] or a typed [Pattern.variable].
+         * @param pattern the pattern which declares the variables
+         * @param initializer the expression which is destructured
+         * @param args arguments for placeholders in the initializer
+         * @param isFinal whether the variables are declared with `final` instead of `var`
+         * @since 2.6.0
+         */
+        fun addPatternDeclaration(
+            pattern: Pattern,
+            initializer: String,
+            vararg args: Any?,
+            isFinal: Boolean = false,
+        ): Builder {
+            pattern.requireOuterPattern("pattern declaration")
+            return addPatternDeclaration(pattern.toString(), initializer, *args, isFinal = isFinal)
+        }
+
+        /**
+         * Adds a pattern assignment which assigns existing variables, e.g. `(a, b) = (b, a);`.
+         * @param pattern the pattern which assigns the variables
+         * @param value the expression which is destructured
+         * @param args arguments for placeholders in the pattern and value
+         * @since 2.6.0
+         */
+        fun addPatternAssignment(pattern: String, value: String, vararg args: Any?): Builder =
+            addStatement("$pattern = $value;", *args)
+
+        /**
+         * Adds a pattern assignment using a structured [Pattern]. The pattern must be a record, list, map
+         * or object pattern whose variables use [Pattern.identifier].
+         * @param pattern the pattern which assigns the variables
+         * @param value the expression which is destructured
+         * @param args arguments for placeholders in the value
+         * @since 2.6.0
+         */
+        fun addPatternAssignment(pattern: Pattern, value: String, vararg args: Any?): Builder {
+            pattern.requireOuterPattern("pattern assignment", isAssignment = true)
+            return addPatternAssignment(pattern.toString(), value, *args)
+        }
+
+        /**
+         * Begins a for-in loop, e.g. `for (final (key, value) in map.entries) {`.
+         * Close it with [endControlFlow].
+         * @param pattern the pattern or variable name for each element
+         * @param iterable the expression which is iterated
+         * @param args arguments for placeholders in the pattern and iterable
+         * @param isFinal whether the variables are declared with `final` instead of `var`
+         * @since 2.6.0
+         */
+        fun beginForIn(pattern: String, iterable: String, vararg args: Any?, isFinal: Boolean = false): Builder = apply {
+            add("for (${declarationKeyword(isFinal)} $pattern in $iterable)·{\n", *args)
+            indent()
+        }
+
+        /**
+         * Begins a for-in loop using a structured [Pattern]. The pattern must be a record, list, map or
+         * object pattern whose variables use [Pattern.identifier] or a typed [Pattern.variable].
+         * @param pattern the pattern for each element
+         * @param iterable the expression which is iterated
+         * @param args arguments for placeholders in the iterable
+         * @param isFinal whether the variables are declared with `final` instead of `var`
+         * @since 2.6.0
+         */
+        fun beginForIn(pattern: Pattern, iterable: String, vararg args: Any?, isFinal: Boolean = false): Builder {
+            pattern.requireOuterPattern("for-in loop")
+            return beginForIn(pattern.toString(), iterable, *args, isFinal = isFinal)
+        }
+
+        /**
+         * Adds a for-in loop whose body is populated by [action].
+         * @param pattern the pattern or variable name for each element
+         * @param iterable the expression which is iterated
+         * @param args arguments for placeholders in the pattern and iterable
+         * @param isFinal whether the variables are declared with `final` instead of `var`
+         * @param action the builder which populates the loop body
+         * @since 2.6.0
+         */
+        fun addForIn(
+            pattern: String,
+            iterable: String,
+            vararg args: Any?,
+            isFinal: Boolean = false,
+            action: Builder.() -> Unit,
+        ): Builder = apply {
+            beginForIn(pattern, iterable, *args, isFinal = isFinal)
+            action()
+            endControlFlow()
+        }
+
+        /**
+         * Adds a for-in loop using a structured [Pattern] whose body is populated by [action].
+         * @param pattern the pattern for each element
+         * @param iterable the expression which is iterated
+         * @param args arguments for placeholders in the iterable
+         * @param isFinal whether the variables are declared with `final` instead of `var`
+         * @param action the builder which populates the loop body
+         * @since 2.6.0
+         */
+        fun addForIn(
+            pattern: Pattern,
+            iterable: String,
+            vararg args: Any?,
+            isFinal: Boolean = false,
+            action: Builder.() -> Unit,
+        ): Builder = apply {
+            beginForIn(pattern, iterable, *args, isFinal = isFinal)
+            action()
+            endControlFlow()
+        }
+
+        private fun declarationKeyword(isFinal: Boolean): String = if (isFinal) "final" else "var"
+
         fun build(): CodeBlock = CodeBlock(formatParts.toImmutableList(), args.toImmutableList())
     }
 
@@ -675,6 +871,75 @@ inline fun buildCodeBlock(builderAction: CodeBlock.Builder.() -> Unit): CodeBloc
  */
 inline fun CodeBlock.Builder.withIndent(builderAction: CodeBlock.Builder.() -> Unit): CodeBlock.Builder {
     return indent().also(builderAction).unindent()
+}
+
+/**
+ * Builder class for the branches of an if-case statement DSL block.
+ * @since 2.6.0
+ */
+class IfCaseBuilder internal constructor(
+    private val builder: CodeBlock.Builder,
+    private val expression: String,
+    private val expressionArgs: List<Any?>,
+) {
+
+    private var hasCase = false
+    private var hasElse = false
+
+    /**
+     * Adds a branch which runs if the expression matches [pattern], with an optional `when` guard.
+     * The first branch starts with `if`, all following branches with `else if`.
+     * @param pattern the pattern to match against
+     * @param guard an optional guard condition
+     * @param args arguments for placeholders in the pattern and guard
+     * @param action code block builder populating the branch body
+     */
+    fun case(
+        pattern: String,
+        guard: String? = null,
+        vararg args: Any?,
+        action: CodeBlock.Builder.() -> Unit
+    ) {
+        check(!hasElse) { "A case can't be added after the else branch" }
+        val allArgs = (expressionArgs + args).toTypedArray()
+        when (hasCase) {
+            true -> builder.nextIfCase(expression, pattern, guard, *allArgs)
+            false -> builder.beginIfCase(expression, pattern, guard, *allArgs)
+        }
+        hasCase = true
+        builder.action()
+    }
+
+    /**
+     * Adds a branch which runs if the expression matches the structured [pattern], with an optional `when` guard.
+     * @param pattern the structured pattern to match against
+     * @param guard an optional guard condition
+     * @param args arguments for placeholders in the guard
+     * @param action code block builder populating the branch body
+     */
+    fun case(
+        pattern: Pattern,
+        guard: String? = null,
+        vararg args: Any?,
+        action: CodeBlock.Builder.() -> Unit
+    ) = case(pattern.toString(), guard, *args, action = action)
+
+    /**
+     * Adds the `else` branch, which runs if no case matches. It must be the last branch.
+     * @param action code block builder populating the branch body
+     */
+    fun orElse(action: CodeBlock.Builder.() -> Unit) {
+        check(hasCase) { "The else branch needs at least one case before it" }
+        check(!hasElse) { "An if-case can only have one else branch" }
+        hasElse = true
+        builder.nextControlFlow("else")
+        builder.action()
+    }
+
+    internal fun finish() {
+        check(hasCase) { "An if-case needs at least one case" }
+        builder.endControlFlow()
+    }
 }
 
 /**
