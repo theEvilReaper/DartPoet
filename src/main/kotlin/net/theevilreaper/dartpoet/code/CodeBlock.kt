@@ -34,6 +34,7 @@ import net.theevilreaper.dartpoet.util.escapeIfNecessary
 import net.theevilreaper.dartpoet.util.isOneOf
 import net.theevilreaper.dartpoet.util.toImmutableList
 import java.lang.reflect.Type
+import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import kotlin.reflect.KClass
@@ -55,7 +56,8 @@ import kotlin.reflect.KClass
  *    example, `6" sandwich` is emitted `"6\" sandwich"`. `%S` will also escape all dollar signs
  *    (`$`), use `%P` for string templates.
  *  * `%P` - Similar to `%S`, but doesn't escape dollar signs (`$`) to allow creation of string
- *    templates. If the string contains dollar signs that should be escaped - use `%S`.
+ *    templates. Interpolated expressions (`${…}`) are emitted unchanged. If the string contains
+ *    dollar signs that should be escaped - use `%S`.
  *  * `%T` emits a *type* reference. Types will be imported if possible. Arguments for types may be
  *    [classes][Class].
  *  * `%%` emits a percent sign.
@@ -395,19 +397,30 @@ class CodeBlock private constructor(
         private fun argToString(o: Any?) = o?.toString()
 
         private fun formatNumericValue(o: Number): Any? {
+            // No grouping, because digit separators (`1_000`) require Dart 3.6
             val format = DecimalFormatSymbols().apply {
                 decimalSeparator = '.'
-                groupingSeparator = '_'
             }
 
-            val precision = if (o is Float || o is Double) o.toString().split(".").last().length else 0
-
-            val pattern = when (o) {
-                is Float, is Double -> "###,##0.0" + "#".repeat(precision - 1)
-                else -> "###,##0"
+            if (o !is Float && o !is Double) {
+                return DecimalFormat("0", format).format(o)
             }
 
-            return DecimalFormat(pattern, format).format(o)
+            val value = o.toDouble()
+            when {
+                value.isNaN() -> return "double.nan"
+                value == Double.POSITIVE_INFINITY -> return "double.infinity"
+                value == Double.NEGATIVE_INFINITY -> return "double.negativeInfinity"
+                // BigDecimal has no negative zero, so the sign has to be kept here
+                value == 0.0 -> return if (1.0 / value < 0) "-0.0" else "0.0"
+            }
+
+            // Parse the shortest representation (e.g. `1.0E-5`) so no digits are lost to rounding
+            val decimal = BigDecimal(o.toString())
+            val decimalFormat = DecimalFormat("0.0", format).apply {
+                maximumFractionDigits = maxOf(1, decimal.stripTrailingZeros().scale())
+            }
+            return decimalFormat.format(decimal)
         }
 
         /**
