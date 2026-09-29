@@ -26,6 +26,14 @@
 
 * **class:** remove library as a valid class type ([#291](https://github.com/theEvilReaper/DartPoet/issues/291)) ([b6fc1d5](https://github.com/theEvilReaper/DartPoet/commit/b6fc1d502c89a5ae113a7c2da96785e65d084ed5))
 
+## [2.5.1](https://github.com/theEvilReaper/DartPoet/compare/2.5.0...2.5.1) (2026-09-29)
+
+
+### Bug Fixes
+
+* **code:** allow keywords like get, set and on as names ([#327](https://github.com/theEvilReaper/DartPoet/issues/327)) ([9c0b789](https://github.com/theEvilReaper/DartPoet/commit/9c0b789da6012903d04748f08ddd86cc762a14b8))
+* **code:** generate correct number and string literals ([#326](https://github.com/theEvilReaper/DartPoet/issues/326)) ([18ab87a](https://github.com/theEvilReaper/DartPoet/commit/18ab87ac947eee0f7a027f6864fcca6e1cde8617))
+
 ## [2.5.0](https://github.com/theEvilReaper/DartPoet/compare/2.4.0...2.5.0) (2026-09-19)
 
 
