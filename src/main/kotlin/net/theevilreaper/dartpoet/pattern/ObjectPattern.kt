@@ -16,6 +16,8 @@ class ObjectPattern internal constructor(
 
     private val fieldEntries = fields.toMap()
 
+    override val subPatterns: List<Pattern> get() = fieldEntries.values.toList()
+
     override fun toString(): String {
         val body = fieldEntries.entries.joinToString(separator = ", ") { (name, pattern) -> "$name: $pattern" }
         return "$type($body)"

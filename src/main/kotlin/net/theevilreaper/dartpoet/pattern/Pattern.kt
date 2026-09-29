@@ -30,6 +30,11 @@ sealed class Pattern {
      */
     internal fun render(minimum: Int): String = if (precedence < minimum) "($this)" else toString()
 
+    /**
+     * The patterns which are nested directly inside this pattern.
+     */
+    internal open val subPatterns: List<Pattern> get() = emptyList()
+
     companion object {
 
         // Precedence levels from the Dart grammar, from the loosest to the tightest binding
@@ -242,6 +247,18 @@ sealed class Pattern {
         fun nullAssert(pattern: Pattern): Pattern = NullAssertPattern(pattern)
 
         /**
+         * Creates an identifier pattern which is only the given [name], e.g. `a`.
+         * It's meant for pattern declarations, pattern assignments and for-in loops, where it binds or
+         * assigns the variable. Inside a `case` or an if-case, Dart treats a plain identifier as a
+         * constant to compare with, so use [variable] to bind a value there.
+         * @param name the name of the variable
+         * @return the created [Pattern]
+         * @since 2.6.0
+         */
+        @JvmStatic
+        fun identifier(name: String): Pattern = IdentifierPattern(name)
+
+        /**
          * Creates a pattern that emits [expression] verbatim - an escape hatch for pattern syntax
          * not modeled as a dedicated [Pattern]. A raw pattern is never wrapped in parentheses.
          * @param expression the raw Dart pattern expression
@@ -261,4 +278,30 @@ sealed class Pattern {
 internal fun patternConstant(value: Any?): String = when (value) {
     is CodeBlock -> value.toString()
     else -> LiteralPattern(value).toString()
+}
+
+/**
+ * Checks that this pattern can be used as the outer pattern of a pattern declaration, a for-in loop or
+ * a pattern assignment. Raw patterns are not checked.
+ * @param context the name of the statement, used in the error messages
+ * @param isAssignment whether the pattern assigns existing variables instead of declaring new ones
+ */
+internal fun Pattern.requireOuterPattern(context: String, isAssignment: Boolean = false) {
+    if (this is RawPattern) return
+    require(this is RecordPattern || this is ListPattern || this is MapPattern || this is ObjectPattern) {
+        "A $context needs a record, list, map or object pattern"
+    }
+    nestedPatterns().filterIsInstance<VariablePattern>().forEach { variable ->
+        require(!isAssignment) {
+            "A $context can't declare the variable '${variable.name}', use Pattern.identifier instead"
+        }
+        require(variable.typeName != null && !variable.isFinal) {
+            "Variable patterns in a $context can't use var or final, use Pattern.identifier or a typed variable pattern instead"
+        }
+    }
+}
+
+private fun Pattern.nestedPatterns(): Sequence<Pattern> = sequence {
+    yield(this@nestedPatterns)
+    subPatterns.forEach { yieldAll(it.nestedPatterns()) }
 }

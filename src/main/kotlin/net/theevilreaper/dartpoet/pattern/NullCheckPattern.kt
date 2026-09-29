@@ -12,5 +12,7 @@ class NullCheckPattern internal constructor(
 
     override val precedence: Int get() = UNARY_PRECEDENCE
 
+    override val subPatterns: List<Pattern> get() = listOf(pattern)
+
     override fun toString(): String = "${pattern.render(PRIMARY_PRECEDENCE)}?"
 }

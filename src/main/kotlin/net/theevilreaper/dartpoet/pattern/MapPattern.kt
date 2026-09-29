@@ -13,6 +13,8 @@ class MapPattern internal constructor(
 
     private val entryList = entries.toList()
 
+    override val subPatterns: List<Pattern> get() = entryList.map { it.second }
+
     init {
         require(entryList.isNotEmpty()) { "A map pattern must have at least one entry" }
     }

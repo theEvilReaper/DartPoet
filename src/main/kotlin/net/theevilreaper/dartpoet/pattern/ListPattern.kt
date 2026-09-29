@@ -19,6 +19,8 @@ class ListPattern internal constructor(
     private val beforeList = before.toImmutableList()
     private val afterList = after.toImmutableList()
 
+    override val subPatterns: List<Pattern> get() = beforeList + afterList
+
     init {
         require(restName == null || restName.trim().isNotEmpty()) {
             "The rest element's binding name can't be blank"

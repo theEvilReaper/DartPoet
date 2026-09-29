@@ -27,6 +27,8 @@ class LogicalPattern internal constructor(
 
     override val precedence: Int get() = operator.precedence
 
+    override val subPatterns: List<Pattern> get() = patternList
+
     override fun toString(): String =
         patternList.joinToString(separator = " ${operator.symbol} ") { it.render(operator.precedence) }
 }

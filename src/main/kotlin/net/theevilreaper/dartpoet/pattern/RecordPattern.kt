@@ -16,6 +16,8 @@ class RecordPattern internal constructor(
     private val positionalList = positional.toImmutableList()
     private val namedFields = named.toMap()
 
+    override val subPatterns: List<Pattern> get() = positionalList + namedFields.values
+
     override fun toString(): String {
         val fields = positionalList.map { it.toString() } + namedFields.map { (name, pattern) -> "$name: $pattern" }
         return fields.joinToString(prefix = "(", separator = ", ", postfix = ")")
