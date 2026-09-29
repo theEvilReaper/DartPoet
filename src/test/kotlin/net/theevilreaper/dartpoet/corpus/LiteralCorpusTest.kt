@@ -4,6 +4,7 @@ import net.theevilreaper.dartpoet.DartFile
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.type.DOUBLE
+import net.theevilreaper.dartpoet.type.INTEGER
 import net.theevilreaper.dartpoet.type.STRING
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.verify.verifyDartOutput
@@ -36,6 +37,28 @@ class LiteralCorpusTest {
             |final double small = 0.00001;
             |final double tiny = 0.00000015;
             |final double negativeZero = -0.0;
+            |
+            """.trimMargin()
+        )
+    }
+
+    @Test
+    fun `test numeric literals do not use digit separators`() {
+        val file = DartFile.builder("numeric_literals_without_separators")
+            .properties(
+                finalProperty("thousand", INTEGER, "%L", 1000),
+                finalProperty("large", INTEGER, "%L", 9_007_199_254_740_991L),
+                finalProperty("negative", INTEGER, "%L", -1_234_567),
+                finalProperty("fraction", DOUBLE, "%L", 123456.789),
+            )
+            .build()
+
+        file.verifyDartOutput(
+            """
+            |final int thousand = 1000;
+            |final int large = 9007199254740991;
+            |final int negative = -1234567;
+            |final double fraction = 123456.789;
             |
             """.trimMargin()
         )

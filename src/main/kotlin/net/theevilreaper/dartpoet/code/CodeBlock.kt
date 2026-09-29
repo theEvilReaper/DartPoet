@@ -396,13 +396,13 @@ class CodeBlock private constructor(
         private fun argToString(o: Any?) = o?.toString()
 
         private fun formatNumericValue(o: Number): Any? {
+            // No grouping, because digit separators (`1_000`) require Dart 3.6
             val format = DecimalFormatSymbols().apply {
                 decimalSeparator = '.'
-                groupingSeparator = '_'
             }
 
             if (o !is Float && o !is Double) {
-                return DecimalFormat("###,##0", format).format(o)
+                return DecimalFormat("0", format).format(o)
             }
 
             val value = o.toDouble()
@@ -416,7 +416,7 @@ class CodeBlock private constructor(
 
             // Parse the shortest representation (e.g. `1.0E-5`) so no digits are lost to rounding
             val decimal = BigDecimal(o.toString())
-            val decimalFormat = DecimalFormat("###,##0.0", format).apply {
+            val decimalFormat = DecimalFormat("0.0", format).apply {
                 maximumFractionDigits = maxOf(1, decimal.stripTrailingZeros().scale())
             }
             return decimalFormat.format(decimal)
