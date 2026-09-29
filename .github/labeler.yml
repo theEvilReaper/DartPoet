@@ -51,6 +51,12 @@
           - 'src/main/kotlin/**/pattern/**'
           - 'src/test/kotlin/**/pattern/**'
 
+"area: util":
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/main/kotlin/**/util/**'
+          - 'src/test/kotlin/**/util/**'
+
 "area: directive":
   - changed-files:
       - any-glob-to-any-file:
