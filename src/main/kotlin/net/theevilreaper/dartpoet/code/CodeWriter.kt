@@ -65,8 +65,8 @@ internal val emptyCurlyBlock = buildCodeString {
 }
 
 /**
- * Converts a [DartFile] to a string suitable for both human- and kotlinc-consumption. This honors
- * imports, indentation, and deferred variable names.
+ * Converts a [DartFile] to a string suitable for both humans and the Dart compiler. This honors
+ * indentation, statements and line wrapping.
  */
 class CodeWriter(
     out: Appendable,
@@ -182,7 +182,7 @@ class CodeWriter(
      * - `%C` — emits the argument as a Dart string literal with single quotes (`'`), escaping `$`
      * - `%P` — emits the argument as a Dart string literal with single quotes (`'`), keeping `$` for string interpolation
      * - `%T` — emits the argument as a [TypeName]
-     * - `%N` — emits the argument as a plain name (no escaping)
+     * - `%N` — emits the argument as a name, which was validated when the [CodeBlock] was built
      * - `%%` — emits a literal `%`
      * - `⇥` — increases the indentation level
      * - `⇤` — decreases the indentation level

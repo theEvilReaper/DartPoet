@@ -48,9 +48,13 @@ import kotlin.reflect.KClass
  *  * `%L` emits a *literal* value with no escaping. Arguments for literals may be strings,
  *    primitives, [type declarations][ClassSpec], [annotations][AnnotationSpec] and even other code
  *    blocks.
- *  * `%N` emits a *name*, using name collision avoidance where necessary. Arguments for names may
- *    be strings (actually any [character sequence][CharSequence]), [parameters][ParameterSpec],
- *    [properties][PropertySpec], [functions][FunctionSpec], [typeDefs][TypeDefSpec] and [types][ClassSpec].
+ *  * `%N` emits a *name*. The name is validated against the Dart identifier rules, so reserved
+ *    words are rejected and built-in identifiers (e.g. `get`) are only rejected as type names.
+ *    Arguments for names may be strings (actually any [character sequence][CharSequence]),
+ *    [parameters][ParameterSpec], [properties][PropertySpec], [functions][FunctionSpec],
+ *    [typeDefs][AbstractTypeDef] and [types][ClassSpec].
+ *  * `%C` escapes the value as a *string* and wraps it with single quotes, which is the
+ *    preferred style in Dart. Dollar signs (`$`) are escaped as well.
  *  * `%S` escapes the value as a *string*, wraps it with double quotes, and emits that. For
  *    example, `6" sandwich` is emitted `"6\" sandwich"`. `%S` will also escape all dollar signs
  *    (`$`), use `%P` for string templates.
