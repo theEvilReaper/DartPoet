@@ -100,6 +100,29 @@ class LiteralCorpusTest {
     }
 
     @Test
+    fun `test string templates keep interpolated expressions unescaped`() {
+        val file = DartFile.builder("string_template_literals")
+            .properties(
+                finalProperty("name", STRING, "%C", "Dart"),
+                finalProperty("greeting", STRING, "%P", "Hello \${name.replaceAll('a', 'b')}"),
+                finalProperty("nested", STRING, "%P", "It's \${name.isEmpty ? '{}' : name}"),
+                finalProperty("multiline", STRING, "%P", "\${name.toUpperCase()}\nC:\\temp \$name"),
+            )
+            .build()
+
+        file.verifyDartOutput(
+            """
+            |final String name = 'Dart';
+            |final String greeting = 'Hello ${'$'}{name.replaceAll('a', 'b')}';
+            |final String nested = 'It\'s ${'$'}{name.isEmpty ? '{}' : name}';
+            |final String multiline = '''${'$'}{name.toUpperCase()}
+            |C:\\temp ${'$'}name''';
+            |
+            """.trimMargin()
+        )
+    }
+
+    @Test
     fun `test multiline string literals keep carriage returns`() {
         val file = DartFile.builder("multiline_carriage_return_literals")
             .property(finalProperty("crlf", STRING, "%C", "first\r\nsecond"))

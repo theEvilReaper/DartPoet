@@ -56,7 +56,8 @@ import kotlin.reflect.KClass
  *    example, `6" sandwich` is emitted `"6\" sandwich"`. `%S` will also escape all dollar signs
  *    (`$`), use `%P` for string templates.
  *  * `%P` - Similar to `%S`, but doesn't escape dollar signs (`$`) to allow creation of string
- *    templates. If the string contains dollar signs that should be escaped - use `%S`.
+ *    templates. Interpolated expressions (`${…}`) are emitted unchanged. If the string contains
+ *    dollar signs that should be escaped - use `%S`.
  *  * `%T` emits a *type* reference. Types will be imported if possible. Arguments for types may be
  *    [classes][Class].
  *  * `%%` emits a percent sign.

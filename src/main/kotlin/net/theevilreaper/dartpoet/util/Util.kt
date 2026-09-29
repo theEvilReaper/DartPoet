@@ -64,7 +64,18 @@ internal fun dartStringLiteral(
     var escapeFirstNewline = multiline && value.substringBefore('\n').all { it == ' ' || it == '\t' }
 
     val escaped = buildString {
-        for (c in value) {
+        var index = 0
+        while (index < value.length) {
+            // Interpolated expressions are Dart code, so they are copied without escaping
+            if (!escapeDollar && value.startsWith("\${", index)) {
+                val end = value.interpolationEnd(index + 2)
+                if (end != -1) {
+                    append(value, index, end + 1)
+                    index = end + 1
+                    continue
+                }
+            }
+            val c = value[index++]
             when {
                 c == quoteChar -> append("\\$quoteChar")
                 c == '\\' -> append("\\\\")
@@ -84,6 +95,22 @@ internal fun dartStringLiteral(
     }
     val delimiter = if (multiline) tripleQuote else quote
     return "$delimiter$escaped$delimiter"
+}
+
+/**
+ * Returns the index of the `}` which closes an interpolation whose expression starts at [start],
+ * or -1 if the interpolation is not closed.
+ * Braces are counted, so an unbalanced brace inside a nested string literal (e.g. `${f('}')}`) is not supported.
+ */
+private fun String.interpolationEnd(start: Int): Int {
+    var depth = 1
+    for (i in start until length) {
+        when (this[i]) {
+            '{' -> depth++
+            '}' -> if (--depth == 0) return i
+        }
+    }
+    return -1
 }
 
 private val DART_KEYWORDS = setOf(
