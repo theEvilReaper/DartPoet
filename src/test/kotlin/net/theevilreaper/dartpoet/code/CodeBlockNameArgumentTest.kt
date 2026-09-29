@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 
 /**
  * Dedicated test class which contains only test cases from a [CodeBlock] which uses the %N placeholder
@@ -29,6 +31,27 @@ class CodeBlockNameArgumentTest {
         assertNotNull(exception)
         assertNotNull(exception.message)
         assertTrue { exception.message!!.contains("expected name but was java.lang.Object") }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["class", "final", "var", "switch", "this"])
+    fun `test reserved words are rejected`(name: String) {
+        val exception = assertThrows<IllegalArgumentException> { CodeBlock.of("%N", name) }
+        assertThat(exception).hasMessageThat().contains("reserved word")
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["größe", "naïve", "1name", "my-name"])
+    fun `test invalid identifiers are rejected`(name: String) {
+        val exception = assertThrows<IllegalArgumentException> { CodeBlock.of("%N", name) }
+        assertThat(exception).hasMessageThat().contains("not a valid Dart identifier")
+    }
+
+    @Test
+    fun `test built-in identifier as type name is rejected`() {
+        val clazz = ClassSpec.builder("get").build()
+        val exception = assertThrows<IllegalArgumentException> { CodeBlock.of("%N()", clazz) }
+        assertThat(exception).hasMessageThat().contains("can't be used as a type name")
     }
 
     @Test
