@@ -119,9 +119,13 @@ internal fun String.escapeIfNecessary(validate: Boolean = true, isTypeName: Bool
     return this
 }
 
+/**
+ * Checks if this string matches the Dart identifier grammar, which only allows ASCII letters and digits.
+ */
 private fun String.isValidDartIdentifier(): Boolean {
     if (isEmpty()) return false
-    val first = first()
-    if (!first.isLetter() && first != '_' && first != '$') return false
-    return drop(1).all { it.isLetterOrDigit() || it == '_' || it == '$' }
+    if (!first().isIdentifierStart()) return false
+    return drop(1).all { it.isIdentifierStart() || it in '0'..'9' }
 }
+
+private fun Char.isIdentifierStart(): Boolean = this in 'a'..'z' || this in 'A'..'Z' || this == '_' || this == '$'
