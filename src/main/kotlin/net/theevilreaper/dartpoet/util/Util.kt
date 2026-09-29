@@ -113,29 +113,54 @@ private fun String.interpolationEnd(start: Int): Int {
     return -1
 }
 
-private val DART_KEYWORDS = setOf(
-    "abstract", "as", "assert", "async", "await", "base", "break", "case", "catch", "class",
-    "const", "continue", "covariant", "default", "deferred", "do", "dynamic", "else", "enum",
-    "export", "extends", "extension", "external", "factory", "false", "final", "finally", "for",
-    "Function", "get", "hide", "if", "implements", "import", "in", "interface", "is", "late",
-    "library", "mixin", "new", "null", "on", "operator", "part", "required", "rethrow", "return",
-    "sealed", "set", "show", "static", "super", "switch", "sync", "this", "throw", "true", "try",
-    "typedef", "var", "void", "when", "while", "with", "yield"
+/**
+ * Reserved words which can never be used as an identifier.
+ * Contextual keywords (`await`, `yield`) and unrestricted keywords (e.g. `on`, `when`) are valid identifiers.
+ * @see <a href="https://dart.dev/language/keywords">Dart keywords</a>
+ */
+private val DART_RESERVED_WORDS = setOf(
+    "assert", "break", "case", "catch", "class", "const", "continue", "default", "do", "else",
+    "enum", "extends", "false", "final", "finally", "for", "if", "in", "is", "new", "null",
+    "rethrow", "return", "super", "switch", "this", "throw", "true", "try", "var", "void",
+    "while", "with"
 )
 
-internal val String.isKeyword get() = this in DART_KEYWORDS
+/**
+ * Built-in identifiers which can't be used as the name of a type, an extension or an import prefix,
+ * but are valid identifiers in all other places.
+ * @see <a href="https://dart.dev/language/keywords">Dart keywords</a>
+ */
+private val DART_BUILT_IN_IDENTIFIERS = setOf(
+    "abstract", "as", "covariant", "deferred", "dynamic", "export", "extension", "external",
+    "factory", "Function", "get", "implements", "import", "interface", "late", "library", "mixin",
+    "operator", "part", "required", "set", "static", "type", "typedef"
+)
 
-internal fun String.escapeIfNecessary(validate: Boolean = true): String {
+internal val String.isReservedWord get() = this in DART_RESERVED_WORDS
+
+/**
+ * Validates that this string can be used as a Dart identifier.
+ * @param validate whether the validation should be performed
+ * @param isTypeName whether the identifier names a type, which additionally forbids built-in identifiers
+ */
+internal fun String.escapeIfNecessary(validate: Boolean = true, isTypeName: Boolean = false): String {
     if (validate) {
-        require(!isKeyword) { "The given name '$this' is a Dart keyword and cannot be used as an identifier." }
+        require(!isReservedWord) { "The given name '$this' is a reserved word and cannot be used as an identifier." }
+        require(!isTypeName || this !in DART_BUILT_IN_IDENTIFIERS) {
+            "The given name '$this' is a built-in identifier and can't be used as a type name."
+        }
         require(isValidDartIdentifier()) { "The given name '$this' is not a valid Dart identifier." }
     }
     return this
 }
 
+/**
+ * Checks if this string matches the Dart identifier grammar, which only allows ASCII letters and digits.
+ */
 private fun String.isValidDartIdentifier(): Boolean {
     if (isEmpty()) return false
-    val first = first()
-    if (!first.isLetter() && first != '_' && first != '$') return false
-    return drop(1).all { it.isLetterOrDigit() || it == '_' || it == '$' }
+    if (!first().isIdentifierStart()) return false
+    return drop(1).all { it.isIdentifierStart() || it in '0'..'9' }
 }
+
+private fun Char.isIdentifierStart(): Boolean = this in 'a'..'z' || this in 'A'..'Z' || this == '_' || this == '$'

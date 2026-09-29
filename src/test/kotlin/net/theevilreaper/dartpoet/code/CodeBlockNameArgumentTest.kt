@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 
 /**
  * Dedicated test class which contains only test cases from a [CodeBlock] which uses the %N placeholder
@@ -29,6 +31,62 @@ class CodeBlockNameArgumentTest {
         assertNotNull(exception)
         assertNotNull(exception.message)
         assertTrue { exception.message!!.contains("expected name but was java.lang.Object") }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["class", "final", "var", "switch", "this"])
+    fun `test reserved words are rejected`(name: String) {
+        val exception = assertThrows<IllegalArgumentException> { CodeBlock.of("%N", name) }
+        assertThat(exception).hasMessageThat().contains("reserved word")
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["größe", "naïve", "1name", "my-name", "", "a٣", "with space"])
+    fun `test invalid identifiers are rejected`(name: String) {
+        val exception = assertThrows<IllegalArgumentException> { CodeBlock.of("%N", name) }
+        assertThat(exception).hasMessageThat().contains("not a valid Dart identifier")
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["_private", "\$name", "name1", "_", "\$", "camelCase", "SCREAMING_CASE", "_1"])
+    fun `test valid identifiers are accepted`(name: String) {
+        assertThat(CodeBlock.of("%N", name).toString()).isEqualTo(name)
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["get", "set", "on", "when", "required", "late", "async", "await", "yield", "type", "Function"])
+    fun `test keywords which are no reserved words are accepted as member names`(name: String) {
+        val parameter = ParameterSpec.positional(name, String::class).build()
+        val property = PropertySpec.builder(name, String::class).build()
+        val function = FunctionSpec.builder(name).build()
+
+        assertThat(CodeBlock.of("%N", parameter).toString()).isEqualTo(name)
+        assertThat(CodeBlock.of("%N", property).toString()).isEqualTo(name)
+        assertThat(CodeBlock.of("%N", function).toString()).isEqualTo(name)
+    }
+
+    @Test
+    fun `test built-in identifier as type name is rejected`() {
+        val clazz = ClassSpec.builder("get").build()
+        val exception = assertThrows<IllegalArgumentException> { CodeBlock.of("%N()", clazz) }
+        assertThat(exception).hasMessageThat().contains("can't be used as a type name")
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["set", "dynamic", "typedef"])
+    fun `test built-in identifier as typedef name is rejected`(name: String) {
+        val typeDef = TypeDef.alias(name)
+            .returns(List::class)
+            .build()
+        val exception = assertThrows<IllegalArgumentException> { CodeBlock.of("%N", typeDef) }
+        assertThat(exception).hasMessageThat().contains("can't be used as a type name")
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["on", "when", "sealed"])
+    fun `test unrestricted keywords are accepted as type names`(name: String) {
+        val clazz = ClassSpec.builder(name).build()
+        assertThat(CodeBlock.of("%N", clazz).toString()).isEqualTo(name)
     }
 
     @Test
