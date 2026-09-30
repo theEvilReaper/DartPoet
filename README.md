@@ -19,9 +19,8 @@ more recent SDK. Extension Types require Dart `3.3+`, and private named paramete
 > [!NOTE]
 > **Roadmap & Dart 3 Support:**  
 > Most Dart 3.0+ features are now natively supported, including Record Types, Extension Types, the combined
-> `mixin class` declaration, and Dart 3.12's private named parameters. The one remaining gap is a dedicated API for
-> structured pattern matching (record/list/object destructuring, `if`-case); until then, patterns can still be
-> expressed as raw strings inside the existing `switch` statement/expression DSL.
+> `mixin class` declaration, Dart 3.12's private named parameters and pattern matching. Patterns can be used in
+> `switch` statements and expressions, `if`-case statements, pattern declarations and assignments, and `for`-in loops.
 
 > [!WARNING]
 >
