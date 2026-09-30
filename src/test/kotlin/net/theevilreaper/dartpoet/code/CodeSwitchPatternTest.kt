@@ -120,7 +120,6 @@ class CodeSwitchPatternTest {
             |    default:
             |      return 'unknown';
             |  }
-            |
             |}
             |
             """.trimMargin()

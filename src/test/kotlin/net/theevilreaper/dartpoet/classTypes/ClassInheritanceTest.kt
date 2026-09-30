@@ -56,9 +56,7 @@ class ClassInheritanceTest {
                     .build(),
                 """
                 |enum Status with M1 implements I1 {
-                |
                 |  active;
-                |
                 |}
                 """.trimMargin()
             )

@@ -83,7 +83,6 @@ class GenericClassTest {
         genericClass.verifyDartOutput(
             """
             |class TestClass<T, E> {
-            |
             |  late T argument;
             |  late List<E> list;
             |

@@ -64,13 +64,12 @@ class EnumCorpusTest {
         file.verifyDartOutput(
             """
             |enum Status {
-            |
             |  active,
             |  inactive,
             |  pending
             |}
-            |enum Vehicle {
             |
+            |enum Vehicle {
             |  car(4),
             |  motorcycle(2);
             |
@@ -123,13 +122,12 @@ class EnumCorpusTest {
         file.verifyDartOutput(
             """
             |mixin LoggingMixin {
-            |
             |  void log(String msg) {
             |    print(msg);
             |  }
             |}
-            |enum Direction with LoggingMixin implements Comparable<Direction> {
             |
+            |enum Direction with LoggingMixin implements Comparable<Direction> {
             |  north,
             |  south,
             |  east,
@@ -181,11 +179,11 @@ class EnumCorpusTest {
             |}
             |
             |enum TaskStatus {
-            |
             |  todo,
             |  inProgress,
             |  done
             |}
+            |
             """.trimMargin()
         )
     }

@@ -102,7 +102,6 @@ class PatternTypesCorpusTest {
             |    default:
             |      return 'unknown';
             |  }
-            |
             |}
             |
             """.trimMargin()
@@ -174,7 +173,6 @@ class PatternTypesCorpusTest {
             |    default:
             |      return 'nobody';
             |  }
-            |
             |}
             |
             |int sum((int?, int?) value) {

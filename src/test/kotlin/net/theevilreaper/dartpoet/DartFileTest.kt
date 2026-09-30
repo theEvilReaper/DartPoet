@@ -145,7 +145,6 @@ class DartFileTest {
             |part of testLibrary;
             |
             |class DefectApi {
-            |
             |  final ApiClient apiClient;
             |
             |  DefectApi(ApiClient apiClient): apiClient = apiClient;
@@ -159,9 +158,9 @@ class DartFileTest {
             |    ).then((response) {
             |      return DefectDTO.from(response.data!);
             |    });
-            |
             |  }
             |}
+            |
             """.trimMargin()
         )
     }
@@ -212,7 +211,6 @@ class DartFileTest {
         assertThat(modelClass.toString()).isEqualTo(
             """
             |abstract class $name implements Built<$name, ${name}Builder> {
-            |
             |  static Serializer<$name> get serializer => _$${name}Serializer;
             |
             |  static $name fromJson(dynamic json) => $serializer.deserialize(json);
@@ -249,6 +247,7 @@ class DartFileTest {
             |
             |@freezed
             |class Environment {}
+            |
             """.trimMargin()
         )
     }
@@ -268,6 +267,7 @@ class DartFileTest {
             |/// Hallo
             |/// This is a [Test]
             |class Test {}
+            |
             """.trimMargin()
         )
     }
@@ -308,7 +308,6 @@ class DartFileTest {
             |/// Class documentation is good
             |/// And its working
             |class TestModel {
-            |
             |  /// Property comment
             |  String name;
             |
@@ -320,6 +319,7 @@ class DartFileTest {
             |    return name;
             |  }
             |}
+            |
             """.trimMargin()
         )
     }

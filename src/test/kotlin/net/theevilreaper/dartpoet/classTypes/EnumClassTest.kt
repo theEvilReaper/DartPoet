@@ -124,7 +124,6 @@ class EnumClassTest {
         enumClass.verifyDartOutput(
             """
             |enum NavigationEntry {
-            |
             |  dashboard('Dashboard', '/dashboard'),
             |  build('Build', '/build');
             |
@@ -132,8 +131,8 @@ class EnumClassTest {
             |  final String route;
             |
             |  const NavigationEntry(this.name, this.route);
-            |
             |}
+            |
             """.trimMargin()
         )
     }
@@ -187,7 +186,6 @@ class EnumClassTest {
         enumClass.verifyDartOutput(
             """
             |enum Vehicle {
-            |
             |  car(tires: 4, passengers: 6),
             |  bus(tires: 6, passengers: 80);
             |
@@ -195,7 +193,6 @@ class EnumClassTest {
             |  final int passengers;
             |
             |  const Vehicle({required this.tires, required this.passengers});
-            |
             |}
             |
             """.trimMargin()

@@ -2,8 +2,9 @@ package net.theevilreaper.dartpoet.code.writer
 
 import net.theevilreaper.dartpoet.DartFile
 import net.theevilreaper.dartpoet.code.*
-import net.theevilreaper.dartpoet.code.emitExtensions
 import net.theevilreaper.dartpoet.directive.Directive
+import net.theevilreaper.dartpoet.extension.ExtensionSpec
+import net.theevilreaper.dartpoet.spec.TypeSpec
 import net.theevilreaper.dartpoet.util.NEW_LINE
 
 internal class DartFileWriter : Writeable<DartFile>, DocumentationAppender {
@@ -44,15 +45,14 @@ internal class DartFileWriter : Writeable<DartFile>, DocumentationAppender {
             emitSectionSeparator(writer, hasContent = true, hasMoreContent = hasTypes || hasExtensions)
         }
 
-        if (hasTypes) {
-            spec.types.forEach {
-                it.write(writer)
-                if (spec.types.size > 1) {
-                    writer.emit(NEW_LINE)
-                }
+        // Type and extension declarations are separated by a blank line, like dart format does
+        (spec.types + spec.extensions).forEachIndexed { index, declaration ->
+            if (index > 0) writer.emit("$NEW_LINE$NEW_LINE")
+            when (declaration) {
+                is TypeSpec -> declaration.write(writer)
+                is ExtensionSpec -> declaration.write(writer)
             }
         }
-        spec.extensions.emitExtensions(writer)
     }
 
     /**

@@ -92,38 +92,38 @@ class ClassModifierCorpusTest {
         file.verifyDartOutput(
             """
             |base mixin BaseLogMixin {
-            |
             |  void log(String msg) {
             |    // empty body
             |  }
             |}
-            |mixin class Service {
             |
+            |mixin class Service {
             |  void start() {
             |    // start service
             |  }
             |}
-            |base mixin class BaseWorker {
             |
+            |base mixin class BaseWorker {
             |  void work() {
             |    // do work
             |  }
             |}
-            |abstract mixin class AbstractHelper {
             |
+            |abstract mixin class AbstractHelper {
             |  void help();
             |}
-            |abstract base mixin class AbstractBaseService {
             |
+            |abstract base mixin class AbstractBaseService {
             |  void init();
             |}
-            |class AppService with Service implements AbstractHelper {
             |
+            |class AppService with Service implements AbstractHelper {
             |  @override
             |  void help() {
             |    // help implemented
             |  }
             |}
+            |
             |base class WorkerApp extends BaseWorker with BaseLogMixin {}
             |
             """.trimMargin()

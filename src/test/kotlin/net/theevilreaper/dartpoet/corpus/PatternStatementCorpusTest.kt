@@ -68,7 +68,6 @@ class PatternStatementCorpusTest {
             |  } else {
             |    return 'unknown';
             |  }
-            |
             |}
             |
             |bool isOrigin(Object point) {
@@ -76,7 +75,6 @@ class PatternStatementCorpusTest {
             |    return true;
             |  }
             |  return false;
-            |
             |}
             |
             """.trimMargin()
@@ -120,7 +118,6 @@ class PatternStatementCorpusTest {
             |  (lat, lng) = (lng, lat);
             |  final [double first, _] = [lat, lng];
             |  return (first, lng);
-            |
             |}
             |
             """.trimMargin()
@@ -176,14 +173,12 @@ class PatternStatementCorpusTest {
             |  for (final (name, score) in scores) {
             |    print('${'$'}name: ${'$'}score');
             |  }
-            |
             |}
             |
             |void printEntries(Map<String, int> values) {
             |  for (var MapEntry(key: key, value: value) in values.entries) {
             |    print('${'$'}key = ${'$'}value');
             |  }
-            |
             |}
             |
             """.trimMargin()

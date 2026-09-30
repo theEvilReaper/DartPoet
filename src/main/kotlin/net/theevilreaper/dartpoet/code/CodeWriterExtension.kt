@@ -5,7 +5,6 @@ import net.theevilreaper.dartpoet.constructor.ConstructorBase
 import net.theevilreaper.dartpoet.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.constructor.factory.FactorySpec
 import net.theevilreaper.dartpoet.directive.Directive
-import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.typedef.AbstractTypeDef
 import net.theevilreaper.dartpoet.operator.DartOperatorSpec
@@ -118,19 +117,6 @@ internal fun List<ParameterSpec>.emitParameters(
         }
     }
 }
-
-/**
- * Emits the extensions of the list to a [CodeWriter] via [emitBlockElements].
- * A single extension gets no trailing new line unless [forceNewLines] is true.
- * @param codeWriter the writer to emit into
- * @param forceNewLines forces a separating new line even for a single extension
- * @param emitBlock the block that emits a single extension
- */
-internal fun List<ExtensionSpec>.emitExtensions(
-    codeWriter: CodeWriter,
-    forceNewLines: Boolean = false,
-    emitBlock: (ExtensionSpec) -> Unit = { it.write(codeWriter) },
-) = emitBlockElements(codeWriter, forceNewLines, alwaysEmitTrailingNewLine = false, emitBlock = emitBlock)
 
 internal fun <T : Directive> List<T>.writeImports(
     writer: CodeWriter,

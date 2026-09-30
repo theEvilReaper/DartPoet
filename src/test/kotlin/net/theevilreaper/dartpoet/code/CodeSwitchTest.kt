@@ -217,7 +217,6 @@ class CodeSwitchTest {
             |    default:
             |      return 'unknown';
             |  }
-            |
             |}
             |
             |String evalCommand(String cmd) {
@@ -226,7 +225,6 @@ class CodeSwitchTest {
             |    'stop' => 'stopping',
             |    _ => 'unknown',
             |  };
-            |
             |}
             |
             """.trimMargin()
