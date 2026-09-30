@@ -25,6 +25,7 @@ class DartAnalyzeExtension : InvocationInterceptor {
     ) {
         invocation.proceed()
         val generated = invocationContext.arguments.firstOrNull() ?: return
+        generated.assertBlankLineStyle()
         DartAnalyzeCorpus.record(generated.toString())
     }
 }
