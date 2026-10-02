@@ -55,7 +55,6 @@ class ClassWriterOperatorTest {
                     .build(),
                 """
                 |class Vector {
-                |
                 |  int x;
                 |  int y;
                 |
@@ -87,7 +86,6 @@ class ClassWriterOperatorTest {
                     .build(),
                 """
                 |class Box {
-                |
                 |  bool _open = false;
                 |
                 |  void open() {
@@ -132,7 +130,6 @@ class ClassWriterOperatorTest {
                     .build(),
                 """
                 |class Money {
-                |
                 |  int cents;
                 |
                 |  Money(this.cents);
@@ -179,7 +176,6 @@ class ClassWriterOperatorTest {
                     .build(),
                 """
                 |class IntList {
-                |
                 |  List<int> _values;
                 |
                 |  IntList(this._values);

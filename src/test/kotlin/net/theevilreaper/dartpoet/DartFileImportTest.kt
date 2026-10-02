@@ -60,7 +60,6 @@ class DartFileImportTest {
             |import 'package:model/sound_model.dart';
             |
             |class TestAction extends ReduxAction<AppState> {
-            |
             |  @override
             |  Future<AppState> reduce() async {
             |    var models = [];

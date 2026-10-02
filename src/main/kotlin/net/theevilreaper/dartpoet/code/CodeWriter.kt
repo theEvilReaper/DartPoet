@@ -87,6 +87,24 @@ class CodeWriter(
     private var statementLine = -1
 
     /**
+     * Line breaks which are not written yet. They are written together before the next line, so the
+     * writer can decide how many blank lines are allowed at that position. See [flushLineBreaks].
+     */
+    @PublishedApi
+    internal var pendingLineBreaks = 0
+
+    /**
+     * The last character which was written and isn't whitespace, or `null` if nothing was written yet.
+     */
+    @PublishedApi
+    internal var lastContentChar: Char? = null
+
+    /**
+     * Whether line breaks are written as they are, e.g. inside a multiline string literal.
+     */
+    private var preserveLineBreaks = false
+
+    /**
      * Increases the current indentation level by a given amount.
      * The default value is 1.
      * @param levels the number of levels to increase
@@ -112,6 +130,7 @@ class CodeWriter(
      * @return the instance from the writer
      */
     fun emitDoc(codeBlock: CodeBlock) = apply {
+        flushLineBreaks()
         trailingNewline = true // Force the '///' prefix for the documentation.
         comment = true
         try {
@@ -222,7 +241,7 @@ class CodeWriter(
                 else -> emit(part)
             }
         }
-        if (ensureTrailingNewline && out.hasPendingSegments) emit(NEW_LINE)
+        if (ensureTrailingNewline && out.hasPendingSegments && pendingLineBreaks == 0) emit(NEW_LINE)
     }
 
     /**
@@ -243,7 +262,12 @@ class CodeWriter(
             true -> dartStringLiteral(string, quoteChar, escapeDollar)
             false -> NULL_STRING
         }
-        emit(stringArgument, nonWrapping = true)
+        preserveLineBreaks = true
+        try {
+            emit(stringArgument, nonWrapping = true)
+        } finally {
+            preserveLineBreaks = false
+        }
     }
 
     /**
@@ -273,6 +297,8 @@ class CodeWriter(
      */
     private fun openStatement(codeBlock: CodeBlock) {
         CodeWriterCheck.ensureStatementNotAlreadyOpen(statementLine, codeBlock)
+        // Line breaks before the statement must not count as wrapped lines of the statement
+        flushLineBreaks()
         statementLine = 0
     }
 
@@ -302,11 +328,45 @@ class CodeWriter(
     fun emit(s: String, nonWrapping: Boolean = false) = apply {
         var first = true
         for (line in s.split('\n')) {
-            if (!first) emitNewline()
+            if (!first) {
+                when (comment || preserveLineBreaks) {
+                    true -> emitNewline()
+                    false -> pendingLineBreaks++
+                }
+            }
             first = false
             if (line.isEmpty()) continue
+            flushLineBreaks(line)
             emitLine(line, nonWrapping)
         }
+    }
+
+    /**
+     * Writes the pending line breaks before [nextLine] is written. This is the central place which
+     * decides where blank lines are allowed, following the rules of `dart format`:
+     * - never more than one blank line in a row
+     * - no blank line after an opening brace
+     * - no blank line before a closing brace
+     *
+     * @param nextLine the line which is written next, or `null` if it's not known
+     */
+    @PublishedApi
+    internal fun flushLineBreaks(nextLine: String? = null) {
+        if (pendingLineBreaks == 0) return
+        val opensBlock = lastContentChar == '{'
+        val closesBlock = nextLine?.trimStart()?.startsWith('}') == true
+        val lineBreaks = if (opensBlock || closesBlock) 1 else minOf(pendingLineBreaks, 2)
+        pendingLineBreaks = 0
+        repeat(lineBreaks) { emitNewline() }
+    }
+
+    /**
+     * Ends a file with exactly one line break, as required by the Dart style.
+     */
+    internal fun finishFile() {
+        if (lastContentChar == null) return
+        pendingLineBreaks = 1
+        flushLineBreaks()
     }
 
     /**
@@ -357,6 +417,7 @@ class CodeWriter(
             out.append(line, indentLevel = indentLevel + 2)
         }
         trailingNewline = false
+        line.trimEnd().lastOrNull()?.let { lastContentChar = it }
     }
 
     /**
@@ -375,6 +436,7 @@ class CodeWriter(
      */
     fun emitSpaces(amount: Int = 1) = apply {
         check(amount > 0) { "The amount can't be negative" }
+        flushLineBreaks()
         repeat(amount) {
             out.appendNonWrapping(SPACE)
         }
@@ -385,6 +447,7 @@ class CodeWriter(
      * @return the instance from the writer
      */
     fun emitSpace() = apply {
+        flushLineBreaks()
         out.appendNonWrapping(SPACE)
     }
 
@@ -396,14 +459,23 @@ class CodeWriter(
         val codeWrapper = this
         LineWrapper(out, indent = DEFAULT_INDENT, maxLineLength = Int.MAX_VALUE).use { newOut ->
             val oldOut = codeWrapper.out
+            val outerLineBreaks = codeWrapper.pendingLineBreaks
+            val outerContentChar = codeWrapper.lastContentChar
             codeWrapper.out = newOut
+            codeWrapper.pendingLineBreaks = 0
             action()
+            codeWrapper.flushLineBreaks()
             codeWrapper.out = oldOut
+            codeWrapper.pendingLineBreaks = outerLineBreaks
+            codeWrapper.lastContentChar = outerContentChar
         }
     }
 
     /**
-     * Closes the underlying [Appendable].
+     * Writes the pending line breaks and closes the underlying [Appendable].
      */
-    override fun close() = out.close()
+    override fun close() {
+        flushLineBreaks()
+        out.close()
+    }
 }

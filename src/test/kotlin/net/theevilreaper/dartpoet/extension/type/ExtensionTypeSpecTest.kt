@@ -94,7 +94,6 @@ class ExtensionTypeSpecTest {
         extensionType.verifyDartOutput(
             """
             |extension type Meters(double value) {
-            |
             |  static const double zero = 0.0;
             |
             |  static String unit = 'm';
@@ -264,11 +263,11 @@ class ExtensionTypeSpecTest {
         dartFile.verifyDartOutput(
             """
             |extension type Meters(double value) {
-            |
             |  double toFeet() {
             |    return value * 3.281;
             |  }
             |}
+            |
             """.trimMargin()
         )
     }

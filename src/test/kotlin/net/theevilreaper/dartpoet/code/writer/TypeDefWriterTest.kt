@@ -205,7 +205,6 @@ class TypeDefWriterTest {
             |typedef Callback = void Function(String message, [int? code]);
             |
             |class Handler {
-            |
             |  void onMessage(String message, [int? code = 0]) {
             |    code ??= 0;
             |  }

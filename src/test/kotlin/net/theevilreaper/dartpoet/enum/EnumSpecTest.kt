@@ -31,7 +31,6 @@ class EnumSpecTest {
         enumSpec.verifyDartOutput(
             """
             |enum Color {
-            |
             |  red,
             |  green,
             |  blue
@@ -73,7 +72,6 @@ class EnumSpecTest {
         enumSpec.verifyDartOutput(
             """
             |enum NavigationEntry {
-            |
             |  dashboard('Dashboard', '/dashboard'),
             |  build('Build', '/build');
             |
@@ -81,7 +79,6 @@ class EnumSpecTest {
             |  final String route;
             |
             |  const NavigationEntry(this.name, this.route);
-            |
             |}
             """.trimMargin()
         )
@@ -98,7 +95,6 @@ class EnumSpecTest {
         enumSpec.verifyDartOutput(
             """
             |enum Status with M1 implements I1 {
-            |
             |  active
             |}
             """.trimMargin()
@@ -117,7 +113,6 @@ class EnumSpecTest {
         enumSpec.verifyDartOutput(
             """
             |enum Result<T, E extends Comparable> {
-            |
             |  success,
             |  failure
             |}
@@ -136,7 +131,6 @@ class EnumSpecTest {
             """
             |@deprecated
             |enum _Status {
-            |
             |  active
             |}
             """.trimMargin(),
@@ -154,7 +148,6 @@ class EnumSpecTest {
         enumSpec.verifyDartOutput(
             """
             |enum Status {
-            |
             |  active
             |}
             |
@@ -176,10 +169,10 @@ class EnumSpecTest {
         dartFile.verifyDartOutput(
             """
             |enum Color {
-            |
             |  red,
             |  green
             |}
+            |
             """.trimMargin()
         )
     }

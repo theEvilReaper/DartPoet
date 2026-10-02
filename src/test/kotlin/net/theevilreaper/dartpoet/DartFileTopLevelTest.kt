@@ -126,6 +126,7 @@ class DartFileTopLevelTest {
             |}
             |
             |class AppConfig {}
+            |
             """.trimMargin()
         )
     }

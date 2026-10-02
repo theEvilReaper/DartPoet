@@ -31,10 +31,11 @@ internal object DartAnalyzeCorpus {
  *
  * Prefer this helper over a plain `assertThat(...).isEqualTo(...)` whenever
  * the generated output represents valid Dart code that should be included in
- * the analyzer corpus.
+ * the analyzer corpus. The blank lines are checked against the Dart style as well.
  */
 internal fun Any.verifyDartOutput(expected: String) {
     val actual = toString()
     assertThat(actual).isEqualTo(expected)
+    assertBlankLineStyle()
     DartAnalyzeCorpus.record(actual)
 }

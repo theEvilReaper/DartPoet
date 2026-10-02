@@ -16,6 +16,9 @@ Some newer language features are not yet directly supported by the API, but they
 Generated code uses Dart's null-safety features and requires Dart `3.0` or newer. Some newer constructs need a
 more recent SDK. Extension Types require Dart `3.3+`, and private named parameters require Dart `3.12+`.
 
+The generated code uses blank lines the same way as `dart format`. Long lines may be wrapped differently, so run
+`dart format` on the generated files if you need the exact output of the formatter.
+
 > [!NOTE]
 > **Roadmap & Dart 3 Support:**  
 > Most Dart 3.0+ features are now natively supported, including Record Types, Extension Types, the combined

@@ -28,7 +28,6 @@ class AbstractClassTest {
         assertThat(abstractClass.toString()).isEqualTo(
             """
             |abstract class DatabaseHandler {
-            |
             |  TestModel getByID(int id);
             |
             |  void test();
@@ -50,7 +49,6 @@ class AbstractClassTest {
             """
             |@abc
             |abstract class Test {
-            |
             |  void test();
             |}
             """.trimMargin()

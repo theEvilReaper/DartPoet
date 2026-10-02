@@ -62,6 +62,7 @@ class DartFile internal constructor(
 
     internal fun write(codeWriter: CodeWriter) {
         WriterHelper.fileWriter.write(this, codeWriter)
+        codeWriter.finishFile()
     }
 
     override fun toString() = buildCodeString { write(this) }

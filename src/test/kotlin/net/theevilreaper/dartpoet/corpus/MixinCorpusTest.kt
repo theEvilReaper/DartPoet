@@ -80,29 +80,28 @@ class MixinCorpusTest {
         file.verifyDartOutput(
             """
             |mixin Logger {
-            |
             |  int logCount = 0;
             |
             |  void log(String message) {
             |    print('[${'$'}logCount] ${'$'}message');
             |  }
             |}
-            |base mixin BaseWorker {
             |
+            |base mixin BaseWorker {
             |  final String workerId = "worker-1";
             |
             |  void performTask() {
             |    print('Worker ${'$'}workerId performing task');
             |  }
             |}
-            |class AppLogger with Logger {
             |
+            |class AppLogger with Logger {
             |  void run() {
             |    log('App started');
             |  }
             |}
-            |base class TaskRunner with BaseWorker {
             |
+            |base class TaskRunner with BaseWorker {
             |  void execute() {
             |    performTask();
             |  }
@@ -167,15 +166,14 @@ class MixinCorpusTest {
         file.verifyDartOutput(
             """
             |abstract class Animal {
-            |
             |  void makeSound();
             |}
-            |abstract class Identifiable {
             |
+            |abstract class Identifiable {
             |  String getId();
             |}
-            |mixin Walkable on Animal implements Identifiable {
             |
+            |mixin Walkable on Animal implements Identifiable {
             |  void walk() {
             |    makeSound();
             |  }
@@ -185,8 +183,8 @@ class MixinCorpusTest {
             |    return 'walkable-id';
             |  }
             |}
-            |class Dog extends Animal with Walkable {
             |
+            |class Dog extends Animal with Walkable {
             |  @override
             |  void makeSound() {
             |    print('Woof');
@@ -238,7 +236,6 @@ class MixinCorpusTest {
         file.verifyDartOutput(
             """
             |mixin Cache<T> {
-            |
             |  T? cachedItem;
             |
             |  void store(T item) {
@@ -249,8 +246,8 @@ class MixinCorpusTest {
             |    return cachedItem;
             |  }
             |}
-            |class Repository<T> with Cache<T> {
             |
+            |class Repository<T> with Cache<T> {
             |  bool hasItem() {
             |    return retrieve() != null;
             |  }

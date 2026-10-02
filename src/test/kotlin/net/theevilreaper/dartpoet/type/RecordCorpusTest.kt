@@ -141,7 +141,6 @@ class RecordCorpusTest {
         file.verifyDartOutput(
             """
             |class Location {
-            |
             |  final (double lat, double lng) coordinates;
             |
             |  Location(this.coordinates);
@@ -150,6 +149,7 @@ class RecordCorpusTest {
             |    return coordinates;
             |  }
             |}
+            |
             """.trimMargin()
         )
     }

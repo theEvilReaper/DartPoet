@@ -48,11 +48,11 @@ class ExtensionTypeCorpusTest {
             |}
             |
             |extension type UserId(int value) implements Comparable<num> {
-            |
             |  bool isGreaterThan(UserId other) {
             |    return value > other.value;
             |  }
             |}
+            |
             """.trimMargin()
         )
     }
@@ -79,11 +79,11 @@ class ExtensionTypeCorpusTest {
         file.verifyDartOutput(
             """
             |extension type const _Wrapper<T>._(T value) {
-            |
             |  T unwrap() {
             |    return value;
             |  }
             |}
+            |
             """.trimMargin()
         )
     }

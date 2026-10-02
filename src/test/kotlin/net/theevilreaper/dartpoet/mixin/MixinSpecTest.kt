@@ -86,7 +86,6 @@ class MixinSpecTest {
         mixinSpec.verifyDartOutput(
             """
             |mixin Calculator {
-            |
             |  int value = 0;
             |
             |  void reset() {
@@ -123,9 +122,7 @@ class MixinSpecTest {
         mixinSpec.verifyDartOutput(
             """
             |mixin ConstantsMixin {
-            |
             |  static const String version = '1.0.0';
-            |
             |}
             """.trimMargin()
         )
@@ -144,9 +141,7 @@ class MixinSpecTest {
         assertEquals(
             """
             |mixin TypedefMixin {
-            |
             |  typedef StringList = List;
-            |
             |}
             """.trimMargin(),
             mixinSpec.toString()
@@ -194,12 +189,13 @@ class MixinSpecTest {
         dartFile.verifyDartOutput(
             """
             |class Animal {}
-            |mixin Walkable on Animal {
             |
+            |mixin Walkable on Animal {
             |  void walk() {
             |    // walk
             |  }
             |}
+            |
             |class Dog extends Animal with Walkable {}
             |
             """.trimMargin()
@@ -218,9 +214,9 @@ class MixinSpecTest {
         dartFile.verifyDartOutput(
             """
             |mixin Flyable {
-            |
             |  void fly();
             |}
+            |
             """.trimMargin()
         )
     }

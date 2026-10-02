@@ -74,10 +74,8 @@ class ClassWriterTest {
         assertThat(clazz.toString()).isEqualTo(
             """
             |class TestClass {
-            |
             |  static const String test = 'Test';
             |  static const int maxId = 100;
-            |
             |}
             """.trimMargin()
         )
@@ -95,9 +93,7 @@ class ClassWriterTest {
         assertThat(clazz.toString()).isEqualTo(
             """
             |class TestClass {
-            |
             |  typedef JsonMap = Map;
-            |
             |}
             """.trimMargin()
         )
@@ -127,7 +123,6 @@ class ClassWriterTest {
         clazz.verifyDartOutput(
             """
             |class NativeBinding {
-            |
             |  external int nativeHandle;
             |
             |  external NativeBinding();
