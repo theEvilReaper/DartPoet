@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.6.0](https://github.com/theEvilReaper/DartPoet/compare/2.5.1...2.6.0) (2026-10-02)
+
+
+### Features
+
+* **code:** support patterns in if-case, declarations, assignments and for-in loops ([#333](https://github.com/theEvilReaper/DartPoet/issues/333)) ([0b8cc09](https://github.com/theEvilReaper/DartPoet/commit/0b8cc0982e24a1ce2ae33404e7bc0c2542f6631c))
+* **pattern:** add more pattern implementations ([#328](https://github.com/theEvilReaper/DartPoet/issues/328)) ([802c4f5](https://github.com/theEvilReaper/DartPoet/commit/802c4f5a312e69a6aeb6a9f84bae1640213ddf1f))
+
+
+### Bug Fixes
+
+* **code:** use blank lines like dart format ([#334](https://github.com/theEvilReaper/DartPoet/issues/334)) ([2e75476](https://github.com/theEvilReaper/DartPoet/commit/2e75476393c18a054ffd1a82938499a52801e5ec))
+
 ## [2.5.1](https://github.com/theEvilReaper/DartPoet/compare/2.5.0...2.5.1) (2026-09-29)
 
 
