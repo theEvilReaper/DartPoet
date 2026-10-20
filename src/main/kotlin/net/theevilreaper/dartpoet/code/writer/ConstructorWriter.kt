@@ -8,7 +8,6 @@ import net.theevilreaper.dartpoet.code.Writeable
 import net.theevilreaper.dartpoet.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.util.*
-import net.theevilreaper.dartpoet.util.NEW_LINE
 import net.theevilreaper.dartpoet.util.SEMICOLON
 import net.theevilreaper.dartpoet.util.parameter.ParameterData
 
@@ -51,25 +50,7 @@ internal class ConstructorWriter : Writeable<ConstructorSpec>, DocumentationAppe
         val parameterData: ParameterData<ParameterSpec> = ParameterData.of(spec)
         ParameterHelper.writeParameters(parameterData, writer)
 
-        val initializerBlock: CodeBlock = spec.initializer.build()
-
-        when (spec.isLambda) {
-            true -> emitLambdaPart(writer, initializerBlock)
-            false -> emitStandardPart(writer, initializerBlock)
-        }
-    }
-
-    /**
-     * Writes the initializer [CodeBlock] with the formating of a lambda expression in Dart.
-     * @param writer the [CodeWriter] instance to apply to content
-     * @param initializer the [CodeBlock] which contains the content
-     */
-    private fun emitLambdaPart(writer: CodeWriter, initializer: CodeBlock) {
-        writer.emitSpace()
-        writer.emit("=>$NEW_LINE")
-        writer.indent(2)
-        writer.emitCode(initializer, ensureTrailingNewline = true)
-        writer.unindent(2)
+        emitStandardPart(writer, spec.initializer.build())
     }
 
     /**
