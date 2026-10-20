@@ -11,6 +11,7 @@ import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.function.FunctionType
 import net.theevilreaper.dartpoet.function.MethodAccessorType
+import net.theevilreaper.dartpoet.function.body.FunctionBodyType
 import net.theevilreaper.dartpoet.function.typedef.TypeDef
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.property.PropertySpec
@@ -114,8 +115,8 @@ class DartFileTest {
             )
             .function(
                 FunctionSpec.builder("getByID")
-                    .async(true)
-                    .returns(ClassName("DefectDTO"))
+                    .body(FunctionBodyType.ASYNC)
+                    .returns(ClassName("Future").parameterizedBy(ClassName("DefectDTO")))
                     .parameter(ParameterSpec.positional("id", Int::class).build())
                     .addCode(buildCodeBlock {
                         addStatement("final queryParams = %L;", "<String, dynamic>{}")

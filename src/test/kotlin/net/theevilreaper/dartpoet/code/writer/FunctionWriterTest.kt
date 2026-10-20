@@ -3,7 +3,6 @@ package net.theevilreaper.dartpoet.code.writer
 import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.clazz.ClassSpec
-import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.buildCodeBlock
 import net.theevilreaper.dartpoet.function.FunctionType
@@ -322,29 +321,6 @@ class FunctionWriterTest {
             """
             |int? getValue() {
             |  return 1;
-            |}
-            """.trimMargin()
-        )
-    }
-
-    @Test
-    fun `write simple async function`() {
-        val method = FunctionSpec.builder("getNameById")
-            .returns(String::class)
-            .async(true)
-            .parameter {
-                ParameterSpec.positional("id", Int::class).build()
-            }
-            .addCode(
-                CodeBlock.builder()
-                    .add("return 'Thomas';")
-                    .build()
-            )
-            .build()
-        method.verifyDartOutput(
-            """
-            |Future<String> getNameById(int id) async {
-            |  return 'Thomas';
             |}
             """.trimMargin()
         )

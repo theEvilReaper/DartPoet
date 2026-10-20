@@ -8,6 +8,7 @@ import net.theevilreaper.dartpoet.directive.CastType
 import net.theevilreaper.dartpoet.directive.DirectiveFactory
 import net.theevilreaper.dartpoet.directive.DirectiveType
 import net.theevilreaper.dartpoet.function.FunctionSpec
+import net.theevilreaper.dartpoet.function.body.FunctionBodyType
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
 import org.junit.jupiter.api.DisplayName
@@ -38,8 +39,8 @@ class DartFileImportTest {
                                 AnnotationSpec.builder("override")
                                     .build()
                             )
-                            .async(true)
-                            .returns(appState)
+                            .body(FunctionBodyType.ASYNC)
+                            .returns(ClassName("Future").parameterizedBy(appState))
                             .addCode(
                                 buildCodeBlock {
                                     addStatement("var models = [];")
