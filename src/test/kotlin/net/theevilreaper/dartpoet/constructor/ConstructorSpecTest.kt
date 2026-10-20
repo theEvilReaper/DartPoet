@@ -25,6 +25,18 @@ class ConstructorSpecTest {
     }
 
     @Test
+    fun `test lambda constructor throws exception`() {
+        val exception = assertThrows(IllegalStateException::class.java) {
+            @Suppress("DEPRECATION")
+            ConstructorSpec.builder("TestModel")
+                .lambda(true)
+                .addCode(net.theevilreaper.dartpoet.code.CodeBlock.of("field = 1"))
+                .build()
+        }
+        assertEquals("A generative constructor can't use the arrow syntax. Use a factory constructor instead", exception.message)
+    }
+
+    @Test
     fun `test external constructor with initializer throws exception`() {
         val exception = assertThrows(IllegalStateException::class.java) {
             ConstructorSpec.builder("TestModel")

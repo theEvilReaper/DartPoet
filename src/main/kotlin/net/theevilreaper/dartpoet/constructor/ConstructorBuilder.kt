@@ -90,8 +90,10 @@ class ConstructorBuilder internal constructor(
 
     /**
      * Indicates if the constructor should be generated with lambda.
+     * A generative constructor can't use the arrow syntax in Dart, so `true` fails when the spec is built.
      * @param lambda True for a lambda variant otherwise false
      */
+    @Deprecated("A generative constructor can't use the arrow syntax. Use FactorySpec with delegation(ConstructorDelegation.LAMBDA) instead")
     fun lambda(lambda: Boolean) = apply {
         this.lambda = lambda
     }

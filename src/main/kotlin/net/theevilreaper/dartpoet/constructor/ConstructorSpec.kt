@@ -32,6 +32,9 @@ class ConstructorSpec internal constructor(
     internal val docs = builder.docs.toImmutableList()
 
     init {
+        check(!isLambda) {
+            "A generative constructor can't use the arrow syntax. Use a factory constructor instead"
+        }
         if (modifiers.contains(DartModifier.EXTERNAL)) {
             check(initializer.build().isEmpty()) { "An external constructor can't have an initializer" }
             check(!modifiers.contains(DartModifier.CONST)) { "An external constructor can't be const" }
