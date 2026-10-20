@@ -34,6 +34,7 @@ class DartFileTest {
         val dartFileSpec = DartFile.builder("TestClass")
             .indent(" ")
             .annotation(AnnotationSpec.builder("ignore").build())
+            .annotation { AnnotationSpec.builder("immutable").build() }
             .property(PropertySpec.builder("greeting", String::class).build())
             .function(FunctionSpec.builder("main").build())
             .build()
