@@ -473,6 +473,25 @@ class CodeBlock private constructor(
             add("\n»")
         }
 
+        /**
+         * Adds a `yield` statement, e.g. `yield value;`. Only valid inside a `sync*` or `async*` function.
+         * @param format the expression which is yielded
+         * @param args arguments for placeholders in the expression
+         * @since 2.7.0
+         */
+        fun addYield(format: String, vararg args: Any?): Builder =
+            addStatement("yield $format;", *args)
+
+        /**
+         * Adds a `yield*` statement, e.g. `yield* values;`, which yields all elements of an `Iterable` or `Stream`.
+         * Only valid inside a `sync*` or `async*` function.
+         * @param format the expression whose elements are yielded
+         * @param args arguments for placeholders in the expression
+         * @since 2.7.0
+         */
+        fun addYieldAll(format: String, vararg args: Any?): Builder =
+            addStatement("yield* $format;", *args)
+
         fun add(codeBlock: CodeBlock): Builder = apply {
             formatParts += codeBlock.formatParts
             args.addAll(codeBlock.args)
