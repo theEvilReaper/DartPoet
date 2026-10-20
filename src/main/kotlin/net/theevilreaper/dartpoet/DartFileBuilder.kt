@@ -7,6 +7,8 @@ import net.theevilreaper.dartpoet.directive.Directive
 import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.typedef.AbstractTypeDef
+import net.theevilreaper.dartpoet.meta.AnnotationData
+import net.theevilreaper.dartpoet.meta.AnnotationMethods
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.property.PropertySpec
 import net.theevilreaper.dartpoet.spec.TypeSpec
@@ -15,11 +17,11 @@ import net.theevilreaper.dartpoet.util.isIndent
 
 class DartFileBuilder(
     val name: String
-) {
+) : AnnotationMethods<DartFileBuilder> {
     internal val docs: MutableList<CodeBlock> = mutableListOf()
     internal val specTypes: MutableList<TypeSpec> = mutableListOf()
     internal val directives: MutableList<Directive> = mutableListOf()
-    internal val annotations: MutableList<AnnotationSpec> = mutableListOf()
+    internal val annotationData: AnnotationData = AnnotationData()
     internal val extensionStack: MutableList<ExtensionSpec> = mutableListOf()
     internal val constants: MutableSet<ConstantPropertySpec> = mutableSetOf()
     internal val typeDefs: MutableList<AbstractTypeDef<*>> = mutableListOf()
@@ -172,12 +174,31 @@ class DartFileBuilder(
         this.specTypes += typeSpecs
     }
 
-    fun annotations(vararg annotations: AnnotationSpec) = apply {
-        this.annotations += annotations
+    /**
+     * Add a new [AnnotationSpec] to the file via lambda reference.
+     * @param annotation the lambda reference to the annotation
+     * @return the current [DartFileBuilder] instance
+     */
+    override fun annotation(annotation: () -> AnnotationSpec) = apply {
+        this.annotationData.annotation(annotation)
     }
 
-    fun annotation(annotation: AnnotationSpec) = apply {
-        this.annotations += annotation
+    /**
+     * Add a new [AnnotationSpec] to the file.
+     * @param annotation the annotation to add
+     * @return the current [DartFileBuilder] instance
+     */
+    override fun annotation(annotation: AnnotationSpec) = apply {
+        this.annotationData.annotation(annotation)
+    }
+
+    /**
+     * Add a given array of [AnnotationSpec] to the file.
+     * @param annotations the annotations to add
+     * @return the current [DartFileBuilder] instance
+     */
+    override fun annotations(vararg annotations: AnnotationSpec) = apply {
+        this.annotationData.annotations(*annotations)
     }
 
     /**

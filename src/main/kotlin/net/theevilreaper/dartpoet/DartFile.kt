@@ -30,7 +30,7 @@ class DartFile internal constructor(
 ) {
     internal val name: String = builder.name
     internal val indent: String = builder.indent
-    internal val annotations: List<AnnotationSpec> = builder.annotations.toImmutableList()
+    internal val annotations: List<AnnotationSpec> = builder.annotationData.annotations.toImmutableList()
     internal val types: List<TypeSpec> = builder.specTypes.toImmutableList()
     internal val extensions: List<ExtensionSpec> = builder.extensionStack
     internal val docs = builder.docs
@@ -151,7 +151,7 @@ class DartFile internal constructor(
         val builder = DartFileBuilder(this.name)
         builder.specTypes.addAll(this.types)
         builder.directives.addAll(this.directives)
-        builder.annotations.addAll(this.annotations)
+        builder.annotationData.annotations.addAll(this.annotations)
         builder.extensionStack.addAll(this.extensions)
         builder.constants.addAll(this.constants)
         builder.propertyStack.addAll(this.properties)
