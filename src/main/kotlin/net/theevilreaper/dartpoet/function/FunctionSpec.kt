@@ -11,6 +11,7 @@ import net.theevilreaper.dartpoet.function.body.FunctionBodyType
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.DYNAMIC
+import net.theevilreaper.dartpoet.type.OBJECT
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.TypeVariableName
@@ -79,8 +80,8 @@ class FunctionSpec internal constructor(
             }
             val expected = bodyType.expectedReturnType!!
             val rawName = returnType.rawTypeName()
-            require(rawName == expected || returnType == DYNAMIC) {
-                "A ${bodyType.keyword} function must return $expected<T>, but was $returnType"
+            require(rawName == expected || rawName == OBJECT.name || returnType == DYNAMIC) {
+                "A function with the ${bodyType.keyword} modifier must return $expected<T>, Object or dynamic, but was $returnType"
             }
         }
     }

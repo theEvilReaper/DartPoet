@@ -6,6 +6,7 @@ import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.DYNAMIC
 import net.theevilreaper.dartpoet.type.INTEGER
+import net.theevilreaper.dartpoet.type.OBJECT
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
 import net.theevilreaper.dartpoet.type.asTypeName
 import net.theevilreaper.dartpoet.util.NO_PARAMETER_TYPE
@@ -177,7 +178,7 @@ class FunctionSpecTest {
                         .addCode("%L", "yield 1;")
                         .build()
                 },
-                "A async* function must return Stream<T>, but was Iterable<int>"
+                "A function with the async* modifier must return Stream<T>, Object or dynamic, but was Iterable<int>"
             ),
             Arguments.of(
                 {
@@ -187,7 +188,7 @@ class FunctionSpecTest {
                         .addCode("%L", "yield 1;")
                         .build()
                 },
-                "A sync* function must return Iterable<T>, but was int"
+                "A function with the sync* modifier must return Iterable<T>, Object or dynamic, but was int"
             ),
         )
 
@@ -254,6 +255,16 @@ class FunctionSpecTest {
             .addCode("%L", "yield 1;")
             .build()
         assertEquals(FunctionBodyType.SYNC_STAR, functionSpec.bodyType)
+    }
+
+    @Test
+    fun `test generator function allows object return type`() {
+        val functionSpec = FunctionSpec.builder("values")
+            .returns(OBJECT.copy(nullable = true))
+            .body(FunctionBodyType.ASYNC_STAR)
+            .addCode("%L", "yield 1;")
+            .build()
+        assertEquals(FunctionBodyType.ASYNC_STAR, functionSpec.bodyType)
     }
 
     @Test
