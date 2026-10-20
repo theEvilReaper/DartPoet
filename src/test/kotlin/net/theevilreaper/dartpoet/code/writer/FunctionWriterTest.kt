@@ -341,4 +341,31 @@ class FunctionWriterTest {
             .build()
         setterSpec.verifyDartOutput("external set count(int value);")
     }
+
+    @Test
+    fun `write getter with block body`() {
+        val getter = FunctionSpec.builder("value")
+            .returns(INTEGER)
+            .accessorType(MethodAccessorType.GETTER)
+            .addCode("return 1;")
+            .build()
+        getter.verifyDartOutput(
+            """
+            |int get value {
+            |  return 1;
+            |}
+            """.trimMargin()
+        )
+    }
+
+    @Test
+    fun `write setter with arrow syntax`() {
+        val setter = FunctionSpec.builder("value")
+            .accessorType(MethodAccessorType.SETTER)
+            .type(FunctionType.SHORTEN)
+            .parameter(ParameterSpec.positional("value", INTEGER).build())
+            .addCode("%L", "print(value);")
+            .build()
+        setter.verifyDartOutput("set value(int value) => print(value);")
+    }
 }

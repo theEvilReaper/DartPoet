@@ -102,16 +102,12 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
             return
         }
 
-        if (spec.hasGetterAccessor) {
-            writer.emitSpace()
-        }
-
         val bracketType = when (spec.type) {
             FunctionType.STANDARD -> {
                 "·$CURLY_OPEN\n"
             }
 
-            FunctionType.SHORTEN -> "${FunctionType.SHORTEN.identifier}·"
+            FunctionType.SHORTEN -> "·${FunctionType.SHORTEN.identifier}·"
         }
 
         if (spec.type == FunctionType.STANDARD) {
