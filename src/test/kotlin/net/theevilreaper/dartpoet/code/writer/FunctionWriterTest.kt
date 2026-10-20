@@ -2,6 +2,7 @@ package net.theevilreaper.dartpoet.code.writer
 
 import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.DartModifier
+import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.buildCodeBlock
@@ -102,6 +103,28 @@ class FunctionWriterTest {
                 |Iterable<int> get values sync* {
                 |  yield 1;
                 |  yield 2;
+                |}
+                """.trimMargin()
+            ),
+            Arguments.of(
+                FunctionSpec.builder("value")
+                    .returns(ClassName("Future").parameterizedBy(INTEGER))
+                    .body(FunctionBodyType.ASYNC)
+                    .type(FunctionType.SHORTEN)
+                    .addCode("%L", "1;")
+                    .build(),
+                "Future<int> value() async => 1;"
+            ),
+            Arguments.of(
+                FunctionSpec.builder("value")
+                    .returns(ClassName("Future").parameterizedBy(INTEGER))
+                    .accessorType(MethodAccessorType.GETTER)
+                    .body(FunctionBodyType.ASYNC)
+                    .addCode("return 1;")
+                    .build(),
+                """
+                |Future<int> get value async {
+                |  return 1;
                 |}
                 """.trimMargin()
             ),
@@ -470,5 +493,37 @@ class FunctionWriterTest {
     @MethodSource("accessorSpacingCases")
     fun `test accessor write spacing`(functionSpec: FunctionSpec, expected: String) {
         assertThat(functionSpec.toString()).isEqualTo(expected)
+    }
+
+    @Test
+    fun `test static generator function inside class`() {
+        val classSpec = ClassSpec.builder("Counter")
+            .function(
+                FunctionSpec.builder("countTo")
+                    .modifier(DartModifier.STATIC)
+                    .returns(ClassName("Iterable").parameterizedBy(INTEGER))
+                    .body(FunctionBodyType.SYNC_STAR)
+                    .parameter(ParameterSpec.positional("max", INTEGER).build())
+                    .addCode(
+                        buildCodeBlock {
+                            beginControlFlow("for (var i = 1; i <= max; i++)")
+                            addYield("i")
+                            endControlFlow()
+                        }
+                    )
+                    .build()
+            )
+            .build()
+        classSpec.verifyDartOutput(
+            """
+            |class Counter {
+            |  static Iterable<int> countTo(int max) sync* {
+            |    for (var i = 1; i <= max; i++) {
+            |      yield i;
+            |    }
+            |  }
+            |}
+            """.trimMargin()
+        )
     }
 }

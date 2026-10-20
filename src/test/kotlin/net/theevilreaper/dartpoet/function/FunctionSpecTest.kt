@@ -194,11 +194,38 @@ class FunctionSpecTest {
         )
 
         @JvmStatic
+        @Suppress("DEPRECATION")
+        private fun invalidDeprecatedAsyncFunctions(): Stream<Arguments> = Stream.of(
+            Arguments.of(
+                {
+                    FunctionSpec.builder("value")
+                        .accessorType(MethodAccessorType.SETTER)
+                        .parameter(ParameterSpec.positional("value", INTEGER).build())
+                        .async(true)
+                        .addCode("%L", "print(value);")
+                        .build()
+                },
+                "A setter can't use the async modifier"
+            ),
+            Arguments.of(
+                {
+                    FunctionSpec.builder("load")
+                        .modifier(DartModifier.ABSTRACT)
+                        .async(true)
+                        .build()
+                },
+                "A function with the async modifier must have a body"
+            ),
+        )
+
+        @JvmStatic
         private fun validGeneratorReturnTypes(): Stream<Arguments> = Stream.of(
             Arguments.of(FunctionBodyType.SYNC_STAR, DYNAMIC),
             Arguments.of(FunctionBodyType.ASYNC_STAR, OBJECT.copy(nullable = true)),
             Arguments.of(FunctionBodyType.SYNC_STAR, ClassName("Iterable").parameterizedBy(INTEGER)),
             Arguments.of(FunctionBodyType.ASYNC_STAR, ClassName("Stream").parameterizedBy(INTEGER)),
+            Arguments.of(FunctionBodyType.ASYNC_STAR, ClassName("Stream")),
+            Arguments.of(FunctionBodyType.SYNC_STAR, ClassName("Iterable").parameterizedBy(INTEGER).copy(nullable = true)),
         )
 
         @JvmStatic
@@ -277,6 +304,13 @@ class FunctionSpecTest {
     @ParameterizedTest
     @MethodSource("invalidGeneratorFunctions")
     fun `test invalid generator functions`(specBuilder: () -> Unit, message: String) {
+        val exception = assertThrows(IllegalArgumentException::class.java, specBuilder)
+        assertEquals(message, exception.message)
+    }
+
+    @ParameterizedTest
+    @MethodSource("invalidDeprecatedAsyncFunctions")
+    fun `test invalid deprecated async functions`(specBuilder: () -> Unit, message: String) {
         val exception = assertThrows(IllegalArgumentException::class.java, specBuilder)
         assertEquals(message, exception.message)
     }
