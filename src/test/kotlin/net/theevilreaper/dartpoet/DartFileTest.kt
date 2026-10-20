@@ -37,6 +37,11 @@ class DartFileTest {
             .annotation { AnnotationSpec.builder("immutable").build() }
             .property(PropertySpec.builder("greeting", String::class).build())
             .function(FunctionSpec.builder("main").build())
+            .typeDef(
+                TypeDef.alias("JsonMap")
+                    .returns(Map::class.parameterizedBy(String::class.asTypeName(), DYNAMIC))
+                    .build()
+            )
             .build()
         val specAsBuilder = dartFileSpec.toBuilder()
         assertEquals(dartFileSpec.name, specAsBuilder.name)
@@ -45,6 +50,7 @@ class DartFileTest {
         assertContentEquals(dartFileSpec.annotations, specAsBuilder.annotationData.annotations)
         assertEquals(dartFileSpec.properties, specAsBuilder.propertyStack.toSet())
         assertEquals(dartFileSpec.functions, specAsBuilder.functionStack.toSet())
+        assertContentEquals(dartFileSpec.typeDefs, specAsBuilder.typeDefs)
     }
 
     @Test
