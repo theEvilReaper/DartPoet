@@ -222,7 +222,11 @@ class FunctionBuilder internal constructor(
     )
     fun async(async: Boolean) = apply {
         this.async = async
-        this.bodyType = if (async) FunctionBodyType.ASYNC else FunctionBodyType.NONE
+        if (async) {
+            this.bodyType = FunctionBodyType.ASYNC
+        } else if (this.bodyType == FunctionBodyType.ASYNC) {
+            this.bodyType = FunctionBodyType.NONE
+        }
     }
 
     /**

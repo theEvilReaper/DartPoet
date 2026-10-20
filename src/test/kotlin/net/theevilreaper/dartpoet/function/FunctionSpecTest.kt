@@ -267,6 +267,25 @@ class FunctionSpecTest {
     }
 
     @Test
+    fun `test deprecated async flag keeps generator body type`() {
+        @Suppress("DEPRECATION")
+        val builder = FunctionSpec.builder("values")
+            .body(FunctionBodyType.SYNC_STAR)
+            .async(false)
+        assertEquals(FunctionBodyType.SYNC_STAR, builder.bodyType)
+    }
+
+    @Test
+    fun `test deprecated async flag resets async body type`() {
+        @Suppress("DEPRECATION")
+        val builder = FunctionSpec.builder("values")
+            .async(true)
+            .async(false)
+        assertFalse(builder.async)
+        assertEquals(FunctionBodyType.NONE, builder.bodyType)
+    }
+
+    @Test
     fun `test body type is kept on builder conversation`() {
         val functionSpec = FunctionSpec.builder("values")
             .returns(ClassName("Stream").parameterizedBy(INTEGER))
