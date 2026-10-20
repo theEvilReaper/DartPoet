@@ -61,6 +61,7 @@ internal class ConstructorWriter : Writeable<ConstructorSpec>, DocumentationAppe
     private fun emitStandardPart(writer: CodeWriter, initializer: CodeBlock) = when (initializer.isEmpty()) {
         true -> writer.emit(SEMICOLON)
         false -> {
+            writer.emitSpace()
             writer.emit(":")
             writer.emitSpace()
             writer.emitCode(initializer, ensureTrailingNewline = false)
