@@ -108,7 +108,7 @@ class ConstructorWriterTest {
             CAR,
             
             """
-            Car.withoutABS(this.maker, this.model, this.yearMade): hasABS = false;
+            Car.withoutABS(this.maker, this.model, this.yearMade) : hasABS = false;
             """.trimIndent()
         )
     }

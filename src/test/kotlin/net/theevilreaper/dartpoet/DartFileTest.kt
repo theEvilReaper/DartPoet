@@ -147,7 +147,7 @@ class DartFileTest {
             |class DefectApi {
             |  final ApiClient apiClient;
             |
-            |  DefectApi(ApiClient apiClient): apiClient = apiClient;
+            |  DefectApi(ApiClient apiClient) : apiClient = apiClient;
             |
             |  Future<DefectDTO> getByID(int id) async {
             |    final queryParams = <String, dynamic>{};
