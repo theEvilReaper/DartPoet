@@ -146,7 +146,18 @@ class FunctionSpecTest {
                         .addCode("%L", "yield value;")
                         .build()
                 },
-                "A setter can't be a generator (sync*)"
+                "A setter can't use the sync* modifier"
+            ),
+            Arguments.of(
+                {
+                    FunctionSpec.builder("values")
+                        .accessorType(MethodAccessorType.SETTER)
+                        .parameter(ParameterSpec.positional("value", INTEGER).build())
+                        .body(FunctionBodyType.ASYNC)
+                        .addCode("%L", "print(value);")
+                        .build()
+                },
+                "A setter can't use the async modifier"
             ),
             Arguments.of(
                 {

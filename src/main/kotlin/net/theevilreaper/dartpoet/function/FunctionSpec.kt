@@ -64,15 +64,16 @@ class FunctionSpec internal constructor(
         require(!(type == FunctionType.SHORTEN && body.isEmpty())) { "Lambda can only be used with a body" }
         require(!(requiredParameters.isNotEmpty() && parametersWithDefaults.isNotEmpty())) { "A function can't have required and optional parameters" }
 
+        require(bodyType == FunctionBodyType.NONE || methodAccessorType != MethodAccessorType.SETTER) {
+            "A setter can't use the ${bodyType.keyword} modifier"
+        }
+
         if (bodyType.isGenerator) {
             require(body.isNotEmpty()) {
                 "A generator function (${bodyType.keyword}) must have a body"
             }
             require(type != FunctionType.SHORTEN) {
                 "A generator function (${bodyType.keyword}) can't use the arrow syntax"
-            }
-            require(methodAccessorType != MethodAccessorType.SETTER) {
-                "A setter can't be a generator (${bodyType.keyword})"
             }
             val expected = bodyType.expectedReturnType!!
             val rawName = returnType.rawTypeName()
