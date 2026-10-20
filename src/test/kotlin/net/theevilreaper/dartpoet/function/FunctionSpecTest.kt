@@ -1,8 +1,14 @@
 package net.theevilreaper.dartpoet.function
 
 import net.theevilreaper.dartpoet.DartModifier
+import net.theevilreaper.dartpoet.function.body.FunctionBodyType
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.ClassName
+import net.theevilreaper.dartpoet.type.DYNAMIC
+import net.theevilreaper.dartpoet.type.INTEGER
+import net.theevilreaper.dartpoet.type.OBJECT
+import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
+import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asTypeName
 import net.theevilreaper.dartpoet.util.NO_PARAMETER_TYPE
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -112,6 +118,142 @@ class FunctionSpecTest {
         )
 
         @JvmStatic
+        private fun invalidGeneratorFunctions(): Stream<Arguments> = Stream.of(
+            Arguments.of(
+                {
+                    FunctionSpec.builder("values")
+                        .returns(ClassName("Iterable").parameterizedBy(INTEGER))
+                        .body(FunctionBodyType.SYNC_STAR)
+                        .build()
+                },
+                "A function with the sync* modifier must have a body"
+            ),
+            Arguments.of(
+                {
+                    FunctionSpec.builder("load")
+                        .modifier(DartModifier.ABSTRACT)
+                        .returns(ClassName("Future").parameterizedBy(ClassName("void")))
+                        .body(FunctionBodyType.ASYNC)
+                        .build()
+                },
+                "A function with the async modifier must have a body"
+            ),
+            Arguments.of(
+                {
+                    FunctionSpec.builder("values")
+                        .returns(ClassName("Stream").parameterizedBy(INTEGER))
+                        .body(FunctionBodyType.ASYNC_STAR)
+                        .type(FunctionType.SHORTEN)
+                        .addCode("%L", "Stream.empty();")
+                        .build()
+                },
+                "A generator function (async*) can't use the arrow syntax"
+            ),
+            Arguments.of(
+                {
+                    FunctionSpec.builder("values")
+                        .accessorType(MethodAccessorType.SETTER)
+                        .parameter(ParameterSpec.positional("value", INTEGER).build())
+                        .body(FunctionBodyType.SYNC_STAR)
+                        .addCode("%L", "yield value;")
+                        .build()
+                },
+                "A setter can't use the sync* modifier"
+            ),
+            Arguments.of(
+                {
+                    FunctionSpec.builder("values")
+                        .accessorType(MethodAccessorType.SETTER)
+                        .parameter(ParameterSpec.positional("value", INTEGER).build())
+                        .body(FunctionBodyType.ASYNC)
+                        .addCode("%L", "print(value);")
+                        .build()
+                },
+                "A setter can't use the async modifier"
+            ),
+            Arguments.of(
+                {
+                    FunctionSpec.builder("values")
+                        .returns(ClassName("Iterable").parameterizedBy(INTEGER))
+                        .body(FunctionBodyType.ASYNC_STAR)
+                        .addCode("%L", "yield 1;")
+                        .build()
+                },
+                "A function with the async* modifier must return Stream<T>, Object or dynamic, but was Iterable<int>"
+            ),
+            Arguments.of(
+                {
+                    FunctionSpec.builder("values")
+                        .returns(INTEGER)
+                        .body(FunctionBodyType.SYNC_STAR)
+                        .addCode("%L", "yield 1;")
+                        .build()
+                },
+                "A function with the sync* modifier must return Iterable<T>, Object or dynamic, but was int"
+            ),
+        )
+
+        @JvmStatic
+        @Suppress("DEPRECATION")
+        private fun invalidDeprecatedAsyncFunctions(): Stream<Arguments> = Stream.of(
+            Arguments.of(
+                {
+                    FunctionSpec.builder("value")
+                        .accessorType(MethodAccessorType.SETTER)
+                        .parameter(ParameterSpec.positional("value", INTEGER).build())
+                        .async(true)
+                        .addCode("%L", "print(value);")
+                        .build()
+                },
+                "A setter can't use the async modifier"
+            ),
+            Arguments.of(
+                {
+                    FunctionSpec.builder("load")
+                        .modifier(DartModifier.ABSTRACT)
+                        .async(true)
+                        .build()
+                },
+                "A function with the async modifier must have a body"
+            ),
+        )
+
+        @JvmStatic
+        private fun validGeneratorReturnTypes(): Stream<Arguments> = Stream.of(
+            Arguments.of(FunctionBodyType.SYNC_STAR, DYNAMIC),
+            Arguments.of(FunctionBodyType.ASYNC_STAR, OBJECT.copy(nullable = true)),
+            Arguments.of(FunctionBodyType.SYNC_STAR, ClassName("Iterable").parameterizedBy(INTEGER)),
+            Arguments.of(FunctionBodyType.ASYNC_STAR, ClassName("Stream").parameterizedBy(INTEGER)),
+            Arguments.of(FunctionBodyType.ASYNC_STAR, ClassName("Stream")),
+            Arguments.of(FunctionBodyType.SYNC_STAR, ClassName("Iterable").parameterizedBy(INTEGER).copy(nullable = true)),
+        )
+
+        @JvmStatic
+        @Suppress("DEPRECATION")
+        private fun asyncFlagInteractions(): Stream<Arguments> = Stream.of(
+            Arguments.of(
+                { builder: FunctionBuilder -> builder.async(true).body(FunctionBodyType.ASYNC_STAR) },
+                FunctionBodyType.ASYNC_STAR,
+                false
+            ),
+            Arguments.of(
+                { builder: FunctionBuilder -> builder.body(FunctionBodyType.SYNC_STAR).async(false) },
+                FunctionBodyType.SYNC_STAR,
+                false
+            ),
+            Arguments.of(
+                { builder: FunctionBuilder -> builder.async(true).async(false) },
+                FunctionBodyType.NONE,
+                false
+            ),
+            Arguments.of(
+                { builder: FunctionBuilder -> builder.async(true) },
+                FunctionBodyType.ASYNC,
+                true
+            ),
+        )
+
+        @JvmStatic
         private fun invalidFunctionParameters() = Stream.of(
             Arguments.of(
                 {
@@ -159,17 +301,55 @@ class FunctionSpecTest {
         assertThrows(IllegalStateException::class.java, specBuilder, expected)
     }
 
+    @ParameterizedTest
+    @MethodSource("invalidGeneratorFunctions")
+    fun `test invalid generator functions`(specBuilder: () -> Unit, message: String) {
+        val exception = assertThrows(IllegalArgumentException::class.java, specBuilder)
+        assertEquals(message, exception.message)
+    }
+
+    @ParameterizedTest
+    @MethodSource("invalidDeprecatedAsyncFunctions")
+    fun `test invalid deprecated async functions`(specBuilder: () -> Unit, message: String) {
+        val exception = assertThrows(IllegalArgumentException::class.java, specBuilder)
+        assertEquals(message, exception.message)
+    }
+
+    @ParameterizedTest
+    @MethodSource("validGeneratorReturnTypes")
+    fun `test valid generator return types`(bodyType: FunctionBodyType, returnType: TypeName) {
+        val functionSpec = FunctionSpec.builder("values")
+            .returns(returnType)
+            .body(bodyType)
+            .addCode("%L", "yield 1;")
+            .build()
+        assertEquals(bodyType, functionSpec.bodyType)
+    }
+
+    @ParameterizedTest
+    @MethodSource("asyncFlagInteractions")
+    fun `test deprecated async flag interaction with body type`(
+        configure: (FunctionBuilder) -> FunctionBuilder,
+        expectedBodyType: FunctionBodyType,
+        expectedAsync: Boolean
+    ) {
+        val builder = configure(FunctionSpec.builder("values"))
+        assertEquals(expectedBodyType, builder.bodyType)
+        assertEquals(expectedAsync, builder.async)
+    }
+
     @Test
     fun `test spec to builder conversation`() {
         val functionSpec = FunctionSpec.builder("getAmount")
-            .returns(Int::class.asTypeName().copy(nullable = true))
-            .async(false)
+            .returns(ClassName("Future").parameterizedBy(Int::class.asTypeName().copy(nullable = true)))
+            .body(FunctionBodyType.ASYNC)
             .generic("T", ClassName("Comparable"))
             .addCode("return %L", "10")
             .build()
         val specAsBuilder = functionSpec.toBuilder()
         assertEquals(functionSpec.name, specAsBuilder.name)
         assertEquals(functionSpec.returnType, specAsBuilder.returnType)
+        assertEquals(FunctionBodyType.ASYNC, specAsBuilder.bodyType)
         assertFalse { specAsBuilder.async }
         assertTrue { specAsBuilder.body.isNotEmpty() }
         assertEquals(functionSpec.genericCasts, specAsBuilder.genericCasts)

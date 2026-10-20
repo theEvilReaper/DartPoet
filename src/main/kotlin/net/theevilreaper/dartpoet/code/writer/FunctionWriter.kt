@@ -1,6 +1,5 @@
 package net.theevilreaper.dartpoet.code.writer
 
-import net.theevilreaper.dartpoet.DartModifier.ASYNC
 import net.theevilreaper.dartpoet.DartModifier.PUBLIC
 import net.theevilreaper.dartpoet.DartModifier.PRIVATE
 import net.theevilreaper.dartpoet.code.*
@@ -8,6 +7,7 @@ import net.theevilreaper.dartpoet.code.DocumentationAppender
 import net.theevilreaper.dartpoet.function.FunctionType
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.MethodAccessorType
+import net.theevilreaper.dartpoet.function.body.FunctionBodyType
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
 import net.theevilreaper.dartpoet.type.TypeName
@@ -57,11 +57,19 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
 
         val parameterData = ParameterData.of(spec)
         ParameterHelper.writeParameters(parameterData, writer)
-        if (spec.isAsync) {
-            writer.emitSpace()
-            writer.emit(ASYNC.identifier)
-        }
+        emitBodyType(spec, writer)
         writeBody(spec, writer)
+    }
+
+    /**
+     * Emits the body modifier (`async`, `async*` or `sync*`) of a [FunctionSpec] if one is set.
+     * @param spec the spec to read the body modifier from
+     * @param writer the writer to emit the modifier to
+     */
+    private fun emitBodyType(spec: FunctionSpec, writer: CodeWriter) {
+        if (spec.bodyType == FunctionBodyType.NONE) return
+        writer.emitSpace()
+        writer.emit(spec.bodyType.keyword)
     }
 
     /**
@@ -86,7 +94,10 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
         val typeDefinition: CodeBlock = buildCodeBlock {
             when (spec.methodAccessorType!!) {
                 MethodAccessorType.SETTER -> add(MethodAccessorType.SETTER.keyword)
-                MethodAccessorType.GETTER -> add("%T·${MethodAccessorType.GETTER.keyword}", spec.returnType)
+                MethodAccessorType.GETTER -> add(
+                    "%T·${MethodAccessorType.GETTER.keyword}",
+                    parameterizedReturnType(spec) ?: spec.returnType
+                )
             }
         }
         writer.emitCode(codeBlock = typeDefinition, ensureTrailingNewline = false)
@@ -96,14 +107,11 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
             val parameterData = ParameterData.of(spec)
             ParameterHelper.writeParameters(parameterData, writer)
         }
+        emitBodyType(spec, writer)
 
         if (spec.body.isEmpty()) {
             writer.emit(SEMICOLON)
             return
-        }
-
-        if (spec.hasGetterAccessor) {
-            writer.emitSpace()
         }
 
         val bracketType = when (spec.type) {
@@ -111,7 +119,7 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
                 "·$CURLY_OPEN\n"
             }
 
-            FunctionType.SHORTEN -> "${FunctionType.SHORTEN.identifier}·"
+            FunctionType.SHORTEN -> "·${FunctionType.SHORTEN.identifier}·"
         }
 
         if (spec.type == FunctionType.STANDARD) {

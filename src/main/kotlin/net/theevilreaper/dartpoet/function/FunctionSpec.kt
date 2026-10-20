@@ -7,8 +7,12 @@ import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.writer.FunctionWriter
 import net.theevilreaper.dartpoet.code.buildCodeString
+import net.theevilreaper.dartpoet.function.body.FunctionBodyType
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.ClassName
+import net.theevilreaper.dartpoet.type.DYNAMIC
+import net.theevilreaper.dartpoet.type.OBJECT
+import net.theevilreaper.dartpoet.type.ParameterizedTypeName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.TypeVariableName
 import net.theevilreaper.dartpoet.type.asTypeName
@@ -36,6 +40,7 @@ class FunctionSpec internal constructor(
     internal val methodAccessorType: MethodAccessorType? = builder.methodAccessorType
     internal val body: CodeBlock = builder.body.build()
     internal val isAsync: Boolean = builder.async
+    internal val bodyType: FunctionBodyType = builder.bodyType
     internal val annotation: Set<AnnotationSpec> = builder.specData.annotations.toImmutableSet()
     internal val modifiers: Set<DartModifier> = builder.specData.modifiers.also {
         hasAllowedModifiers(it, ALLOWED_FUNCTION_MODIFIERS, "function")
@@ -48,7 +53,6 @@ class FunctionSpec internal constructor(
 
     internal val hasMethodAccessorType = methodAccessorType != null
     internal val hasSetterAccessor = hasMethodAccessorType && methodAccessorType == MethodAccessorType.SETTER
-    internal val hasGetterAccessor = hasMethodAccessorType && methodAccessorType == MethodAccessorType.GETTER
 
     init {
         require(name.trim().isNotEmpty()) { "The name of a function can't be empty" }
@@ -59,6 +63,35 @@ class FunctionSpec internal constructor(
         }
         require(!(type == FunctionType.SHORTEN && body.isEmpty())) { "Lambda can only be used with a body" }
         require(!(requiredParameters.isNotEmpty() && parametersWithDefaults.isNotEmpty())) { "A function can't have required and optional parameters" }
+
+        if (bodyType != FunctionBodyType.NONE) {
+            require(body.isNotEmpty()) {
+                "A function with the ${bodyType.keyword} modifier must have a body"
+            }
+            require(methodAccessorType != MethodAccessorType.SETTER) {
+                "A setter can't use the ${bodyType.keyword} modifier"
+            }
+        }
+
+        if (bodyType.isGenerator) {
+            require(type != FunctionType.SHORTEN) {
+                "A generator function (${bodyType.keyword}) can't use the arrow syntax"
+            }
+            val expected = bodyType.expectedReturnType!!
+            val rawName = returnType.rawTypeName()
+            require(rawName == expected || rawName == OBJECT.name || returnType == DYNAMIC) {
+                "A function with the ${bodyType.keyword} modifier must return $expected<T>, Object or dynamic, but was $returnType"
+            }
+        }
+    }
+
+    /**
+     * Returns the name of the type without its type arguments, or null if the type has no plain name.
+     */
+    private fun TypeName.rawTypeName(): String? = when (this) {
+        is ParameterizedTypeName -> rawTypeName
+        is ClassName -> name
+        else -> null
     }
 
     /**
@@ -85,6 +118,7 @@ class FunctionSpec internal constructor(
         builder.modifiers(*this.modifiers.toTypedArray())
         builder.parameters.addAll(this.parameters)
         builder.async = this.isAsync
+        builder.bodyType = this.bodyType
         builder.genericCasts.addAll(this.genericCasts)
         builder.methodAccessorType = this.methodAccessorType
         builder.body.formatParts.addAll(this.body.formatParts)

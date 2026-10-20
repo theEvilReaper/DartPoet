@@ -2,12 +2,14 @@ package net.theevilreaper.dartpoet.code.writer
 
 import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.DartModifier
+import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.buildCodeBlock
 import net.theevilreaper.dartpoet.function.FunctionType
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.MethodAccessorType
+import net.theevilreaper.dartpoet.function.body.FunctionBodyType
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.FunctionTypeName
 import net.theevilreaper.dartpoet.type.INTEGER
@@ -29,6 +31,143 @@ import java.util.stream.Stream
 class FunctionWriterTest {
 
     private companion object {
+
+        @JvmStatic
+        private fun bodyTypeCases(): Stream<Arguments> = Stream.of(
+            Arguments.of(
+                FunctionSpec.builder("getNameById")
+                    .returns(ClassName("Future").parameterizedBy(STRING))
+                    .body(FunctionBodyType.ASYNC)
+                    .parameter(ParameterSpec.positional("id", INTEGER).build())
+                    .addCode("return 'Thomas';")
+                    .build(),
+                """
+                |Future<String> getNameById(int id) async {
+                |  return 'Thomas';
+                |}
+                """.trimMargin()
+            ),
+            Arguments.of(
+                FunctionSpec.builder("countTo")
+                    .returns(ClassName("Iterable").parameterizedBy(INTEGER))
+                    .body(FunctionBodyType.SYNC_STAR)
+                    .parameter(ParameterSpec.positional("max", INTEGER).build())
+                    .addCode(
+                        buildCodeBlock {
+                            beginControlFlow("for (var i = 1; i <= max; i++)")
+                            addYield("i")
+                            endControlFlow()
+                        }
+                    )
+                    .build(),
+                """
+                |Iterable<int> countTo(int max) sync* {
+                |  for (var i = 1; i <= max; i++) {
+                |    yield i;
+                |  }
+                |}
+                """.trimMargin()
+            ),
+            Arguments.of(
+                FunctionSpec.builder("countAll")
+                    .returns(ClassName("Stream").parameterizedBy(INTEGER))
+                    .body(FunctionBodyType.ASYNC_STAR)
+                    .parameter(ParameterSpec.positional("values", ClassName("Stream").parameterizedBy(INTEGER)).build())
+                    .addCode(
+                        buildCodeBlock {
+                            addYield("0")
+                            addYieldAll("values")
+                        }
+                    )
+                    .build(),
+                """
+                |Stream<int> countAll(Stream<int> values) async* {
+                |  yield 0;
+                |  yield* values;
+                |}
+                """.trimMargin()
+            ),
+            Arguments.of(
+                FunctionSpec.builder("values")
+                    .returns(ClassName("Iterable").parameterizedBy(INTEGER))
+                    .accessorType(MethodAccessorType.GETTER)
+                    .body(FunctionBodyType.SYNC_STAR)
+                    .addCode(
+                        buildCodeBlock {
+                            addYield("1")
+                            addYield("2")
+                        }
+                    )
+                    .build(),
+                """
+                |Iterable<int> get values sync* {
+                |  yield 1;
+                |  yield 2;
+                |}
+                """.trimMargin()
+            ),
+            Arguments.of(
+                FunctionSpec.builder("value")
+                    .returns(ClassName("Future").parameterizedBy(INTEGER))
+                    .body(FunctionBodyType.ASYNC)
+                    .type(FunctionType.SHORTEN)
+                    .addCode("%L", "1;")
+                    .build(),
+                "Future<int> value() async => 1;"
+            ),
+            Arguments.of(
+                FunctionSpec.builder("value")
+                    .returns(ClassName("Future").parameterizedBy(INTEGER))
+                    .accessorType(MethodAccessorType.GETTER)
+                    .body(FunctionBodyType.ASYNC)
+                    .addCode("return 1;")
+                    .build(),
+                """
+                |Future<int> get value async {
+                |  return 1;
+                |}
+                """.trimMargin()
+            ),
+            @Suppress("DEPRECATION")
+            Arguments.of(
+                FunctionSpec.builder("value")
+                    .returns(INTEGER)
+                    .accessorType(MethodAccessorType.GETTER)
+                    .async(true)
+                    .addCode("return 1;")
+                    .build(),
+                """
+                |Future<int> get value async {
+                |  return 1;
+                |}
+                """.trimMargin()
+            ),
+        )
+
+        @JvmStatic
+        private fun accessorSpacingCases(): Stream<Arguments> = Stream.of(
+            Arguments.of(
+                FunctionSpec.builder("value")
+                    .returns(INTEGER)
+                    .accessorType(MethodAccessorType.GETTER)
+                    .addCode("return 1;")
+                    .build(),
+                """
+                |int get value {
+                |  return 1;
+                |}
+                """.trimMargin()
+            ),
+            Arguments.of(
+                FunctionSpec.builder("value")
+                    .accessorType(MethodAccessorType.SETTER)
+                    .type(FunctionType.SHORTEN)
+                    .parameter(ParameterSpec.positional("value", INTEGER).build())
+                    .addCode("%L", "print(value);")
+                    .build(),
+                "set value(int value) => print(value);"
+            ),
+        )
 
         @JvmStatic
         private fun genericOverloadCases(): Stream<Arguments> {
@@ -340,5 +479,51 @@ class FunctionWriterTest {
             .parameter(ParameterSpec.positional("value", INTEGER).build())
             .build()
         setterSpec.verifyDartOutput("external set count(int value);")
+    }
+
+    @DartAnalyzeCase
+    @ParameterizedTest
+    @MethodSource("bodyTypeCases")
+    fun `test function write with body type`(functionSpec: FunctionSpec, expected: String) {
+        assertThat(functionSpec.toString()).isEqualTo(expected)
+    }
+
+    @DartAnalyzeCase
+    @ParameterizedTest
+    @MethodSource("accessorSpacingCases")
+    fun `test accessor write spacing`(functionSpec: FunctionSpec, expected: String) {
+        assertThat(functionSpec.toString()).isEqualTo(expected)
+    }
+
+    @Test
+    fun `test static generator function inside class`() {
+        val classSpec = ClassSpec.builder("Counter")
+            .function(
+                FunctionSpec.builder("countTo")
+                    .modifier(DartModifier.STATIC)
+                    .returns(ClassName("Iterable").parameterizedBy(INTEGER))
+                    .body(FunctionBodyType.SYNC_STAR)
+                    .parameter(ParameterSpec.positional("max", INTEGER).build())
+                    .addCode(
+                        buildCodeBlock {
+                            beginControlFlow("for (var i = 1; i <= max; i++)")
+                            addYield("i")
+                            endControlFlow()
+                        }
+                    )
+                    .build()
+            )
+            .build()
+        classSpec.verifyDartOutput(
+            """
+            |class Counter {
+            |  static Iterable<int> countTo(int max) sync* {
+            |    for (var i = 1; i <= max; i++) {
+            |      yield i;
+            |    }
+            |  }
+            |}
+            """.trimMargin()
+        )
     }
 }

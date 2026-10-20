@@ -3,6 +3,7 @@ package net.theevilreaper.dartpoet.function
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.code.CodeBlock
+import net.theevilreaper.dartpoet.function.body.FunctionBodyType
 import net.theevilreaper.dartpoet.meta.GenericMethods
 import net.theevilreaper.dartpoet.meta.SpecData
 import net.theevilreaper.dartpoet.meta.SpecMethods
@@ -29,6 +30,11 @@ class FunctionBuilder internal constructor(
 ) : SpecMethods<FunctionBuilder>, GenericMethods<FunctionBuilder> {
     internal val specData: SpecData = SpecData()
     internal val parameters: MutableList<ParameterSpec> = mutableListOf()
+    internal var bodyType: FunctionBodyType = FunctionBodyType.NONE
+
+    /**
+     * Only set by the deprecated [async] method: wraps the return type into a `Future` when writing.
+     */
     internal var async: Boolean = false
     internal val body: CodeBlock.Builder = CodeBlock.builder()
     internal val genericCasts: MutableList<TypeName> = mutableListOf()
@@ -206,8 +212,31 @@ class FunctionBuilder internal constructor(
         this.returnType = returnType.asClassName()
     }
 
+    /**
+     * Marks the function as `async` and wraps the return type into a `Future` when writing.
+     * @param async true to mark the function as async
+     */
+    @Deprecated(
+        "Use body(FunctionBodyType.ASYNC) and declare the Future return type explicitly",
+        ReplaceWith("body(FunctionBodyType.ASYNC)", "net.theevilreaper.dartpoet.function.body.FunctionBodyType")
+    )
     fun async(async: Boolean) = apply {
         this.async = async
+        if (async) {
+            this.bodyType = FunctionBodyType.ASYNC
+        } else if (this.bodyType == FunctionBodyType.ASYNC) {
+            this.bodyType = FunctionBodyType.NONE
+        }
+    }
+
+    /**
+     * Sets the body modifier of the function (`async`, `async*` or `sync*`).
+     * The return type is written as given, so an `async` function must declare its `Future` itself.
+     * @param type the body modifier to set
+     */
+    fun body(type: FunctionBodyType) = apply {
+        this.bodyType = type
+        this.async = false
     }
 
     fun parameter(parameter: ParameterSpec) = apply {

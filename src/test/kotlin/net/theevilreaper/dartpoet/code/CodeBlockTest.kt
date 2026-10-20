@@ -145,4 +145,18 @@ class CodeBlockTest {
             Arguments.of("%P", "open \${call('x'", "'open \${call(\\'x\\''"),
         )
     }
+
+    @Test
+    fun `test yield statements with placeholders`() {
+        val block = CodeBlock.builder()
+            .addYield("%L", 42)
+            .addYieldAll("%N", "values")
+            .build()
+        assertThat(block.toString().trim()).isEqualTo(
+            """
+            |yield 42;
+            |yield* values;
+            """.trimMargin()
+        )
+    }
 }
