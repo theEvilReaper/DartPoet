@@ -457,4 +457,22 @@ class FunctionWriterTest {
             .build()
         setter.verifyDartOutput("set value(int value) => print(value);")
     }
+
+    @Test
+    fun `write deprecated async getter with future return type`() {
+        @Suppress("DEPRECATION")
+        val getter = FunctionSpec.builder("value")
+            .returns(INTEGER)
+            .accessorType(MethodAccessorType.GETTER)
+            .async(true)
+            .addCode("return 1;")
+            .build()
+        getter.verifyDartOutput(
+            """
+            |Future<int> get value async {
+            |  return 1;
+            |}
+            """.trimMargin()
+        )
+    }
 }

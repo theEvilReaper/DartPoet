@@ -94,7 +94,10 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
         val typeDefinition: CodeBlock = buildCodeBlock {
             when (spec.methodAccessorType!!) {
                 MethodAccessorType.SETTER -> add(MethodAccessorType.SETTER.keyword)
-                MethodAccessorType.GETTER -> add("%T·${MethodAccessorType.GETTER.keyword}", spec.returnType)
+                MethodAccessorType.GETTER -> add(
+                    "%T·${MethodAccessorType.GETTER.keyword}",
+                    parameterizedReturnType(spec) ?: spec.returnType
+                )
             }
         }
         writer.emitCode(codeBlock = typeDefinition, ensureTrailingNewline = false)
