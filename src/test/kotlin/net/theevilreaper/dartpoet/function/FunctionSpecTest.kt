@@ -124,7 +124,17 @@ class FunctionSpecTest {
                         .body(FunctionBodyType.SYNC_STAR)
                         .build()
                 },
-                "A generator function (sync*) must have a body"
+                "A function with the sync* modifier must have a body"
+            ),
+            Arguments.of(
+                {
+                    FunctionSpec.builder("load")
+                        .modifier(DartModifier.ABSTRACT)
+                        .returns(ClassName("Future").parameterizedBy(ClassName("void")))
+                        .body(FunctionBodyType.ASYNC)
+                        .build()
+                },
+                "A function with the async modifier must have a body"
             ),
             Arguments.of(
                 {
