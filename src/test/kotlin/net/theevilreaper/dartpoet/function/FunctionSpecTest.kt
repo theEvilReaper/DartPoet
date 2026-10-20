@@ -1,8 +1,12 @@
 package net.theevilreaper.dartpoet.function
 
 import net.theevilreaper.dartpoet.DartModifier
+import net.theevilreaper.dartpoet.function.body.FunctionBodyType
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.ClassName
+import net.theevilreaper.dartpoet.type.DYNAMIC
+import net.theevilreaper.dartpoet.type.INTEGER
+import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
 import net.theevilreaper.dartpoet.type.asTypeName
 import net.theevilreaper.dartpoet.util.NO_PARAMETER_TYPE
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -112,6 +116,61 @@ class FunctionSpecTest {
         )
 
         @JvmStatic
+        private fun invalidGeneratorFunctions(): Stream<Arguments> = Stream.of(
+            Arguments.of(
+                {
+                    FunctionSpec.builder("values")
+                        .returns(ClassName("Iterable").parameterizedBy(INTEGER))
+                        .body(FunctionBodyType.SYNC_STAR)
+                        .build()
+                },
+                "A generator function (sync*) must have a body"
+            ),
+            Arguments.of(
+                {
+                    FunctionSpec.builder("values")
+                        .returns(ClassName("Stream").parameterizedBy(INTEGER))
+                        .body(FunctionBodyType.ASYNC_STAR)
+                        .type(FunctionType.SHORTEN)
+                        .addCode("%L", "Stream.empty();")
+                        .build()
+                },
+                "A generator function (async*) can't use the arrow syntax"
+            ),
+            Arguments.of(
+                {
+                    FunctionSpec.builder("values")
+                        .accessorType(MethodAccessorType.SETTER)
+                        .parameter(ParameterSpec.positional("value", INTEGER).build())
+                        .body(FunctionBodyType.SYNC_STAR)
+                        .addCode("%L", "yield value;")
+                        .build()
+                },
+                "A setter can't be a generator (sync*)"
+            ),
+            Arguments.of(
+                {
+                    FunctionSpec.builder("values")
+                        .returns(ClassName("Iterable").parameterizedBy(INTEGER))
+                        .body(FunctionBodyType.ASYNC_STAR)
+                        .addCode("%L", "yield 1;")
+                        .build()
+                },
+                "A async* function must return Stream<T>, but was Iterable<int>"
+            ),
+            Arguments.of(
+                {
+                    FunctionSpec.builder("values")
+                        .returns(INTEGER)
+                        .body(FunctionBodyType.SYNC_STAR)
+                        .addCode("%L", "yield 1;")
+                        .build()
+                },
+                "A sync* function must return Iterable<T>, but was int"
+            ),
+        )
+
+        @JvmStatic
         private fun invalidFunctionParameters() = Stream.of(
             Arguments.of(
                 {
@@ -157,6 +216,43 @@ class FunctionSpecTest {
     @MethodSource("invalidFunctionParameters")
     fun `test invalid parameters on functions`(specBuilder: () -> Unit, expected: String) {
         assertThrows(IllegalStateException::class.java, specBuilder, expected)
+    }
+
+    @ParameterizedTest
+    @MethodSource("invalidGeneratorFunctions")
+    fun `test invalid generator functions`(specBuilder: () -> Unit, message: String) {
+        val exception = assertThrows(IllegalArgumentException::class.java, specBuilder)
+        assertEquals(message, exception.message)
+    }
+
+    @Test
+    fun `test generator function allows dynamic return type`() {
+        val functionSpec = FunctionSpec.builder("values")
+            .returns(DYNAMIC)
+            .body(FunctionBodyType.SYNC_STAR)
+            .addCode("%L", "yield 1;")
+            .build()
+        assertEquals(FunctionBodyType.SYNC_STAR, functionSpec.bodyType)
+    }
+
+    @Test
+    fun `test body type overrides deprecated async flag`() {
+        @Suppress("DEPRECATION")
+        val builder = FunctionSpec.builder("values")
+            .async(true)
+            .body(FunctionBodyType.ASYNC_STAR)
+        assertFalse(builder.async)
+        assertEquals(FunctionBodyType.ASYNC_STAR, builder.bodyType)
+    }
+
+    @Test
+    fun `test body type is kept on builder conversation`() {
+        val functionSpec = FunctionSpec.builder("values")
+            .returns(ClassName("Stream").parameterizedBy(INTEGER))
+            .body(FunctionBodyType.ASYNC_STAR)
+            .addCode("%L", "yield 1;")
+            .build()
+        assertEquals(FunctionBodyType.ASYNC_STAR, functionSpec.toBuilder().bodyType)
     }
 
     @Test

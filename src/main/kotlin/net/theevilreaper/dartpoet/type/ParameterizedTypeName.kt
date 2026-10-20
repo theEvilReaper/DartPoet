@@ -42,6 +42,11 @@ class ParameterizedTypeName internal constructor(
     }
 
     /**
+     * The name of the raw type without its type arguments (e.g. `Stream` for `Stream<int>`).
+     */
+    internal val rawTypeName: String get() = rawType.name
+
+    /**
      * Creates a copy of the [ParameterizedTypeName] with an optional nullable flag.
      *
      * @param nullable a flag indicating whether the copied [ParameterizedTypeName] can be null

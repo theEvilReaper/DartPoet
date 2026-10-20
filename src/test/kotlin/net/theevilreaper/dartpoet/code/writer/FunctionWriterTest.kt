@@ -8,6 +8,7 @@ import net.theevilreaper.dartpoet.code.buildCodeBlock
 import net.theevilreaper.dartpoet.function.FunctionType
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.MethodAccessorType
+import net.theevilreaper.dartpoet.function.body.FunctionBodyType
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.type.FunctionTypeName
 import net.theevilreaper.dartpoet.type.INTEGER
@@ -340,6 +341,94 @@ class FunctionWriterTest {
             .parameter(ParameterSpec.positional("value", INTEGER).build())
             .build()
         setterSpec.verifyDartOutput("external set count(int value);")
+    }
+
+    @Test
+    fun `write async function with explicit future return type`() {
+        val method = FunctionSpec.builder("getNameById")
+            .returns(ClassName("Future").parameterizedBy(STRING))
+            .body(FunctionBodyType.ASYNC)
+            .parameter(ParameterSpec.positional("id", INTEGER).build())
+            .addCode("return 'Thomas';")
+            .build()
+        method.verifyDartOutput(
+            """
+            |Future<String> getNameById(int id) async {
+            |  return 'Thomas';
+            |}
+            """.trimMargin()
+        )
+    }
+
+    @Test
+    fun `write sync generator function`() {
+        val method = FunctionSpec.builder("countTo")
+            .returns(ClassName("Iterable").parameterizedBy(INTEGER))
+            .body(FunctionBodyType.SYNC_STAR)
+            .parameter(ParameterSpec.positional("max", INTEGER).build())
+            .addCode(
+                buildCodeBlock {
+                    beginControlFlow("for (var i = 1; i <= max; i++)")
+                    addYield("i")
+                    endControlFlow()
+                }
+            )
+            .build()
+        method.verifyDartOutput(
+            """
+            |Iterable<int> countTo(int max) sync* {
+            |  for (var i = 1; i <= max; i++) {
+            |    yield i;
+            |  }
+            |}
+            """.trimMargin()
+        )
+    }
+
+    @Test
+    fun `write async generator function`() {
+        val method = FunctionSpec.builder("countAll")
+            .returns(ClassName("Stream").parameterizedBy(INTEGER))
+            .body(FunctionBodyType.ASYNC_STAR)
+            .parameter(ParameterSpec.positional("values", ClassName("Stream").parameterizedBy(INTEGER)).build())
+            .addCode(
+                buildCodeBlock {
+                    addYield("0")
+                    addYieldAll("values")
+                }
+            )
+            .build()
+        method.verifyDartOutput(
+            """
+            |Stream<int> countAll(Stream<int> values) async* {
+            |  yield 0;
+            |  yield* values;
+            |}
+            """.trimMargin()
+        )
+    }
+
+    @Test
+    fun `write sync generator getter`() {
+        val getter = FunctionSpec.builder("values")
+            .returns(ClassName("Iterable").parameterizedBy(INTEGER))
+            .accessorType(MethodAccessorType.GETTER)
+            .body(FunctionBodyType.SYNC_STAR)
+            .addCode(
+                buildCodeBlock {
+                    addYield("1")
+                    addYield("2")
+                }
+            )
+            .build()
+        getter.verifyDartOutput(
+            """
+            |Iterable<int> get values sync* {
+            |  yield 1;
+            |  yield 2;
+            |}
+            """.trimMargin()
+        )
     }
 
     @Test
