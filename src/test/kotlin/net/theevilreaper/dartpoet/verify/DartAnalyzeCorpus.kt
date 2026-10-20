@@ -39,3 +39,21 @@ internal fun Any.verifyDartOutput(expected: String) {
     assertBlankLineStyle()
     DartAnalyzeCorpus.record(actual)
 }
+
+/**
+ * The placeholder in a context of [verifyDartOutputIn] which is replaced with the generated source.
+ */
+internal const val GENERATED_SOURCE = "%GENERATED%"
+
+/**
+ * Verifies the generated Dart source like [verifyDartOutput], but for declarations which are only valid
+ * inside an enclosing declaration, such as constructors. The generated source replaces [GENERATED_SOURCE]
+ * in [context] before the result is recorded in [DartAnalyzeCorpus].
+ */
+internal fun Any.verifyDartOutputIn(context: String, expected: String) {
+    require(context.contains(GENERATED_SOURCE)) { "The context must contain $GENERATED_SOURCE" }
+    val actual = toString()
+    assertThat(actual).isEqualTo(expected)
+    assertBlankLineStyle()
+    DartAnalyzeCorpus.record(context.replace(GENERATED_SOURCE, actual.prependIndent("  ")))
+}

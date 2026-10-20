@@ -1,15 +1,57 @@
 package net.theevilreaper.dartpoet.code.writer
 
-import com.google.common.truth.Truth.*
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.parameter.ParameterSpec
+import net.theevilreaper.dartpoet.verify.GENERATED_SOURCE
+import net.theevilreaper.dartpoet.verify.verifyDartOutputIn
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 @DisplayName("Test constructor writer")
 class ConstructorWriterTest {
+
+    private companion object {
+        val CAR = """
+            |class Car {
+            |  dynamic maker, model, yearMade, hasABS;
+            |$GENERATED_SOURCE
+            |}
+            """.trimMargin()
+
+        val CONST_CAR = """
+            |class Car {
+            |  final dynamic maker, model, yearMade;
+            |$GENERATED_SOURCE
+            |}
+            """.trimMargin()
+
+        val ITEM = """
+            |class Item {
+            |  dynamic name, amount, id;
+            |$GENERATED_SOURCE
+            |}
+            """.trimMargin()
+
+        val CAT = """
+            |class Animal {
+            |  final String name;
+            |  Animal({required this.name});
+            |}
+            |
+            |class Cat extends Animal {
+            |  dynamic color;
+            |$GENERATED_SOURCE
+            |}
+            """.trimMargin()
+
+        val POINT = """
+            |class Point {
+            |$GENERATED_SOURCE
+            |}
+            """.trimMargin()
+    }
 
     @Test
     fun `test constructor write without any special parameter`() {
@@ -21,7 +63,9 @@ class ConstructorWriterTest {
                 ParameterSpec.positional("hasABS").build()
             )
             .build()
-        assertThat(constructor.toString()).isEqualTo(
+        constructor.verifyDartOutputIn(
+            CAR,
+            
             """
             Car(this.maker, this.model, this.yearMade, this.hasABS);
             """.trimIndent()
@@ -37,7 +81,9 @@ class ConstructorWriterTest {
                 ParameterSpec.positional("yearMade").build(),
             )
             .build()
-        assertThat(constructor.toString()).isEqualTo(
+        constructor.verifyDartOutputIn(
+            CAR,
+            
             """
             Car.withoutABS(this.maker, this.model, this.yearMade);
             """.trimIndent()
@@ -58,7 +104,9 @@ class ConstructorWriterTest {
                 )
             )
             .build()
-        assertThat(constructor.toString()).isEqualTo(
+        constructor.verifyDartOutputIn(
+            CAR,
+            
             """
             Car.withoutABS(this.maker, this.model, this.yearMade): hasABS = false;
             """.trimIndent()
@@ -75,7 +123,9 @@ class ConstructorWriterTest {
                 ParameterSpec.positional("yearMade").build(),
             )
             .build()
-        assertThat(constructor.toString()).isEqualTo(
+        constructor.verifyDartOutputIn(
+            CONST_CAR,
+            
             """
             const Car(this.maker, this.model, this.yearMade);
             """.trimIndent()
@@ -91,7 +141,9 @@ class ConstructorWriterTest {
                 ParameterSpec.required("yearMade").build(),
             )
             .build()
-        assertThat(constructor.toString()).isEqualTo(
+        constructor.verifyDartOutputIn(
+            CAR,
+            
             """
             Car({required this.maker, required this.yearMade, this.model});
             """.trimIndent()
@@ -107,7 +159,9 @@ class ConstructorWriterTest {
                 ParameterSpec.required("amount").build()
             )
             .build()
-        assertThat(constructor.toString()).isEqualTo(
+        constructor.verifyDartOutputIn(
+            ITEM,
+            
             """
             Item({required this.name, required this.amount, this.id = 10});
             """.trimIndent()
@@ -121,7 +175,9 @@ class ConstructorWriterTest {
             .parameters(
                 ParameterSpec.positional("name").build())
             .build()
-        assertThat(constructor.toString()).isEqualTo(
+        constructor.verifyDartOutputIn(
+            ITEM,
+            
             """
             /// Creates a new item object
             Item(this.name);
@@ -137,7 +193,9 @@ class ConstructorWriterTest {
                 ParameterSpec.named("color").nullable(true).build(),
             )
             .build()
-        assertThat(constructor.toString()).isEqualTo(
+        constructor.verifyDartOutputIn(
+            CAT,
+            
             """
             Cat({required super.name, this.color});
             """.trimIndent()
@@ -153,7 +211,7 @@ class ConstructorWriterTest {
                 ParameterSpec.positional("y", Int::class).build()
             )
             .build()
-        assertThat(constructor.toString()).isEqualTo("external Point(int x, int y);")
+        constructor.verifyDartOutputIn(POINT, "external Point(int x, int y);")
     }
 
     @Test
@@ -161,6 +219,6 @@ class ConstructorWriterTest {
         val constructor = ConstructorSpec.named("Point", "origin")
             .modifier(DartModifier.EXTERNAL)
             .build()
-        assertThat(constructor.toString()).isEqualTo("external Point.origin();")
+        constructor.verifyDartOutputIn(POINT, "external Point.origin();")
     }
 }
