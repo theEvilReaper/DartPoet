@@ -32,6 +32,121 @@ class FunctionWriterTest {
     private companion object {
 
         @JvmStatic
+        private fun bodyTypeCases(): Stream<Arguments> = Stream.of(
+            Arguments.of(
+                FunctionSpec.builder("getNameById")
+                    .returns(ClassName("Future").parameterizedBy(STRING))
+                    .body(FunctionBodyType.ASYNC)
+                    .parameter(ParameterSpec.positional("id", INTEGER).build())
+                    .addCode("return 'Thomas';")
+                    .build(),
+                """
+                |Future<String> getNameById(int id) async {
+                |  return 'Thomas';
+                |}
+                """.trimMargin()
+            ),
+            Arguments.of(
+                FunctionSpec.builder("countTo")
+                    .returns(ClassName("Iterable").parameterizedBy(INTEGER))
+                    .body(FunctionBodyType.SYNC_STAR)
+                    .parameter(ParameterSpec.positional("max", INTEGER).build())
+                    .addCode(
+                        buildCodeBlock {
+                            beginControlFlow("for (var i = 1; i <= max; i++)")
+                            addYield("i")
+                            endControlFlow()
+                        }
+                    )
+                    .build(),
+                """
+                |Iterable<int> countTo(int max) sync* {
+                |  for (var i = 1; i <= max; i++) {
+                |    yield i;
+                |  }
+                |}
+                """.trimMargin()
+            ),
+            Arguments.of(
+                FunctionSpec.builder("countAll")
+                    .returns(ClassName("Stream").parameterizedBy(INTEGER))
+                    .body(FunctionBodyType.ASYNC_STAR)
+                    .parameter(ParameterSpec.positional("values", ClassName("Stream").parameterizedBy(INTEGER)).build())
+                    .addCode(
+                        buildCodeBlock {
+                            addYield("0")
+                            addYieldAll("values")
+                        }
+                    )
+                    .build(),
+                """
+                |Stream<int> countAll(Stream<int> values) async* {
+                |  yield 0;
+                |  yield* values;
+                |}
+                """.trimMargin()
+            ),
+            Arguments.of(
+                FunctionSpec.builder("values")
+                    .returns(ClassName("Iterable").parameterizedBy(INTEGER))
+                    .accessorType(MethodAccessorType.GETTER)
+                    .body(FunctionBodyType.SYNC_STAR)
+                    .addCode(
+                        buildCodeBlock {
+                            addYield("1")
+                            addYield("2")
+                        }
+                    )
+                    .build(),
+                """
+                |Iterable<int> get values sync* {
+                |  yield 1;
+                |  yield 2;
+                |}
+                """.trimMargin()
+            ),
+            @Suppress("DEPRECATION")
+            Arguments.of(
+                FunctionSpec.builder("value")
+                    .returns(INTEGER)
+                    .accessorType(MethodAccessorType.GETTER)
+                    .async(true)
+                    .addCode("return 1;")
+                    .build(),
+                """
+                |Future<int> get value async {
+                |  return 1;
+                |}
+                """.trimMargin()
+            ),
+        )
+
+        @JvmStatic
+        private fun accessorSpacingCases(): Stream<Arguments> = Stream.of(
+            Arguments.of(
+                FunctionSpec.builder("value")
+                    .returns(INTEGER)
+                    .accessorType(MethodAccessorType.GETTER)
+                    .addCode("return 1;")
+                    .build(),
+                """
+                |int get value {
+                |  return 1;
+                |}
+                """.trimMargin()
+            ),
+            Arguments.of(
+                FunctionSpec.builder("value")
+                    .accessorType(MethodAccessorType.SETTER)
+                    .type(FunctionType.SHORTEN)
+                    .parameter(ParameterSpec.positional("value", INTEGER).build())
+                    .addCode("%L", "print(value);")
+                    .build(),
+                "set value(int value) => print(value);"
+            ),
+        )
+
+        @JvmStatic
         private fun genericOverloadCases(): Stream<Arguments> {
             val reflectType: Type = String::class.java
             return Stream.of(
@@ -343,136 +458,17 @@ class FunctionWriterTest {
         setterSpec.verifyDartOutput("external set count(int value);")
     }
 
-    @Test
-    fun `write async function with explicit future return type`() {
-        val method = FunctionSpec.builder("getNameById")
-            .returns(ClassName("Future").parameterizedBy(STRING))
-            .body(FunctionBodyType.ASYNC)
-            .parameter(ParameterSpec.positional("id", INTEGER).build())
-            .addCode("return 'Thomas';")
-            .build()
-        method.verifyDartOutput(
-            """
-            |Future<String> getNameById(int id) async {
-            |  return 'Thomas';
-            |}
-            """.trimMargin()
-        )
+    @DartAnalyzeCase
+    @ParameterizedTest
+    @MethodSource("bodyTypeCases")
+    fun `test function write with body type`(functionSpec: FunctionSpec, expected: String) {
+        assertThat(functionSpec.toString()).isEqualTo(expected)
     }
 
-    @Test
-    fun `write sync generator function`() {
-        val method = FunctionSpec.builder("countTo")
-            .returns(ClassName("Iterable").parameterizedBy(INTEGER))
-            .body(FunctionBodyType.SYNC_STAR)
-            .parameter(ParameterSpec.positional("max", INTEGER).build())
-            .addCode(
-                buildCodeBlock {
-                    beginControlFlow("for (var i = 1; i <= max; i++)")
-                    addYield("i")
-                    endControlFlow()
-                }
-            )
-            .build()
-        method.verifyDartOutput(
-            """
-            |Iterable<int> countTo(int max) sync* {
-            |  for (var i = 1; i <= max; i++) {
-            |    yield i;
-            |  }
-            |}
-            """.trimMargin()
-        )
-    }
-
-    @Test
-    fun `write async generator function`() {
-        val method = FunctionSpec.builder("countAll")
-            .returns(ClassName("Stream").parameterizedBy(INTEGER))
-            .body(FunctionBodyType.ASYNC_STAR)
-            .parameter(ParameterSpec.positional("values", ClassName("Stream").parameterizedBy(INTEGER)).build())
-            .addCode(
-                buildCodeBlock {
-                    addYield("0")
-                    addYieldAll("values")
-                }
-            )
-            .build()
-        method.verifyDartOutput(
-            """
-            |Stream<int> countAll(Stream<int> values) async* {
-            |  yield 0;
-            |  yield* values;
-            |}
-            """.trimMargin()
-        )
-    }
-
-    @Test
-    fun `write sync generator getter`() {
-        val getter = FunctionSpec.builder("values")
-            .returns(ClassName("Iterable").parameterizedBy(INTEGER))
-            .accessorType(MethodAccessorType.GETTER)
-            .body(FunctionBodyType.SYNC_STAR)
-            .addCode(
-                buildCodeBlock {
-                    addYield("1")
-                    addYield("2")
-                }
-            )
-            .build()
-        getter.verifyDartOutput(
-            """
-            |Iterable<int> get values sync* {
-            |  yield 1;
-            |  yield 2;
-            |}
-            """.trimMargin()
-        )
-    }
-
-    @Test
-    fun `write getter with block body`() {
-        val getter = FunctionSpec.builder("value")
-            .returns(INTEGER)
-            .accessorType(MethodAccessorType.GETTER)
-            .addCode("return 1;")
-            .build()
-        getter.verifyDartOutput(
-            """
-            |int get value {
-            |  return 1;
-            |}
-            """.trimMargin()
-        )
-    }
-
-    @Test
-    fun `write setter with arrow syntax`() {
-        val setter = FunctionSpec.builder("value")
-            .accessorType(MethodAccessorType.SETTER)
-            .type(FunctionType.SHORTEN)
-            .parameter(ParameterSpec.positional("value", INTEGER).build())
-            .addCode("%L", "print(value);")
-            .build()
-        setter.verifyDartOutput("set value(int value) => print(value);")
-    }
-
-    @Test
-    fun `write deprecated async getter with future return type`() {
-        @Suppress("DEPRECATION")
-        val getter = FunctionSpec.builder("value")
-            .returns(INTEGER)
-            .accessorType(MethodAccessorType.GETTER)
-            .async(true)
-            .addCode("return 1;")
-            .build()
-        getter.verifyDartOutput(
-            """
-            |Future<int> get value async {
-            |  return 1;
-            |}
-            """.trimMargin()
-        )
+    @DartAnalyzeCase
+    @ParameterizedTest
+    @MethodSource("accessorSpacingCases")
+    fun `test accessor write spacing`(functionSpec: FunctionSpec, expected: String) {
+        assertThat(functionSpec.toString()).isEqualTo(expected)
     }
 }
