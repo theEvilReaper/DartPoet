@@ -2,6 +2,7 @@ package net.theevilreaper.dartpoet.directive
 
 import net.theevilreaper.dartpoet.directive.impl.*
 import net.theevilreaper.dartpoet.util.DEFAULT_MAX_DEPTH
+import net.theevilreaper.dartpoet.util.EMPTY_STRING
 
 /**
  * The [DirectiveFactory] should be used to create a new instance of different [Directive] implementations.
@@ -64,6 +65,13 @@ object DirectiveFactory {
         path: String,
         partOf: Boolean = false,
     ) = create(DirectiveType.LIBRARY, path, partOf, null, null)
+
+    /**
+     * Creates a new instance from an unnamed [LibraryDirective] which is written as `library;`.
+     * It can be used to attach file annotations without the need to give the library a name.
+     * @return the created [LibraryDirective] instance
+     */
+    fun unnamedLib(): Directive = LibraryDirective(EMPTY_STRING, unnamed = true)
 
     /**
      * Creates a new instance from a [PackageDirective].
