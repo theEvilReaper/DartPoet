@@ -20,7 +20,7 @@ class DirectiveTest {
     private val packageImport = "import 'package:flutter/material.dart';"
 
     companion object {
-        private const val EMPTY_NAME_MESSAGE = "The path of an directive can't be empty"
+        private const val EMPTY_NAME_MESSAGE = "The path of a directive can't be empty"
         private const val INVALID_CAST_USAGE =
             "The castType and importCast must be set together or must be null. A mixed state is not allowed"
 

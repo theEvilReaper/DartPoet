@@ -18,7 +18,7 @@ abstract class BaseDirective(
 ) : Directive {
 
     init {
-        check(allowEmptyPath || path.trim().isNotEmpty()) { "The path of an directive can't be empty" }
+        check(allowEmptyPath || path.trim().isNotEmpty()) { "The path of a directive can't be empty" }
     }
 
     /**

@@ -70,6 +70,7 @@ object DirectiveFactory {
      * Creates a new instance from an unnamed [LibraryDirective] which is written as `library;`.
      * It can be used to attach file annotations without the need to give the library a name.
      * @return the created [LibraryDirective] instance
+     * @since 2.7.0
      */
     fun unnamedLib(): Directive = LibraryDirective(EMPTY_STRING, unnamed = true)
 

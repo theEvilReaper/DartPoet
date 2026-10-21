@@ -138,7 +138,7 @@ class DartFileTest {
                 .build()
         }
         assertEquals(
-            "File annotations require a library directive. Use DirectiveFactory.unnamedLib() to emit an unnamed library;",
+            "File annotations require a library directive. Use DirectiveFactory.unnamedLib() to emit an unnamed `library;` directive.",
             exception.message
         )
     }
