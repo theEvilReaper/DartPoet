@@ -1,5 +1,24 @@
 # Changelog
 
+## [2.7.0](https://github.com/theEvilReaper/DartPoet/compare/2.6.0...2.7.0) (2026-10-21)
+
+
+### Features
+
+* **function:** support sync* and async* generator functions ([#338](https://github.com/theEvilReaper/DartPoet/issues/338)) ([5f071c4](https://github.com/theEvilReaper/DartPoet/commit/5f071c44b04c2213b7622705b49c0d8fd5a7e354))
+* **lib:** allow unnamed library definitions ([#351](https://github.com/theEvilReaper/DartPoet/issues/351)) ([6cbbe00](https://github.com/theEvilReaper/DartPoet/commit/6cbbe0069c7d2418dfa6b2b4aff6aacf7b066eaf))
+
+
+### Bug Fixes
+
+* **constructor:** add space before the initializer list colon ([#343](https://github.com/theEvilReaper/DartPoet/issues/343)) ([f66c54d](https://github.com/theEvilReaper/DartPoet/commit/f66c54d654b1040e08334b3dbbb04158cf3dd365))
+* **constructor:** reject arrow syntax on generative constructors ([#341](https://github.com/theEvilReaper/DartPoet/issues/341)) ([5c6958a](https://github.com/theEvilReaper/DartPoet/commit/5c6958a2fa095448900185de2d2591c367de0ee8))
+* **directive:** polish unnamed library error messages and KDoc ([a46cb95](https://github.com/theEvilReaper/DartPoet/commit/a46cb954d01e93411a11a102fb19b6114a364270))
+* **file:** copy docs and extensions into immutable lists ([#346](https://github.com/theEvilReaper/DartPoet/issues/346)) ([d95a3b8](https://github.com/theEvilReaper/DartPoet/commit/d95a3b8329ef015d1ce9c85e0788504bbb458b4f))
+* **file:** copy typeDefs in DartFile.toBuilder() ([7f7cc30](https://github.com/theEvilReaper/DartPoet/commit/7f7cc30c997f55bf54e1606145765b4ace311754))
+* **file:** correct error messages for file name and indent validation ([#349](https://github.com/theEvilReaper/DartPoet/issues/349)) ([a856cf3](https://github.com/theEvilReaper/DartPoet/commit/a856cf3e2e924f09f642cd4c55f504f69b26b953))
+* **file:** emit file annotations before the library directive ([#345](https://github.com/theEvilReaper/DartPoet/issues/345)) ([c5f7f6d](https://github.com/theEvilReaper/DartPoet/commit/c5f7f6dba500a4015cc1c68480d2874bc4fecf27))
+
 ## [2.6.0](https://github.com/theEvilReaper/DartPoet/compare/2.5.1...2.6.0) (2026-10-02)
 
 
