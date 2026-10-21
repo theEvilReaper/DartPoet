@@ -136,8 +136,16 @@ class DartFileBuilder(
      * @param typeDef the type definitions to add
      * @return the current instance of [DartFileBuilder]
      */
-    fun typeDef(vararg typeDef: AbstractTypeDef<*>) = apply {
-        this.typeDefs += typeDef
+    @Deprecated("Use typeDefs(vararg) instead", ReplaceWith("typeDefs(*typeDef)"))
+    fun typeDef(vararg typeDef: AbstractTypeDef<*>) = typeDefs(*typeDef)
+
+    /**
+     * Add an array of type definitions to the file builder.
+     * @param typeDefs the type definitions to add
+     * @return the current instance of [DartFileBuilder]
+     */
+    fun typeDefs(vararg typeDefs: AbstractTypeDef<*>) = apply {
+        this.typeDefs += typeDefs
     }
 
     /**
@@ -161,9 +169,8 @@ class DartFileBuilder(
      * @param typeSpecs the type specifications to add
      * @return the current instance of [DartFileBuilder]
      */
-    fun type(vararg typeSpecs: TypeSpec) = apply {
-        this.specTypes += typeSpecs
-    }
+    @Deprecated("Use types(vararg) instead", ReplaceWith("types(*typeSpecs)"))
+    fun type(vararg typeSpecs: TypeSpec) = types(*typeSpecs)
 
     /**
      * Add an array of top level [TypeSpec]s to the file.
