@@ -55,7 +55,7 @@ class DartFile internal constructor(
     internal val hasTypeDefs = typeDefs.isNotEmpty()
 
     init {
-        check(name.trim().isNotEmpty()) { "The name of a class can't be empty (ONLY SPACES ARE NOT ALLOWED" }
+        check(name.trim().isNotEmpty()) { "The name of a file can't be empty or contain only spaces" }
         if (libImport.isNotEmpty()) {
             check(libImport.size == 1) { "Only one library directive is allowed" }
         }

@@ -102,7 +102,7 @@ class DartFileBuilder(
     }
 
     fun indent(indent: String) = apply {
-        check(isIndent(indent)) { "An indent can only contains only spaces" }
+        check(isIndent(indent)) { "An indent can only contain spaces" }
         this.indent = indent
     }
 
