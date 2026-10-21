@@ -60,7 +60,9 @@ class DartFile internal constructor(
             check(libImport.size == 1) { "Only one library directive is allowed" }
         }
         // Dart attaches metadata to the following declaration, so file annotations need a library directive
-        check(annotations.isEmpty() || libImport.isNotEmpty()) { "File annotations require a library directive" }
+        check(annotations.isEmpty() || libImport.isNotEmpty()) {
+            "File annotations require a library directive. Use DirectiveFactory.unnamedLib() to emit an unnamed library;"
+        }
     }
 
     internal fun write(codeWriter: CodeWriter) {
