@@ -51,6 +51,10 @@ class DirectiveTest {
                 "part of testLib;",
                 DirectiveFactory.createLib("testLib", true),
             ),
+            Arguments.of(
+                "library;",
+                DirectiveFactory.unnamedLib(),
+            ),
         )
 
         @JvmStatic

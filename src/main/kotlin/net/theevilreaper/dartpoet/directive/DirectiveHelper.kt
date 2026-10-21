@@ -106,8 +106,11 @@ internal object DirectiveHelper {
         }
 
         writer.emitCode("%L", importPair.first)
-        writer.emitSpace()
-        writer.emitCode(importPair.second, path)
+        // An unnamed library directive is written as `library;`
+        if (path.isNotEmpty()) {
+            writer.emitSpace()
+            writer.emitCode(importPair.second, path)
+        }
         writer.emit(SEMICOLON)
     }
 

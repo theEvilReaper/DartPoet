@@ -7,16 +7,18 @@ import net.theevilreaper.dartpoet.util.DART_FILE_ENDING
 /**
  * The class represents the basic implementation which are used from all directive implementations.
  * @param path the path for the directive
+ * @param allowEmptyPath if true the path is allowed to be empty (e.g. for an unnamed library directive)
  * @author theEvilReaper
  * @since 1.0.0
  */
 abstract class BaseDirective(
     protected val type: DirectiveType,
-    private val path: String
+    private val path: String,
+    allowEmptyPath: Boolean = false,
 ) : Directive {
 
     init {
-        check(path.trim().isNotEmpty()) { "The path of an directive can't be empty" }
+        check(allowEmptyPath || path.trim().isNotEmpty()) { "The path of an directive can't be empty" }
     }
 
     /**

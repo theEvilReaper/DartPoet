@@ -116,13 +116,31 @@ class DartFileTest {
     }
 
     @Test
+    fun `test file annotations are written before an unnamed library directive`() {
+        val libFile = DartFile.builder("unnamed_lib")
+            .annotation(AnnotationSpec.builder("Deprecated").content("%C", "Use other_lib instead").build())
+            .directive(DirectiveFactory.unnamedLib())
+            .build()
+        libFile.verifyDartOutput(
+            """
+            |@Deprecated('Use other_lib instead')
+            |library;
+            |
+            """.trimMargin()
+        )
+    }
+
+    @Test
     fun `test file annotations without library directive are rejected`() {
         val exception = assertThrows<IllegalStateException> {
             DartFile.builder("no_lib")
                 .annotation(AnnotationSpec.builder("Deprecated").content("%C", "Unused").build())
                 .build()
         }
-        assertEquals("File annotations require a library directive", exception.message)
+        assertEquals(
+            "File annotations require a library directive. Use DirectiveFactory.unnamedLib() to emit an unnamed library;",
+            exception.message
+        )
     }
 
     @Test

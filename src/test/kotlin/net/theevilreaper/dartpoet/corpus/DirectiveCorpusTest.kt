@@ -1,6 +1,7 @@
 package net.theevilreaper.dartpoet.corpus
 
 import net.theevilreaper.dartpoet.DartFile
+import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.directive.DirectiveFactory
 import net.theevilreaper.dartpoet.directive.DirectiveType
 import net.theevilreaper.dartpoet.function.FunctionSpec
@@ -49,6 +50,43 @@ class DirectiveCorpusTest {
             |
             |void main() {
             |  print('ok');
+            |}
+            |
+            """.trimMargin()
+        )
+    }
+
+    @Test
+    fun `test unnamed library directive with file annotation and directive ordering`() {
+        val file = DartFile.builder("unnamed_library_directives")
+            .annotation(AnnotationSpec.builder("Deprecated").content("%C", "Use other_lib instead").build())
+            .directive(DirectiveFactory.create(DirectiveType.PART, "unnamed_library_directives.g.dart"))
+            .directive(DirectiveFactory.create(DirectiveType.EXPORT, "src/export_me.dart"))
+            .directive(DirectiveFactory.create(DirectiveType.IMPORT, "path/path.dart"))
+            .directive(DirectiveFactory.create(DirectiveType.IMPORT, "dart:math"))
+            .directive(DirectiveFactory.unnamedLib())
+            .function(
+                FunctionSpec.builder("main")
+                    .addCode("print(max(1, 2));")
+                    .build()
+            )
+            .build()
+
+        file.verifyDartOutput(
+            """
+            |@Deprecated('Use other_lib instead')
+            |library;
+            |
+            |import 'dart:math';
+            |
+            |import 'package:path/path.dart';
+            |
+            |export 'src/export_me.dart';
+            |
+            |part 'unnamed_library_directives.g.dart';
+            |
+            |void main() {
+            |  print(max(1, 2));
             |}
             |
             """.trimMargin()

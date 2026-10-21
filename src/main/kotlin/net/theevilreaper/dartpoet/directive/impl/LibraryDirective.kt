@@ -12,8 +12,9 @@ import net.theevilreaper.dartpoet.directive.DirectiveType
  */
 class LibraryDirective internal constructor(
     path: String,
-    private val asPartOf: Boolean = false
-) : BaseDirective(DirectiveType.LIBRARY, path) {
+    private val asPartOf: Boolean = false,
+    unnamed: Boolean = false,
+) : BaseDirective(DirectiveType.LIBRARY, path, unnamed) {
 
     /**
      * Writes the data from the [LibraryDirective] to a given instance from a [CodeWriter].
