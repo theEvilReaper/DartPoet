@@ -30,13 +30,19 @@ class DartFileBuilder(
     internal var indent = DEFAULT_INDENT
 
     /**
-     * Add a constant [PropertySpec] to the file.
-     * @param constant the property to add
+     * Add a top level [ConstantPropertySpec] to the file.
+     * @param constant the constant to add
+     * @return the current instance of [DartFileBuilder]
      */
     fun constant(constant: ConstantPropertySpec) = apply {
         this.constants += constant
     }
 
+    /**
+     * Add an array of top level [ConstantPropertySpec]s to the file.
+     * @param constants the constants to add
+     * @return the current instance of [DartFileBuilder]
+     */
     fun constants(vararg constants: ConstantPropertySpec) = apply {
         this.constants += constants
     }
@@ -44,6 +50,7 @@ class DartFileBuilder(
     /**
      * Add a top level [PropertySpec] to the file.
      * @param property the property to add
+     * @return the current instance of [DartFileBuilder]
      */
     fun property(property: PropertySpec) = apply {
         this.propertyStack += property
@@ -51,13 +58,15 @@ class DartFileBuilder(
 
     /**
      * Add a top level [PropertySpec] to the file over a lambda reference.
-     * @param property the property to add
+     * @param property lambda returning the property to add
+     * @return the current instance of [DartFileBuilder]
      */
     fun property(property: () -> PropertySpec) = this.property(property())
 
     /**
      * Add an array of top level [PropertySpec] to the file.
      * @param properties the properties to add
+     * @return the current instance of [DartFileBuilder]
      */
     fun properties(vararg properties: PropertySpec) = apply {
         this.propertyStack += properties
@@ -66,6 +75,7 @@ class DartFileBuilder(
     /**
      * Add a top level [FunctionSpec] to the file.
      * @param function the function to add
+     * @return the current instance of [DartFileBuilder]
      */
     fun function(function: FunctionSpec) = apply {
         this.functionStack += function
@@ -73,51 +83,103 @@ class DartFileBuilder(
 
     /**
      * Add a top level [FunctionSpec] to the file over a lambda reference.
-     * @param function the function to add
+     * @param function lambda returning the function to add
+     * @return the current instance of [DartFileBuilder]
      */
     fun function(function: () -> FunctionSpec) = this.function(function())
 
     /**
      * Add an array of top level [FunctionSpec] to the file.
      * @param functions the functions to add
+     * @return the current instance of [DartFileBuilder]
      */
     fun functions(vararg functions: FunctionSpec) = apply {
         this.functionStack += functions
     }
 
+    /**
+     * Add a [Directive] (e.g. an import, export, part or library directive) to the file.
+     * The directives are sorted by their type when the file is written.
+     * @param directive the directive to add
+     * @return the current instance of [DartFileBuilder]
+     */
     fun directive(directive: Directive) = apply {
         this.directives += directive
     }
 
+    /**
+     * Add a [Directive] to the file over a lambda reference.
+     * @param directive lambda returning the directive to add
+     * @return the current instance of [DartFileBuilder]
+     */
     fun directive(directive: () -> Directive) = apply {
         this.directives += directive()
     }
 
+    /**
+     * Add an array of [Directive]s to the file.
+     * @param directive the directives to add
+     * @return the current instance of [DartFileBuilder]
+     */
     fun directives(vararg directive: Directive) = apply {
         this.directives += directive
     }
 
+    /**
+     * Add a documentation comment at the top of the file.
+     * Spaces are replaced with non-breaking spaces (`·`) so that the comment line is not wrapped.
+     * @param format the string which contains the content and the format
+     * @param args the arguments for the format string
+     * @return the current instance of [DartFileBuilder]
+     */
     fun doc(format: String, vararg args: Any) = apply {
         this.docs.add(CodeBlock.of(format.replace(' ', '·'), *args))
     }
 
+    /**
+     * Set the indent which is used to write the file.
+     * @param indent the indent to use, which may only contain spaces
+     * @return the current instance of [DartFileBuilder]
+     * @throws IllegalStateException if the indent contains other characters than spaces
+     */
     fun indent(indent: String) = apply {
         check(isIndent(indent)) { "An indent can only contains only spaces" }
         this.indent = indent
     }
 
+    /**
+     * Set the indent which is used to write the file over a lambda reference.
+     * @param indent lambda returning the indent to use, which may only contain spaces
+     * @return the current instance of [DartFileBuilder]
+     * @throws IllegalStateException if the indent contains other characters than spaces
+     */
     fun indent(indent: () -> String) = apply {
         this.indent(indent())
     }
 
+    /**
+     * Add a top level [ExtensionSpec] to the file.
+     * @param extension the extension to add
+     * @return the current instance of [DartFileBuilder]
+     */
     fun extension(extension: ExtensionSpec) = apply {
         this.extensionStack += extension
     }
 
+    /**
+     * Add a top level [ExtensionSpec] to the file over a lambda reference.
+     * @param extension lambda returning the extension to add
+     * @return the current instance of [DartFileBuilder]
+     */
     fun extension(extension: () -> ExtensionSpec) = apply {
         this.extensionStack += extension()
     }
 
+    /**
+     * Add an array of top level [ExtensionSpec]s to the file.
+     * @param extensions the extensions to add
+     * @return the current instance of [DartFileBuilder]
+     */
     fun extensions(vararg extensions: ExtensionSpec) = apply {
         this.extensionStack += extensions
     }
