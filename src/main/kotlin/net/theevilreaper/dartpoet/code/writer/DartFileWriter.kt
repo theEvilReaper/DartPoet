@@ -11,6 +11,10 @@ internal class DartFileWriter : Writeable<DartFile>, DocumentationAppender {
 
     override fun write(spec: DartFile, writer: CodeWriter) {
         emitDocumentation(spec.docs, writer)
+        spec.annotations.forEach {
+            it.write(writer, inline = false)
+            writer.emit(NEW_LINE)
+        }
         emitDirectives(writer, spec.libImport)
         emitDirectives(writer, spec.dartImports)
         emitDirectives(writer, spec.packageImports)

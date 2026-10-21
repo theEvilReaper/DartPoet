@@ -20,6 +20,7 @@ import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.DYNAMIC
 import net.theevilreaper.dartpoet.type.ParameterizedTypeName.Companion.parameterizedBy
 import net.theevilreaper.dartpoet.type.asTypeName
+import net.theevilreaper.dartpoet.verify.verifyDartOutput
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -33,6 +34,7 @@ class DartFileTest {
     fun `test spec to builder conversation`() {
         val dartFileSpec = DartFile.builder("TestClass")
             .indent(" ")
+            .directive(DirectiveFactory.createLib("test_class"))
             .annotation(AnnotationSpec.builder("ignore").build())
             .annotation { AnnotationSpec.builder("immutable").build() }
             .property(PropertySpec.builder("greeting", String::class).build())
@@ -83,6 +85,43 @@ class DartFileTest {
             |
             """.trimMargin()
         )
+    }
+
+    @Test
+    fun `test file annotations are written before the library directive`() {
+        val libFile = DartFile.builder("annotated_lib")
+            .doc("A library with annotations")
+            .annotation(AnnotationSpec.builder("Deprecated").content("%C", "Use other_lib instead").build())
+            .annotation { AnnotationSpec.builder("pragma").content("%C", "vm:prefer-inline").build() }
+            .directives(
+                DirectiveFactory.create(DirectiveType.IMPORT, "dart:math"),
+                DirectiveFactory.createLib("annotated_lib"),
+            )
+            .property(PropertySpec.builder("maxValue", Int::class).initWith("%L", "max(1, 2)").build())
+            .build()
+        libFile.verifyDartOutput(
+            """
+            |/// A library with annotations
+            |@Deprecated('Use other_lib instead')
+            |@pragma('vm:prefer-inline')
+            |library annotated_lib;
+            |
+            |import 'dart:math';
+            |
+            |int maxValue = max(1, 2);
+            |
+            """.trimMargin()
+        )
+    }
+
+    @Test
+    fun `test file annotations without library directive are rejected`() {
+        val exception = assertThrows<IllegalStateException> {
+            DartFile.builder("no_lib")
+                .annotation(AnnotationSpec.builder("Deprecated").content("%C", "Unused").build())
+                .build()
+        }
+        assertEquals("File annotations require a library directive", exception.message)
     }
 
     @Test
