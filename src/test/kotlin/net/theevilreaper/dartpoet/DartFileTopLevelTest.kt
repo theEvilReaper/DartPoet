@@ -130,4 +130,33 @@ class DartFileTopLevelTest {
             """.trimMargin()
         )
     }
+
+    @Test
+    fun `test multiple typedefs and types added via the plural vararg methods`() {
+        val file = DartFile.builder("plural_file")
+            .typeDefs(
+                TypeDef.alias("JsonMap")
+                    .returns(Map::class.parameterizedBy(String::class.asTypeName(), DYNAMIC))
+                    .build(),
+                TypeDef.alias("Names")
+                    .returns(List::class.parameterizedBy(String::class.asTypeName()))
+                    .build(),
+            )
+            .types(
+                ClassSpec.builder("First").build(),
+                ClassSpec.builder("Second").build(),
+            )
+            .build()
+        file.verifyDartOutput(
+            """
+            |typedef JsonMap = Map<String, dynamic>;
+            |typedef Names = List<String>;
+            |
+            |class First {}
+            |
+            |class Second {}
+            |
+            """.trimMargin()
+        )
+    }
 }
