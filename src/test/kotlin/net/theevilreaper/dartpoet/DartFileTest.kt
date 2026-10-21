@@ -126,6 +126,22 @@ class DartFileTest {
     }
 
     @Test
+    fun `test file name with only spaces is rejected`() {
+        val exception = assertThrows<IllegalStateException> {
+            DartFile.builder("   ").build()
+        }
+        assertEquals("The name of a file can't be empty or contain only spaces", exception.message)
+    }
+
+    @Test
+    fun `test indent with other characters than spaces is rejected`() {
+        val exception = assertThrows<IllegalStateException> {
+            DartFile.builder("indent_file").indent("\t")
+        }
+        assertEquals("An indent can only contain spaces", exception.message)
+    }
+
+    @Test
     fun `test duplicate library directives are rejected`() {
         val exception = assertThrows<IllegalStateException> {
             DartFile.builder("dup_lib")
