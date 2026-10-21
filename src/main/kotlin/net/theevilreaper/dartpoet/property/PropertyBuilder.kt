@@ -25,8 +25,8 @@ class PropertyBuilder internal constructor(
     internal var initBlock: CodeBlock.Builder = CodeBlock.builder()
 
     /**
-     * Add a comment over for the extension class.
-     * Note this comments will be generated over the extension class
+     * Add a documentation comment which is written above the property.
+     * Spaces are replaced with non-breaking spaces (`·`) so that the comment line is not wrapped.
      * @param format the string which contains the content and the format
      * @param args the arguments for the format string
      * @return the current [PropertyBuilder] instance
