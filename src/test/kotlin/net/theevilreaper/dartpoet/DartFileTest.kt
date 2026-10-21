@@ -7,6 +7,7 @@ import net.theevilreaper.dartpoet.code.buildCodeBlock
 import net.theevilreaper.dartpoet.directive.CastType
 import net.theevilreaper.dartpoet.directive.DirectiveFactory
 import net.theevilreaper.dartpoet.directive.DirectiveType
+import net.theevilreaper.dartpoet.extension.ExtensionSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.constructor.ConstructorSpec
 import net.theevilreaper.dartpoet.function.FunctionType
@@ -369,5 +370,19 @@ class DartFileTest {
             |
             """.trimMargin()
         )
+    }
+
+    @Test
+    fun `test builder changes after build do not affect the file`() {
+        val builder = DartFile.builder("immutable_file")
+            .doc("Initial doc")
+            .extension(ExtensionSpec.builder("StringExt", String::class).build())
+        val dartFile = builder.build()
+
+        builder.doc("Added after build")
+        builder.extension(ExtensionSpec.builder("IntExt", Int::class).build())
+
+        assertEquals(1, dartFile.docs.size)
+        assertEquals(1, dartFile.extensions.size)
     }
 }
