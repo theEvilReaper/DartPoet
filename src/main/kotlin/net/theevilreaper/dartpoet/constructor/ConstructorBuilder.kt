@@ -29,10 +29,11 @@ class ConstructorBuilder internal constructor(
     internal val docs: MutableList<CodeBlock> = mutableListOf()
 
     /**
-     * Add a comment over for the extension class.
-     * Note this comments will be generated over the extension class
+     * Add a documentation comment which is written above the constructor.
+     * Spaces are replaced with non-breaking spaces (`·`) so that the comment line is not wrapped.
      * @param format the string which contains the content and the format
      * @param args the arguments for the format string
+     * @return the current [ConstructorBuilder] instance
      */
     fun doc(format: String, vararg args: Any) = apply {
         this.docs.add(CodeBlock.of(format.replace(' ', '·'), *args))
