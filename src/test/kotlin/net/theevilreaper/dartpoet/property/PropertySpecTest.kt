@@ -111,6 +111,16 @@ class PropertySpecTest {
     }
 
     @Test
+    fun `test spec to builder conversation keeps private modifier`() {
+        val propertySpec = PropertySpec.builder("amount", Int::class.asTypeName())
+            .modifiers(DartModifier.PRIVATE, DartModifier.FINAL)
+            .build()
+        val rebuiltSpec = propertySpec.toBuilder().build()
+        assertTrue { rebuiltSpec.isPrivate }
+        assertEquals(propertySpec.toString(), rebuiltSpec.toString())
+    }
+
+    @Test
     fun `test annotations vararg overload adds annotations`() {
         val propertySpec = PropertySpec.builder("amount", Int::class.asTypeName())
             .annotations(
