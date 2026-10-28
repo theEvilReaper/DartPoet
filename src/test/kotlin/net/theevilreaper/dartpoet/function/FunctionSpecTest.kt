@@ -356,6 +356,17 @@ class FunctionSpecTest {
     }
 
     @Test
+    fun `test spec to builder conversation keeps function type`() {
+        val functionSpec = FunctionSpec.builder("getValue", ClassName("int"))
+            .type(FunctionType.SHORTEN)
+            .addCode("1;")
+            .build()
+        val specAsBuilder = functionSpec.toBuilder()
+        assertEquals(FunctionType.SHORTEN, specAsBuilder.type)
+        assertEquals(functionSpec.toString(), specAsBuilder.build().toString())
+    }
+
+    @Test
     fun `test generic function with string overload`() {
         val functionSpec = FunctionSpec.builder("identity")
             .generic("T")
