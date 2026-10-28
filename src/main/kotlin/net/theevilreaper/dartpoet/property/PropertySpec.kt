@@ -2,6 +2,7 @@ package net.theevilreaper.dartpoet.property
 
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
+import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.writer.PropertyWriter
@@ -29,7 +30,7 @@ class PropertySpec internal constructor(
     internal var type = builder.type
     internal val nullable = builder.nullable
     internal var annotations: Set<AnnotationSpec> = builder.specData.annotations.toImmutableSet()
-    internal var initBlock = builder.initBlock
+    internal var initBlock: CodeBlock = builder.initBlock.build()
     internal var isPrivate = builder.specData.modifiers.contains(DartModifier.PRIVATE)
     internal var isConst = builder.specData.modifiers.contains(DartModifier.CONST)
     internal val docs = builder.docs
@@ -80,7 +81,7 @@ class PropertySpec internal constructor(
         val updatedModifiers = if (isPrivate) modifiers + DartModifier.PRIVATE else modifiers
         builder.specData.modifiers.addAll(updatedModifiers)
         builder.specData.annotations.addAll(this.annotations)
-        builder.initBlock = this.initBlock
+        builder.initBlock.add(this.initBlock)
         builder.docs.addAll(this.docs)
         builder.nullable = nullable
         return builder
