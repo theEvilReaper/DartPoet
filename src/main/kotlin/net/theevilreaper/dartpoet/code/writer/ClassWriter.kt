@@ -24,7 +24,7 @@ import net.theevilreaper.dartpoet.util.SEMICOLON
  * @since 1.0.0
  * @author theEvilReaper
  */
-internal class ClassWriter : Writeable<ClassSpec> {
+internal class ClassWriter : Writeable<ClassSpec>, DocumentationAppender {
 
     /**
      * Writes the given [ClassSpec] to a [CodeWriter] instance.
@@ -38,6 +38,7 @@ internal class ClassWriter : Writeable<ClassSpec> {
             return
         }
 
+        emitDocumentation(spec.docs, writer)
         spec.annotations.emitAnnotations(writer, inLineAnnotations = false)
         writeClassHeader(spec, writer)
 

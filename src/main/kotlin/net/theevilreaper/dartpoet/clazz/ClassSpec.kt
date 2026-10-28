@@ -3,6 +3,7 @@ package net.theevilreaper.dartpoet.clazz
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.DartModifier.CLASS
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
+import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.buildCodeString
@@ -53,6 +54,7 @@ class ClassSpec internal constructor(
     internal val enumPropertyStack: List<EnumEntrySpec> = builder.enumPropertyStack.toImmutableList()
     internal val constantStack = builder.constantStack.toImmutableSet()
     internal val genericCasts: Set<TypeName> = builder.genericCasts.toImmutableSet()
+    internal val docs: List<CodeBlock> = builder.docs.toImmutableList()
     /**
      * Returns true when the class has no content to generate.
      */
@@ -124,6 +126,10 @@ class ClassSpec internal constructor(
             "An anonymous class can't declare operators"
         }
 
+        check(!isAnonymous || docs.isEmpty()) {
+            "An anonymous class can't have documentation"
+        }
+
         if (classType == ClassType.CLASS || classType == ClassType.ABSTRACT) {
             val exclusiveModifiers = modifiers.intersect(EXCLUSIVE_CLASS_MODIFIERS)
             check(exclusiveModifiers.size <= 1) {
@@ -176,6 +182,7 @@ class ClassSpec internal constructor(
         classBuilder.interfaces.addAll(interfaces)
         classBuilder.onTypes.addAll(onTypes)
         classBuilder.genericCasts.addAll(genericCasts)
+        classBuilder.docs.addAll(docs)
         return classBuilder
     }
 

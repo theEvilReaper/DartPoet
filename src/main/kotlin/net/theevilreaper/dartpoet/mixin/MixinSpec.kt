@@ -2,6 +2,7 @@ package net.theevilreaper.dartpoet.mixin
 
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
+import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.buildCodeString
@@ -37,6 +38,7 @@ class MixinSpec internal constructor(
     val annotations: Set<AnnotationSpec> = builder.specData.annotations.toImmutableSet()
     val modifiers: Set<DartModifier> = builder.specData.modifiers.toImmutableSet()
     val endsWithNewLine: Boolean = builder.endWithNewLine
+    internal val docs: List<CodeBlock> = builder.docs.toImmutableList()
     val isBase: Boolean = DartModifier.BASE in modifiers
 
     internal val hasNoContent: Boolean
@@ -70,6 +72,7 @@ class MixinSpec internal constructor(
         builder.specData.annotations.addAll(this.annotations)
         builder.specData.modifiers.addAll(this.modifiers)
         builder.endWithNewLine = this.endsWithNewLine
+        builder.docs.addAll(this.docs)
         return builder
     }
 

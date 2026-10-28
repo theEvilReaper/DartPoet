@@ -2,6 +2,7 @@ package net.theevilreaper.dartpoet.enum
 
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
+import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.buildCodeString
@@ -38,6 +39,7 @@ class EnumSpec internal constructor(
     val annotations: Set<AnnotationSpec> = builder.classMetaData.annotations.toImmutableSet()
     val modifiers: Set<DartModifier> = builder.classMetaData.modifiers.toImmutableSet()
     val endsWithNewLine: Boolean = builder.endWithNewLine
+    internal val docs: List<CodeBlock> = builder.docs.toImmutableList()
 
     internal val hasNoContent: Boolean
         get() = properties.isEmpty() && constructors.isEmpty() && functions.isEmpty() && operators.isEmpty() && constants.isEmpty()
@@ -97,6 +99,7 @@ class EnumSpec internal constructor(
         builder.classMetaData.annotations.addAll(this.annotations)
         builder.classMetaData.modifiers.addAll(this.modifiers)
         builder.endWithNewLine = this.endsWithNewLine
+        builder.docs.addAll(this.docs)
         return builder
     }
 

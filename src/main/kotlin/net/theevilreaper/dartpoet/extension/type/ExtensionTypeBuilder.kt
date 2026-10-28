@@ -2,6 +2,7 @@ package net.theevilreaper.dartpoet.extension.type
 
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
+import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.meta.GenericMethods
 import net.theevilreaper.dartpoet.meta.SpecData
@@ -45,6 +46,18 @@ class ExtensionTypeBuilder internal constructor(
     internal var constructorName: String? = null
     internal var isConst: Boolean = false
     internal var endWithNewLine: Boolean = false
+    internal val docs: MutableList<CodeBlock> = mutableListOf()
+
+    /**
+     * Add a documentation comment which is written above the extension type.
+     * Spaces are replaced with non-breaking spaces (`·`) so that the comment line is not wrapped.
+     * @param format the string which contains the content and the format
+     * @param args the arguments for the format string
+     * @return the given instance of an [ExtensionTypeBuilder]
+     */
+    fun doc(format: String, vararg args: Any) = apply {
+        this.docs.add(CodeBlock.of(format.replace(' ', '·'), *args))
+    }
 
     /**
      * Sets the name of a named representation constructor, e.g. `_` in `extension type Id._(int value)`.
