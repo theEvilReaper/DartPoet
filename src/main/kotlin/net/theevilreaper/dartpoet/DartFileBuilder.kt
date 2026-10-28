@@ -128,6 +128,7 @@ class DartFileBuilder(
     /**
      * Add a documentation comment at the top of the file.
      * Spaces are replaced with non-breaking spaces (`·`) so that the comment line is not wrapped.
+     * If the file also contains directives, a library directive is required to own the comment.
      * @param format the string which contains the content and the format
      * @param args the arguments for the format string
      * @return the current instance of [DartFileBuilder]

@@ -144,6 +144,40 @@ class DartFileTest {
     }
 
     @Test
+    fun `test file docs followed by directives without library directive are rejected`() {
+        val exception = assertThrows<IllegalStateException> {
+            DartFile.builder("no_lib")
+                .doc("A dangling comment")
+                .directive(DirectiveFactory.create(DirectiveType.IMPORT, "dart:math"))
+                .build()
+        }
+        assertEquals(
+            "File docs followed by directives require a library directive. Use DirectiveFactory.unnamedLib() to emit an unnamed `library;` directive.",
+            exception.message
+        )
+    }
+
+    @Test
+    fun `test file docs are written before an unnamed library directive`() {
+        val libFile = DartFile.builder("unnamed_lib")
+            .doc("A library with imports")
+            .directives(
+                DirectiveFactory.create(DirectiveType.IMPORT, "dart:math"),
+                DirectiveFactory.unnamedLib(),
+            )
+            .build()
+        libFile.verifyDartOutput(
+            """
+            |/// A library with imports
+            |library;
+            |
+            |import 'dart:math';
+            |
+            """.trimMargin()
+        )
+    }
+
+    @Test
     fun `test file name with only spaces is rejected`() {
         val exception = assertThrows<IllegalStateException> {
             DartFile.builder("   ").build()

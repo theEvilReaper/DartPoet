@@ -63,6 +63,10 @@ class DartFile internal constructor(
         check(annotations.isEmpty() || libImport.isNotEmpty()) {
             "File annotations require a library directive. Use DirectiveFactory.unnamedLib() to emit an unnamed `library;` directive."
         }
+        // A doc comment in front of an import, export or part directive is dangling unless a library directive owns it
+        check(docs.isEmpty() || libImport.isNotEmpty() || directives.isEmpty()) {
+            "File docs followed by directives require a library directive. Use DirectiveFactory.unnamedLib() to emit an unnamed `library;` directive."
+        }
     }
 
     internal fun write(codeWriter: CodeWriter) {
