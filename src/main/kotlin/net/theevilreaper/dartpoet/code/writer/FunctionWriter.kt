@@ -102,7 +102,7 @@ internal class FunctionWriter : Writeable<FunctionSpec>, DocumentationAppender {
         }
         writer.emitCode(codeBlock = typeDefinition, ensureTrailingNewline = false)
         writer.emitSpace()
-        writer.emit(spec.name)
+        writer.emit(StringHelper.ensureVariableNameWithPrivateModifier(spec.name, spec.isPrivate))
         if (spec.hasSetterAccessor) {
             val parameterData = ParameterData.of(spec)
             ParameterHelper.writeParameters(parameterData, writer)
