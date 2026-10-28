@@ -389,6 +389,15 @@ class FunctionSpecTest {
     }
 
     @Test
+    fun `test spec to builder conversation keeps body arguments`() {
+        val functionSpec = FunctionSpec.builder("create", ClassName("String"))
+            .addCode("return %T(%S);", ClassName("String"), "value")
+            .build()
+        val rebuiltSpec = functionSpec.toBuilder().build()
+        assertEquals(functionSpec.toString(), rebuiltSpec.toString())
+    }
+
+    @Test
     fun `test generic function with string overload`() {
         val functionSpec = FunctionSpec.builder("identity")
             .generic("T")

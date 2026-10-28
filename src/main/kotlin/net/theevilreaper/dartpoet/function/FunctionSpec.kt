@@ -124,7 +124,7 @@ class FunctionSpec internal constructor(
         builder.genericCasts.addAll(this.genericCasts)
         builder.methodAccessorType = this.methodAccessorType
         builder.body.formatParts.addAll(this.body.formatParts)
-        builder.body.args.add(this.body.args)
+        builder.body.args.addAll(this.body.args)
         builder.docs.addAll(this.docs)
         return builder
     }
