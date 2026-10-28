@@ -117,6 +117,7 @@ class FunctionSpec internal constructor(
         builder.annotations(*this.annotation.toTypedArray())
         builder.modifiers(*this.modifiers.toTypedArray())
         builder.parameters.addAll(this.parameters)
+        builder.type = this.type
         builder.async = this.isAsync
         builder.bodyType = this.bodyType
         builder.genericCasts.addAll(this.genericCasts)
