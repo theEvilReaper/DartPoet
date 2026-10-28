@@ -258,7 +258,6 @@ class DartFileTest {
             .function(
                 FunctionSpec.builder("serializer")
                     .returns(ClassName("Serializer<$name>"))
-                    .lambda(true)
                     .type(FunctionType.SHORTEN)
                     .accessorType(MethodAccessorType.GETTER)
                     .modifier(DartModifier.STATIC)
