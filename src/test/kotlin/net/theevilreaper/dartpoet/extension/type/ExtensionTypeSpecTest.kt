@@ -2,6 +2,7 @@ package net.theevilreaper.dartpoet.extension.type
 
 import net.theevilreaper.dartpoet.DartFile
 import net.theevilreaper.dartpoet.DartModifier
+import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.operator.BinaryOperator
 import net.theevilreaper.dartpoet.operator.DartOperatorSpec
@@ -268,6 +269,21 @@ class ExtensionTypeSpecTest {
             |  }
             |}
             |
+            """.trimMargin()
+        )
+    }
+
+    @Test
+    fun `test extension type with annotations`() {
+        val extensionType = ExtensionTypeSpec.builder("Meters", ParameterSpec.positional("value", DOUBLE).build())
+            .annotation(AnnotationSpec.builder("deprecated").build())
+            .annotation(AnnotationSpec.builder("Deprecated").content("%C", "Use Distance instead").build())
+            .build()
+        extensionType.verifyDartOutput(
+            """
+            |@deprecated
+            |@Deprecated('Use Distance instead')
+            |extension type Meters(double value) {}
             """.trimMargin()
         )
     }

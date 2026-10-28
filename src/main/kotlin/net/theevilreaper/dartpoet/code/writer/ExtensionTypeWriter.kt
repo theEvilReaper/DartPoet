@@ -5,6 +5,7 @@ import net.theevilreaper.dartpoet.DartModifier.PRIVATE
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.DocumentationAppender
 import net.theevilreaper.dartpoet.code.Writeable
+import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.code.emitConstants
 import net.theevilreaper.dartpoet.code.emitFunctions
 import net.theevilreaper.dartpoet.code.emitOperators
@@ -31,6 +32,7 @@ internal class ExtensionTypeWriter : Writeable<ExtensionTypeSpec>, Documentation
 
     override fun write(spec: ExtensionTypeSpec, writer: CodeWriter) {
         emitDocumentation(spec.docs, writer)
+        spec.annotations.emitAnnotations(writer, inLineAnnotations = false)
         writeHeader(spec, writer)
         writeGenericArguments(spec, writer)
         writeConstructorName(spec, writer)
