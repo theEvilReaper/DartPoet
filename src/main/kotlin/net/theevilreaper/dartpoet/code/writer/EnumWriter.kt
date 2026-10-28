@@ -2,6 +2,7 @@ package net.theevilreaper.dartpoet.code.writer
 
 import net.theevilreaper.dartpoet.DartModifier.PRIVATE
 import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.DocumentationAppender
 import net.theevilreaper.dartpoet.code.Writeable
 import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.code.emitConstants
@@ -24,7 +25,7 @@ import net.theevilreaper.dartpoet.util.StringHelper
  * @since 2.4.0
  * @author theEvilReaper
  */
-internal class EnumWriter : Writeable<EnumSpec> {
+internal class EnumWriter : Writeable<EnumSpec>, DocumentationAppender {
 
     /**
      * Writes the given [EnumSpec] to a [CodeWriter] instance.
@@ -33,6 +34,7 @@ internal class EnumWriter : Writeable<EnumSpec> {
      * @param writer the [CodeWriter] instance to append the generated code into
      */
     override fun write(spec: EnumSpec, writer: CodeWriter) {
+        emitDocumentation(spec.docs, writer)
         spec.annotations.emitAnnotations(writer, inLineAnnotations = false)
         writeEnumHeader(spec, writer)
         writeGenericArguments(spec, writer)

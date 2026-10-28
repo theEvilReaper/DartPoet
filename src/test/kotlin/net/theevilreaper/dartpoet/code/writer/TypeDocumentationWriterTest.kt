@@ -3,6 +3,8 @@ package net.theevilreaper.dartpoet.code.writer
 import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.ClassSpec
+import net.theevilreaper.dartpoet.enum.EnumEntrySpec
+import net.theevilreaper.dartpoet.enum.EnumSpec
 import net.theevilreaper.dartpoet.spec.TypeSpec
 import net.theevilreaper.dartpoet.verify.verifyDartOutput
 import org.junit.jupiter.api.DisplayName
@@ -24,6 +26,12 @@ class TypeDocumentationWriterTest {
             .annotation(AnnotationSpec.builder("deprecated").build())
             .build()
 
+        private val documentedEnum = EnumSpec.builder("Color")
+            .doc("All supported colors.")
+            .annotation(AnnotationSpec.builder("deprecated").build())
+            .entry(EnumEntrySpec.builder("red").build())
+            .build()
+
         @JvmStatic
         private fun documentedTypes() = Stream.of(
             Arguments.of(
@@ -34,12 +42,23 @@ class TypeDocumentationWriterTest {
                 |@deprecated
                 |class Model {}
                 """.trimMargin()
+            ),
+            Arguments.of(
+                documentedEnum,
+                """
+                |/// All supported colors.
+                |@deprecated
+                |enum Color {
+                |  red
+                |}
+                """.trimMargin()
             )
         )
 
         @JvmStatic
         private fun toBuilderRoundtrips() = Stream.of(
-            Arguments.of(documentedClass, documentedClass.toBuilder().build())
+            Arguments.of(documentedClass, documentedClass.toBuilder().build()),
+            Arguments.of(documentedEnum, documentedEnum.toBuilder().build())
         )
     }
 

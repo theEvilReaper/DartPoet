@@ -2,6 +2,7 @@ package net.theevilreaper.dartpoet.enum
 
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
+import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.constructor.ConstructorBase
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.meta.GenericMethods
@@ -44,6 +45,18 @@ class EnumBuilder internal constructor(
     internal val interfaces: MutableList<TypeName> = mutableListOf()
     internal val genericCasts: MutableList<TypeName> = mutableListOf()
     internal var endWithNewLine: Boolean = false
+    internal val docs: MutableList<CodeBlock> = mutableListOf()
+
+    /**
+     * Add a documentation comment which is written above the enum.
+     * Spaces are replaced with non-breaking spaces (`·`) so that the comment line is not wrapped.
+     * @param format the string which contains the content and the format
+     * @param args the arguments for the format string
+     * @return the given instance of an [EnumBuilder]
+     */
+    fun doc(format: String, vararg args: Any) = apply {
+        this.docs.add(CodeBlock.of(format.replace(' ', '·'), *args))
+    }
 
     fun entry(entry: EnumEntrySpec) = apply {
         this.entries += entry
