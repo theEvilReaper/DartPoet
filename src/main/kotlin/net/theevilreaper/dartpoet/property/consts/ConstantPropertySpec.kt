@@ -1,6 +1,7 @@
 package net.theevilreaper.dartpoet.property.consts
 
 import net.theevilreaper.dartpoet.DartModifier
+import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.buildCodeString
@@ -27,7 +28,7 @@ class ConstantPropertySpec(
 ) {
     internal val name = builder.name
     internal val typeName = builder.typeName
-    internal val initializer = builder.initializer
+    internal val initializer: CodeBlock = builder.initializer.build()
     internal val isPrivate = builder.isPrivate
     internal val modifiers = builder.modifiers.toImmutableSet()
 
@@ -60,7 +61,7 @@ class ConstantPropertySpec(
      */
     fun toBuilder(): ConstantPropertyBuilder {
         val builder = ConstantPropertyBuilder(name, typeName, modifiers)
-        builder.initializer = initializer
+        builder.initializer.add(initializer)
         builder.isPrivate = isPrivate
         return builder
     }
