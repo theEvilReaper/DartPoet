@@ -5,6 +5,7 @@ import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.enum.EnumEntrySpec
 import net.theevilreaper.dartpoet.enum.EnumSpec
+import net.theevilreaper.dartpoet.mixin.MixinSpec
 import net.theevilreaper.dartpoet.spec.TypeSpec
 import net.theevilreaper.dartpoet.verify.verifyDartOutput
 import org.junit.jupiter.api.DisplayName
@@ -32,6 +33,11 @@ class TypeDocumentationWriterTest {
             .entry(EnumEntrySpec.builder("red").build())
             .build()
 
+        private val documentedMixin = MixinSpec.builder("Walkable")
+            .doc("Adds walking behaviour.")
+            .annotation(AnnotationSpec.builder("deprecated").build())
+            .build()
+
         @JvmStatic
         private fun documentedTypes() = Stream.of(
             Arguments.of(
@@ -52,13 +58,22 @@ class TypeDocumentationWriterTest {
                 |  red
                 |}
                 """.trimMargin()
+            ),
+            Arguments.of(
+                documentedMixin,
+                """
+                |/// Adds walking behaviour.
+                |@deprecated
+                |mixin Walkable {}
+                """.trimMargin()
             )
         )
 
         @JvmStatic
         private fun toBuilderRoundtrips() = Stream.of(
             Arguments.of(documentedClass, documentedClass.toBuilder().build()),
-            Arguments.of(documentedEnum, documentedEnum.toBuilder().build())
+            Arguments.of(documentedEnum, documentedEnum.toBuilder().build()),
+            Arguments.of(documentedMixin, documentedMixin.toBuilder().build())
         )
     }
 

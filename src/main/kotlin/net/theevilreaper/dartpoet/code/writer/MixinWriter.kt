@@ -2,6 +2,7 @@ package net.theevilreaper.dartpoet.code.writer
 
 import net.theevilreaper.dartpoet.DartModifier.PRIVATE
 import net.theevilreaper.dartpoet.code.CodeWriter
+import net.theevilreaper.dartpoet.code.DocumentationAppender
 import net.theevilreaper.dartpoet.code.Writeable
 import net.theevilreaper.dartpoet.code.emitAnnotations
 import net.theevilreaper.dartpoet.code.emitConstants
@@ -23,9 +24,10 @@ import net.theevilreaper.dartpoet.util.StringHelper
  * @author theEvilReaper
  * @since 2.4.0
  */
-internal class MixinWriter : Writeable<MixinSpec> {
+internal class MixinWriter : Writeable<MixinSpec>, DocumentationAppender {
 
     override fun write(spec: MixinSpec, writer: CodeWriter) {
+        emitDocumentation(spec.docs, writer)
         spec.annotations.emitAnnotations(writer, inLineAnnotations = false)
         writeMixinHeader(spec, writer)
         writeGenericArguments(spec, writer)

@@ -2,6 +2,7 @@ package net.theevilreaper.dartpoet.mixin
 
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
+import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.function.FunctionSpec
 import net.theevilreaper.dartpoet.function.typedef.AbstractTypeDef
 import net.theevilreaper.dartpoet.meta.GenericMethods
@@ -43,6 +44,18 @@ class MixinBuilder internal constructor(
     internal val constants: MutableSet<ConstantPropertySpec> = mutableSetOf()
     internal val typeDefs: MutableList<AbstractTypeDef<*>> = mutableListOf()
     internal var endWithNewLine: Boolean = false
+    internal val docs: MutableList<CodeBlock> = mutableListOf()
+
+    /**
+     * Add a documentation comment which is written above the mixin.
+     * Spaces are replaced with non-breaking spaces (`·`) so that the comment line is not wrapped.
+     * @param format the string which contains the content and the format
+     * @param args the arguments for the format string
+     * @return the given instance of an [MixinBuilder]
+     */
+    fun doc(format: String, vararg args: Any) = apply {
+        this.docs.add(CodeBlock.of(format.replace(' ', '·'), *args))
+    }
 
     fun on(vararg onTypes: TypeName) = apply {
         this.onTypes += onTypes
