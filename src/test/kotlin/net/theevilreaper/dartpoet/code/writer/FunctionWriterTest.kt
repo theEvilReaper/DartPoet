@@ -169,6 +169,30 @@ class FunctionWriterTest {
         )
 
         @JvmStatic
+        private fun privateAccessorCases(): Stream<Arguments> = Stream.of(
+            Arguments.of(
+                FunctionSpec.builder("value")
+                    .returns(INTEGER)
+                    .modifier(DartModifier.PRIVATE)
+                    .accessorType(MethodAccessorType.GETTER)
+                    .type(FunctionType.SHORTEN)
+                    .addCode("%L", "1;")
+                    .build(),
+                "int get _value => 1;"
+            ),
+            Arguments.of(
+                FunctionSpec.builder("value")
+                    .modifier(DartModifier.PRIVATE)
+                    .accessorType(MethodAccessorType.SETTER)
+                    .type(FunctionType.SHORTEN)
+                    .parameter(ParameterSpec.positional("value", INTEGER).build())
+                    .addCode("%L", "print(value);")
+                    .build(),
+                "set _value(int value) => print(value);"
+            ),
+        )
+
+        @JvmStatic
         private fun genericOverloadCases(): Stream<Arguments> {
             val reflectType: Type = String::class.java
             return Stream.of(
@@ -468,6 +492,13 @@ class FunctionWriterTest {
     @ParameterizedTest
     @MethodSource("accessorSpacingCases")
     fun `test accessor write spacing`(functionSpec: FunctionSpec, expected: String) {
+        assertThat(functionSpec.toString()).isEqualTo(expected)
+    }
+
+    @DartAnalyzeCase
+    @ParameterizedTest
+    @MethodSource("privateAccessorCases")
+    fun `test private accessor write`(functionSpec: FunctionSpec, expected: String) {
         assertThat(functionSpec.toString()).isEqualTo(expected)
     }
 
