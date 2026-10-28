@@ -1,5 +1,6 @@
 package net.theevilreaper.dartpoet.property
 
+import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.property.consts.ConstantPropertySpec
 import net.theevilreaper.dartpoet.util.EMPTY_STRING
 import org.junit.jupiter.api.Assertions.*
@@ -49,7 +50,33 @@ class ConstantPropertySpecTest {
         val newBuilder = spec.toBuilder()
         assertEquals(builder.name, newBuilder.name)
         assertEquals(builder.typeName, newBuilder.typeName)
-        assertEquals(builder.initializer, newBuilder.initializer)
+        assertEquals(builder.initializer.build(), newBuilder.initializer.build())
         assertFalse { newBuilder.isPrivate }
+    }
+
+    @Test
+    fun `test builder changes after build don't affect the spec`() {
+        val builder = ConstantPropertySpec.fileConst("value", Int::class).initWith("%L", 1)
+        val spec = builder.build()
+        val expected = spec.toString()
+        builder.initWith(" + %L", 2)
+        assertEquals(expected, spec.toString())
+    }
+
+    @Test
+    fun `test changes on converted builder don't affect the original spec`() {
+        val spec = ConstantPropertySpec.fileConst("value", Int::class).initWith("%L", 1).build()
+        val expected = spec.toString()
+        spec.toBuilder().initWith(" + %L", 2)
+        assertEquals(expected, spec.toString())
+    }
+
+    @Test
+    fun `test external code block changes after build don't affect the spec`() {
+        val codeBlock = CodeBlock.builder().add("%L", 1)
+        val spec = ConstantPropertySpec.fileConst("value", Int::class).initWith(codeBlock).build()
+        val expected = spec.toString()
+        codeBlock.add(" + %L", 2)
+        assertEquals(expected, spec.toString())
     }
 }
