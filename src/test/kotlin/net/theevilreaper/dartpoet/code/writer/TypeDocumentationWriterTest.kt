@@ -5,8 +5,11 @@ import net.theevilreaper.dartpoet.annotation.AnnotationSpec
 import net.theevilreaper.dartpoet.clazz.ClassSpec
 import net.theevilreaper.dartpoet.enum.EnumEntrySpec
 import net.theevilreaper.dartpoet.enum.EnumSpec
+import net.theevilreaper.dartpoet.extension.type.ExtensionTypeSpec
 import net.theevilreaper.dartpoet.mixin.MixinSpec
+import net.theevilreaper.dartpoet.parameter.ParameterSpec
 import net.theevilreaper.dartpoet.spec.TypeSpec
+import net.theevilreaper.dartpoet.type.DOUBLE
 import net.theevilreaper.dartpoet.verify.verifyDartOutput
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -38,6 +41,10 @@ class TypeDocumentationWriterTest {
             .annotation(AnnotationSpec.builder("deprecated").build())
             .build()
 
+        private val documentedExtensionType = ExtensionTypeSpec.builder("Meters", ParameterSpec.positional("value", DOUBLE).build())
+            .doc("A distance in meters.")
+            .build()
+
         @JvmStatic
         private fun documentedTypes() = Stream.of(
             Arguments.of(
@@ -66,6 +73,13 @@ class TypeDocumentationWriterTest {
                 |@deprecated
                 |mixin Walkable {}
                 """.trimMargin()
+            ),
+            Arguments.of(
+                documentedExtensionType,
+                """
+                |/// A distance in meters.
+                |extension type Meters(double value) {}
+                """.trimMargin()
             )
         )
 
@@ -73,7 +87,8 @@ class TypeDocumentationWriterTest {
         private fun toBuilderRoundtrips() = Stream.of(
             Arguments.of(documentedClass, documentedClass.toBuilder().build()),
             Arguments.of(documentedEnum, documentedEnum.toBuilder().build()),
-            Arguments.of(documentedMixin, documentedMixin.toBuilder().build())
+            Arguments.of(documentedMixin, documentedMixin.toBuilder().build()),
+            Arguments.of(documentedExtensionType, documentedExtensionType.toBuilder().build())
         )
     }
 

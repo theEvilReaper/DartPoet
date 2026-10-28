@@ -2,6 +2,7 @@ package net.theevilreaper.dartpoet.extension.type
 
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
+import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.buildCodeString
@@ -43,6 +44,7 @@ class ExtensionTypeSpec internal constructor(
     internal val annotations: Set<AnnotationSpec> = builder.specData.annotations.toImmutableSet()
     internal val modifiers: Set<DartModifier> = builder.specData.modifiers.toImmutableSet()
     internal val endsWithNewLine: Boolean = builder.endWithNewLine
+    internal val docs: List<CodeBlock> = builder.docs.toImmutableList()
 
     internal val hasNoContent: Boolean
         get() = properties.isEmpty() && functions.isEmpty() && operators.isEmpty() && constants.isEmpty()
@@ -113,6 +115,7 @@ class ExtensionTypeSpec internal constructor(
         builder.specData.annotations.addAll(annotations)
         builder.specData.modifiers.addAll(modifiers)
         builder.endWithNewLine = endsWithNewLine
+        builder.docs.addAll(docs)
         return builder
     }
 
