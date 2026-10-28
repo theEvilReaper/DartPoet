@@ -46,7 +46,7 @@ class FunctionSpec internal constructor(
         hasAllowedModifiers(it, ALLOWED_FUNCTION_MODIFIERS, "function")
     }.filter { it != DartModifier.PRIVATE && it != DartModifier.PUBLIC }.toImmutableSet()
 
-    internal val isPrivate = builder.specData.modifiers.remove(DartModifier.PRIVATE)
+    internal val isPrivate = builder.specData.modifiers.contains(DartModifier.PRIVATE)
     internal val genericCasts: List<TypeName> = builder.genericCasts.toImmutableList()
     internal val genericDeclaration by lazy { TypeVariableName.renderDeclarationList(genericCasts) }
     internal val docs = builder.docs
@@ -115,7 +115,8 @@ class FunctionSpec internal constructor(
     fun toBuilder(): FunctionBuilder {
         val builder = FunctionBuilder(this.name, this.returnType)
         builder.annotations(*this.annotation.toTypedArray())
-        builder.modifiers(*this.modifiers.toTypedArray())
+        val updatedModifiers = if (isPrivate) modifiers + DartModifier.PRIVATE else modifiers
+        builder.modifiers(*updatedModifiers.toTypedArray())
         builder.parameters.addAll(this.parameters)
         builder.type = this.type
         builder.async = this.isAsync

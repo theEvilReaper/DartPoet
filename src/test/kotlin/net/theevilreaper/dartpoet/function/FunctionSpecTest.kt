@@ -367,6 +367,28 @@ class FunctionSpecTest {
     }
 
     @Test
+    fun `test spec to builder conversation keeps private modifier`() {
+        val functionSpec = FunctionSpec.builder("getValue", ClassName("int"))
+            .modifier(DartModifier.PRIVATE)
+            .addCode("return 1;")
+            .build()
+        val rebuiltSpec = functionSpec.toBuilder().build()
+        assertTrue { rebuiltSpec.isPrivate }
+        assertEquals(functionSpec.toString(), rebuiltSpec.toString())
+    }
+
+    @Test
+    fun `test multiple builds keep private modifier`() {
+        val builder = FunctionSpec.builder("getValue", ClassName("int"))
+            .modifier(DartModifier.PRIVATE)
+            .addCode("return 1;")
+        val firstSpec = builder.build()
+        val secondSpec = builder.build()
+        assertTrue { secondSpec.isPrivate }
+        assertEquals(firstSpec.toString(), secondSpec.toString())
+    }
+
+    @Test
     fun `test generic function with string overload`() {
         val functionSpec = FunctionSpec.builder("identity")
             .generic("T")
