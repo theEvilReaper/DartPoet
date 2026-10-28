@@ -50,7 +50,7 @@ internal class ConstructorWriter : Writeable<ConstructorSpec>, DocumentationAppe
         val parameterData: ParameterData<ParameterSpec> = ParameterData.of(spec)
         ParameterHelper.writeParameters(parameterData, writer)
 
-        emitStandardPart(writer, spec.initializer.build())
+        emitStandardPart(writer, spec.initializer)
     }
 
     /**
