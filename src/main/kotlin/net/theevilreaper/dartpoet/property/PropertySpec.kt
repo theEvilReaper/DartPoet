@@ -77,7 +77,8 @@ class PropertySpec internal constructor(
      */
     fun toBuilder(): PropertyBuilder {
         val builder = PropertyBuilder(this.name, this.type)
-        builder.specData.modifiers.addAll(this.modifiers)
+        val updatedModifiers = if (isPrivate) modifiers + DartModifier.PRIVATE else modifiers
+        builder.specData.modifiers.addAll(updatedModifiers)
         builder.specData.annotations.addAll(this.annotations)
         builder.initBlock = this.initBlock
         builder.docs.addAll(this.docs)
