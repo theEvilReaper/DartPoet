@@ -36,7 +36,7 @@ internal class PropertyWriter : Writeable<PropertySpec>, DocumentationAppender,
         }
 
         writer.emit(StringHelper.ensureVariableNameWithPrivateModifier(spec.name, spec.isPrivate))
-        writeInitBlock(spec.initBlock.build(), writer)
+        writeInitBlock(spec.initBlock, writer)
         writer.emit(SEMICOLON)
     }
 }

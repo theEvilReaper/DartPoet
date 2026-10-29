@@ -3,6 +3,7 @@ package net.theevilreaper.dartpoet.property
 import com.google.common.truth.Truth.assertThat
 import net.theevilreaper.dartpoet.DartModifier
 import net.theevilreaper.dartpoet.annotation.AnnotationSpec
+import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.type.asTypeName
 import net.theevilreaper.dartpoet.util.ALLOWED_CONST_MODIFIERS
 import net.theevilreaper.dartpoet.util.ALLOWED_PROPERTY_MODIFIERS
@@ -117,6 +118,40 @@ class PropertySpecTest {
             .build()
         val rebuiltSpec = propertySpec.toBuilder().build()
         assertTrue { rebuiltSpec.isPrivate }
+    }
+
+    @Test
+    fun `test builder changes after build don't affect the spec`() {
+        val builder = PropertySpec.builder("value", Int::class, DartModifier.FINAL).initWith("%L", 1)
+        val propertySpec = builder.build()
+        val expected = propertySpec.toString()
+        builder.initWith(" + %L", 2)
+        assertEquals(expected, propertySpec.toString())
+    }
+
+    @Test
+    fun `test changes on converted builder don't affect the original spec`() {
+        val propertySpec = PropertySpec.builder("value", Int::class, DartModifier.FINAL).initWith("%L", 1).build()
+        val expected = propertySpec.toString()
+        propertySpec.toBuilder().initWith(" + %L", 2)
+        assertEquals(expected, propertySpec.toString())
+    }
+
+    @Test
+    fun `test external code block changes after build don't affect the spec`() {
+        val codeBlock = CodeBlock.builder().add("%L", 1)
+        val propertySpec = PropertySpec.builder("value", Int::class, DartModifier.FINAL).initWith(codeBlock).build()
+        val expected = propertySpec.toString()
+        codeBlock.add(" + %L", 2)
+        assertEquals(expected, propertySpec.toString())
+    }
+
+    @Test
+    fun `test spec to builder conversation keeps initializer`() {
+        val propertySpec = PropertySpec.builder("value", String::class, DartModifier.FINAL)
+            .initWith("%S", "text")
+            .build()
+        val rebuiltSpec = propertySpec.toBuilder().build()
         assertEquals(propertySpec.toString(), rebuiltSpec.toString())
     }
 
