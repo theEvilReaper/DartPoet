@@ -17,6 +17,24 @@ class ConstructorSpecTest {
     }
 
     @Test
+    fun `test builder changes after build don't affect the spec`() {
+        val builder = ConstructorSpec.builder("TestModel").addCode("a = %L", 1)
+        val constructorSpec = builder.build()
+        val expected = constructorSpec.toString()
+        builder.addCode(", b = %L", 2)
+        assertEquals(expected, constructorSpec.toString())
+    }
+
+    @Test
+    fun `test spec to builder conversation keeps initializer`() {
+        val constructorSpec = ConstructorSpec.builder("TestModel")
+            .addCode("a = %L, b = %S", 1, "value")
+            .build()
+        val rebuiltSpec = constructorSpec.toBuilder().build()
+        assertEquals(constructorSpec.toString(), rebuiltSpec.toString())
+    }
+
+    @Test
     fun `test modifier lambda overload adds modifier`() {
         val constructorSpec = ConstructorSpec.builder("TestModel")
             .modifier { DartModifier.CONST }

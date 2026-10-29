@@ -1,6 +1,7 @@
 package net.theevilreaper.dartpoet.constructor
 
 import net.theevilreaper.dartpoet.DartModifier
+import net.theevilreaper.dartpoet.code.CodeBlock
 import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.code.WriterHelper
 import net.theevilreaper.dartpoet.code.buildCodeString
@@ -26,7 +27,7 @@ class ConstructorSpec internal constructor(
     internal val named = builder.named
     internal val isNamed = named.orEmpty().trim().isNotEmpty()
     internal val isLambda = builder.lambda
-    internal val initializer = builder.initializer
+    internal val initializer: CodeBlock = builder.initializer.build()
     internal val modifiers = builder.modifierData.modifiers.toImmutableSet()
 
     internal val docs = builder.docs.toImmutableList()
@@ -36,7 +37,7 @@ class ConstructorSpec internal constructor(
             "A generative constructor can't use the arrow syntax. Use a factory constructor instead"
         }
         if (modifiers.contains(DartModifier.EXTERNAL)) {
-            check(initializer.build().isEmpty()) { "An external constructor can't have an initializer" }
+            check(initializer.isEmpty()) { "An external constructor can't have an initializer" }
             check(!modifiers.contains(DartModifier.CONST)) { "An external constructor can't be const" }
         }
     }
@@ -65,9 +66,8 @@ class ConstructorSpec internal constructor(
         builder.modifierData.modifiers.addAll(this.modifiers)
         builder.parameters.addAll(this.parameters)
 
-        if (this.initializer.build().isNotEmpty()) {
-            builder.initializer.formatParts.addAll(this.initializer.formatParts)
-            builder.initializer.args.addAll(this.initializer.args)
+        if (this.initializer.isNotEmpty()) {
+            builder.initializer.add(this.initializer)
         }
 
         builder.docs.addAll(this.docs)
