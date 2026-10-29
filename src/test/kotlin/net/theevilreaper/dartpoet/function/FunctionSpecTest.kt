@@ -397,6 +397,15 @@ class FunctionSpecTest {
         assertEquals(functionSpec.toString(), rebuiltSpec.toString())
     }
 
+    @Suppress("DEPRECATION")
+    @Test
+    fun `test deprecated lambda flag sets the function type`() {
+        val builder = FunctionSpec.builder("value", INTEGER).addCode("1;")
+        assertEquals(FunctionType.SHORTEN, builder.lambda(true).type)
+        assertEquals("int value() => 1;", builder.build().toString())
+        assertEquals(FunctionType.STANDARD, builder.lambda(false).type)
+    }
+
     @Test
     fun `test generic function with string overload`() {
         val functionSpec = FunctionSpec.builder("identity")

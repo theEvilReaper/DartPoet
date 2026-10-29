@@ -38,7 +38,6 @@ class FunctionBuilder internal constructor(
     internal var async: Boolean = false
     internal val body: CodeBlock.Builder = CodeBlock.builder()
     internal val genericCasts: MutableList<TypeName> = mutableListOf()
-    internal var lambda: Boolean = false
     internal val docs: MutableList<CodeBlock> = mutableListOf()
     internal var type: FunctionType = FunctionType.STANDARD
     internal var methodAccessorType: MethodAccessorType? = null
@@ -58,8 +57,16 @@ class FunctionBuilder internal constructor(
      * Indicates if the method should be generated as lambda method.
      * @param lambda True when the method should be lambda otherwise false
      */
+    @Deprecated(
+        "Use type(FunctionType.SHORTEN) to generate a function with the arrow syntax",
+        ReplaceWith("type(FunctionType.SHORTEN)", "net.theevilreaper.dartpoet.function.FunctionType")
+    )
     fun lambda(lambda: Boolean) = apply {
-        this.lambda = lambda
+        if (lambda) {
+            this.type = FunctionType.SHORTEN
+        } else if (this.type == FunctionType.SHORTEN) {
+            this.type = FunctionType.STANDARD
+        }
     }
 
     /**
