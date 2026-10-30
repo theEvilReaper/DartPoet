@@ -39,8 +39,7 @@ class PropertySpec internal constructor(
             if (it.isNotEmpty()) {
                 hasAllowedModifiers(it, ALLOWED_PROPERTY_MODIFIERS, "property")
                 if (type == null) {
-                    hasAllowedModifiers(it, ALLOWED_CONST_MODIFIERS, "const property")
-                    it.clear()
+                    hasAllowedModifiers(it, ALLOWED_CONST_MODIFIERS + DartModifier.PRIVATE, "const property")
                     it.addAll(ALLOWED_CONST_MODIFIERS)
                 }
             }
