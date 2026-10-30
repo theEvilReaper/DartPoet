@@ -1,5 +1,29 @@
 # Changelog
 
+## [2.8.0](https://github.com/theEvilReaper/DartPoet/compare/2.7.0...2.8.0) (2026-10-30)
+
+
+### Features
+
+* **types:** add doc() to class, enum, mixin and extension type builders ([#354](https://github.com/theEvilReaper/DartPoet/issues/354)) ([1e03a44](https://github.com/theEvilReaper/DartPoet/commit/1e03a44d4484d3883d72ec97b0056c9a8e94d63c))
+
+
+### Bug Fixes
+
+* **constructor:** stop builder changes after build() from affecting the constructor ([#362](https://github.com/theEvilReaper/DartPoet/issues/362)) ([7662ba9](https://github.com/theEvilReaper/DartPoet/commit/7662ba9fdaefdf2057263b75e8a44e562e7eea37))
+* **directive:** validate import aliases and library names as identifiers ([#368](https://github.com/theEvilReaper/DartPoet/issues/368)) ([84eddab](https://github.com/theEvilReaper/DartPoet/commit/84eddab560a751c9ce7a76ecf10db0815391f0ba))
+* **extension-type:** emit annotations above the declaration ([#355](https://github.com/theEvilReaper/DartPoet/issues/355)) ([4e7c03a](https://github.com/theEvilReaper/DartPoet/commit/4e7c03ab33a730b4f315c955e96bdfbd48b13353))
+* **function:** add underscore prefix to private getters and setters ([#361](https://github.com/theEvilReaper/DartPoet/issues/361)) ([625839a](https://github.com/theEvilReaper/DartPoet/commit/625839a53b7471845c84efb561037949ff9b8add))
+* **function:** copy given type when invoking toBuilder ([#357](https://github.com/theEvilReaper/DartPoet/issues/357)) ([7e1ac1f](https://github.com/theEvilReaper/DartPoet/commit/7e1ac1fcd86da4380dc6d9722bc5a2e8a7dc1ce1))
+* **function:** deprecate lambda() and make it generate arrow functions ([#365](https://github.com/theEvilReaper/DartPoet/issues/365)) ([fb298c7](https://github.com/theEvilReaper/DartPoet/commit/fb298c78476910975c45417b595b46417223ff25))
+* **function:** keep body arguments when converting a FunctionSpec to a builder ([#359](https://github.com/theEvilReaper/DartPoet/issues/359)) ([b506db1](https://github.com/theEvilReaper/DartPoet/commit/b506db1248dd146e583ffe4eb42f05924ed8fe58))
+* **function:** stop build() from mutating the private modifier ([#358](https://github.com/theEvilReaper/DartPoet/issues/358)) ([81da3fe](https://github.com/theEvilReaper/DartPoet/commit/81da3fed1b2df911911d49270f8a27c94ef3f01c))
+* **property:** allow private modifier on untyped const properties ([#367](https://github.com/theEvilReaper/DartPoet/issues/367)) ([bf92533](https://github.com/theEvilReaper/DartPoet/commit/bf92533edff9958bf634240bc39fc7d7d2ab1af4))
+* **property:** keep private modifier when converting a property to a builder ([#360](https://github.com/theEvilReaper/DartPoet/issues/360)) ([2fec9b4](https://github.com/theEvilReaper/DartPoet/commit/2fec9b41e085293568ba1d7310216f3d6607a6d7))
+* **property:** stop later changes from affecting an already built constant ([#363](https://github.com/theEvilReaper/DartPoet/issues/363)) ([c3244da](https://github.com/theEvilReaper/DartPoet/commit/c3244da502728498207d0afbe7832fb71e9ee967))
+* **property:** stop later changes from affecting an already built property ([#364](https://github.com/theEvilReaper/DartPoet/issues/364)) ([4bddc02](https://github.com/theEvilReaper/DartPoet/commit/4bddc0262c285b29b81a6e89c707f007749dbebd))
+* **spec:** stop later doc changes from affecting already built functions and properties ([#366](https://github.com/theEvilReaper/DartPoet/issues/366)) ([75a7d9b](https://github.com/theEvilReaper/DartPoet/commit/75a7d9b6280330d2131db80c91e14deb07506dde))
+
 ## [2.7.0](https://github.com/theEvilReaper/DartPoet/compare/2.6.0...2.7.0) (2026-10-21)
 
 
