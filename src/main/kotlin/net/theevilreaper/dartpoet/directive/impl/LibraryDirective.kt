@@ -16,6 +16,10 @@ class LibraryDirective internal constructor(
     unnamed: Boolean = false,
 ) : BaseDirective(DirectiveType.LIBRARY, path, unnamed) {
 
+    init {
+        if (!unnamed) DirectiveHelper.validateLibraryName(path)
+    }
+
     /**
      * Writes the data from the [LibraryDirective] to a given instance from a [CodeWriter].
      * @param writer the [CodeWriter] instance to append the directive

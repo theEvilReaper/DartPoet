@@ -4,6 +4,7 @@ import net.theevilreaper.dartpoet.code.CodeWriter
 import net.theevilreaper.dartpoet.directive.impl.DartDirective
 import net.theevilreaper.dartpoet.directive.impl.RelativeDirective
 import net.theevilreaper.dartpoet.util.SEMICOLON
+import net.theevilreaper.dartpoet.util.escapeIfNecessary
 
 /**
  * The [DirectiveHelper] is a utility class that provides functionality to write a [Directive] to a [CodeWriter] instance.
@@ -38,6 +39,22 @@ internal object DirectiveHelper {
         check(!((castType != null && importCast == null) || (castType == null && importCast != null))) {
             "The castType and importCast must be set together or must be null. A mixed state is not allowed"
         }
+
+        if (importCast == null || castType == null) return
+
+        when (castType) {
+            // A prefix can't be a built-in identifier, so it is checked like a type name
+            CastType.AS, CastType.DEFERRED -> importCast.escapeIfNecessary(isTypeName = true)
+            CastType.SHOW, CastType.HIDE -> importCast.split(',').forEach { it.trim().escapeIfNecessary() }
+        }
+    }
+
+    /**
+     * Validates that the given library name is a dotted list of Dart identifiers like `dart.math`.
+     * @param name the library name to check
+     */
+    internal fun validateLibraryName(name: String) {
+        name.split('.').forEach { it.escapeIfNecessary() }
     }
 
     /**
