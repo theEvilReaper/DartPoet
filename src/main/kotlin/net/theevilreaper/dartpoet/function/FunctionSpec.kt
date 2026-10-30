@@ -49,7 +49,7 @@ class FunctionSpec internal constructor(
     internal val isPrivate = builder.specData.modifiers.contains(DartModifier.PRIVATE)
     internal val genericCasts: List<TypeName> = builder.genericCasts.toImmutableList()
     internal val genericDeclaration by lazy { TypeVariableName.renderDeclarationList(genericCasts) }
-    internal val docs = builder.docs
+    internal val docs = builder.docs.toImmutableList()
 
     internal val hasMethodAccessorType = methodAccessorType != null
     internal val hasSetterAccessor = hasMethodAccessorType && methodAccessorType == MethodAccessorType.SETTER
