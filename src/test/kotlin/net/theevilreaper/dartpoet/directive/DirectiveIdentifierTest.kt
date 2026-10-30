@@ -14,18 +14,41 @@ class DirectiveIdentifierTest {
 
     companion object {
 
-        @JvmStatic
-        private fun invalidPrefixes() = Stream.of(
-            Arguments.of(CastType.AS, "u;\nimport 'package:evil/evil.dart'"),
-            Arguments.of(CastType.AS, "my-alias"),
-            Arguments.of(CastType.AS, "1alias"),
-            Arguments.of(CastType.AS, "class"),
-            Arguments.of(CastType.AS, "dynamic"),
-            Arguments.of(CastType.DEFERRED, "lazy lib"),
-            Arguments.of(CastType.SHOW, "a; import 'package:evil/evil.dart'"),
-            Arguments.of(CastType.SHOW, "a,"),
-            Arguments.of(CastType.HIDE, "a, b-c"),
+        private val invalidCastValues = listOf(
+            CastType.AS to "u;\nimport 'package:evil/evil.dart'",
+            CastType.AS to "my-alias",
+            CastType.AS to "1alias",
+            CastType.AS to "class",
+            CastType.AS to "dynamic",
+            CastType.DEFERRED to "lazy lib",
+            CastType.SHOW to "a; import 'package:evil/evil.dart'",
+            CastType.SHOW to "a,",
+            CastType.HIDE to "a, b-c",
         )
+
+        private val invalidLibraryNames = listOf(
+            "foo;\nimport 'package:evil/evil.dart'",
+            "my-lib",
+            "dart..math",
+            ".lib",
+            "lib.",
+            "class",
+        )
+
+        @JvmStatic
+        private fun invalidCastDirectives(): Stream<Arguments> {
+            val directiveTypes = listOf(DirectiveType.IMPORT, DirectiveType.RELATIVE, DirectiveType.PACKAGE, DirectiveType.EXPORT)
+            return directiveTypes.flatMap { directiveType ->
+                invalidCastValues
+                    // Export rejects these cast types before the value is checked
+                    .filterNot { directiveType == DirectiveType.EXPORT && it.first in setOf(CastType.AS, CastType.DEFERRED) }
+                    .map { (castType, importCast) -> Arguments.of(directiveType, castType, importCast) }
+            }.stream()
+        }
+
+        @JvmStatic
+        private fun invalidLibraryDirectives(): Stream<Arguments> =
+            invalidLibraryNames.flatMap { name -> listOf(false, true).map { partOf -> Arguments.of(name, partOf) } }.stream()
 
         @JvmStatic
         private fun validCombinators() = Stream.of(
@@ -36,19 +59,11 @@ class DirectiveIdentifierTest {
         )
     }
 
-    @ParameterizedTest(name = "Rejects {0} value: {1}")
-    @MethodSource("invalidPrefixes")
-    fun `test import rejects invalid cast value`(castType: CastType, importCast: String) {
+    @ParameterizedTest(name = "{0} rejects {1} value: {2}")
+    @MethodSource("invalidCastDirectives")
+    fun `test directive rejects invalid cast value`(directiveType: DirectiveType, castType: CastType, importCast: String) {
         assertThrows<IllegalArgumentException> {
-            DirectiveFactory.create(DirectiveType.IMPORT, "dart:math", castType, importCast)
-        }
-    }
-
-    @ParameterizedTest(name = "Rejects relative import {0} value: {1}")
-    @MethodSource("invalidPrefixes")
-    fun `test relative import rejects invalid cast value`(castType: CastType, importCast: String) {
-        assertThrows<IllegalArgumentException> {
-            DirectiveFactory.createRelative("models/user", castType, importCast)
+            DirectiveFactory.create(directiveType, "models/user.dart", castType, importCast)
         }
     }
 
@@ -59,24 +74,10 @@ class DirectiveIdentifierTest {
         assertEquals(expected, directive.asString())
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = ["a, b-c", "a; export 'package:evil/evil.dart'"])
-    fun `test export rejects invalid combinator names`(importCast: String) {
-        assertThrows<IllegalArgumentException> {
-            DirectiveFactory.create(DirectiveType.EXPORT, "garden.dart", CastType.SHOW, importCast)
-        }
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = ["foo;\nimport 'package:evil/evil.dart'", "my-lib", "dart..math", ".lib", "lib.", "class"])
-    fun `test library rejects invalid name`(name: String) {
-        assertThrows<IllegalArgumentException> { DirectiveFactory.createLib(name) }
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = ["foo;\nimport 'package:evil/evil.dart'", "my-lib"])
-    fun `test part of rejects invalid library name`(name: String) {
-        assertThrows<IllegalArgumentException> { DirectiveFactory.createLib(name, true) }
+    @ParameterizedTest(name = "Rejects library name: {0} (part of: {1})")
+    @MethodSource("invalidLibraryDirectives")
+    fun `test library rejects invalid name`(name: String, partOf: Boolean) {
+        assertThrows<IllegalArgumentException> { DirectiveFactory.createLib(name, partOf) }
     }
 
     @ParameterizedTest
