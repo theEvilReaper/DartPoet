@@ -11,6 +11,7 @@ import net.theevilreaper.dartpoet.type.ClassName
 import net.theevilreaper.dartpoet.type.TypeName
 import net.theevilreaper.dartpoet.type.asTypeName
 import net.theevilreaper.dartpoet.util.ALLOWED_CONST_MODIFIERS
+import net.theevilreaper.dartpoet.util.toImmutableList
 import net.theevilreaper.dartpoet.util.toImmutableSet
 import net.theevilreaper.dartpoet.util.ALLOWED_PROPERTY_MODIFIERS
 import net.theevilreaper.dartpoet.util.hasAllowedModifiers
@@ -33,7 +34,7 @@ class PropertySpec internal constructor(
     internal var initBlock: CodeBlock = builder.initBlock.build()
     internal var isPrivate = builder.specData.modifiers.contains(DartModifier.PRIVATE)
     internal var isConst = builder.specData.modifiers.contains(DartModifier.CONST)
-    internal val docs = builder.docs
+    internal val docs = builder.docs.toImmutableList()
     internal var modifiers: Set<DartModifier> = builder.specData.modifiers
         .also {
             if (it.isNotEmpty()) {
