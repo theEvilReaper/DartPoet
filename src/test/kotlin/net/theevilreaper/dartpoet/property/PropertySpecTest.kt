@@ -73,7 +73,7 @@ class PropertySpecTest {
                         .modifier(DartModifier.FINAL)
                         .build()
                 },
-                "These modifiers [FINAL] are not allowed in a const property context. Allowed modifiers: $ALLOWED_CONST_MODIFIERS"
+                "These modifiers [FINAL] are not allowed in a const property context. Allowed modifiers: ${ALLOWED_CONST_MODIFIERS + DartModifier.PRIVATE}"
             ),
             Arguments.of(
                 {
