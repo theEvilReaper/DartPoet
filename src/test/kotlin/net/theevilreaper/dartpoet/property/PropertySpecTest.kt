@@ -165,4 +165,21 @@ class PropertySpecTest {
             .build()
         assertEquals(2, propertySpec.annotations.size)
     }
+
+    @Test
+    fun `test builder doc changes after build don't affect the spec`() {
+        val builder = PropertySpec.builder("value", Int::class, DartModifier.FINAL).docs("First line")
+        val propertySpec = builder.build()
+        val expected = propertySpec.toString()
+        builder.docs("Second line")
+        assertEquals(expected, propertySpec.toString())
+    }
+
+    @Test
+    fun `test doc changes on converted builder don't affect the original spec`() {
+        val propertySpec = PropertySpec.builder("value", Int::class, DartModifier.FINAL).docs("First line").build()
+        val expected = propertySpec.toString()
+        propertySpec.toBuilder().docs("Second line")
+        assertEquals(expected, propertySpec.toString())
+    }
 }

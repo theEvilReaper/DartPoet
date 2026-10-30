@@ -423,4 +423,21 @@ class FunctionSpecTest {
             functionSpec.toString()
         )
     }
+
+    @Test
+    fun `test builder doc changes after build don't affect the spec`() {
+        val builder = FunctionSpec.builder("test").doc("First line")
+        val functionSpec = builder.build()
+        val expected = functionSpec.toString()
+        builder.doc("Second line")
+        assertEquals(expected, functionSpec.toString())
+    }
+
+    @Test
+    fun `test doc changes on converted builder don't affect the original spec`() {
+        val functionSpec = FunctionSpec.builder("test").doc("First line").build()
+        val expected = functionSpec.toString()
+        functionSpec.toBuilder().doc("Second line")
+        assertEquals(expected, functionSpec.toString())
+    }
 }
